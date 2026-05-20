@@ -7,13 +7,13 @@ const nextConfig: NextConfig = {
     return [
       {
         source: '/api/:path*',
-        destination: 'http://localhost:8000/api/:path*',
+        destination: 'https://backend.nextdigihome.com/api/:path*',
       },
     ];
   },
   // Environment variables
   env: {
-    BACKEND_URL: 'http://localhost:8000',
+    BACKEND_URL: 'https://backend.nextdigihome.com',
   },
 };
 
