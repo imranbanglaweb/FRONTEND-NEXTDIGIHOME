@@ -2,6 +2,8 @@ import Link from "next/link";
 import { ShieldCheckIcon, LockClosedIcon } from "@heroicons/react/24/outline";
 import { fetchPrivacyContent } from "@/app/utils/api";
 
+export const dynamic = 'force-dynamic';
+
 interface PrivacyContent {
   id: number;
   title: string;

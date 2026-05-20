@@ -9,13 +9,19 @@ export const getApiUrl = (endpoint: string): string => {
     return endpoint;
   }
 
+  // Remove leading /api from endpoint if API_URL already includes /api
+  let cleanEndpoint = endpoint;
+  if (API_URL.endsWith('/api') && endpoint.startsWith('/api/')) {
+    cleanEndpoint = endpoint.replace('/api/', '/');
+  }
+
   // If endpoint starts with /, prepend API_URL
-  if (endpoint.startsWith('/')) {
-    return `${API_URL}${endpoint}`;
+  if (cleanEndpoint.startsWith('/')) {
+    return `${API_URL}${cleanEndpoint}`;
   }
 
   // Otherwise, prepend API_URL and API_BASE_PATH
-  return `${API_URL}${API_BASE_PATH}/${endpoint}`;
+  return `${API_URL}${API_BASE_PATH}/${cleanEndpoint}`;
 };
 
 export interface FetchOptions extends RequestInit {
