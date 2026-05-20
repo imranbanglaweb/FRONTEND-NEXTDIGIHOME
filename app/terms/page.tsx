@@ -2,6 +2,8 @@ import Link from "next/link";
 import { DocumentTextIcon, ScaleIcon } from "@heroicons/react/24/outline";
 import { fetchTermsContent } from "@/app/utils/api";
 
+export const dynamic = 'force-dynamic';
+
 interface TermsContent {
   id: number;
   title: string;
