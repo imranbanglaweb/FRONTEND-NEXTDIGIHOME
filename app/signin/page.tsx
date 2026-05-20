@@ -82,7 +82,7 @@ export default function SignInPage() {
     setError('');
 
     try {
-      const response = await fetch('http://localhost:8000/api/auth/google');
+      const response = await fetch('https://backend.nextdigihome.com/api/auth/google');
       const data = await response.json();
 
       if (data.success) {
@@ -102,7 +102,7 @@ export default function SignInPage() {
     setError('');
 
     try {
-      const response = await fetch('http://localhost:8000/api/auth/facebook');
+      const response = await fetch('https://backend.nextdigihome.com/api/auth/facebook');
       const data = await response.json();
 
       if (data.success) {
@@ -137,7 +137,7 @@ export default function SignInPage() {
 
     try {
       // Call API login
-      const response = await fetch('http://localhost:8000/api/login', {
+      const response = await fetch('https://backend.nextdigihome.com/api/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -173,7 +173,7 @@ export default function SignInPage() {
 
   const fetchSettings = async () => {
     try {
-      const response = await fetch('http://localhost/nextdigihomwwithlaravelnextjs/backend/api/settings');
+      const response = await fetch('https://backend.nextdigihome.com/api/settings');
       if (response.ok) {
         const data = await response.json();
         setSettings(data);
@@ -207,7 +207,7 @@ export default function SignInPage() {
             <div className="w-16 h-16 bg-gradient-to-r from-[#00d4aa] to-[#8b5cf6] rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg overflow-hidden">
               {settings?.site_logo ? (
                 <img
-                  src={`http://localhost/nextdigihomwwithlaravelnextjs/backend/api/logo/${settings.site_logo}`}
+                  src={`https://backend.nextdigihome.com/api/logo/${settings.site_logo}`}
                   alt="Site Logo"
                   className="w-full h-full object-cover"
                   onError={(e) => {
@@ -287,7 +287,7 @@ export default function SignInPage() {
                   <span className="ml-2 text-sm text-[#737373]">Remember me</span>
                 </label>
                 <a
-                  href="http://localhost:8000/password/reset"
+                  href="https://backend.nextdigihome.com/password/reset"
                   className="text-sm text-[#00d4aa] hover:text-[#8b5cf6] transition-colors font-medium"
                 >
                   Forgot password?

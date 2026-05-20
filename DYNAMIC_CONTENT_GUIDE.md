@@ -68,7 +68,7 @@ Create `.env.local` in the frontend directory:
 
 ```bash
 # API Configuration
-NEXT_PUBLIC_API_URL=http://localhost:8000
+NEXT_PUBLIC_API_URL=https://backend.nextdigihome.com
 NEXT_PUBLIC_API_BASE_PATH=/api
 ```
 
@@ -199,7 +199,7 @@ All pages maintain responsive layouts:
 
 ```bash
 # Test home content endpoint
-curl http://localhost:8000/api/content/home
+curl https://backend.nextdigihome.com/api/content/home
 
 # Expected response
 {

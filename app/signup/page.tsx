@@ -108,7 +108,7 @@ export default function SignUpPage() {
 
     try {
       // Call API register
-      const response = await fetch('http://localhost:8000/api/register', {
+      const response = await fetch('https://backend.nextdigihome.com/api/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -143,7 +143,7 @@ export default function SignUpPage() {
 
   const fetchSettings = async () => {
     try {
-      const response = await fetch('http://localhost/nextdigihomwwithlaravelnextjs/backend/api/settings');
+      const response = await fetch('https://backend.nextdigihome.com/api/settings');
       if (response.ok) {
         const data = await response.json();
         setSettings(data);
@@ -177,7 +177,7 @@ export default function SignUpPage() {
             <div className="w-16 h-16 bg-gradient-to-r from-[#8b5cf6] to-[#00d4aa] rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg overflow-hidden">
               {settings?.site_logo ? (
                 <img
-                  src={`http://localhost/nextdigihomwwithlaravelnextjs/backend/api/logo/${settings.site_logo}`}
+                  src={`https://backend.nextdigihome.com/api/logo/${settings.site_logo}`}
                   alt="Site Logo"
                   className="w-full h-full object-cover"
                   onError={(e) => {

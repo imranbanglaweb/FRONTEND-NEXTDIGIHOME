@@ -47,7 +47,7 @@ export default function AboutPage() {
   useEffect(() => {
     const fetchAboutContent = async () => {
       try {
-        const response = await fetch('http://localhost:8000/api/content/about');
+        const response = await fetch('https://backend.nextdigihome.com/api/content/about');
         if (response.ok) {
           const contentType = response.headers.get('content-type');
           if (contentType && contentType.includes('application/json')) {

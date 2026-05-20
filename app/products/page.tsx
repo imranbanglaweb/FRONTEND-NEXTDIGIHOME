@@ -39,7 +39,7 @@ export default function ProductsPage() {
 
   const fetchProducts = useCallback(async () => {
     try {
-        const response = await fetch(`http://localhost:8000/api/products?page=${page}&per_page=100`);
+        const response = await fetch(`https://backend.nextdigihome.com/api/products?page=${page}&per_page=100`);
 
       if (!response.ok) {
         throw new Error('Failed to fetch products');
@@ -120,7 +120,7 @@ export default function ProductsPage() {
     try {
 
     try {
-      const response = await fetch('http://localhost:8000/api/cart', {
+      const response = await fetch('https://backend.nextdigihome.com/api/cart', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -504,7 +504,7 @@ export default function ProductsPage() {
                    <div className="relative aspect-video overflow-hidden">
                       {product.thumbnail ? (
                         <img
-                          src={product.thumbnail.startsWith('http') ? product.thumbnail : `http://localhost:8000/storage/${product.thumbnail}`}
+                          src={product.thumbnail.startsWith('http') ? product.thumbnail : `https://backend.nextdigihome.com/storage/${product.thumbnail}`}
                           alt={product.name}
                           className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                         />
@@ -614,7 +614,7 @@ export default function ProductsPage() {
                    <div className="relative aspect-video overflow-hidden">
                       {product.thumbnail ? (
                         <img
-                          src={product.thumbnail.startsWith('http') ? product.thumbnail : `http://localhost:8000/storage/${product.thumbnail}`}
+                          src={product.thumbnail.startsWith('http') ? product.thumbnail : `https://backend.nextdigihome.com/storage/${product.thumbnail}`}
                           alt={product.name}
                           className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                         />

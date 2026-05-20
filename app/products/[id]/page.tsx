@@ -55,7 +55,7 @@ export default function ProductDetailPage() {
       setLoading(true);
 
       const response = await fetch(
-        `http://localhost:8000/api/products/${params.id}`,
+        `https://backend.nextdigihome.com/api/products/${params.id}`,
         {
           credentials: 'include',
         }
@@ -165,7 +165,7 @@ export default function ProductDetailPage() {
       setIsLoadingCart(true);
 
       const response = await fetch(
-        'http://localhost:8000/api/cart',
+        'https://backend.nextdigihome.com/api/cart',
         {
           method: 'POST',
           headers: {
@@ -333,7 +333,7 @@ export default function ProductDetailPage() {
                                src={
                                  image.startsWith('http')
                                    ? image
-                                   : `http://localhost:8000/storage/${image}`
+                                   : `https://backend.nextdigihome.com/storage/${image}`
                                }
                                alt={`${product.name}-${index}`}
                                className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 hover:scale-105"
@@ -411,7 +411,7 @@ export default function ProductDetailPage() {
                             src={
                               image.startsWith('http')
                                 ? image
-                                : `http://localhost:8000/storage/${image}`
+                                : `https://backend.nextdigihome.com/storage/${image}`
                             }
                             alt={`thumb-${index}`}
                             className="w-full h-full object-cover transition-all duration-300 group-hover:scale-105 group-hover:brightness-110"

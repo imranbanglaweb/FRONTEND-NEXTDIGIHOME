@@ -69,7 +69,7 @@ export default function ClientLayout({
 
   const fetchCartCount = async () => {
     try {
-      const response = await fetch('http://localhost:8000/api/cart', {
+      const response = await fetch('https://backend.nextdigihome.com/api/cart', {
         credentials: 'include',
       });
       if (response.ok) {
@@ -86,7 +86,7 @@ export default function ClientLayout({
 
   const fetchSettings = async () => {
     try {
-      const response = await fetch('http://localhost:8000/api/settings');
+      const response = await fetch('https://backend.nextdigihome.com/api/settings');
       if (response.ok) {
         const data = await response.json();
         setSettings(data);
@@ -98,7 +98,7 @@ export default function ClientLayout({
 
   const fetchCategories = async () => {
     try {
-      const response = await fetch('http://localhost:8000/api/categories');
+      const response = await fetch('https://backend.nextdigihome.com/api/categories');
       if (response.ok) {
         const data = await response.json();
         setCategories(data);
@@ -140,7 +140,7 @@ export default function ClientLayout({
 
                   return logoToUse ? (
                     <img
-                      src={`http://localhost:8000/api/logo/${logoToUse}`}
+                      src={`https://backend.nextdigihome.com/api/logo/${logoToUse}`}
                       alt={isAdminPage ? "Admin Logo" : "Site Logo"}
                       className="w-full h-full object-cover"
                       onError={(e) => {
@@ -379,7 +379,7 @@ export default function ClientLayout({
                 <div className="w-10 h-10 rounded-xl  from-[#00d4aa] to-[#8b5cf6] flex items-center justify-center overflow-hidden">
                   {settings?.admin_logo ? (
                     <img
-                      src={`http://localhost:8000/api/logo/${settings.admin_logo}`}
+                      src={`https://backend.nextdigihome.com/api/logo/${settings.admin_logo}`}
                       alt="Site Logo"
                       className="w-full h-full object-cover"
                       onError={(e) => {
@@ -469,7 +469,7 @@ export default function ClientLayout({
               <div className="w-6 h-6 rounded bg-gradient-to-br from-[#00d4aa] to-[#8b5cf6] flex items-center justify-center overflow-hidden">
                 {settings?.admin_logo ? (
                   <img
-                    src={`http://localhost:8000/api/logo/${settings.admin_logo}`}
+                    src={`https://backend.nextdigihome.com/api/logo/${settings.admin_logo}`}
                     alt="Site Logo"
                     className="w-full h-full object-cover"
                     onError={(e) => {

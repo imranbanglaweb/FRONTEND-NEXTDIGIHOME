@@ -40,7 +40,7 @@ export default function CheckoutPage() {
 
   const fetchUser = async (token: string) => {
     try {
-      const response = await fetch('http://localhost:8000/api/user', {
+      const response = await fetch('https://backend.nextdigihome.com/api/user', {
         method: 'GET',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -94,7 +94,7 @@ export default function CheckoutPage() {
 
     try {
       // Try to access a protected API endpoint to check authentication
-      const response = await fetch('http://localhost:8000/api/checkout/purchases', {
+      const response = await fetch('https://backend.nextdigihome.com/api/checkout/purchases', {
         method: 'GET',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -125,7 +125,7 @@ export default function CheckoutPage() {
 
   const fetchCart = async () => {
     try {
-      const response = await fetch('http://localhost:8000/api/cart', {
+      const response = await fetch('https://backend.nextdigihome.com/api/cart', {
         credentials: 'include',
       });
       if (response.ok) {
@@ -206,7 +206,7 @@ export default function CheckoutPage() {
         formDataToSend.append('payment_proof', paymentProof);
       }
 
-      const response = await fetch('http://localhost:8000/api/checkout', {
+      const response = await fetch('https://backend.nextdigihome.com/api/checkout', {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -234,7 +234,7 @@ export default function CheckoutPage() {
           // Save email for dashboard lookup
           localStorage.setItem('customer_email', formData.customer_email);
           setStep('payment');
-          await fetch('http://localhost:8000/api/cart', { 
+          await fetch('https://backend.nextdigihome.com/api/cart', { 
             method: 'DELETE',
             headers: {
               'Authorization': `Bearer ${token}`,
@@ -283,7 +283,7 @@ export default function CheckoutPage() {
         formDataVerification.append('notes', formData.notes);
       }
 
-      const response = await fetch('http://localhost:8000/api/checkout/verify', {
+      const response = await fetch('https://backend.nextdigihome.com/api/checkout/verify', {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,

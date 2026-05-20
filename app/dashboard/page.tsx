@@ -116,7 +116,7 @@ export default function DashboardPage() {
     setSearched(true);
 
     try {
-      const response = await fetch('http://localhost:8000/api/checkout/purchases', {
+      const response = await fetch('https://backend.nextdigihome.com/api/checkout/purchases', {
         headers: {
           'Authorization': `Bearer ${token}`,
         },
@@ -240,7 +240,7 @@ export default function DashboardPage() {
 
     try {
       // Try to access a protected API endpoint to check authentication
-      const response = await fetch('http://localhost:8000/api/cart', {
+      const response = await fetch('https://backend.nextdigihome.com/api/cart', {
         headers: {
           'Authorization': `Bearer ${token}`,
         },

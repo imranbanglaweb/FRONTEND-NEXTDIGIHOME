@@ -93,7 +93,7 @@ export default function Home() {
   useEffect(() => {
     const fetchHomeContent = async () => {
       try {
-        const response = await fetch('http://localhost:8000/api/content/home');
+        const response = await fetch('https://backend.nextdigihome.com/api/content/home');
 
         if (response.ok) {
           const contentType = response.headers.get('content-type');
@@ -123,7 +123,7 @@ export default function Home() {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await fetch('http://localhost:8000/api/products?per_page=50');
+        const response = await fetch('https://backend.nextdigihome.com/api/products?per_page=50');
         if (response.ok) {
           const contentType = response.headers.get('content-type');
           if (contentType && contentType.includes('application/json')) {
@@ -148,7 +148,7 @@ export default function Home() {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await fetch('http://localhost:8000/api/categories');
+        const response = await fetch('https://backend.nextdigihome.com/api/categories');
         if (response.ok) {
           const contentType = response.headers.get('content-type');
           if (contentType && contentType.includes('application/json')) {
@@ -270,7 +270,7 @@ export default function Home() {
 
   const addToCart = async (product: Product) => {
     try {
-      const response = await fetch('http://localhost:8000/api/cart', {
+      const response = await fetch('https://backend.nextdigihome.com/api/cart', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -750,7 +750,7 @@ export default function Home() {
                 <div className="aspect-video relative overflow-hidden">
                   {product.thumbnail ? (
                     <img
-                      src={product.thumbnail.startsWith('http') ? product.thumbnail : `http://localhost:8000/storage/${product.thumbnail}`}
+                      src={product.thumbnail.startsWith('http') ? product.thumbnail : `https://backend.nextdigihome.com/storage/${product.thumbnail}`}
                       alt={product.name}
                       className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                     />
@@ -1011,7 +1011,7 @@ export default function Home() {
                       <div className="relative aspect-video overflow-hidden">
                          {product.thumbnail ? (
                            <img
-                             src={product.thumbnail.startsWith('http') ? product.thumbnail : `http://localhost:8000/storage/${product.thumbnail}`}
+                             src={product.thumbnail.startsWith('http') ? product.thumbnail : `https://backend.nextdigihome.com/storage/${product.thumbnail}`}
                              alt={product.name}
                              className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                            />
