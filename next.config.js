@@ -6,10 +6,12 @@ const nextConfig = {
   images: {
     remotePatterns: [
       {
-        protocol: 'http',
-        hostname: 'localhost',
-        port: '',
-        pathname: '/**',
+        protocol: 'https',
+        hostname: 'backend.nextdigihome.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'nextdigihome.com',
       },
     ],
   },
