@@ -482,112 +482,109 @@ export default function Home() {
                     </div>
                   </div>
 
-                  {/* Premium Right Side - Product Showcase */}
-                  <div className="relative animate-fade-in-up hidden md:block max-h-fit">
-                    {/* Main Premium Card Showcase */}
-                    <div className="relative group">
-                      {/* Glowing background */}
-                      <div className="absolute -inset-0.5 bg-gradient-to-r from-[#00d4aa] via-[#8b5cf6] to-[#ff6b9d] rounded-2xl blur-2xl opacity-20 group-hover:opacity-40 transition-all duration-500"></div>
-                      
-                      {/* Card */}
-                      <div className="relative bg-gradient-to-br from-[#1a1a1f] to-[#0f0f12] rounded-2xl p-6 border border-[#2a2a30] group-hover:border-[#00d4aa]/50 transition-all duration-500 overflow-hidden">
-                        {/* Inner glow effect */}
-                        <div className="absolute inset-0 bg-gradient-to-tr from-[#00d4aa]/10 via-transparent to-[#8b5cf6]/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                    {/* Premium Right Side - Unique 3D Movable Products (Ultra Premium) */}
+                    <div className="relative hidden md:block">
+                      <div className="relative">
+                        {/* Deep luxurious glow */}
+                        <div className="absolute -inset-3 bg-gradient-to-r from-[#00d4aa] via-[#8b5cf6] via-[#ff6b9d] to-[#00d4aa] rounded-[3rem] blur-[70px] opacity-[0.15] group-hover:opacity-25 transition-all duration-700"></div>
 
-                        <div className="relative z-10 text-center">
-                          {/* Product Icon/Image */}
-                          <div className="mb-6">
-                             <div className="inline-block p-4 rounded-xl bg-gradient-to-br from-[#00d4aa]/20 to-[#8b5cf6]/20 border border-[#00d4aa]/30 mb-3 group-hover:scale-110 transition-transform duration-300">
-                               {slide.image && slide.image.startsWith('http') ? (
-                                 <img
-                                   src={slide.image}
-                                   alt={slide.title}
-                                   className="w-16 h-16 object-cover rounded-lg filter drop-shadow-lg"
-                                 />
-                               ) : (
-                                 <div className="text-5xl filter drop-shadow-lg">{slide.image || '🎯'}</div>
-                               )}
-                             </div>
-                            <h3 className="text-sm font-bold text-[#fafafa] mb-3">{slide.title}</h3>
-                            <div className="w-full h-1 bg-gradient-to-r from-[#00d4aa] to-[#8b5cf6] rounded-full"></div>
+                        {/* Main Container with Perspective */}
+                        <div 
+                          className="relative bg-[#0a0a0d]/95 backdrop-blur-3xl border border-white/10 rounded-3xl p-7 shadow-[0_20px_70px_rgb(0,0,0,0.65)]"
+                          style={{ perspective: '1400px' }}
+                        >
+                          {/* Header */}
+                          <div className="flex items-center justify-between mb-6">
+                            <div>
+                              <div className="text-[10px] uppercase tracking-[3px] font-medium text-[#00d4aa]/80">Handpicked for You</div>
+                              <div className="text-3xl font-semibold tracking-[-1px] text-[#fafafa]">Premium Collection</div>
+                            </div>
+                            <Link 
+                              href="/products" 
+                              className="px-6 py-2.5 text-sm font-semibold rounded-2xl border border-white/15 hover:bg-white/5 hover:border-[#00d4aa]/50 transition-all flex items-center gap-2"
+                            >
+                              View Full Catalog
+                              <ArrowRightIcon className="w-4 h-4" />
+                            </Link>
                           </div>
 
-                          {/* Dynamic Features List from API */}
-                          <div className="space-y-2">
-                            {features.slice(0, 3).map((feature, idx) => (
-                              <div key={feature.id} className="flex items-start gap-3 p-3 rounded-lg bg-[#2a2a30]/30 backdrop-blur-sm border border-[#2a2a30]/50 hover:border-[#00d4aa]/30 transition-all group/item">
-                                <div className="w-5 h-5 rounded-full bg-gradient-to-br from-[#00d4aa] to-[#8b5cf6] flex items-center justify-center text-xs font-bold text-[#0f0f12] flex-shrink-0 mt-0.5">{feature.icon}</div>
-                                <div className="flex-1">
-                                  <div className="text-xs font-semibold text-[#fafafa]">{feature.title}</div>
-                                  <div className="text-xs text-[#737373]">{(feature.description || 'Premium feature').substring(0, 40)}...</div>
-                                </div>
-                              </div>
-                            ))}
+                          {/* 3D Perspective Product Grid */}
+                          <div className="grid grid-cols-3 gap-4" style={{ transformStyle: 'preserve-3d' }}>
+                            {(allProducts.length > 0 ? allProducts.slice(0, 6) : fallbackProducts).map((product, idx) => {
+                              // Different base rotation for each card to create dynamic scattered premium look
+                              const rotations = [-12, -5, 4, 9, -3, 7];
+                              const baseRotate = rotations[idx % rotations.length];
+
+                              return (
+                                <Link
+                                  key={product.id || idx}
+                                  href={`/products/${product.slug || product.id}`}
+                                  className="group/card relative block rounded-2xl bg-[#121216] border border-white/10 overflow-hidden transition-all duration-500 cursor-pointer"
+                                  style={{
+                                    transform: `rotateY(${baseRotate}deg) rotateX(4deg)`,
+                                    transformStyle: 'preserve-3d',
+                                    transition: 'transform 0.6s cubic-bezier(0.23, 1.0, 0.32, 1), box-shadow 0.4s ease',
+                                  }}
+                                  onMouseMove={(e) => {
+                                    const rect = e.currentTarget.getBoundingClientRect();
+                                    const x = ((e.clientX - rect.left) / rect.width - 0.5) * 24;
+                                    const y = ((e.clientY - rect.top) / rect.height - 0.5) * -18;
+                                    e.currentTarget.style.transform = `rotateY(${x + baseRotate}deg) rotateX(${y + 4}deg) translateZ(12px)`;
+                                  }}
+                                  onMouseLeave={(e) => {
+                                    e.currentTarget.style.transform = `rotateY(${baseRotate}deg) rotateX(4deg)`;
+                                  }}
+                                >
+                                  {/* Product Visual with Depth */}
+                                  <div className="relative h-28 w-full bg-[#1a1a1f] flex items-center justify-center overflow-hidden">
+                                    {product.thumbnail ? (
+                                      <img
+                                        src={getStorageUrl(product.thumbnail)!}
+                                        alt={product.name}
+                                        className="h-full w-full object-cover transition-all duration-700 group-hover/card:scale-110"
+                                        style={{ transform: 'translateZ(20px)' }}
+                                      />
+                                    ) : (
+                                      <div className="text-[52px] opacity-90 transition-transform duration-500 group-hover/card:scale-110">
+                                        {['📄','📊','🚀','🎯','💼','✨'][idx % 6]}
+                                      </div>
+                                    )}
+                                    {/* Subtle inner glow */}
+                                    <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-transparent to-black/30" />
+                                  </div>
+
+                                  {/* Content */}
+                                  <div className="p-4" style={{ transform: 'translateZ(30px)' }}>
+                                    <div className="font-semibold text-[#fafafa] text-[15px] leading-[1.1] tracking-[-0.3px] line-clamp-2 group-hover/card:text-[#00d4aa] transition-colors">
+                                      {product.name}
+                                    </div>
+                                    <div className="mt-1.5 text-[11px] text-[#666] line-clamp-1">
+                                      {product.description || "Premium digital product"}
+                                    </div>
+
+                                    <div className="mt-4 flex items-center justify-between">
+                                      <div className="text-[21px] font-semibold tracking-tighter text-[#00d4aa]">
+                                        ৳{product.price}
+                                      </div>
+                                      <div className="text-[10px] px-3 py-1 rounded-full bg-white/5 border border-white/10 text-[#00d4aa] group-hover/card:bg-[#00d4aa] group-hover/card:text-black transition-all">
+                                        Quick View
+                                      </div>
+                                    </div>
+                                  </div>
+
+                                  {/* Edge highlight for premium depth */}
+                                  <div className="absolute inset-0 border border-white/5 rounded-2xl pointer-events-none" />
+                                </Link>
+                              );
+                            })}
                           </div>
                         </div>
                       </div>
                     </div>
-
-                    {/* Dynamic Feature Cards from API - Movable & Rotatable */}
-                    <div className="relative mt-6 grid grid-cols-3 gap-3 perspective">
-                      <style>{`
-                        @keyframes floatRotate {
-                          0%, 100% { transform: translateY(0px) rotateX(0deg) rotateY(0deg) rotateZ(0deg); }
-                          25% { transform: translateY(-10px) rotateX(5deg) rotateY(5deg) rotateZ(3deg); }
-                          50% { transform: translateY(-15px) rotateX(-5deg) rotateY(-5deg) rotateZ(-3deg); }
-                          75% { transform: translateY(-8px) rotateX(3deg) rotateY(-3deg) rotateZ(5deg); }
-                        }
-                        @keyframes floatRotate2 {
-                          0%, 100% { transform: translateY(0px) rotateX(0deg) rotateY(0deg) rotateZ(0deg); }
-                          25% { transform: translateY(-12px) rotateX(-4deg) rotateY(6deg) rotateZ(-4deg); }
-                          50% { transform: translateY(-18px) rotateX(4deg) rotateY(-6deg) rotateZ(4deg); }
-                          75% { transform: translateY(-6px) rotateX(-3deg) rotateY(3deg) rotateZ(-5deg); }
-                        }
-                        @keyframes floatRotate3 {
-                          0%, 100% { transform: translateY(0px) rotateX(0deg) rotateY(0deg) rotateZ(0deg); }
-                          25% { transform: translateY(-8px) rotateX(6deg) rotateY(-5deg) rotateZ(5deg); }
-                          50% { transform: translateY(-16px) rotateX(-6deg) rotateY(5deg) rotateZ(-5deg); }
-                          75% { transform: translateY(-10px) rotateX(4deg) rotateY(-4deg) rotateZ(3deg); }
-                        }
-                        .feature-card-rotatable {
-                          perspective: 1200px;
-                          transform-style: preserve-3d;
-                          transition: all 0.3s ease-out;
-                        }
-                        .feature-card-rotatable:hover {
-                          filter: brightness(1.1) drop-shadow(0 0 30px rgba(0, 212, 170, 0.4));
-                        }
-                      `}</style>
-                      {features.slice(0, 3).map((feature, idx) => {
-                        const colors = [
-                          { from: '#00d4aa', to: '#8b5cf6', border: '#00d4aa' },
-                          { from: '#8b5cf6', to: '#00d4aa', border: '#8b5cf6' },
-                          { from: '#00d4aa', to: '#8b5cf6', border: '#00d4aa' }
-                        ];
-                        const color = colors[idx % 3];
-                        const animationNames = ['floatRotate', 'floatRotate2', 'floatRotate3'];
-                        return (
-                          <div 
-                            key={feature.id} 
-                            className="feature-card-rotatable w-full h-20 rounded-lg p-2 shadow-lg opacity-90 border hover:scale-110 hover:brightness-125 cursor-grab active:cursor-grabbing" 
-                            style={{ 
-                              backgroundImage: `linear-gradient(135deg, ${color.from} 0%, ${color.to} 100%)`, 
-                              borderColor: `${color.border}80`,
-                              animation: `${animationNames[idx]} 6s ease-in-out infinite`,
-                              animationDelay: `${idx * 0.2}s`,
-                              transformStyle: 'preserve-3d'
-                            }}
-                          >
-                            <div className="w-full h-full rounded-md bg-[#0f0f12] flex flex-col items-center justify-center transform transition-transform duration-300 hover:scale-95">
-                              <div className="text-lg mb-0.5 transition-transform duration-300 hover:rotate-12">{feature.icon || '⭐'}</div>
-                              <div className="text-xs font-bold text-center text-[#fafafa] group-hover:text-opacity-100">{(feature.title || 'Feature').substring(0, 12)}</div>
-                            </div>
-                          </div>
-                        );
-                      })}
-                    </div>
-                  </div>
                 </div>
+
+
+                
               </div>
             </div>
           ))}
@@ -665,69 +662,6 @@ export default function Home() {
           <div className="text-[#737373] text-sm font-medium">{stat.label}</div>
         </div>
       ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Product Categories Section */}
-      <section className="relative py-24 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-b from-[#0f0f12] to-[#1a1a1f]" />
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold mb-6 gradient-text">
-              Product Categories
-            </h2>
-            <p className="text-xl text-[#737373] max-w-2xl mx-auto">
-              Explore our diverse range of digital products across multiple categories
-            </p>
-          </div>
-
-          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6">
-            {loadingCategories ? (
-              // Loading state for categories
-              Array.from({ length: 12 }, (_, index) => (
-                <div key={index} className="group relative overflow-hidden rounded-2xl bg-[#1a1a1f] border border-[#2a2a30] animate-pulse">
-                  <div className="aspect-square flex items-center justify-center p-6">
-                    <div className="text-center">
-                      <div className="w-12 h-12 bg-[#2a2a30] rounded-full mb-3 mx-auto"></div>
-                      <div className="w-20 h-4 bg-[#2a2a30] rounded mx-auto"></div>
-                    </div>
-                  </div>
-                </div>
-              ))
-            ) : (
-              allCategories.slice(0, 12).map((category, index) => (
-                <Link
-                  key={category.id}
-                  href={`/products?category=${category.slug}`}
-                  className="group relative overflow-hidden rounded-2xl bg-[#1a1a1f] border border-[#2a2a30] hover:border-[#00d4aa]/50 transition-all duration-300 hover:scale-105 hover:shadow-[0_0_40px_rgba(0,212,170,0.3)]"
-                >
-                  <div className="aspect-square flex items-center justify-center p-6">
-                    <div className="text-center">
-                      <div className="text-4xl mb-3">
-                        {['🎨', '💻', '📊', '📱', '🎵', '🎬', '📝', '⚙️', '🌐', '📱', '🎯', '📈'][index % 12]}
-                      </div>
-                      <h3 className="text-lg font-bold text-[#fafafa] group-hover:text-[#00d4aa] transition-colors">
-                        {category.category_name}
-                      </h3>
-                    </div>
-                  </div>
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#00d4aa]/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                </Link>
-              ))
-            )}
-          </div>
-
-          <div className="text-center mt-12">
-            <Link
-              href="/products"
-              className="inline-flex items-center px-8 py-4 bg-gradient-to-r from-[#00d4aa] to-[#8b5cf6] text-[#0f0f12] font-bold rounded-xl hover:opacity-90 transition-opacity"
-            >
-              View All Products
-              <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
-              </svg>
-            </Link>
           </div>
         </div>
       </section>
@@ -872,37 +806,6 @@ export default function Home() {
                 Implement your new digital assets and watch your business grow. Our 24/7 support team is here to help you succeed.
               </p>
             </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Features Section */}
-      <section className="relative py-24 overflow-hidden">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_50%_50%,rgba(0,212,170,0.05)_0%,rgba(8,8,8,0)_60%)]" />
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-             <h2 className="text-4xl md:text-5xl font-bold mb-6 gradient-text">
-               Why Choose Next Digi Home
-             </h2>
-            <p className="text-xl text-[#737373] max-w-2xl mx-auto">
-              Premium quality digital assets engineered for exceptional results
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {features.map((feature, index) => (
-              <div key={feature.id} className="glass-card rounded-2xl p-8 border border-[#2a2a30] hover:border-[#00d4aa]/30 transition-all duration-300 hover-lift">
-                <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-[#00d4aa]/20 to-[#8b5cf6]/20 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-                  <div className="text-4xl leading-none select-none" role="img" aria-label={feature.title}>
-                    {feature.icon}
-                  </div>
-                </div>
-                <h3 className="text-2xl font-bold mb-3 text-[#fafafa]">{feature.title}</h3>
-                <p className="text-[#737373] leading-relaxed">
-                  {feature.description}
-                </p>
-              </div>
-            ))}
           </div>
         </div>
       </section>

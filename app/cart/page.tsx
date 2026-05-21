@@ -172,7 +172,7 @@ export default function CartPage() {
                         <Link href={`/products/${item.product_id}`} className="text-lg font-semibold text-[#fafafa] hover:text-[#00d4aa] transition-colors line-clamp-1">
                           {item.name}
                         </Link>
-                        <p className="text-[#00d4aa] font-bold mt-1">${item.price.toFixed(2)}</p>
+                        <p className="text-[#00d4aa] font-bold mt-1">৳${item.price.toFixed(2)}</p>
                       </div>
                       <button
                         onClick={() => removeItem(item.id)}

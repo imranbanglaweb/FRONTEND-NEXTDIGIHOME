@@ -565,11 +565,11 @@ export default function ProductsPage() {
                      <div className="flex items-center justify-between">
                        <div className="flex items-baseline gap-2">
                          <span className="text-xl font-bold text-[#00d4aa]">
-                           ${product.price}
+                            ৳${product.price}
                          </span>
                          {product.compare_price && product.compare_price > product.price && (
                            <span className="text-sm text-[#737373] line-through">
-                             ${product.compare_price}
+                              ৳${product.compare_price}
                            </span>
                          )}
                        </div>
@@ -668,11 +668,11 @@ export default function ProductsPage() {
                     <div className="flex items-center justify-between">
                       <div className="flex items-baseline gap-2">
                         <span className="text-xl font-bold text-[#00d4aa]">
-                          ${product.price}
+                           ৳${product.price}
                         </span>
                         {product.compare_price && product.compare_price > product.price && (
                           <span className="text-sm text-[#737373] line-through">
-                            ${product.compare_price}
+                             ৳${product.compare_price}
                           </span>
                         )}
                       </div>
@@ -781,11 +781,11 @@ export default function ProductsPage() {
 
                 <div className="flex items-center gap-4 mb-6">
                   <span className="text-3xl font-bold text-[#00d4aa]">
-                    ${quickViewProduct.price}
+                     ৳${quickViewProduct.price}
                   </span>
                   {quickViewProduct.compare_price && quickViewProduct.compare_price > quickViewProduct.price && (
                     <span className="text-lg text-[#737373] line-through">
-                      ${quickViewProduct.compare_price}
+                       ৳${quickViewProduct.compare_price}
                     </span>
                   )}
                 </div>

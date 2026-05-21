@@ -436,14 +436,14 @@ export default function ProductDetailPage() {
               <div className="mb-6">
                 <div className="flex flex-wrap items-center gap-4">
                   <span className="text-4xl sm:text-5xl font-bold text-[#00d4aa]">
-                    ${product.price}
+                     ৳${product.price}
                   </span>
 
                   {product.compare_price &&
                     product.compare_price > product.price && (
                       <>
                         <span className="text-xl sm:text-2xl text-gray-500 line-through">
-                          ${product.compare_price}
+                           ৳${product.compare_price}
                         </span>
 
                         <span className="px-3 py-1 rounded-lg bg-red-500/20 text-red-400 border border-red-500/30 font-bold">
