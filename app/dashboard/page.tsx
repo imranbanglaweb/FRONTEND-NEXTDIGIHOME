@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { BACKEND_BASE_URL } from '../utils/api';
 import {
   ArrowDownTrayIcon,
   CheckCircleIcon,
@@ -116,7 +117,7 @@ export default function DashboardPage() {
     setSearched(true);
 
     try {
-      const response = await fetch('https://backend.nextdigihome.com/api/checkout/purchases', {
+      const response = await fetch(`${BACKEND_BASE_URL}/api/checkout/purchases`, {
         headers: {
           'Authorization': `Bearer ${token}`,
         },
@@ -240,7 +241,7 @@ export default function DashboardPage() {
 
     try {
       // Try to access a protected API endpoint to check authentication
-      const response = await fetch('https://backend.nextdigihome.com/api/cart', {
+      const response = await fetch(`${BACKEND_BASE_URL}/api/cart`, {
         headers: {
           'Authorization': `Bearer ${token}`,
         },

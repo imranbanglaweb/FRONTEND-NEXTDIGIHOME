@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { PhoneIcon, EnvelopeIcon, MapPinIcon, ClockIcon, CheckCircleIcon } from "@heroicons/react/24/outline";
+import { BACKEND_BASE_URL } from '../utils/api';
 
 interface ContactInfo {
   id: number;
@@ -36,7 +37,7 @@ export default function ContactPage() {
   useEffect(() => {
     const fetchContactContent = async () => {
       try {
-        const response = await fetch('https://backend.nextdigihome.com/api/content/contact');
+        const response = await fetch(`${BACKEND_BASE_URL}/api/content/contact`);
         if (response.ok) {
           const contentType = response.headers.get('content-type');
           if (contentType && contentType.includes('application/json')) {

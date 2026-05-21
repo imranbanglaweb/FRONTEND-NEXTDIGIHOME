@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
 import { ShoppingCartIcon, Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
+import { apiFetch, BACKEND_BASE_URL, getStorageUrl } from './utils/api';
 
 export default function ClientLayout({
   children,
@@ -69,16 +70,8 @@ export default function ClientLayout({
 
   const fetchCartCount = async () => {
     try {
-      const response = await fetch('https://backend.nextdigihome.com/api/cart', {
-        credentials: 'include',
-      });
-      if (response.ok) {
-        const contentType = response.headers.get('content-type');
-        if (contentType && contentType.includes('application/json')) {
-          const data = await response.json();
-          setCartCount(data.items?.length || 0);
-        }
-      }
+      const data = await apiFetch('/api/cart', { credentials: 'include' });
+      setCartCount(data.items?.length || 0);
     } catch (error) {
       console.error('Failed to fetch cart count:', error);
     }
@@ -86,11 +79,8 @@ export default function ClientLayout({
 
   const fetchSettings = async () => {
     try {
-      const response = await fetch('https://backend.nextdigihome.com/api/settings');
-      if (response.ok) {
-        const data = await response.json();
-        setSettings(data);
-      }
+      const data = await apiFetch('/api/settings');
+      setSettings(data);
     } catch (error) {
       console.error('Failed to fetch settings:', error);
     }
@@ -98,11 +88,8 @@ export default function ClientLayout({
 
   const fetchCategories = async () => {
     try {
-      const response = await fetch('https://backend.nextdigihome.com/api/categories');
-      if (response.ok) {
-        const data = await response.json();
-        setCategories(data);
-      }
+      const data = await apiFetch('/api/categories');
+      setCategories(data);
     } catch (error) {
       console.error('Failed to fetch categories:', error);
     }
@@ -139,10 +126,10 @@ export default function ClientLayout({
                     : settings?.admin_logo;
 
                   return logoToUse ? (
-                    <img
-                      src={`https://backend.nextdigihome.com/api/logo/${logoToUse}`}
-                      alt={isAdminPage ? "Admin Logo" : "Site Logo"}
-                      className="w-full h-full object-cover"
+                     <img
+                       src={`${BACKEND_BASE_URL}/api/logo/${logoToUse}`}
+                       alt={isAdminPage ? "Admin Logo" : "Site Logo"}
+                       className="w-full h-full object-cover"
                       onError={(e) => {
                         // Fallback to default icon if logo fails to load
                         e.currentTarget.style.display = 'none';
@@ -379,7 +366,7 @@ export default function ClientLayout({
                 <div className="w-10 h-10 rounded-xl  from-[#00d4aa] to-[#8b5cf6] flex items-center justify-center overflow-hidden">
                   {settings?.admin_logo ? (
                     <img
-                      src={`https://backend.nextdigihome.com/api/logo/${settings.admin_logo}`}
+                      src={`${BACKEND_BASE_URL}/api/logo/${settings.admin_logo}`}
                       alt="Site Logo"
                       className="w-full h-full object-cover"
                       onError={(e) => {
@@ -469,7 +456,7 @@ export default function ClientLayout({
               <div className="w-6 h-6 rounded bg-gradient-to-br from-[#00d4aa] to-[#8b5cf6] flex items-center justify-center overflow-hidden">
                 {settings?.admin_logo ? (
                   <img
-                    src={`https://backend.nextdigihome.com/api/logo/${settings.admin_logo}`}
+                    src={`${BACKEND_BASE_URL}/api/logo/${settings.admin_logo}`}
                     alt="Site Logo"
                     className="w-full h-full object-cover"
                     onError={(e) => {

@@ -1,6 +1,9 @@
 // utils/api.ts
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+// Clean base URL (always without trailing /api)
+const RAW_API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+export const BACKEND_BASE_URL = RAW_API_URL.replace(/\/api\/?$/, '');
+
 const API_BASE_PATH = process.env.NEXT_PUBLIC_API_BASE_PATH || '/api';
 
 export const getApiUrl = (endpoint: string): string => {
@@ -9,19 +12,13 @@ export const getApiUrl = (endpoint: string): string => {
     return endpoint;
   }
 
-  // Remove leading /api from endpoint if API_URL already includes /api
-  let cleanEndpoint = endpoint;
-  if (API_URL.endsWith('/api') && endpoint.startsWith('/api/')) {
-    cleanEndpoint = endpoint.replace('/api/', '/');
+  // If endpoint starts with /, prepend BACKEND_BASE_URL
+  if (endpoint.startsWith('/')) {
+    return `${BACKEND_BASE_URL}${endpoint}`;
   }
 
-  // If endpoint starts with /, prepend API_URL
-  if (cleanEndpoint.startsWith('/')) {
-    return `${API_URL}${cleanEndpoint}`;
-  }
-
-  // Otherwise, prepend API_URL and API_BASE_PATH
-  return `${API_URL}${API_BASE_PATH}/${cleanEndpoint}`;
+  // Otherwise, prepend BACKEND_BASE_URL + API_BASE_PATH
+  return `${BACKEND_BASE_URL}${API_BASE_PATH}/${endpoint}`;
 };
 
 export interface FetchOptions extends RequestInit {
@@ -67,3 +64,11 @@ export const fetchPrivacyContent = () => apiFetch('/api/content/privacy');
 export const fetchTermsContent = () => apiFetch('/api/content/terms');
 export const fetchProducts = (page: number = 1, perPage: number = 12) =>
   apiFetch(`/api/products?page=${page}&per_page=${perPage}`);
+
+// Helper for Laravel storage URLs (thumbnails, logos, etc.)
+export const getStorageUrl = (path: string | null | undefined): string | null => {
+  if (!path) return null;
+  if (path.startsWith('http')) return path;
+  const cleanPath = path.replace(/^\/+/, '');
+  return `${BACKEND_BASE_URL}/storage/${cleanPath}`;
+};

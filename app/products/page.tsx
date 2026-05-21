@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { MagnifyingGlassIcon, ArrowDownTrayIcon, StarIcon, ArrowPathIcon, AdjustmentsHorizontalIcon, HeartIcon, EyeIcon, XMarkIcon, BarsArrowDownIcon, BarsArrowUpIcon } from "@heroicons/react/24/outline";
 import { HeartIcon as HeartIconSolid } from "@heroicons/react/24/solid";
 import Swal from 'sweetalert2';
+import { getStorageUrl, BACKEND_BASE_URL } from '../utils/api';
 
 interface Product {
   id: number;
@@ -39,7 +40,7 @@ export default function ProductsPage() {
 
   const fetchProducts = useCallback(async () => {
     try {
-        const response = await fetch(`https://backend.nextdigihome.com/api/products?page=${page}&per_page=100`);
+        const response = await fetch(`${BACKEND_BASE_URL}/api/products?page=${page}&per_page=100`);
 
       if (!response.ok) {
         throw new Error('Failed to fetch products');
@@ -120,7 +121,7 @@ export default function ProductsPage() {
     try {
 
     try {
-      const response = await fetch('https://backend.nextdigihome.com/api/cart', {
+      const response = await fetch(`${BACKEND_BASE_URL}/api/cart`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -504,7 +505,7 @@ export default function ProductsPage() {
                    <div className="relative aspect-video overflow-hidden">
                       {product.thumbnail ? (
                         <img
-                          src={product.thumbnail.startsWith('http') ? product.thumbnail : `https://backend.nextdigihome.com/storage/${product.thumbnail}`}
+                            src={getStorageUrl(product.thumbnail)!}
                           alt={product.name}
                           className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                         />
@@ -614,7 +615,7 @@ export default function ProductsPage() {
                    <div className="relative aspect-video overflow-hidden">
                       {product.thumbnail ? (
                         <img
-                          src={product.thumbnail.startsWith('http') ? product.thumbnail : `https://backend.nextdigihome.com/storage/${product.thumbnail}`}
+                            src={getStorageUrl(product.thumbnail)!}
                           alt={product.name}
                           className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                         />
@@ -744,7 +745,7 @@ export default function ProductsPage() {
               <div className="lg:w-1/2 relative">
                 {quickViewProduct.thumbnail ? (
                    <img
-                     src={quickViewProduct.thumbnail.startsWith('http') ? quickViewProduct.thumbnail : `https://backend.nextdigihome.com/storage/${quickViewProduct.thumbnail}`}
+                     src={getStorageUrl(quickViewProduct.thumbnail)!}
                      alt={quickViewProduct.name}
                     className="w-full h-64 lg:h-full object-cover"
                   />

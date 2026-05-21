@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { ArrowLeftIcon, CheckCircleIcon, GlobeAltIcon, UsersIcon } from "@heroicons/react/24/outline";
+import { BACKEND_BASE_URL } from '../utils/api';
 
 interface Mission {
   id: number;
@@ -47,7 +48,7 @@ export default function AboutPage() {
   useEffect(() => {
     const fetchAboutContent = async () => {
       try {
-        const response = await fetch('https://backend.nextdigihome.com/api/content/about');
+        const response = await fetch(`${BACKEND_BASE_URL}/api/content/about`);
         if (response.ok) {
           const contentType = response.headers.get('content-type');
           if (contentType && contentType.includes('application/json')) {

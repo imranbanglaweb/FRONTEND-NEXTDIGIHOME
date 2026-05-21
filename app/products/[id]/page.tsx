@@ -9,6 +9,7 @@ import {
   CheckIcon,
 } from '@heroicons/react/24/outline';
 import Swal from 'sweetalert2';
+import { getStorageUrl, BACKEND_BASE_URL } from '../../utils/api';
 
 interface Product {
   id: number;
@@ -55,7 +56,7 @@ export default function ProductDetailPage() {
       setLoading(true);
 
       const response = await fetch(
-        `https://backend.nextdigihome.com/api/products/${params.id}`,
+         `${BACKEND_BASE_URL}/api/products/${params.id}`,
         {
           credentials: 'include',
         }
@@ -104,7 +105,7 @@ export default function ProductDetailPage() {
     }
 
     if (product.thumbnail) {
-      return [product.thumbnail.startsWith('http') ? product.thumbnail : `https://backend.nextdigihome.com/storage/${product.thumbnail}`];
+      return [getStorageUrl(product.thumbnail)!];
     }
 
     return [];
@@ -165,7 +166,7 @@ export default function ProductDetailPage() {
       setIsLoadingCart(true);
 
       const response = await fetch(
-        'https://backend.nextdigihome.com/api/cart',
+         `${BACKEND_BASE_URL}/api/cart`,
         {
           method: 'POST',
           headers: {
@@ -329,12 +330,8 @@ export default function ProductDetailPage() {
                           className="min-w-full flex-shrink-0"
                         >
                            <div className="relative w-full aspect-square sm:aspect-[4/3] md:aspect-[16/10] lg:aspect-[4/3] xl:aspect-[16/9] overflow-hidden bg-[#0f0f12]">
-                             <img
-                               src={
-                                 image.startsWith('http')
-                                   ? image
-                                   : `https://backend.nextdigihome.com/storage/${image}`
-                               }
+                              <img
+                                src={getStorageUrl(image)!}
                                alt={`${product.name}-${index}`}
                                className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 hover:scale-105"
                                loading={index === 0 ? "eager" : "lazy"}
@@ -408,11 +405,7 @@ export default function ProductDetailPage() {
                           }`}
                         >
                           <img
-                            src={
-                              image.startsWith('http')
-                                ? image
-                                : `https://backend.nextdigihome.com/storage/${image}`
-                            }
+                            src={getStorageUrl(image)!}
                             alt={`thumb-${index}`}
                             className="w-full h-full object-cover transition-all duration-300 group-hover:scale-105 group-hover:brightness-110"
                             loading="lazy"

@@ -4,16 +4,17 @@ const nextConfig: NextConfig = {
 
   // Proxy API requests to Laravel backend
   async rewrites() {
+    const apiBase = (process.env.NEXT_PUBLIC_API_URL || 'https://backend.nextdigihome.com').replace(/\/$/, '');
     return [
       {
         source: '/api/:path*',
-        destination: 'https://backend.nextdigihome.com/api/:path*',
+        destination: `${apiBase}/api/:path*`,
       },
     ];
   },
   // Environment variables
   env: {
-    BACKEND_URL: 'https://backend.nextdigihome.com',
+    BACKEND_URL: process.env.NEXT_PUBLIC_API_URL || 'https://backend.nextdigihome.com',
   },
 };
 

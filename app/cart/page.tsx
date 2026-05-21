@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { TrashIcon, PlusIcon, MinusIcon, ShoppingBagIcon, ArrowRightIcon } from "@heroicons/react/24/outline";
+import { getStorageUrl } from '../utils/api';
 
 interface CartItem {
   id: string;
@@ -156,7 +157,7 @@ export default function CartPage() {
                   {/* Product Image */}
                   <div className="w-full sm:w-24 h-24 rounded-xl overflow-hidden bg-[#1a1a1f] flex-shrink-0">
                      {item.thumbnail ? (
-                       <img src={item.thumbnail.startsWith('http') ? item.thumbnail : `https://backend.nextdigihome.com/storage/${item.thumbnail}`} alt={item.name} className="w-full h-full object-cover" />
+                       <img src={getStorageUrl(item.thumbnail)!} alt={item.name} className="w-full h-full object-cover" />
                     ) : (
                       <div className="w-full h-full flex items-center justify-center">
                         <ShoppingBagIcon className="w-8 h-8 text-[#2a2a30]" />

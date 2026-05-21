@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ArrowRightIcon, CogIcon, ShoppingCartIcon, ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/outline";
 import Swal from 'sweetalert2';
+import { getStorageUrl, BACKEND_BASE_URL } from './utils/api';
 
 interface HeroSlide {
   id: number;
@@ -93,7 +94,7 @@ export default function Home() {
   useEffect(() => {
     const fetchHomeContent = async () => {
       try {
-        const response = await fetch('https://backend.nextdigihome.com/api/content/home');
+        const response = await fetch(`${BACKEND_BASE_URL}/api/content/home`);
 
         if (response.ok) {
           const contentType = response.headers.get('content-type');
@@ -123,7 +124,7 @@ export default function Home() {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await fetch('https://backend.nextdigihome.com/api/products?per_page=50');
+        const response = await fetch(`${BACKEND_BASE_URL}/api/products?per_page=50`);
         if (response.ok) {
           const contentType = response.headers.get('content-type');
           if (contentType && contentType.includes('application/json')) {
@@ -148,7 +149,7 @@ export default function Home() {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await fetch('https://backend.nextdigihome.com/api/categories');
+        const response = await fetch(`${BACKEND_BASE_URL}/api/categories`);
         if (response.ok) {
           const contentType = response.headers.get('content-type');
           if (contentType && contentType.includes('application/json')) {
@@ -270,7 +271,7 @@ export default function Home() {
 
   const addToCart = async (product: Product) => {
     try {
-      const response = await fetch('https://backend.nextdigihome.com/api/cart', {
+      const response = await fetch(`${BACKEND_BASE_URL}/api/cart`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -750,7 +751,7 @@ export default function Home() {
                 <div className="aspect-video relative overflow-hidden">
                   {product.thumbnail ? (
                     <img
-                      src={product.thumbnail.startsWith('http') ? product.thumbnail : `https://backend.nextdigihome.com/storage/${product.thumbnail}`}
+                      src={getStorageUrl(product.thumbnail)!}
                       alt={product.name}
                       className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                     />
@@ -1011,7 +1012,7 @@ export default function Home() {
                       <div className="relative aspect-video overflow-hidden">
                          {product.thumbnail ? (
                            <img
-                             src={product.thumbnail.startsWith('http') ? product.thumbnail : `https://backend.nextdigihome.com/storage/${product.thumbnail}`}
+                             src={getStorageUrl(product.thumbnail)!}
                              alt={product.name}
                              className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                            />
@@ -1231,7 +1232,7 @@ export default function Home() {
                 </div>
                 <div className="h-40 bg-gradient-to-br from-[#00d4aa]/20 to-[#8b5cf6]/20 flex items-center justify-center overflow-hidden relative group/img">
                    {allProducts[0].thumbnail ? (
-                     <img src={allProducts[0].thumbnail.startsWith('http') ? allProducts[0].thumbnail : `https://backend.nextdigihome.com/storage/${allProducts[0].thumbnail}`} alt={allProducts[0].name} className="w-full h-full object-cover group-hover/img:scale-110 transition-transform duration-300" />
+                     <img src={getStorageUrl(allProducts[0].thumbnail)!} alt={allProducts[0].name} className="w-full h-full object-cover group-hover/img:scale-110 transition-transform duration-300" />
                   ) : (
                     <div className="text-6xl group-hover/img:scale-110 transition-transform duration-300">🎨</div>
                   )}
@@ -1270,7 +1271,7 @@ export default function Home() {
                 </div>
                 <div className="h-40 bg-gradient-to-br from-[#8b5cf6]/20 to-[#ff6b9d]/20 flex items-center justify-center overflow-hidden relative group/img">
                    {allProducts[1].thumbnail ? (
-                     <img src={allProducts[1].thumbnail.startsWith('http') ? allProducts[1].thumbnail : `https://backend.nextdigihome.com/storage/${allProducts[1].thumbnail}`} alt={allProducts[1].name} className="w-full h-full object-cover group-hover/img:scale-110 transition-transform duration-300" />
+                     <img src={getStorageUrl(allProducts[1].thumbnail)!} alt={allProducts[1].name} className="w-full h-full object-cover group-hover/img:scale-110 transition-transform duration-300" />
                   ) : (
                     <div className="text-6xl group-hover/img:scale-110 transition-transform duration-300">💼</div>
                   )}
@@ -1309,7 +1310,7 @@ export default function Home() {
                 </div>
                 <div className="h-40 bg-gradient-to-br from-[#ff6b9d]/20 to-[#00d4aa]/20 flex items-center justify-center overflow-hidden relative group/img">
                    {allProducts[2].thumbnail ? (
-                     <img src={allProducts[2].thumbnail.startsWith('http') ? allProducts[2].thumbnail : `https://backend.nextdigihome.com/storage/${allProducts[2].thumbnail}`} alt={allProducts[2].name} className="w-full h-full object-cover group-hover/img:scale-110 transition-transform duration-300" />
+                     <img src={getStorageUrl(allProducts[2].thumbnail)!} alt={allProducts[2].name} className="w-full h-full object-cover group-hover/img:scale-110 transition-transform duration-300" />
                   ) : (
                     <div className="text-6xl group-hover/img:scale-110 transition-transform duration-300">📱</div>
                   )}
@@ -1348,7 +1349,7 @@ export default function Home() {
                 </div>
                 <div className="h-40 bg-gradient-to-br from-[#00d4aa]/20 to-[#8b5cf6]/20 flex items-center justify-center overflow-hidden relative group/img">
                    {allProducts[3].thumbnail ? (
-                     <img src={allProducts[3].thumbnail.startsWith('http') ? allProducts[3].thumbnail : `https://backend.nextdigihome.com/storage/${allProducts[3].thumbnail}`} alt={allProducts[3].name} className="w-full h-full object-cover group-hover/img:scale-110 transition-transform duration-300" />
+                     <img src={getStorageUrl(allProducts[3].thumbnail)!} alt={allProducts[3].name} className="w-full h-full object-cover group-hover/img:scale-110 transition-transform duration-300" />
                   ) : (
                     <div className="text-6xl group-hover/img:scale-110 transition-transform duration-300">🚀</div>
                   )}
