@@ -1230,8 +1230,8 @@ export default function Home() {
                   <span className="text-xs font-bold text-white">BESTSELLER</span>
                 </div>
                 <div className="h-40 bg-gradient-to-br from-[#00d4aa]/20 to-[#8b5cf6]/20 flex items-center justify-center overflow-hidden relative group/img">
-                  {allProducts[0].thumbnail ? (
-                    <img src={allProducts[0].thumbnail} alt={allProducts[0].name} className="w-full h-full object-cover group-hover/img:scale-110 transition-transform duration-300" />
+                   {allProducts[0].thumbnail ? (
+                     <img src={allProducts[0].thumbnail.startsWith('http') ? allProducts[0].thumbnail : `https://backend.nextdigihome.com/storage/${allProducts[0].thumbnail}`} alt={allProducts[0].name} className="w-full h-full object-cover group-hover/img:scale-110 transition-transform duration-300" />
                   ) : (
                     <div className="text-6xl group-hover/img:scale-110 transition-transform duration-300">🎨</div>
                   )}
@@ -1269,8 +1269,8 @@ export default function Home() {
                   <span className="text-xs font-bold text-[#0f0f12]">⚡ NEW</span>
                 </div>
                 <div className="h-40 bg-gradient-to-br from-[#8b5cf6]/20 to-[#ff6b9d]/20 flex items-center justify-center overflow-hidden relative group/img">
-                  {allProducts[1].thumbnail ? (
-                    <img src={allProducts[1].thumbnail} alt={allProducts[1].name} className="w-full h-full object-cover group-hover/img:scale-110 transition-transform duration-300" />
+                   {allProducts[1].thumbnail ? (
+                     <img src={allProducts[1].thumbnail.startsWith('http') ? allProducts[1].thumbnail : `https://backend.nextdigihome.com/storage/${allProducts[1].thumbnail}`} alt={allProducts[1].name} className="w-full h-full object-cover group-hover/img:scale-110 transition-transform duration-300" />
                   ) : (
                     <div className="text-6xl group-hover/img:scale-110 transition-transform duration-300">💼</div>
                   )}
@@ -1308,8 +1308,8 @@ export default function Home() {
                   <span className="text-xs font-bold text-white">HOT</span>
                 </div>
                 <div className="h-40 bg-gradient-to-br from-[#ff6b9d]/20 to-[#00d4aa]/20 flex items-center justify-center overflow-hidden relative group/img">
-                  {allProducts[2].thumbnail ? (
-                    <img src={allProducts[2].thumbnail} alt={allProducts[2].name} className="w-full h-full object-cover group-hover/img:scale-110 transition-transform duration-300" />
+                   {allProducts[2].thumbnail ? (
+                     <img src={allProducts[2].thumbnail.startsWith('http') ? allProducts[2].thumbnail : `https://backend.nextdigihome.com/storage/${allProducts[2].thumbnail}`} alt={allProducts[2].name} className="w-full h-full object-cover group-hover/img:scale-110 transition-transform duration-300" />
                   ) : (
                     <div className="text-6xl group-hover/img:scale-110 transition-transform duration-300">📱</div>
                   )}
@@ -1347,8 +1347,8 @@ export default function Home() {
                   <span className="text-xs font-bold text-white">PREMIUM</span>
                 </div>
                 <div className="h-40 bg-gradient-to-br from-[#00d4aa]/20 to-[#8b5cf6]/20 flex items-center justify-center overflow-hidden relative group/img">
-                  {allProducts[3].thumbnail ? (
-                    <img src={allProducts[3].thumbnail} alt={allProducts[3].name} className="w-full h-full object-cover group-hover/img:scale-110 transition-transform duration-300" />
+                   {allProducts[3].thumbnail ? (
+                     <img src={allProducts[3].thumbnail.startsWith('http') ? allProducts[3].thumbnail : `https://backend.nextdigihome.com/storage/${allProducts[3].thumbnail}`} alt={allProducts[3].name} className="w-full h-full object-cover group-hover/img:scale-110 transition-transform duration-300" />
                   ) : (
                     <div className="text-6xl group-hover/img:scale-110 transition-transform duration-300">🚀</div>
                   )}

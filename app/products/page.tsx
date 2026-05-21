@@ -743,9 +743,9 @@ export default function ProductsPage() {
               {/* Product Image */}
               <div className="lg:w-1/2 relative">
                 {quickViewProduct.thumbnail ? (
-                  <img
-                    src={quickViewProduct.thumbnail}
-                    alt={quickViewProduct.name}
+                   <img
+                     src={quickViewProduct.thumbnail.startsWith('http') ? quickViewProduct.thumbnail : `https://backend.nextdigihome.com/storage/${quickViewProduct.thumbnail}`}
+                     alt={quickViewProduct.name}
                     className="w-full h-64 lg:h-full object-cover"
                   />
                 ) : (

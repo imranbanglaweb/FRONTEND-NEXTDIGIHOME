@@ -104,7 +104,7 @@ export default function ProductDetailPage() {
     }
 
     if (product.thumbnail) {
-      return [product.thumbnail];
+      return [product.thumbnail.startsWith('http') ? product.thumbnail : `https://backend.nextdigihome.com/storage/${product.thumbnail}`];
     }
 
     return [];
