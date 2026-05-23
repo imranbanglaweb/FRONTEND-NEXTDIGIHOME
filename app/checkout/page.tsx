@@ -447,7 +447,7 @@ export default function CheckoutPage() {
                 </div>
                 <div className="flex justify-between">
                   <span className="text-[#737373]">Total:</span>
-                  <span className="text-[#fafafa] font-bold">${subtotal.toFixed(2)}</span>
+                  <span className="text-[#fafafa] font-bold">৳${subtotal.toFixed(2)}</span>
                 </div>
               </div>
             </div>
@@ -794,7 +794,7 @@ export default function CheckoutPage() {
                           <div className="bg-gradient-to-r from-[#00d4aa]/10 to-[#8b5cf6]/10 rounded-lg p-4 border border-[#00d4aa]/20">
                             <div className="flex justify-between items-center">
                               <span className="text-[#fafafa] font-semibold">Amount to Pay:</span>
-                              <span className="text-[#00d4aa] font-bold text-xl">${subtotal.toFixed(2)}</span>
+                              <span className="text-[#00d4aa] font-bold text-xl">৳${subtotal.toFixed(2)}</span>
                             </div>
                           </div>
                         </div>
@@ -816,13 +816,13 @@ export default function CheckoutPage() {
                             <p className="text-[#fafafa] font-medium text-sm">{item.name}</p>
                             <p className="text-xs text-[#737373]">Qty: {item.quantity}</p>
                           </div>
-                          <p className="text-[#00d4aa] font-bold text-sm">${item.total.toFixed(2)}</p>
+                          <p className="text-[#00d4aa] font-bold text-sm">৳${item.total.toFixed(2)}</p>
                         </div>
                       ))}
                       <hr className="border-[#2a2a30] my-4" />
                       <div className="flex justify-between items-center p-4 bg-gradient-to-r from-[#00d4aa]/10 to-[#8b5cf6]/10 rounded-lg border border-[#00d4aa]/20">
                         <span className="text-[#fafafa] font-bold text-lg">Total</span>
-                        <span className="text-[#00d4aa] font-bold text-xl">${subtotal.toFixed(2)}</span>
+                        <span className="text-[#00d4aa] font-bold text-xl">৳${subtotal.toFixed(2)}</span>
                       </div>
                     </div>
                   </div>
@@ -913,13 +913,13 @@ export default function CheckoutPage() {
                   <p className="text-[#fafafa] font-medium">{item.name}</p>
                   <p className="text-sm text-[#737373]">Qty: {item.quantity}</p>
                 </div>
-                <p className="text-[#00d4aa] font-bold">${item.total.toFixed(2)}</p>
+                <p className="text-[#00d4aa] font-bold">৳${item.total.toFixed(2)}</p>
               </div>
             ))}
             <hr className="border-[#2a2a30] my-3" />
             <div className="flex justify-between text-lg">
               <span className="text-[#fafafa] font-bold">Total</span>
-              <span className="text-[#00d4aa] font-bold">${subtotal.toFixed(2)}</span>
+              <span className="text-[#00d4aa] font-bold">৳${subtotal.toFixed(2)}</span>
             </div>
           </div>
         </div>
@@ -1140,7 +1140,7 @@ export default function CheckoutPage() {
             disabled={submitting}
             className="w-full group relative overflow-hidden px-8 py-4 rounded-xl font-bold text-lg transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed bg-gradient-to-r from-[#00d4aa] to-[#8b5cf6] text-[#0f0f12] hover:scale-[1.02] hover:shadow-[0_0_50px_rgba(0,212,170,0.5)]"
           >
-            {submitting ? 'Processing...' : `Place Order - $${subtotal.toFixed(2)}`}
+            {submitting ? 'Processing...' : `Place Order - ৳${subtotal.toFixed(2)}`}
           </button>
 
             <p className="text-center text-xs text-[#737373]">

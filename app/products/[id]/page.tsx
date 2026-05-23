@@ -7,6 +7,12 @@ import {
   ArrowLeftIcon,
   StarIcon,
   CheckIcon,
+  TagIcon,
+  FolderIcon,
+  ClockIcon,
+  BoltIcon,
+  TruckIcon,
+  ArrowRightIcon,
 } from '@heroicons/react/24/outline';
 import Swal from 'sweetalert2';
 import { getStorageUrl, BACKEND_BASE_URL } from '../../utils/api';
@@ -46,6 +52,8 @@ export default function ProductDetailPage() {
   const [isLoadingCart, setIsLoadingCart] = useState<boolean>(false);
   const [isPlaying, setIsPlaying] = useState<boolean>(true);
 
+  const [relatedProducts, setRelatedProducts] = useState<Product[]>([]);
+
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
   // =========================
@@ -69,6 +77,22 @@ export default function ProductDetailPage() {
       const data = await response.json();
 
       setProduct(data);
+
+      // Fetch related products (same category, exclude current)
+      try {
+        const relatedRes = await fetch(
+          `${BACKEND_BASE_URL}/api/products?category=${data.category}&per_page=8`
+        );
+        if (relatedRes.ok) {
+          const relatedData = await relatedRes.json();
+          const filtered = (relatedData.data || []).filter(
+            (p: Product) => p.id !== data.id
+          );
+          setRelatedProducts(filtered.slice(0, 8));
+        }
+      } catch (e) {
+        console.error('Failed to load related products');
+      }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Something went wrong');
     } finally {
@@ -436,14 +460,14 @@ export default function ProductDetailPage() {
               <div className="mb-6">
                 <div className="flex flex-wrap items-center gap-4">
                   <span className="text-4xl sm:text-5xl font-bold text-[#00d4aa]">
-                     ৳${product.price}
+                      ৳{product.price}
                   </span>
 
                   {product.compare_price &&
                     product.compare_price > product.price && (
                       <>
                         <span className="text-xl sm:text-2xl text-gray-500 line-through">
-                           ৳${product.compare_price}
+                            ৳{product.compare_price}
                         </span>
 
                         <span className="px-3 py-1 rounded-lg bg-red-500/20 text-red-400 border border-red-500/30 font-bold">
@@ -524,88 +548,102 @@ export default function ProductDetailPage() {
               </div>
             </div>
 
-            {/* DETAILS */}
-            <div className="bg-[#16161a] border border-[#2a2a30] rounded-xl sm:rounded-2xl lg:rounded-3xl p-4 sm:p-5 md:p-6 lg:p-8 shadow-xl">
-              <h2 className="text-2xl font-bold mb-6">
-                Product Details
-              </h2>
+            {/* DETAILS - PREMIUM ICON STYLE */}
+            <div className="bg-[#16161a] border border-[#2a2a30] rounded-xl sm:rounded-2xl lg:rounded-3xl p-6 sm:p-7 md:p-8 shadow-xl">
+              <div className="flex items-center gap-3 mb-8">
+                <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-[#00d4aa] to-[#8b5cf6] flex items-center justify-center">
+                  <BoltIcon className="w-5 h-5 text-black" />
+                </div>
+                <h2 className="text-2xl font-bold tracking-tight">Product Details</h2>
+              </div>
 
-              <div className="space-y-5">
-                <div className="flex justify-between gap-4 border-b border-[#2a2a30] pb-4">
-                  <span className="text-gray-400">
-                    Product Type
-                  </span>
-
-                  <span className="text-right">
-                    {product.digital
-                      ? 'Digital Product'
-                      : 'Physical Product'}
-                  </span>
+              <div className="space-y-6">
+                {/* Product Type */}
+                <div className="flex items-start justify-between gap-4 pb-5 border-b border-[#2a2a30]">
+                  <div className="flex items-center gap-3 text-gray-400">
+                    <div className="w-9 h-9 rounded-xl bg-[#0f0f12] border border-[#2a2a30] flex items-center justify-center flex-shrink-0">
+                      <CheckIcon className="w-4 h-4" />
+                    </div>
+                    <div>
+                      <div className="text-sm text-gray-500">Product Type</div>
+                      <div className="font-semibold text-[#fafafa] mt-0.5">
+                        {product.digital ? 'Digital Product' : 'Physical Product'}
+                      </div>
+                    </div>
+                  </div>
                 </div>
 
-                <div className="flex justify-between gap-4 border-b border-[#2a2a30] pb-4">
-                  <span className="text-gray-400">
-                    Category
-                  </span>
-
-                  <span className="text-right">
-                    {product.category}
-                  </span>
+                {/* Category */}
+                <div className="flex items-start justify-between gap-4 pb-5 border-b border-[#2a2a30]">
+                  <div className="flex items-center gap-3 text-gray-400">
+                    <div className="w-9 h-9 rounded-xl bg-[#0f0f12] border border-[#2a2a30] flex items-center justify-center flex-shrink-0">
+                      <FolderIcon className="w-4 h-4" />
+                    </div>
+                    <div>
+                      <div className="text-sm text-gray-500">Category</div>
+                      <div className="font-semibold text-[#fafafa] mt-0.5">
+                        {product.category}
+                      </div>
+                    </div>
+                  </div>
                 </div>
 
-                <div className="flex justify-between gap-4 border-b border-[#2a2a30] pb-4">
-                  <span className="text-gray-400">
-                    Delivery
-                  </span>
-
-                  <span className="text-right">
-                    {product.digital
-                      ? 'Instant Download'
-                      : 'Shipping'}
-                  </span>
+                {/* Delivery */}
+                <div className="flex items-start justify-between gap-4 pb-5 border-b border-[#2a2a30]">
+                  <div className="flex items-center gap-3 text-gray-400">
+                    <div className="w-9 h-9 rounded-xl bg-[#0f0f12] border border-[#2a2a30] flex items-center justify-center flex-shrink-0">
+                      {product.digital ? (
+                        <BoltIcon className="w-4 h-4" />
+                      ) : (
+                        <TruckIcon className="w-4 h-4" />
+                      )}
+                    </div>
+                    <div>
+                      <div className="text-sm text-gray-500">Delivery</div>
+                      <div className="font-semibold text-[#fafafa] mt-0.5">
+                        {product.digital ? 'Instant Download' : 'Standard Shipping'}
+                      </div>
+                    </div>
+                  </div>
                 </div>
 
-                <div className="flex justify-between gap-4 border-b border-[#2a2a30] pb-4">
-                  <span className="text-gray-400">
-                    Updated
-                  </span>
-
-                  <span className="text-right">
-                    {new Date(
-                      product.updated_at
-                    ).toLocaleDateString()}
-                  </span>
+                {/* Last Updated */}
+                <div className="flex items-start justify-between gap-4 pb-5 border-b border-[#2a2a30]">
+                  <div className="flex items-center gap-3 text-gray-400">
+                    <div className="w-9 h-9 rounded-xl bg-[#0f0f12] border border-[#2a2a30] flex items-center justify-center flex-shrink-0">
+                      <ClockIcon className="w-4 h-4" />
+                    </div>
+                    <div>
+                      <div className="text-sm text-gray-500">Last Updated</div>
+                      <div className="font-semibold text-[#fafafa] mt-0.5">
+                        {new Date(product.updated_at).toLocaleDateString('en-US', {
+                          month: 'short',
+                          day: 'numeric',
+                          year: 'numeric',
+                        })}
+                      </div>
+                    </div>
+                  </div>
                 </div>
 
-                {/* TAGS */}
+                {/* Tags */}
                 {product.tags && product.tags.length > 0 && (
-                  <div>
-                    <span className="block text-gray-400 mb-3">
-                      Tags
-                    </span>
-
-                    <div className="flex flex-wrap gap-2">
+                  <div className="pt-2">
+                    <div className="flex items-center gap-3 text-gray-400 mb-3">
+                      <div className="w-9 h-9 rounded-xl bg-[#0f0f12] border border-[#2a2a30] flex items-center justify-center flex-shrink-0">
+                        <TagIcon className="w-4 h-4" />
+                      </div>
+                      <div className="text-sm text-gray-500">Tags</div>
+                    </div>
+                    <div className="flex flex-wrap gap-2 pl-12">
                       {product.tags.map((tag, index) => (
                         <span
                           key={index}
-                          className="px-3 py-1 rounded-full bg-[#0f0f12] border border-[#2a2a30] text-sm"
+                          className="px-3 py-1 rounded-full bg-[#0f0f12] border border-[#2a2a30] text-sm hover:border-[#00d4aa]/50 transition-colors"
                         >
                           #{tag}
                         </span>
                       ))}
-                    </div>
-                  </div>
-                )}
-
-                {/* DESCRIPTION */}
-                {product.detailed_description && (
-                  <div className="pt-4">
-                    <h3 className="text-xl font-semibold mb-4">
-                      Description
-                    </h3>
-
-                    <div className="text-gray-400 leading-8 whitespace-pre-line">
-                      {product.detailed_description}
                     </div>
                   </div>
                 )}
@@ -625,6 +663,61 @@ export default function ProductDetailPage() {
             )}
           </div>
         </div>
+
+        {/* RELATED PRODUCTS CAROUSEL */}
+        {relatedProducts.length > 0 && (
+          <div className="mt-16">
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-2xl font-bold tracking-tight">You might also like</h2>
+              <Link 
+                href="/products" 
+                className="text-sm text-[#00d4aa] hover:underline flex items-center gap-1"
+              >
+                View all products <ArrowRightIcon className="w-4 h-4" />
+              </Link>
+            </div>
+
+            <div className="relative">
+              <div className="flex gap-6 overflow-x-auto pb-6 snap-x snap-mandatory scroll-smooth no-scrollbar">
+                {relatedProducts.map((related) => (
+                  <Link
+                    key={related.id}
+                    href={`/products/${related.slug || related.id}`}
+                    className="group flex-shrink-0 w-64 sm:w-72 bg-[#16161a] border border-[#2a2a30] rounded-2xl overflow-hidden hover:border-[#00d4aa]/40 transition-all duration-300 snap-start"
+                  >
+                    <div className="relative aspect-video bg-[#0f0f12]">
+                      {related.thumbnail ? (
+                        <img
+                          src={getStorageUrl(related.thumbnail)!}
+                          alt={related.name}
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                        />
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center text-4xl text-gray-600">
+                          📦
+                        </div>
+                      )}
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+                    </div>
+                    <div className="p-4">
+                      <div className="font-semibold text-[#fafafa] line-clamp-2 group-hover:text-[#00d4aa] transition-colors">
+                        {related.name}
+                      </div>
+                      <div className="mt-3 flex items-center justify-between">
+                        <span className="text-lg font-bold text-[#00d4aa]">
+                          ৳{related.price}
+                        </span>
+                        <span className="text-xs px-2 py-1 rounded bg-[#0f0f12] border border-[#2a2a30] text-gray-400">
+                          {related.category}
+                        </span>
+                      </div>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

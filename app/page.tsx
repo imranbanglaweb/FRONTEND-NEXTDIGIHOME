@@ -291,7 +291,7 @@ export default function Home() {
         <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(42,42,48,0.1)_1px,transparent_1px),linear-gradient(to_bottom,rgba(42,42,48,0.1)_1px,transparent_1px)] bg-[size:80px_80px] opacity-40" />
 
         {/* Slider Content */}
-        <div className="slider-content relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16">
+        <div className="slider-content relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6">
           {!loading && heroSlides.map((slide, index) => (
             <div
               key={slide.id}
@@ -302,155 +302,115 @@ export default function Home() {
               }`}
             >
               <div className="min-h-screen flex items-center justify-center px-4 sm:px-6 lg:px-8">
-                <div className="grid md:grid-cols-2 gap-6 lg:gap-16 items-start w-full max-w-7xl pt-20">
-                  {/* Premium Content Left */}
-                  <div className="text-center lg:text-left space-y-8">
-                    {/* Brand Badge */}
-                    <div className="inline-flex items-center gap-3 px-4 py-3 rounded-full border border-[#00d4aa]/30 bg-[#00d4aa]/5 backdrop-blur-md mb-6 animate-fade-in-up hover:border-[#00d4aa]/60 transition-all group cursor-pointer">
-                      <span className="w-3 h-3 rounded-full bg-gradient-to-r from-[#00d4aa] to-[#8b5cf6] animate-pulse"></span>
-                      <span className="text-sm font-semibold bg-gradient-to-r from-[#00d4aa] to-[#8b5cf6] bg-clip-text text-transparent">Next Digi Home Premium Marketplace</span>
-                      <span className="text-xs text-[#00d4aa] ml-1">★ Trusted by 50K+ Users</span>
-                    </div>
+                <div className="grid md:grid-cols-2 gap-6 lg:gap-16 items-start w-full max-w-7xl pt-8">
+                  {/* Premium Content Left - Dynamic from Products */}
+                  {(() => {
+                    const top5Products = (allProducts.length > 0 ? allProducts : fallbackProducts).slice(0, 3);
+                    const activeProduct = top5Products[currentSlide % Math.max(top5Products.length, 1)] || top5Products[0];
+                    if (!activeProduct) return null;
 
-                    {/* Main Heading - Premium Typography */}
-                    <div className="space-y-4">
-                      <h1 className="text-4xl md:text-5xl lg:text-6xl font-black leading-tight animate-fade-in-up tracking-tight">
-                        <span className="block text-[#fafafa] mb-2">{slide.title}</span>
-                        <span className="block bg-gradient-to-r from-[#00d4aa] via-[#8b5cf6] to-[#ff6b9d] bg-clip-text text-transparent animate-pulse">
-                          {slide.subtitle}
-                        </span>
-                      </h1>
-                    </div>
+                    return (
+                      <div className="text-center lg:text-left space-y-8">
+                        {/* Brand Badge */}
+                        <div className="inline-flex items-center gap-3 px-4 py-3 rounded-full border border-[#00d4aa]/30 bg-[#00d4aa]/5 backdrop-blur-md mb-6 animate-fade-in-up hover:border-[#00d4aa]/60 transition-all group cursor-pointer">
+                          <span className="w-3 h-3 rounded-full bg-gradient-to-r from-[#00d4aa] to-[#8b5cf6] animate-pulse"></span>
+                          <span className="text-sm font-semibold bg-gradient-to-r from-[#00d4aa] to-[#8b5cf6] bg-clip-text text-transparent">Next Digi Home Premium Marketplace</span>
+                          <span className="text-xs text-[#00d4aa] ml-1">★ Trusted by 50K+ Users</span>
+                        </div>
 
-                    {/* Premium Description */}
-                    <p className="text-base md:text-lg lg:text-xl text-[#b0b0b0] max-w-2xl leading-relaxed animate-fade-in-up font-light">
-                      {slide.description}
-                    </p>
+                        {/* Main Heading - Dynamic from Product */}
+                        <div className="space-y-4">
+                          <h1 className="text-4xl md:text-5xl lg:text-6xl font-black leading-tight animate-fade-in-up tracking-tight">
+                            <span className="block text-[#fafafa] mb-2">{activeProduct.name}</span>
+                            <span className="block bg-gradient-to-r from-[#00d4aa] via-[#8b5cf6] to-[#ff6b9d] bg-clip-text text-transparent animate-pulse">
+                              {activeProduct.category || "Premium Digital Product"}
+                            </span>
+                          </h1>
+                        </div>
 
+                        {/* Premium Description - Dynamic from Product */}
+                        <p className="text-base md:text-lg lg:text-xl text-[#b0b0b0] max-w-2xl leading-relaxed animate-fade-in-up font-light">
+                          {activeProduct.description || "High-quality digital asset crafted for modern professionals."}
+                        </p>
 
+                        {/* Premium CTA Buttons */}
+                        <div className="flex flex-col sm:flex-row gap-4 pt-4 animate-fade-in-up">
+                          <Link
+                            href={`/products/${activeProduct.slug || activeProduct.id}`}
+                            className="group relative px-8 py-4 border-2 border-[#00d4aa]/50 text-[#fafafa] font-bold text-lg rounded-2xl overflow-hidden transition-all duration-300 hover:border-[#00d4aa] hover:text-[#00d4aa] bg-[#1a1a1f]/20 backdrop-blur-sm"
+                          >
+                            <span className="absolute inset-0 bg-[#00d4aa]/10 scale-x-0 group-hover:scale-x-100 transition-transform origin-left"></span>
+                            <span className="relative flex items-center justify-center gap-2">
+                              View This Product
+                              <ArrowRightIcon className="w-4 h-4" />
+                            </span>
+                          </Link>
+                        </div>
+                      </div>
+                    );
+                   })()}
 
-                    {/* Premium CTA Buttons */}
-                    <div className="flex flex-col sm:flex-row gap-4 pt-4 animate-fade-in-up">
-                      <Link
-                        href={slide.cta_link || "/products"}
-                        className="group relative px-8 py-4 bg-gradient-to-r from-[#00d4aa] via-[#00d4aa] to-[#8b5cf6] text-[#0f0f12] font-bold text-lg rounded-2xl overflow-hidden transition-all duration-300 hover:scale-105 hover:shadow-lg border border-[#00d4aa]/30"
-                      >
-                        <span className="absolute inset-0 bg-white/20 opacity-0 group-hover:opacity-100 transition-opacity"></span>
-                        <span className="relative flex items-center justify-center gap-2">
-                          <span>✨</span>
-                          {slide.cta_text || "Explore Premium Products"}
-                          <ArrowRightIcon className="w-5 h-5 transition-transform group-hover:translate-x-2" />
-                        </span>
-                      </Link>
-                      <Link
-                        href="/products"
-                        className="group relative px-8 py-4 border-2 border-[#00d4aa]/50 text-[#fafafa] font-bold text-lg rounded-2xl overflow-hidden transition-all duration-300 hover:border-[#00d4aa] hover:text-[#00d4aa] bg-[#1a1a1f]/20 backdrop-blur-sm"
-                      >
-                        <span className="absolute inset-0 bg-[#00d4aa]/10 scale-x-0 group-hover:scale-x-100 transition-transform origin-left"></span>
-                        <span className="relative flex items-center justify-center gap-2">
-                          Browse All Products
-                          <ArrowRightIcon className="w-4 h-4" />
-                        </span>
-                      </Link>
-                    </div>
-                  </div>
-
-                    {/* Premium Right Side - Unique 3D Movable Products (Ultra Premium) */}
+                     {/* Premium Right Side - Single Product + 5 Products Bullets (Next/Prev) */}
                     <div className="relative hidden md:block">
                       <div className="relative">
                         {/* Deep luxurious glow */}
-                        <div className="absolute -inset-3 bg-gradient-to-r from-[#00d4aa] via-[#8b5cf6] via-[#ff6b9d] to-[#00d4aa] rounded-[3rem] blur-[70px] opacity-[0.15] group-hover:opacity-25 transition-all duration-700"></div>
+                        <div className="absolute -inset-5 bg-gradient-to-r from-[#00d4aa] via-[#8b5cf6] to-[#ff6b9d] rounded-[3.5rem] blur-[95px] opacity-[0.17]"></div>
 
-                        {/* Main Container with Perspective */}
-                        <div 
-                          className="relative bg-[#0a0a0d]/95 backdrop-blur-3xl border border-white/10 rounded-3xl p-7 shadow-[0_20px_70px_rgb(0,0,0,0.65)]"
-                          style={{ perspective: '1400px' }}
-                        >
-                          {/* Header */}
-                          <div className="flex items-center justify-between mb-6">
-                            <div>
-                              <div className="text-[10px] uppercase tracking-[3px] font-medium text-[#00d4aa]/80">Handpicked for You</div>
-                              <div className="text-3xl font-semibold tracking-[-1px] text-[#fafafa]">Premium Collection</div>
-                            </div>
-                            <Link 
-                              href="/products" 
-                              className="px-6 py-2.5 text-sm font-semibold rounded-2xl border border-white/15 hover:bg-white/5 hover:border-[#00d4aa]/50 transition-all flex items-center gap-2"
-                            >
-                              View Full Catalog
-                              <ArrowRightIcon className="w-4 h-4" />
-                            </Link>
-                          </div>
+                        <div className="relative bg-[#0a0a0d]/95 backdrop-blur-3xl border border-white/10 rounded-3xl p-5 shadow-[0_28px_90px_rgb(0,0,0,0.72)]">
+                          {(() => {
+                            const top5 = (allProducts.length > 0 ? allProducts : fallbackProducts).slice(0, 3);
+                            const currentProduct = top5[currentSlide % Math.max(top5.length, 1)] || top5[0];
+                            if (!currentProduct) return null;
 
-                          {/* 3D Perspective Product Grid */}
-                          <div className="grid grid-cols-3 gap-4" style={{ transformStyle: 'preserve-3d' }}>
-                            {(allProducts.length > 0 ? allProducts.slice(0, 6) : fallbackProducts).map((product, idx) => {
-                              // Different base rotation for each card to create dynamic scattered premium look
-                              const rotations = [-12, -5, 4, 9, -3, 7];
-                              const baseRotate = rotations[idx % rotations.length];
-
-                              return (
-                                <Link
-                                  key={product.id || idx}
-                                  href={`/products/${product.slug || product.id}`}
-                                  className="group/card relative block rounded-2xl bg-[#121216] border border-white/10 overflow-hidden transition-all duration-500 cursor-pointer"
-                                  style={{
-                                    transform: `rotateY(${baseRotate}deg) rotateX(4deg)`,
-                                    transformStyle: 'preserve-3d',
-                                    transition: 'transform 0.6s cubic-bezier(0.23, 1.0, 0.32, 1), box-shadow 0.4s ease',
-                                  }}
-                                  onMouseMove={(e) => {
-                                    const rect = e.currentTarget.getBoundingClientRect();
-                                    const x = ((e.clientX - rect.left) / rect.width - 0.5) * 24;
-                                    const y = ((e.clientY - rect.top) / rect.height - 0.5) * -18;
-                                    e.currentTarget.style.transform = `rotateY(${x + baseRotate}deg) rotateX(${y + 4}deg) translateZ(12px)`;
-                                  }}
-                                  onMouseLeave={(e) => {
-                                    e.currentTarget.style.transform = `rotateY(${baseRotate}deg) rotateX(4deg)`;
-                                  }}
-                                >
-                                  {/* Product Visual with Depth */}
-                                  <div className="relative h-28 w-full bg-[#1a1a1f] flex items-center justify-center overflow-hidden">
-                                    {product.thumbnail ? (
-                                      <img
-                                        src={getStorageUrl(product.thumbnail)!}
-                                        alt={product.name}
-                                        className="h-full w-full object-cover transition-all duration-700 group-hover/card:scale-110"
-                                        style={{ transform: 'translateZ(20px)' }}
-                                      />
-                                    ) : (
-                                      <div className="text-[52px] opacity-90 transition-transform duration-500 group-hover/card:scale-110">
-                                        {['📄','📊','🚀','🎯','💼','✨'][idx % 6]}
-                                      </div>
-                                    )}
-                                    {/* Subtle inner glow */}
-                                    <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-transparent to-black/30" />
+                            return (
+                              <>
+                                {/* Single Premium Product */}
+                                <div className="relative aspect-[16/10] rounded-2xl overflow-hidden mb-5 border border-white/10 shadow-2xl">
+                                  {currentProduct.thumbnail ? (
+                                    <img
+                                      src={getStorageUrl(currentProduct.thumbnail)!}
+                                      alt={currentProduct.name}
+                                      className="w-full h-full object-cover transition-all duration-500"
+                                    />
+                                  ) : (
+                                    <div className="w-full h-full bg-gradient-to-br from-[#1a1a1f] to-[#2a2a30] flex items-center justify-center text-7xl">
+                                      🚀
+                                    </div>
+                                  )}
+                                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
+                                  <div className="absolute top-4 left-4 px-3 py-1 bg-white/10 backdrop-blur-xl border border-white/20 rounded-full text-[10px] font-semibold tracking-wider text-white">
+                                    PREMIUM
                                   </div>
+                                </div>
 
-                                  {/* Content */}
-                                  <div className="p-4" style={{ transform: 'translateZ(30px)' }}>
-                                    <div className="font-semibold text-[#fafafa] text-[15px] leading-[1.1] tracking-[-0.3px] line-clamp-2 group-hover/card:text-[#00d4aa] transition-colors">
-                                      {product.name}
-                                    </div>
-                                    <div className="mt-1.5 text-[11px] text-[#666] line-clamp-1">
-                                      {product.description || "Premium digital product"}
-                                    </div>
-
-                                    <div className="mt-4 flex items-center justify-between">
-                                      <div className="text-[21px] font-semibold tracking-tighter text-[#00d4aa]">
-                                        ৳{product.price}
-                                      </div>
-                                      <div className="text-[10px] px-3 py-1 rounded-full bg-white/5 border border-white/10 text-[#00d4aa] group-hover/card:bg-[#00d4aa] group-hover/card:text-black transition-all">
-                                        Quick View
-                                      </div>
+                                <div className="px-1">
+                                  <div className="flex items-end justify-between mb-2">
+                                    <h3 className="text-xl font-semibold tracking-[-0.8px] text-[#fafafa] pr-3 leading-tight">
+                                      {currentProduct.name}
+                                    </h3>
+                                    <div className="text-right">
+                                       <div className="text-2xl font-bold text-[#00d4aa] leading-none">
+                                          ৳{currentProduct.price}
+                                       </div>
                                     </div>
                                   </div>
 
-                                  {/* Edge highlight for premium depth */}
-                                  <div className="absolute inset-0 border border-white/5 rounded-2xl pointer-events-none" />
-                                </Link>
-                              );
-                            })}
-                          </div>
+                                  <p className="text-[#9ca3af] text-xs mb-4 line-clamp-1">
+                                    {currentProduct.description || "Premium digital asset"}
+                                  </p>
+
+                                   <div>
+                                     <Link
+                                       href={`/products/${currentProduct.slug || currentProduct.id}`}
+                                       className="block text-center px-4 py-2.5 bg-gradient-to-r from-[#00d4aa] to-[#8b5cf6] text-[#0f0f12] rounded-xl text-sm font-bold transition-all hover:brightness-110"
+                                     >
+                                       View Details
+                                     </Link>
+                                   </div>
+                                </div>
+                              </>
+                            );
+                          })()}
                         </div>
                       </div>
                     </div>
@@ -487,7 +447,7 @@ export default function Home() {
 
         {/* Enhanced Navigation Controls - Fixed Positioning */}
         <div className="navigation-container">
-          <div className="slider-navigation absolute top-1/2 -translate-y-1/2 left-4 z-20">
+          <div className="slider-navigation absolute top-1/2 -translate-y-1/2 left-4 z-40">
             <button
               onClick={prevSlide}
               className="w-14 h-14 rounded-full border border-[#2a2a30] bg-[#1a1a1f]/90 backdrop-blur-md flex items-center justify-center text-[#fafafa] hover:border-[#00d4aa] hover:text-[#00d4aa] hover:shadow-lg hover:scale-110 transition-all duration-300 group"
@@ -496,7 +456,7 @@ export default function Home() {
             </button>
           </div>
 
-          <div className="slider-navigation absolute top-1/2 -translate-y-1/2 right-4 z-20">
+          <div className="slider-navigation absolute top-1/2 -translate-y-1/2 right-4 z-40">
             <button
               onClick={nextSlide}
               className="w-14 h-14 rounded-full border border-[#2a2a30] bg-[#1a1a1f]/90 backdrop-blur-md flex items-center justify-center text-[#fafafa] hover:border-[#00d4aa] hover:text-[#00d4aa] hover:shadow-lg hover:scale-110 transition-all duration-300 group"
@@ -506,26 +466,24 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Slide Indicators */}
-        <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 flex gap-2 z-20">
-          {heroSlides.map((_, index) => {
-            const indicatorClass =
-              index === currentSlide
-                ? 'h-2 w-8 rounded-full transition-all duration-300 bg-gradient-to-r from-[#00d4aa] to-[#8b5cf6]'
-                : 'h-2 w-2 rounded-full transition-all duration-300 bg-[#2a2a30] hover:bg-[#737373]';
-            return (
-              <button
-                key={index}
-                onClick={() => setCurrentSlide(index)}
-                className={indicatorClass}
-              />
-            );
-          })}
-        </div>
-      </section>
+           {/* Top 3 Products Navigation - Bullets Only (Main Slider Navigation List) */}
+           <div className="absolute bottom-1 left-1/2 transform -translate-x-1/2 flex gap-2 z-30">
+             {Array.from({ length: 3 }).map((_, i) => (
+               <button
+                 key={i}
+                 onClick={() => setCurrentSlide(i % Math.max(heroSlides.length, 1))}
+                 className={`w-2 h-2 rounded-full transition-all ${
+                   i === currentSlide % 3
+                     ? 'bg-gradient-to-r from-[#00d4aa] to-[#8b5cf6] w-4'
+                     : 'bg-white/30 hover:bg-white/60'
+                 }`}
+               />
+             ))}
+           </div>
+       </section>
 
       {/* Stats Section */}
-      <section className="relative py-20 overflow-hidden">
+      <section className="relative py-12 overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-r from-[#00d4aa]/5 via-transparent to-[#8b5cf6]/5" />
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
@@ -589,11 +547,11 @@ export default function Home() {
                   <div className="flex items-center justify-between">
                     <div className="flex items-baseline gap-2">
                       <span className="text-xl font-bold text-[#00d4aa]">
-                        ${product.price}
+                                ৳{product.price}
                       </span>
                       {product.compare_price && (
                         <span className="text-sm text-[#737373] line-through">
-                          ${product.compare_price}
+                                  ৳{product.compare_price}
                         </span>
                       )}
                     </div>
@@ -819,11 +777,11 @@ export default function Home() {
                         <div className="flex items-center justify-between">
                           <div className="flex items-baseline gap-2">
                             <span className="text-xl font-bold text-[#00d4aa]">
-                              ${product.price}
+                               ৳{product.price}
                             </span>
                             {product.compare_price && product.compare_price > product.price && (
                               <span className="text-sm text-[#737373] line-through">
-                                ${product.compare_price}
+                                 ৳{product.compare_price}
                               </span>
                             )}
                           </div>

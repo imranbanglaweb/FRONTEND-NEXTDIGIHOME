@@ -508,7 +508,7 @@ export default function ClientLayout({
                 {/* Prime Bank */}
                 <div className="relative">
                   <img 
-                    src={getPublicUrl('images/payment/prime-bank.png')} 
+                    src={getPublicUrl('images/payment/prime-nabk.png')} 
                     alt="Prime Bank" 
                     className="h-8 md:h-9 object-contain transition-transform hover:scale-105"
                     onError={(e) => {

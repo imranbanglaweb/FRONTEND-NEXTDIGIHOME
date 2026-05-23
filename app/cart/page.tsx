@@ -231,7 +231,7 @@ export default function CartPage() {
                 <div className="space-y-4 mb-6">
                   <div className="flex justify-between text-[#737373]">
                     <span>Subtotal ({itemCount} items)</span>
-                    <span className="text-[#fafafa] font-medium">${subtotal.toFixed(2)}</span>
+                    <span className="text-[#fafafa] font-medium">৳${subtotal.toFixed(2)}</span>
                   </div>
                   <div className="flex justify-between text-[#737373]">
                     <span>Shipping</span>
@@ -240,7 +240,7 @@ export default function CartPage() {
                   <hr className="border-[#2a2a30]" />
                   <div className="flex justify-between text-lg">
                     <span className="text-[#fafafa] font-bold">Total</span>
-                    <span className="text-[#00d4aa] font-bold">${subtotal.toFixed(2)}</span>
+                    <span className="text-[#00d4aa] font-bold">৳${subtotal.toFixed(2)}</span>
                   </div>
                 </div>
 

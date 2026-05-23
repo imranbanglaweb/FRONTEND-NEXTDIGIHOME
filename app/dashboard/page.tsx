@@ -537,7 +537,7 @@ export default function DashboardPage() {
                     <CreditCardIcon className="w-6 h-6 text-white" />
                   </div>
                   <div>
-                    <p className="text-2xl font-bold text-[#fafafa]">${stats.totalSpent.toFixed(2)}</p>
+                    <p className="text-2xl font-bold text-[#fafafa]">৳${stats.totalSpent.toFixed(2)}</p>
                     <p className="text-sm text-[#737373]">Total Spent</p>
                   </div>
                 </div>
@@ -599,7 +599,7 @@ export default function DashboardPage() {
                       </div>
                       <div className="flex items-center gap-4">
                         {getStatusBadge(purchase.status)}
-                        <span className="font-bold text-[#fafafa]">${(typeof purchase.total === 'string' ? parseFloat(purchase.total) : purchase.total).toFixed(2)}</span>
+                        <span className="font-bold text-[#fafafa]">৳${(typeof purchase.total === 'string' ? parseFloat(purchase.total) : purchase.total).toFixed(2)}</span>
                       </div>
                     </div>
                   ))}
@@ -799,7 +799,7 @@ export default function DashboardPage() {
                       <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
                         <div className="flex items-center gap-3">
                           {getStatusBadge(purchase.status)}
-                          <span className="text-[#fafafa] font-bold">${parseFloat(purchase.total.toString()).toFixed(2)}</span>
+                          <span className="text-[#fafafa] font-bold">৳${parseFloat(purchase.total.toString()).toFixed(2)}</span>
                         </div>
 
                         {purchase.product?.digital && purchase.status === 'completed' && (
@@ -1113,7 +1113,7 @@ export default function DashboardPage() {
                     <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
                       <div className="flex items-center gap-3">
                         {getStatusBadge(purchase.status)}
-                        <span className="text-[#fafafa] font-bold">${(typeof purchase.total === 'string' ? parseFloat(purchase.total) : purchase.total).toFixed(2)}</span>
+                        <span className="text-[#fafafa] font-bold">৳${(typeof purchase.total === 'string' ? parseFloat(purchase.total) : purchase.total).toFixed(2)}</span>
                       </div>
 
                     {purchase.product?.digital && purchase.status === 'completed' && (
