@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
 import { ShoppingCartIcon, Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
-import { apiFetch, BACKEND_BASE_URL, getStorageUrl } from './utils/api';
+import { apiFetch, BACKEND_BASE_URL, getStorageUrl, getPublicUrl } from './utils/api';
 
 export default function ClientLayout({
   children,
@@ -454,26 +454,73 @@ export default function ClientLayout({
             <div className="text-center">
               <h4 className="text-sm font-semibold mb-4 text-[#fafafa]">Accepted Payment Methods</h4>
               <div className="flex flex-wrap items-center justify-center gap-5">
-                <img 
-                  src={getStorageUrl('payment-logo/bkash.png') || ''} 
-                  alt="bKash" 
-                  className="h-8 md:h-9 object-contain transition-transform hover:scale-105" 
-                />
-                <img 
-                  src={getStorageUrl('payment-logo/rocket.png') || ''} 
-                  alt="Rocket" 
-                  className="h-8 md:h-9 object-contain transition-transform hover:scale-105" 
-                />
-                <img 
-                  src={getStorageUrl('payment-logo/nagad.png') || ''} 
-                  alt="Nagad" 
-                  className="h-8 md:h-9 object-contain transition-transform hover:scale-105" 
-                />
-                <img 
-                  src={getStorageUrl('payment-logo/prime-bank.png') || ''} 
-                  alt="Prime Bank" 
-                  className="h-8 md:h-9 object-contain transition-transform hover:scale-105" 
-                />
+                {/* bKash */}
+                <div className="relative">
+                  <img 
+                    src={getPublicUrl('images/payment/bkash.jpg')} 
+                    alt="bKash" 
+                    className="h-8 md:h-9 object-contain transition-transform hover:scale-105"
+                    onError={(e) => {
+                      e.currentTarget.style.display = 'none';
+                      const fallback = e.currentTarget.nextElementSibling as HTMLElement;
+                      if (fallback) fallback.style.display = 'flex';
+                    }}
+                  />
+                  <div className="hidden items-center px-3 py-1 bg-[#E2136E] rounded-lg text-white text-xs font-bold">
+                    bKash
+                  </div>
+                </div>
+
+                {/* Rocket */}
+                <div className="relative">
+                  <img 
+                    src={getPublicUrl('images/payment/rocket.png')} 
+                    alt="Rocket" 
+                    className="h-8 md:h-9 object-contain transition-transform hover:scale-105"
+                    onError={(e) => {
+                      e.currentTarget.style.display = 'none';
+                      const fallback = e.currentTarget.nextElementSibling as HTMLElement;
+                      if (fallback) fallback.style.display = 'flex';
+                    }}
+                  />
+                  <div className="hidden items-center px-3 py-1 bg-[#F7941D] rounded-lg text-white text-xs font-bold">
+                    Rocket
+                  </div>
+                </div>
+
+                {/* Nagad */}
+                <div className="relative">
+                  <img 
+                    src={getPublicUrl('images/payment/nogod.png')} 
+                    alt="Nagad" 
+                    className="h-8 md:h-9 object-contain transition-transform hover:scale-105"
+                    onError={(e) => {
+                      e.currentTarget.style.display = 'none';
+                      const fallback = e.currentTarget.nextElementSibling as HTMLElement;
+                      if (fallback) fallback.style.display = 'flex';
+                    }}
+                  />
+                  <div className="hidden items-center px-3 py-1 bg-[#00A651] rounded-lg text-white text-xs font-bold">
+                    Nagad
+                  </div>
+                </div>
+
+                {/* Prime Bank */}
+                <div className="relative">
+                  <img 
+                    src={getPublicUrl('images/payment/prime-bank.png')} 
+                    alt="Prime Bank" 
+                    className="h-8 md:h-9 object-contain transition-transform hover:scale-105"
+                    onError={(e) => {
+                      e.currentTarget.style.display = 'none';
+                      const fallback = e.currentTarget.nextElementSibling as HTMLElement;
+                      if (fallback) fallback.style.display = 'flex';
+                    }}
+                  />
+                  <div className="hidden items-center px-3 py-1 bg-[#003087] rounded-lg text-white text-xs font-bold">
+                    Prime Bank
+                  </div>
+                </div>
               </div>
               <p className="text-[10px] text-[#737373] mt-2">All payments are secure &amp; encrypted</p>
             </div>

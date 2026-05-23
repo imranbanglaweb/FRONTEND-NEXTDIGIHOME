@@ -1,7 +1,7 @@
 // utils/api.ts
 
 // Clean base URL (always without trailing /api)
-const RAW_API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+const RAW_API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost/NEXTDIGIHOMEBACKEND';
 export const BACKEND_BASE_URL = RAW_API_URL.replace(/\/api\/?$/, '');
 
 const API_BASE_PATH = process.env.NEXT_PUBLIC_API_BASE_PATH || '/api';
@@ -71,4 +71,12 @@ export const getStorageUrl = (path: string | null | undefined): string | null =>
   if (path.startsWith('http')) return path;
   const cleanPath = path.replace(/^\/+/, '');
   return `${BACKEND_BASE_URL}/storage/${cleanPath}`;
+};
+
+// Helper for public folder assets (e.g. /public/images/payment/*.jpg)
+export const getPublicUrl = (path: string | null | undefined): string => {
+  if (!path) return '';
+  if (path.startsWith('http')) return path;
+  const cleanPath = path.replace(/^\/+/, '');
+  return `${BACKEND_BASE_URL}/public/${cleanPath}`;
 };
