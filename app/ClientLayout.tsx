@@ -449,6 +449,36 @@ export default function ClientLayout({
             </div>
           </div>
 
+          {/* Payment Methods Section */}
+          <div className="mt-8 pt-8 border-t border-[#2a2a30]">
+            <div className="text-center">
+              <h4 className="text-sm font-semibold mb-4 text-[#fafafa]">Accepted Payment Methods</h4>
+              <div className="flex flex-wrap items-center justify-center gap-5">
+                <img 
+                  src={getStorageUrl('payment-logo/bkash.png') || ''} 
+                  alt="bKash" 
+                  className="h-8 md:h-9 object-contain transition-transform hover:scale-105" 
+                />
+                <img 
+                  src={getStorageUrl('payment-logo/rocket.png') || ''} 
+                  alt="Rocket" 
+                  className="h-8 md:h-9 object-contain transition-transform hover:scale-105" 
+                />
+                <img 
+                  src={getStorageUrl('payment-logo/nagad.png') || ''} 
+                  alt="Nagad" 
+                  className="h-8 md:h-9 object-contain transition-transform hover:scale-105" 
+                />
+                <img 
+                  src={getStorageUrl('payment-logo/prime-bank.png') || ''} 
+                  alt="Prime Bank" 
+                  className="h-8 md:h-9 object-contain transition-transform hover:scale-105" 
+                />
+              </div>
+              <p className="text-[10px] text-[#737373] mt-2">All payments are secure &amp; encrypted</p>
+            </div>
+          </div>
+
           <div className="mt-12 pt-8 border-t border-[#2a2a30] flex flex-col md:flex-row justify-between items-center text-sm text-[#737373]">
             <p>&copy; 2026 Next Digi Home. All rights reserved. Built for modern businesses worldwide.</p>
             <div className="flex items-center space-x-2 mt-4 md:mt-0">

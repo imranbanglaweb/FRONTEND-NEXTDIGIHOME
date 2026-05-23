@@ -73,12 +73,6 @@ export default function Home() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
 
-  // Helper function to truncate text
-  const truncateText = (text: string, maxLength: number = 80) => {
-    if (!text) return '';
-    return text.length > maxLength ? text.substring(0, maxLength) + '...' : text;
-  };
-
   const nextSlide = useCallback(() => {
     if (homeContent?.hero_sliders) {
       setCurrentSlide((prev) => (prev + 1) % homeContent.hero_sliders.length);
@@ -255,6 +249,15 @@ export default function Home() {
     }
   ];
 
+  const fallbackProducts: Product[] = [
+    { id: 101, name: "Premium Website Templates", slug: "premium-templates", description: "Modern responsive designs", price: 29, category: "templates" },
+    { id: 102, name: "Business Dashboard UI Kit", slug: "dashboard-ui-kit", description: "Analytics & admin templates", price: 39, category: "ui-kits" },
+    { id: 103, name: "Social Media Graphics Pack", slug: "social-graphics", description: "Ready-to-use marketing assets", price: 19, category: "graphics" },
+    { id: 104, name: "Startup Pitch Deck Templates", slug: "pitch-decks", description: "Investor-ready presentations", price: 24, category: "presentations" },
+    { id: 105, name: "E-commerce Conversion Toolkit", slug: "ecommerce-toolkit", description: "Landing page & funnel assets", price: 34, category: "templates" },
+    { id: 106, name: "AI Prompt Engineering Library", slug: "ai-prompts", description: "Advanced ChatGPT workflows", price: 15, category: "tools" },
+  ];
+
   const heroSlides = homeContent?.hero_sliders || fallbackSlides;
   const stats = homeContent?.stats || fallbackStats;
   const features = homeContent?.features || fallbackFeatures;
@@ -268,136 +271,6 @@ export default function Home() {
                           (product.description?.toLowerCase().includes(searchQuery.toLowerCase()) ?? false);
     return matchesCategory && matchesSearch;
   });
-
-  const addToCart = async (product: Product) => {
-    try {
-      const response = await fetch(`${BACKEND_BASE_URL}/api/cart`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        credentials: 'include',
-        body: JSON.stringify({
-          product_id: product.id,
-          quantity: 1,
-        }),
-      });
-
-      if (response.ok) {
-        const contentType = response.headers.get('content-type');
-        if (contentType && contentType.includes('application/json')) {
-          const data = await response.json();
-          if (data.success) {
-            // Trigger cart count update
-            window.dispatchEvent(new Event('cartUpdated'));
-
-            // Premium SweetAlert
-            Swal.fire({
-              title: 'Added to Cart! 🛒',
-              text: `${product.name} has been added to your cart`,
-              icon: 'success',
-              background: '#0f0f12',
-              color: '#fafafa',
-              confirmButtonColor: '#00d4aa',
-              confirmButtonText: 'Continue Shopping',
-              showClass: {
-                popup: 'swal2-show',
-                backdrop: 'swal2-backdrop-show',
-                icon: 'swal2-icon-show'
-              },
-              hideClass: {
-                popup: 'swal2-hide',
-                backdrop: 'swal2-backdrop-hide',
-                icon: 'swal2-icon-hide'
-              },
-              customClass: {
-                popup: 'glass-card border border-[#2a2a30] rounded-2xl',
-                confirmButton: 'bg-gradient-to-r from-[#00d4aa] to-[#8b5cf6] text-[#0f0f12] font-bold px-6 py-3 rounded-xl hover:scale-105 transition-all',
-                title: 'text-2xl font-bold text-[#fafafa] mb-4',
-                htmlContainer: 'text-[#737373] text-lg'
-              },
-              buttonsStyling: false,
-              timer: 3000,
-              timerProgressBar: true,
-              showCloseButton: true,
-              closeButtonHtml: '<span style="color: #737373; font-size: 24px;">&times;</span>',
-            });
-          } else {
-            Swal.fire({
-              title: 'Failed to Add',
-              text: 'Could not add item to cart. Please try again.',
-              icon: 'error',
-              background: '#0f0f12',
-              color: '#fafafa',
-              confirmButtonColor: '#ff4444',
-              confirmButtonText: 'Try Again',
-              customClass: {
-                popup: 'glass-card border border-red-500/30 rounded-2xl',
-                confirmButton: 'bg-red-500 text-white font-bold px-6 py-3 rounded-xl hover:bg-red-600 transition-all',
-                title: 'text-2xl font-bold text-red-400 mb-4',
-                htmlContainer: 'text-[#737373] text-lg'
-              },
-              buttonsStyling: false,
-            });
-          }
-        } else {
-          console.warn('Cart API returned non-JSON response');
-          Swal.fire({
-            title: 'Server Error',
-            text: 'Unable to connect to server. Please check your connection.',
-            icon: 'warning',
-            background: '#0f0f12',
-            color: '#fafafa',
-            confirmButtonColor: '#f59e0b',
-            confirmButtonText: 'OK',
-            customClass: {
-              popup: 'glass-card border border-yellow-500/30 rounded-2xl',
-              confirmButton: 'bg-yellow-500 text-[#0f0f12] font-bold px-6 py-3 rounded-xl hover:bg-yellow-600 transition-all',
-              title: 'text-2xl font-bold text-yellow-400 mb-4',
-              htmlContainer: 'text-[#737373] text-lg'
-            },
-            buttonsStyling: false,
-          });
-        }
-      } else {
-        console.warn('Cart API request failed');
-        Swal.fire({
-          title: 'Failed to Add',
-          text: 'Could not add item to cart. Please try again.',
-          icon: 'error',
-          background: '#0f0f12',
-          color: '#fafafa',
-          confirmButtonColor: '#ff4444',
-          confirmButtonText: 'Try Again',
-          customClass: {
-            popup: 'glass-card border border-red-500/30 rounded-2xl',
-            confirmButton: 'bg-red-500 text-white font-bold px-6 py-3 rounded-xl hover:bg-red-600 transition-all',
-            title: 'text-2xl font-bold text-red-400 mb-4',
-            htmlContainer: 'text-[#737373] text-lg'
-          },
-          buttonsStyling: false,
-        });
-      }
-    } catch (err) {
-      console.error('Failed to add to cart:', err);
-      Swal.fire({
-        title: 'Connection Error',
-        text: 'Failed to add to cart. Please check your internet connection.',
-        icon: 'error',
-        background: '#0f0f12',
-        color: '#fafafa',
-        confirmButtonColor: '#ff4444',
-        confirmButtonText: 'Retry',
-        customClass: {
-          popup: 'glass-card border border-red-500/30 rounded-2xl',
-          confirmButton: 'bg-red-500 text-white font-bold px-6 py-3 rounded-xl hover:bg-red-600 transition-all',
-          title: 'text-2xl font-bold text-red-400 mb-4',
-          htmlContainer: 'text-[#737373] text-lg'
-        },
-        buttonsStyling: false,
-      });
-    }
-  };
 
   return (
     <div>
@@ -662,11 +535,11 @@ export default function Home() {
           <div className="text-[#737373] text-sm font-medium">{stat.label}</div>
         </div>
       ))}
-          </div>
-        </div>
-      </section>
+           </div>
+         </div>
+       </section>
 
-      {/* Featured Products Section */}
+      {/* Real World Professional Use Cases Section */}
       <section className="relative py-24 overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-b from-[#1a1a1f] to-[#0f0f12]" />
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -1099,355 +972,11 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Trending & Featured Products Section */}
-      <section className="relative py-24 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-b from-[#0f0f12] via-[#1a1a2e]/30 to-[#0f0f12]" />
-        
-        {/* Animated background elements */}
-        <div className="absolute inset-0">
-          <div className="absolute top-0 left-1/4 w-96 h-96 bg-[#00d4aa] rounded-full mix-blend-screen filter blur-[150px] opacity-20 animate-float" />
-          <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-[#8b5cf6] rounded-full mix-blend-screen filter blur-[150px] opacity-20 animate-float animate-delay-2000" />
-        </div>
-
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-[#00d4aa]/30 bg-[#00d4aa]/5 backdrop-blur-md mb-6">
-              <span className="w-2 h-2 rounded-full bg-[#00d4aa] animate-pulse"></span>
-              <span className="text-sm font-semibold text-[#00d4aa]">🔥 TRENDING NOW</span>
-            </div>
-            <h2 className="text-4xl md:text-5xl font-bold mb-6 gradient-text">
-              Trending & Featured Products
-            </h2>
-            <p className="text-xl text-[#737373] max-w-2xl mx-auto">
-              Discover the most popular and highest-rated products trusted by thousands of professionals
-            </p>
-          </div>
-
-          {/* Featured Products Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {/* Premium Featured Card 1 */}
-            {allProducts[0] && (
-            <div className="group relative animate-fade-in-up">
-              <div className="absolute -inset-1 bg-gradient-to-r from-[#00d4aa] via-[#8b5cf6] to-[#ff6b9d] rounded-2xl blur-xl opacity-50 group-hover:opacity-100 transition-all duration-300"></div>
-              <div className="relative bg-gradient-to-br from-[#1a1a1f] to-[#0f0f12] rounded-2xl overflow-hidden border border-[#2a2a30] group-hover:border-[#00d4aa]/50 transition-all duration-300">
-                <div className="absolute top-0 right-0 px-4 py-2 bg-gradient-to-r from-[#ff6b9d] to-[#8b5cf6] rounded-bl-xl">
-                  <span className="text-xs font-bold text-white">BESTSELLER</span>
-                </div>
-                <div className="h-40 bg-gradient-to-br from-[#00d4aa]/20 to-[#8b5cf6]/20 flex items-center justify-center overflow-hidden relative group/img">
-                   {allProducts[0].thumbnail ? (
-                     <img src={getStorageUrl(allProducts[0].thumbnail)!} alt={allProducts[0].name} className="w-full h-full object-cover group-hover/img:scale-110 transition-transform duration-300" />
-                  ) : (
-                    <div className="text-6xl group-hover/img:scale-110 transition-transform duration-300">🎨</div>
-                  )}
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#0f0f12] via-transparent to-transparent opacity-60"></div>
-                </div>
-                <div className="p-6">
-                  <div className="flex items-start justify-between mb-3">
-                    <h3 className="text-lg font-bold text-[#fafafa] flex-1">{allProducts[0].name}</h3>
-                    <div className="flex gap-1">
-                      <span className="text-yellow-400">⭐</span>
-                      <span className="text-xs font-bold text-[#fafafa]">4.9</span>
-                    </div>
-                  </div>
-                  <p className="text-sm text-[#737373] mb-4">{truncateText(allProducts[0].description || 'Premium digital product')}</p>
-                  <div className="flex items-center justify-between">
-                    <span className="text-2xl font-bold gradient-text">${allProducts[0].price}</span>
-                    <button
-                      onClick={() => addToCart(allProducts[0])}
-                      className="px-4 py-2 bg-gradient-to-r from-[#00d4aa] to-[#8b5cf6] text-[#0f0f12] font-bold rounded-lg hover:shadow-lg hover:scale-105 transition-all text-sm"
-                    >
-                      Add to Cart
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-            )}
-
-            {/* Premium Featured Card 2 */}
-            {allProducts[1] && (
-            <div className="group relative animate-fade-in-up">
-              <div className="absolute -inset-1 bg-gradient-to-r from-[#8b5cf6] via-[#ff6b9d] to-[#00d4aa] rounded-2xl blur-xl opacity-50 group-hover:opacity-100 transition-all duration-300"></div>
-              <div className="relative bg-gradient-to-br from-[#1a1a1f] to-[#0f0f12] rounded-2xl overflow-hidden border border-[#2a2a30] group-hover:border-[#8b5cf6]/50 transition-all duration-300">
-                <div className="absolute top-0 right-0 px-4 py-2 bg-gradient-to-r from-[#00d4aa] to-[#8b5cf6] rounded-bl-xl">
-                  <span className="text-xs font-bold text-[#0f0f12]">⚡ NEW</span>
-                </div>
-                <div className="h-40 bg-gradient-to-br from-[#8b5cf6]/20 to-[#ff6b9d]/20 flex items-center justify-center overflow-hidden relative group/img">
-                   {allProducts[1].thumbnail ? (
-                     <img src={getStorageUrl(allProducts[1].thumbnail)!} alt={allProducts[1].name} className="w-full h-full object-cover group-hover/img:scale-110 transition-transform duration-300" />
-                  ) : (
-                    <div className="text-6xl group-hover/img:scale-110 transition-transform duration-300">💼</div>
-                  )}
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#0f0f12] via-transparent to-transparent opacity-60"></div>
-                </div>
-                <div className="p-6">
-                  <div className="flex items-start justify-between mb-3">
-                    <h3 className="text-lg font-bold text-[#fafafa] flex-1">{allProducts[1].name}</h3>
-                    <div className="flex gap-1">
-                      <span className="text-yellow-400">⭐</span>
-                      <span className="text-xs font-bold text-[#fafafa]">4.8</span>
-                    </div>
-                  </div>
-                  <p className="text-sm text-[#737373] mb-4">{truncateText(allProducts[1].description || 'Business automation tools')}</p>
-                  <div className="flex items-center justify-between">
-                    <span className="text-2xl font-bold gradient-text">${allProducts[1].price}</span>
-                    <button
-                      onClick={() => addToCart(allProducts[1])}
-                      className="px-4 py-2 bg-gradient-to-r from-[#8b5cf6] to-[#ff6b9d] text-[#0f0f12] font-bold rounded-lg hover:shadow-lg hover:scale-105 transition-all text-sm"
-                    >
-                      Add to Cart
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-            )}
-
-            {/* Premium Featured Card 3 */}
-            {allProducts[2] && (
-            <div className="group relative animate-fade-in-up">
-              <div className="absolute -inset-1 bg-gradient-to-r from-[#ff6b9d] via-[#00d4aa] to-[#8b5cf6] rounded-2xl blur-xl opacity-50 group-hover:opacity-100 transition-all duration-300"></div>
-              <div className="relative bg-gradient-to-br from-[#1a1a1f] to-[#0f0f12] rounded-2xl overflow-hidden border border-[#2a2a30] group-hover:border-[#ff6b9d]/50 transition-all duration-300">
-                <div className="absolute top-0 right-0 px-4 py-2 bg-gradient-to-r from-[#ff6b9d] to-[#00d4aa] rounded-bl-xl">
-                  <span className="text-xs font-bold text-white">HOT</span>
-                </div>
-                <div className="h-40 bg-gradient-to-br from-[#ff6b9d]/20 to-[#00d4aa]/20 flex items-center justify-center overflow-hidden relative group/img">
-                   {allProducts[2].thumbnail ? (
-                     <img src={getStorageUrl(allProducts[2].thumbnail)!} alt={allProducts[2].name} className="w-full h-full object-cover group-hover/img:scale-110 transition-transform duration-300" />
-                  ) : (
-                    <div className="text-6xl group-hover/img:scale-110 transition-transform duration-300">📱</div>
-                  )}
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#0f0f12] via-transparent to-transparent opacity-60"></div>
-                </div>
-                <div className="p-6">
-                  <div className="flex items-start justify-between mb-3">
-                    <h3 className="text-lg font-bold text-[#fafafa] flex-1">{allProducts[2].name}</h3>
-                    <div className="flex gap-1">
-                      <span className="text-yellow-400">⭐</span>
-                      <span className="text-xs font-bold text-[#fafafa]">5.0</span>
-                    </div>
-                  </div>
-                  <p className="text-sm text-[#737373] mb-4">{truncateText(allProducts[2].description || 'Responsive website templates')}</p>
-                  <div className="flex items-center justify-between">
-                    <span className="text-2xl font-bold gradient-text">${allProducts[2].price}</span>
-                    <button
-                      onClick={() => addToCart(allProducts[2])}
-                      className="px-4 py-2 bg-gradient-to-r from-[#ff6b9d] to-[#00d4aa] text-[#0f0f12] font-bold rounded-lg hover:shadow-lg hover:scale-105 transition-all text-sm"
-                    >
-                      Add to Cart
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-            )}
-
-            {/* Premium Featured Card 4 */}
-            {allProducts[3] && (
-            <div className="group relative animate-fade-in-up">
-              <div className="absolute -inset-1 bg-gradient-to-r from-[#00d4aa] via-[#ff6b9d] to-[#8b5cf6] rounded-2xl blur-xl opacity-50 group-hover:opacity-100 transition-all duration-300"></div>
-              <div className="relative bg-gradient-to-br from-[#1a1a1f] to-[#0f0f12] rounded-2xl overflow-hidden border border-[#2a2a30] group-hover:border-[#00d4aa]/50 transition-all duration-300">
-                <div className="absolute top-0 right-0 px-4 py-2 bg-gradient-to-r from-[#8b5cf6] to-[#00d4aa] rounded-bl-xl">
-                  <span className="text-xs font-bold text-white">PREMIUM</span>
-                </div>
-                <div className="h-40 bg-gradient-to-br from-[#00d4aa]/20 to-[#8b5cf6]/20 flex items-center justify-center overflow-hidden relative group/img">
-                   {allProducts[3].thumbnail ? (
-                     <img src={getStorageUrl(allProducts[3].thumbnail)!} alt={allProducts[3].name} className="w-full h-full object-cover group-hover/img:scale-110 transition-transform duration-300" />
-                  ) : (
-                    <div className="text-6xl group-hover/img:scale-110 transition-transform duration-300">🚀</div>
-                  )}
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#0f0f12] via-transparent to-transparent opacity-60"></div>
-                </div>
-                <div className="p-6">
-                  <div className="flex items-start justify-between mb-3">
-                    <h3 className="text-lg font-bold text-[#fafafa] flex-1">{allProducts[3].name}</h3>
-                    <div className="flex gap-1">
-                      <span className="text-yellow-400">⭐</span>
-                      <span className="text-xs font-bold text-[#fafafa]">4.9</span>
-                    </div>
-                  </div>
-                  <p className="text-sm text-[#737373] mb-4">{truncateText(allProducts[3].description || 'All-in-one startup toolkit')}</p>
-                  <div className="flex items-center justify-between">
-                    <span className="text-2xl font-bold gradient-text">${allProducts[3].price}</span>
-                    <button
-                      onClick={() => addToCart(allProducts[3])}
-                      className="px-4 py-2 bg-gradient-to-r from-[#00d4aa] to-[#8b5cf6] text-[#0f0f12] font-bold rounded-lg hover:shadow-lg hover:scale-105 transition-all text-sm"
-                    >
-                      Add to Cart
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-            )}
-          </div>
-
-          {/* View All Products Button */}
-          <div className="flex justify-center mt-12">
-            <Link
-              href="/products"
-              className="group relative inline-flex items-center px-8 py-4 bg-gradient-to-r from-[#00d4aa] via-[#8b5cf6] to-[#ff6b9d] text-[#0f0f12] font-bold text-lg rounded-xl overflow-hidden transition-all duration-300 hover:scale-105 hover:shadow-2xl"
-            >
-              <span className="absolute inset-0 bg-white/20 opacity-0 group-hover:opacity-100 transition-opacity"></span>
-              <span className="relative flex items-center gap-2">
-                View All Products
-                <ArrowRightIcon className="w-5 h-5 transition-transform group-hover:translate-x-1" />
-              </span>
-            </Link>
-          </div>
-        </div>
-      </section>
 
 
 
-      {/* Premium Bottom Section */}
-      <section className="relative py-24 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-r from-[#00d4aa]/5 via-transparent to-[#8b5cf6]/5" />
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            {/* Notifications Card */}
-            <div className="glass-card rounded-2xl border border-[#2a2a30] overflow-hidden hover:border-[#00d4aa]/30 transition-all duration-300 hover-lift animate-fade-in-up">
-              <div className="bg-gradient-to-r from-[#3b82f6] to-[#1d4ed8] p-6 border-b border-[#2a2a30]">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 rounded-xl bg-white/10 flex items-center justify-center text-xl">
-                      🔔
-                    </div>
-                    <div>
-                      <h3 className="text-xl font-bold text-white">System Updates</h3>
-                      <p className="text-sm text-blue-200">Latest announcements</p>
-                    </div>
-                  </div>
-                  <span className="inline-flex items-center px-3 py-1 rounded-full bg-red-500/20 text-red-300 text-xs font-semibold">3 New</span>
-                </div>
-              </div>
-              <div className="p-6 space-y-4">
-                <div className="flex items-start gap-4 pb-4 border-b border-[#2a2a30]">
-                  <div className="w-3 h-3 rounded-full bg-green-500 mt-2 flex-shrink-0"></div>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-semibold text-[#fafafa]">New Premium Features Released</p>
-                    <p className="text-xs text-[#737373] mt-1">2 hours ago</p>
-                  </div>
-                </div>
-                <div className="flex items-start gap-4 pb-4 border-b border-[#2a2a30]">
-                  <div className="w-3 h-3 rounded-full bg-blue-500 mt-2 flex-shrink-0"></div>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-semibold text-[#fafafa]">Marketplace Maintenance Completed</p>
-                    <p className="text-xs text-[#737373] mt-1">5 hours ago</p>
-                  </div>
-                </div>
-                <div className="flex items-start gap-4">
-                  <div className="w-3 h-3 rounded-full bg-yellow-500 mt-2 flex-shrink-0"></div>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-semibold text-[#fafafa]">Security Update Available</p>
-                    <p className="text-xs text-[#737373] mt-1">1 day ago</p>
-                  </div>
-                </div>
-              </div>
-            </div>
 
-            {/* Top Products Card */}
-            <div className="glass-card rounded-2xl border border-[#2a2a30] overflow-hidden hover:border-[#8b5cf6]/30 transition-all duration-300 hover-lift animate-fade-in-up">
-              <div className="bg-gradient-to-r from-[#8b5cf6] to-[#7c3aed] p-6 border-b border-[#2a2a30]">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 rounded-xl bg-white/10 flex items-center justify-center text-xl">
-                      ⭐
-                    </div>
-                    <div>
-                      <h3 className="text-xl font-bold text-white">Top Products</h3>
-                      <p className="text-sm text-purple-200">Best performers</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="p-6 space-y-4">
-                <div className="flex items-center justify-between pb-4 border-b border-[#2a2a30]">
-                  <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#ffd700] to-[#ffed4e] flex items-center justify-center text-lg font-bold">🏆</div>
-                    <div>
-                      <p className="text-sm font-semibold text-[#fafafa]">Premium Templates Pack</p>
-                      <p className="text-xs text-[#737373]">#1 Bestseller</p>
-                    </div>
-                  </div>
-                  <div className="text-right">
-                    <p className="text-lg font-bold gradient-text">2.5K</p>
-                    <p className="text-xs text-[#737373]">sales</p>
-                  </div>
-                </div>
-                <div className="flex items-center justify-between pb-4 border-b border-[#2a2a30]">
-                  <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#c0c0c0] to-[#e8e8e8] flex items-center justify-center text-lg font-bold">🥈</div>
-                    <div>
-                      <p className="text-sm font-semibold text-[#fafafa]">Design Tools Suite</p>
-                      <p className="text-xs text-[#737373]">#2 Popular</p>
-                    </div>
-                  </div>
-                  <div className="text-right">
-                    <p className="text-lg font-bold gradient-text">1.8K</p>
-                    <p className="text-xs text-[#737373]">sales</p>
-                  </div>
-                </div>
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#cd7f32] to-[#d4a574] flex items-center justify-center text-lg font-bold">🥉</div>
-                    <div>
-                      <p className="text-sm font-semibold text-[#fafafa]">Stock Resources Bundle</p>
-                      <p className="text-xs text-[#737373]">#3 Trending</p>
-                    </div>
-                  </div>
-                  <div className="text-right">
-                    <p className="text-lg font-bold gradient-text">1.2K</p>
-                    <p className="text-xs text-[#737373]">sales</p>
-                  </div>
-                </div>
-              </div>
-            </div>
 
-            {/* Statistics Card */}
-            <div className="glass-card rounded-2xl border border-[#2a2a30] overflow-hidden hover:border-[#00d4aa]/30 transition-all duration-300 hover-lift animate-fade-in-up">
-              <div className="bg-gradient-to-r from-[#06b6d4] to-[#0891b2] p-6 border-b border-[#2a2a30]">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 rounded-xl bg-white/10 flex items-center justify-center text-xl">
-                      👥
-                    </div>
-                    <div>
-                      <h3 className="text-xl font-bold text-white">Marketplace Stats</h3>
-                      <p className="text-sm text-cyan-200">Real-time metrics</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="p-6">
-                <div className="grid grid-cols-3 gap-4">
-                  <div className="text-center p-4 rounded-xl bg-[#2a2a30]/50 border border-[#2a2a30] hover:border-[#00d4aa]/30 transition-all">
-                    <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#00d4aa] to-[#8b5cf6] flex items-center justify-center mx-auto mb-2">
-                      📦
-                    </div>
-                    <p className="text-2xl font-bold gradient-text">20K+</p>
-                    <p className="text-xs text-[#737373] mt-1">Products</p>
-                  </div>
-                  <div className="text-center p-4 rounded-xl bg-[#2a2a30]/50 border border-[#2a2a30] hover:border-[#8b5cf6]/30 transition-all">
-                    <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#8b5cf6] to-[#00d4aa] flex items-center justify-center mx-auto mb-2">
-                      🛒
-                    </div>
-                    <p className="text-2xl font-bold gradient-text">100K+</p>
-                    <p className="text-xs text-[#737373] mt-1">Sales</p>
-                  </div>
-                  <div className="text-center p-4 rounded-xl bg-[#2a2a30]/50 border border-[#2a2a30] hover:border-[#00d4aa]/30 transition-all">
-                    <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#00d4aa] to-[#8b5cf6] flex items-center justify-center mx-auto mb-2">
-                      🏷️
-                    </div>
-                    <p className="text-2xl font-bold gradient-text">24</p>
-                    <p className="text-xs text-[#737373] mt-1">Categories</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
 
       {/* Real World Professional Use Cases Section */}
       <section className="relative py-24 overflow-hidden">
