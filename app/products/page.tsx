@@ -19,6 +19,24 @@ interface Product {
   category: string;
 }
 
+// Category Icons Mapping
+const categoryIconMap: Record<string, string> = {
+  'digital-marketing': '📱',
+  'web-development': '💻',
+  'graphic-design': '🎨',
+  'business-tools': '🛠️',
+  'education': '📚',
+  'photography': '📷',
+  'music-audio': '🎵',
+  'video-animation': '🎬',
+  'templates': '📄',
+  'ui-kits': '🎨',
+  'graphics': '🖼️',
+  'presentations': '📊',
+  'tools': '⚙️',
+  'all': '⭐'
+};
+
 export default function ProductsPage() {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
@@ -444,7 +462,7 @@ export default function ProductsPage() {
                   >
                     {categories.map((cat) => (
                       <option key={cat} value={cat}>
-                        {cat.charAt(0).toUpperCase() + cat.slice(1)}
+                        {categoryIconMap[cat.toLowerCase()] || '📌'} {cat.charAt(0).toUpperCase() + cat.slice(1)}
                       </option>
                     ))}
                   </select>

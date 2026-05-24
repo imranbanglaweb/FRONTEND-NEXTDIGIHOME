@@ -1,6 +1,13 @@
 import Link from "next/link";
 import { DocumentTextIcon, ScaleIcon } from "@heroicons/react/24/outline";
 import { fetchTermsContent } from "@/app/utils/api";
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: "Terms of Service",
+  description: "Read the terms of service for Next Digi Home. Learn about our 30-day money-back guarantee, licensing, and usage rights for all premium digital products.",
+  robots: { index: true, follow: true },
+};
 
 export const dynamic = 'force-dynamic';
 

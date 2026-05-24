@@ -7,6 +7,24 @@ import { ArrowRightIcon, CogIcon, ShoppingCartIcon, ChevronLeftIcon, ChevronRigh
 import Swal from 'sweetalert2';
 import { getStorageUrl, BACKEND_BASE_URL } from './utils/api';
 
+// Category Icons Mapping
+const categoryIconMap: Record<string, string> = {
+  'digital-marketing': '📱',
+  'web-development': '💻',
+  'graphic-design': '🎨',
+  'business-tools': '🛠️',
+  'education': '📚',
+  'photography': '📷',
+  'music-audio': '🎵',
+  'video-animation': '🎬',
+  'templates': '📄',
+  'ui-kits': '🎨',
+  'graphics': '🖼️',
+  'presentations': '📊',
+  'tools': '⚙️',
+  'all': '⭐'
+};
+
 interface HeroSlide {
   id: number;
   title: string;
@@ -301,11 +319,11 @@ export default function Home() {
                   : 'opacity-0 translate-y-8 z-0'
               }`}
             >
-              <div className="min-h-screen flex items-center justify-center px-4 sm:px-6 lg:px-8">
-                <div className="grid md:grid-cols-2 gap-6 lg:gap-16 items-start w-full max-w-7xl pt-8">
+              <div className="min-h-[100dvh] sm:min-h-screen flex items-center justify-center px-4 sm:px-6 lg:px-8 pb-16 sm:pb-0">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-16 items-center w-full max-w-7xl pt-8 sm:pt-4">
                   {/* Premium Content Left - Dynamic from Products */}
                   {(() => {
-                    const top5Products = (allProducts.length > 0 ? allProducts : fallbackProducts).slice(0, 3);
+                    const top5Products = (allProducts.length > 0 ? allProducts : fallbackProducts).slice(0, 6);
                     const activeProduct = top5Products[currentSlide % Math.max(top5Products.length, 1)] || top5Products[0];
                     if (!activeProduct) return null;
 
@@ -318,100 +336,123 @@ export default function Home() {
                           <span className="text-xs text-[#00d4aa] ml-1">★ Trusted by 50K+ Users</span>
                         </div>
 
-                        {/* Main Heading - Dynamic from Product */}
-                        <div className="space-y-4">
-                          <h1 className="text-4xl md:text-5xl lg:text-6xl font-black leading-tight animate-fade-in-up tracking-tight">
-                            <span className="block text-[#fafafa] mb-2">{activeProduct.name}</span>
-                            <span className="block bg-gradient-to-r from-[#00d4aa] via-[#8b5cf6] to-[#ff6b9d] bg-clip-text text-transparent animate-pulse">
-                              {activeProduct.category || "Premium Digital Product"}
-                            </span>
-                          </h1>
-                        </div>
+                         {/* Main Heading - Dynamic from Product - Better mobile scaling */}
+                         <div className="space-y-3 sm:space-y-4">
+                           <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black leading-[1.05] sm:leading-tight animate-fade-in-up tracking-[-1.5px] sm:tracking-tight">
+                             <span className="block text-[#fafafa] mb-1.5 sm:mb-2">{activeProduct.name}</span>
+                             <span className="block bg-gradient-to-r from-[#00d4aa] via-[#8b5cf6] to-[#ff6b9d] bg-clip-text text-transparent animate-pulse text-2xl sm:text-3xl md:text-4xl lg:text-5xl">
+                               {activeProduct.category || "Premium Digital Product"}
+                             </span>
+                           </h1>
+                         </div>
 
-                        {/* Premium Description - Dynamic from Product */}
-                        <p className="text-base md:text-lg lg:text-xl text-[#b0b0b0] max-w-2xl leading-relaxed animate-fade-in-up font-light">
-                          {activeProduct.description || "High-quality digital asset crafted for modern professionals."}
-                        </p>
+                         {/* Premium Description - Dynamic from Product */}
+                         <p className="text-sm sm:text-base md:text-lg lg:text-xl text-[#b0b0b0] max-w-2xl leading-relaxed animate-fade-in-up font-light">
+                           {activeProduct.description || "High-quality digital asset crafted for modern professionals."}
+                         </p>
 
-                        {/* Premium CTA Buttons */}
-                        <div className="flex flex-col sm:flex-row gap-4 pt-4 animate-fade-in-up">
-                          <Link
-                            href={`/products/${activeProduct.slug || activeProduct.id}`}
-                            className="group relative px-8 py-4 border-2 border-[#00d4aa]/50 text-[#fafafa] font-bold text-lg rounded-2xl overflow-hidden transition-all duration-300 hover:border-[#00d4aa] hover:text-[#00d4aa] bg-[#1a1a1f]/20 backdrop-blur-sm"
-                          >
-                            <span className="absolute inset-0 bg-[#00d4aa]/10 scale-x-0 group-hover:scale-x-100 transition-transform origin-left"></span>
-                            <span className="relative flex items-center justify-center gap-2">
-                              View This Product
-                              <ArrowRightIcon className="w-4 h-4" />
-                            </span>
-                          </Link>
-                        </div>
-                      </div>
-                    );
-                   })()}
+                         {/* Premium CTA Buttons */}
+                         <div className="flex flex-col sm:flex-row gap-4 pt-4 animate-fade-in-up">
+                           <Link
+                             href={`/products/${activeProduct.slug || activeProduct.id}`}
+                             className="group relative px-8 py-4 border-2 border-[#00d4aa]/50 text-[#fafafa] font-bold text-lg rounded-2xl overflow-hidden transition-all duration-300 hover:border-[#00d4aa] hover:text-[#00d4aa] bg-[#1a1a1f]/20 backdrop-blur-sm"
+                           >
+                             <span className="absolute inset-0 bg-[#00d4aa]/10 scale-x-0 group-hover:scale-x-100 transition-transform origin-left"></span>
+                             <span className="relative flex items-center justify-center gap-2">
+                               View This Product
+                               <ArrowRightIcon className="w-4 h-4" />
+                             </span>
+                           </Link>
+                         </div>
 
-                     {/* Premium Right Side - Single Product + 5 Products Bullets (Next/Prev) */}
-                    <div className="relative hidden md:block">
-                      <div className="relative">
-                        {/* Deep luxurious glow */}
-                        <div className="absolute -inset-5 bg-gradient-to-r from-[#00d4aa] via-[#8b5cf6] to-[#ff6b9d] rounded-[3.5rem] blur-[95px] opacity-[0.17]"></div>
+                         {/* Mobile-only compact product preview for better slider UX on phones */}
+                         <div className="md:hidden mt-6 bg-[#0a0a0d]/80 backdrop-blur border border-white/10 rounded-2xl p-4 flex gap-4 items-center">
+                           {activeProduct.thumbnail && (
+                             <img 
+                               src={getStorageUrl(activeProduct.thumbnail)!} 
+                               alt={activeProduct.name}
+                               className="w-20 h-20 rounded-xl object-cover border border-white/10 flex-shrink-0" 
+                             />
+                           )}
+                           <div className="min-w-0 flex-1">
+                             <div className="font-semibold text-sm text-[#fafafa] line-clamp-2">{activeProduct.name}</div>
+                             <div className="text-[#00d4aa] font-bold text-lg mt-0.5">৳{activeProduct.price}</div>
+                           </div>
+                         </div>
+                       </div>
+                     );
+                    })()}
 
-                        <div className="relative bg-[#0a0a0d]/95 backdrop-blur-3xl border border-white/10 rounded-3xl p-5 shadow-[0_28px_90px_rgb(0,0,0,0.72)]">
-                          {(() => {
-                            const top5 = (allProducts.length > 0 ? allProducts : fallbackProducts).slice(0, 3);
-                            const currentProduct = top5[currentSlide % Math.max(top5.length, 1)] || top5[0];
-                            if (!currentProduct) return null;
+                       {/* Premium Right Side - Single Product (synced via currentSlide % 6) - Responsive from md up */}
+                     <div className="relative hidden md:block">
+                       <div className="relative">
+                         {/* Deep luxurious glow */}
+                         <div className="absolute -inset-5 bg-gradient-to-r from-[#00d4aa] via-[#8b5cf6] to-[#ff6b9d] rounded-[3.5rem] blur-[95px] opacity-[0.17]"></div>
 
-                            return (
-                              <>
-                                {/* Single Premium Product */}
-                                <div className="relative aspect-[16/10] rounded-2xl overflow-hidden mb-5 border border-white/10 shadow-2xl">
-                                  {currentProduct.thumbnail ? (
-                                    <img
-                                      src={getStorageUrl(currentProduct.thumbnail)!}
-                                      alt={currentProduct.name}
-                                      className="w-full h-full object-cover transition-all duration-500"
-                                    />
-                                  ) : (
-                                    <div className="w-full h-full bg-gradient-to-br from-[#1a1a1f] to-[#2a2a30] flex items-center justify-center text-7xl">
-                                      🚀
-                                    </div>
-                                  )}
-                                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
-                                  <div className="absolute top-4 left-4 px-3 py-1 bg-white/10 backdrop-blur-xl border border-white/20 rounded-full text-[10px] font-semibold tracking-wider text-white">
-                                    PREMIUM
-                                  </div>
-                                </div>
+                          <div className="relative bg-[#0a0a0d]/95 backdrop-blur-3xl border border-white/10 rounded-3xl p-5 md:p-6 shadow-[0_32px_100px_rgb(0,0,0,0.75)] ring-1 ring-white/5 overflow-hidden">
+                            {/* Inner subtle glow */}
+                            <div className="absolute inset-0 bg-gradient-to-br from-[#00d4aa]/5 via-transparent to-[#8b5cf6]/5 pointer-events-none" />
+                            
+                           {(() => {
+                              const top5 = (allProducts.length > 0 ? allProducts : fallbackProducts).slice(0, 6);
+                             const currentProduct = top5[currentSlide % Math.max(top5.length, 1)] || top5[0];
+                             if (!currentProduct) return null;
 
-                                <div className="px-1">
-                                  <div className="flex items-end justify-between mb-2">
-                                    <h3 className="text-xl font-semibold tracking-[-0.8px] text-[#fafafa] pr-3 leading-tight">
-                                      {currentProduct.name}
-                                    </h3>
-                                    <div className="text-right">
-                                       <div className="text-2xl font-bold text-[#00d4aa] leading-none">
-                                          ৳{currentProduct.price}
-                                       </div>
-                                    </div>
-                                  </div>
-
-                                  <p className="text-[#9ca3af] text-xs mb-4 line-clamp-1">
-                                    {currentProduct.description || "Premium digital asset"}
-                                  </p>
-
-                                   <div>
-                                     <Link
-                                       href={`/products/${currentProduct.slug || currentProduct.id}`}
-                                       className="block text-center px-4 py-2.5 bg-gradient-to-r from-[#00d4aa] to-[#8b5cf6] text-[#0f0f12] rounded-xl text-sm font-bold transition-all hover:brightness-110"
-                                     >
-                                       View Details
-                                     </Link>
+                             return (
+                               <>
+                                 {/* Single Premium Product - Enhanced */}
+                                 <div className="relative aspect-[16/10] rounded-2xl overflow-hidden mb-5 border border-white/10 shadow-2xl">
+                                   {currentProduct.thumbnail ? (
+                                     <img
+                                       src={getStorageUrl(currentProduct.thumbnail)!}
+                                       alt={currentProduct.name}
+                                       className="w-full h-full object-cover transition-all duration-700 group-hover:scale-[1.03]"
+                                     />
+                                   ) : (
+                                     <div className="w-full h-full bg-gradient-to-br from-[#1a1a1f] to-[#2a2a30] flex items-center justify-center text-7xl">
+                                       🚀
+                                     </div>
+                                   )}
+                                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
+                                   
+                                   <div className="absolute top-4 left-4 px-3.5 py-1 bg-white/10 backdrop-blur-xl border border-white/20 rounded-full text-[10px] font-semibold tracking-[1px] text-white">
+                                     PREMIUM
                                    </div>
-                                </div>
-                              </>
-                            );
-                          })()}
-                        </div>
+                                   
+                                   <div className="absolute bottom-4 right-4 px-3 py-1 bg-black/60 backdrop-blur text-xs font-bold text-[#00d4aa] rounded">
+                                     {currentProduct.category}
+                                   </div>
+                                 </div>
+ 
+                                 <div className="px-1 relative z-10">
+                                   <div className="flex items-end justify-between mb-3">
+                                     <h3 className="text-[15px] md:text-xl font-semibold tracking-[-0.5px] text-[#fafafa] pr-3 leading-tight line-clamp-2">
+                                       {currentProduct.name}
+                                     </h3>
+                                     <div className="text-right flex-shrink-0">
+                                        <div className="text-2xl md:text-3xl font-bold text-[#00d4aa] leading-none">
+                                           ৳{currentProduct.price}
+                                        </div>
+                                     </div>
+                                   </div>
+ 
+                                   <p className="text-[#9ca3af] text-xs mb-5 line-clamp-1 opacity-90">
+                                     {currentProduct.description || "Premium digital asset"}
+                                   </p>
+ 
+                                    <div>
+                                      <Link
+                                        href={`/products/${currentProduct.slug || currentProduct.id}`}
+                                        className="block text-center px-5 py-2.5 bg-gradient-to-r from-[#00d4aa] to-[#8b5cf6] text-[#0f0f12] rounded-2xl text-sm font-bold transition-all hover:brightness-110 active:scale-[0.985] shadow-lg"
+                                      >
+                                        View Details
+                                      </Link>
+                                    </div>
+                                 </div>
+                               </>
+                             );
+                           })()}
+                         </div>
                       </div>
                     </div>
                 </div>
@@ -445,41 +486,42 @@ export default function Home() {
 
         </div>
 
-        {/* Enhanced Navigation Controls - Fixed Positioning */}
+        {/* Enhanced Navigation Controls - Fixed Positioning - Mobile Responsive */}
         <div className="navigation-container">
-          <div className="slider-navigation absolute top-1/2 -translate-y-1/2 left-4 z-40">
+          <div className="slider-navigation absolute top-1/2 -translate-y-1/2 left-3 sm:left-4 z-40">
             <button
               onClick={prevSlide}
-              className="w-14 h-14 rounded-full border border-[#2a2a30] bg-[#1a1a1f]/90 backdrop-blur-md flex items-center justify-center text-[#fafafa] hover:border-[#00d4aa] hover:text-[#00d4aa] hover:shadow-lg hover:scale-110 transition-all duration-300 group"
+              className="w-11 h-11 sm:w-14 sm:h-14 rounded-full border border-[#2a2a30] bg-[#1a1a1f]/90 backdrop-blur-md flex items-center justify-center text-[#fafafa] hover:border-[#00d4aa] hover:text-[#00d4aa] hover:shadow-lg hover:scale-110 transition-all duration-300 group active:scale-95"
             >
-              <ChevronLeftIcon className="w-6 h-6 transition-transform group-hover:-translate-x-1" />
+              <ChevronLeftIcon className="w-5 h-5 sm:w-6 sm:h-6 transition-transform group-hover:-translate-x-1" />
             </button>
           </div>
 
-          <div className="slider-navigation absolute top-1/2 -translate-y-1/2 right-4 z-40">
+          <div className="slider-navigation absolute top-1/2 -translate-y-1/2 right-3 sm:right-4 z-40">
             <button
               onClick={nextSlide}
-              className="w-14 h-14 rounded-full border border-[#2a2a30] bg-[#1a1a1f]/90 backdrop-blur-md flex items-center justify-center text-[#fafafa] hover:border-[#00d4aa] hover:text-[#00d4aa] hover:shadow-lg hover:scale-110 transition-all duration-300 group"
+              className="w-11 h-11 sm:w-14 sm:h-14 rounded-full border border-[#2a2a30] bg-[#1a1a1f]/90 backdrop-blur-md flex items-center justify-center text-[#fafafa] hover:border-[#00d4aa] hover:text-[#00d4aa] hover:shadow-lg hover:scale-110 transition-all duration-300 group active:scale-95"
             >
-              <ChevronRightIcon className="w-6 h-6 transition-transform group-hover:translate-x-1" />
+              <ChevronRightIcon className="w-5 h-5 sm:w-6 sm:h-6 transition-transform group-hover:translate-x-1" />
             </button>
           </div>
         </div>
 
-           {/* Top 3 Products Navigation - Bullets Only (Main Slider Navigation List) */}
-           <div className="absolute bottom-1 left-1/2 transform -translate-x-1/2 flex gap-2 z-30">
-             {Array.from({ length: 3 }).map((_, i) => (
-               <button
-                 key={i}
-                 onClick={() => setCurrentSlide(i % Math.max(heroSlides.length, 1))}
-                 className={`w-2 h-2 rounded-full transition-all ${
-                   i === currentSlide % 3
-                     ? 'bg-gradient-to-r from-[#00d4aa] to-[#8b5cf6] w-4'
-                     : 'bg-white/30 hover:bg-white/60'
-                 }`}
-               />
-             ))}
-           </div>
+            {/* Top 6 Products Navigation - Bullets Only (Main Slider Navigation List) - Larger touch targets on mobile */}
+            <div className="absolute bottom-4 sm:bottom-6 left-1/2 transform -translate-x-1/2 flex gap-3 z-30">
+              {Array.from({ length: 6 }).map((_, i) => (
+                <button
+                  key={i}
+                  onClick={() => setCurrentSlide(i % Math.max(heroSlides.length, 1))}
+                  className={`w-3 h-3 sm:w-2.5 sm:h-2.5 rounded-full transition-all touch-manipulation ${
+                    i === currentSlide % 6
+                      ? 'bg-gradient-to-r from-[#00d4aa] to-[#8b5cf6] w-8 sm:w-4'
+                      : 'bg-white/30 hover:bg-white/60 active:bg-white/80'
+                  }`}
+                  aria-label={`Go to slide ${i + 1}`}
+                />
+              ))}
+            </div>
        </section>
 
       {/* Stats Section */}
@@ -495,16 +537,61 @@ export default function Home() {
       ))}
            </div>
          </div>
+        </section>
+
+       {/* Premium Features Section - Dynamic from API */}
+       <section className="relative py-20 overflow-hidden border-y border-[#2a2a30]">
+         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,#00d4aa0a_0%,transparent_70%)]" />
+         
+         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+           <div className="text-center mb-14">
+             <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-[#00d4aa]/20 bg-[#00d4aa]/5 text-xs font-semibold tracking-[2px] text-[#00d4aa] mb-4">
+               WHY CHOOSE US
+             </div>
+             <h2 className="text-4xl md:text-5xl font-bold tracking-tight mb-4">
+               Built for <span className="gradient-text">Modern Businesses</span>
+             </h2>
+             <p className="text-lg text-[#737373] max-w-lg mx-auto">
+               Everything you need to succeed — delivered instantly.
+             </p>
+           </div>
+
+           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+             {features.map((feature: any, index: number) => (
+               <div 
+                 key={feature.id || index}
+                 className="group relative glass-card rounded-3xl p-8 border border-[#2a2a30] hover:border-[#00d4aa]/40 transition-all duration-500 hover:-translate-y-1 flex flex-col"
+               >
+                 <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#00d4aa] to-[#8b5cf6] flex items-center justify-center text-3xl mb-6 group-hover:scale-110 transition-transform duration-300">
+                   {feature.icon || '✨'}
+                 </div>
+
+                 <h3 className="text-2xl font-semibold tracking-tight text-[#fafafa] mb-3">
+                   {feature.title}
+                 </h3>
+                 
+                 <p className="text-[#737373] leading-relaxed flex-1">
+                   {feature.description}
+                 </p>
+
+                 <div className="mt-6 pt-5 border-t border-[#2a2a30] flex items-center text-xs font-medium text-[#00d4aa] group-hover:gap-2 transition-all">
+                   LEARN MORE 
+                   <ArrowRightIcon className="w-3.5 h-3.5 ml-1.5 transition-transform group-hover:translate-x-1" />
+                 </div>
+               </div>
+             ))}
+           </div>
+         </div>
        </section>
 
-      {/* Real World Professional Use Cases Section */}
-      <section className="relative py-24 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-b from-[#1a1a1f] to-[#0f0f12]" />
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold mb-6 gradient-text">
-              Featured Products
-            </h2>
+       {/* Real World Professional Use Cases Section */}
+       <section className="relative py-24 overflow-hidden">
+         <div className="absolute inset-0 bg-gradient-to-b from-[#1a1a1f] to-[#0f0f12]" />
+         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+           <div className="text-center mb-16">
+             <h2 className="text-4xl md:text-5xl font-bold mb-6 gradient-text">
+               Featured Products
+             </h2>
             <p className="text-xl text-[#737373] max-w-2xl mx-auto">
               Discover our most popular digital products trusted by thousands of businesses
             </p>
@@ -641,86 +728,102 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Categories Section */}
-      <section className="relative py-24 overflow-hidden">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_50%_100%,rgba(139,92,246,0.1)_0%,rgba(8,8,8,0)_60%)]" />
+      {/* Premium Product Categories Section */}
+      <section className="relative py-20 overflow-hidden bg-[#0a0a0d]">
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,#00d4aa05_0%,transparent_70%)]" />
+        
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold mb-6 gradient-text">
-              Product Categories
+          <div className="text-center mb-12">
+            <div className="inline-flex items-center gap-2 px-5 py-1.5 rounded-full border border-[#00d4aa]/20 bg-[#00d4aa]/5 mb-4">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#00d4aa]"></span>
+              <span className="text-xs font-semibold tracking-[2px] text-[#00d4aa]">EXPLORE BY CATEGORY</span>
+            </div>
+            <h2 className="text-4xl md:text-5xl font-bold tracking-[-1.5px] mb-4">
+              Discover by <span className="gradient-text">Category</span>
             </h2>
-            <p className="text-xl text-[#737373]">
-              Find exactly what you need to elevate your business
+            <p className="text-lg text-[#737373] max-w-md mx-auto">
+              Curated collections of premium digital assets for every professional need
             </p>
           </div>
 
-          {/* Left Sidebar Categories + Right Products */}
+          {/* Premium Categories + Products Layout */}
           <div className="grid lg:grid-cols-4 gap-8">
-            {/* Left Sidebar - Categories */}
-            <div className="lg:col-span-1 space-y-4">
-              <h3 className="text-lg font-semibold text-[#fafafa] mb-6">Categories</h3>
-              <div className="space-y-2">
-                <button
-                  onClick={() => setSelectedCategory('all')}
-                  className={`block w-full text-left px-4 py-3 rounded-lg border transition-all ${
-                    selectedCategory === 'all'
-                      ? 'border-[#00d4aa] bg-[#00d4aa]/10 text-[#00d4aa]'
-                      : 'border-[#2a2a30] bg-[#1a1a1f] text-[#fafafa] hover:border-[#00d4aa]/50 hover:text-[#00d4aa]'
-                  }`}
-                >
-                  All Products
-                </button>
-                {loadingCategories ? (
-                  // Loading state for sidebar categories
-                  Array.from({ length: 5 }, (_, index) => (
-                    <div key={index} className="px-4 py-3 rounded-lg border border-[#2a2a30] bg-[#1a1a1f] animate-pulse">
-                      <div className="w-24 h-4 bg-[#2a2a30] rounded"></div>
-                    </div>
-                  ))
-                ) : (
-                  allCategories.map((category) => (
-                    <button
-                      key={category.id}
-                      onClick={() => setSelectedCategory(category.slug)}
-                      className={`block w-full text-left px-4 py-3 rounded-lg border transition-all ${
-                        selectedCategory === category.slug
-                          ? 'border-[#00d4aa] bg-[#00d4aa]/10 text-[#00d4aa]'
-                          : 'border-[#2a2a30] bg-[#1a1a1f] text-[#fafafa] hover:border-[#00d4aa]/50 hover:text-[#00d4aa]'
-                      }`}
-                    >
-                      {category.category_name}
-                    </button>
-                  ))
-                )}
-              </div>
-
-              {/* Search Bar */}
-              <div className="mt-8">
-                <h4 className="text-sm font-medium text-[#737373] mb-3">Quick Search</h4>
-                <div className="relative">
-                  <input
-                    type="text"
-                    placeholder="Search products..."
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    className="w-full bg-[#1a1a1f] border border-[#2a2a30] rounded-lg pl-4 pr-10 py-3 text-[#fafafa] placeholder-[#737373] focus:outline-none focus:border-[#00d4aa] transition-colors"
-                  />
-                  <button className="absolute right-3 top-1/2 transform -translate-y-1/2 text-[#737373] hover:text-[#00d4aa]">
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                    </svg>
+            {/* Premium Left Sidebar - Categories */}
+            <div className="lg:col-span-1">
+              <div className="bg-[#121214] border border-[#2a2a30] rounded-3xl p-6 sticky top-28">
+                <h3 className="text-sm font-semibold text-[#fafafa] mb-5 tracking-wider flex items-center gap-2">
+                  BROWSE CATEGORIES
+                  <span className="flex-1 h-px bg-gradient-to-r from-[#2a2a30] to-transparent"></span>
+                </h3>
+                
+                <div className="space-y-1.5">
+                  <button
+                    onClick={() => setSelectedCategory('all')}
+                    className={`w-full text-left px-5 py-3 rounded-2xl text-sm font-medium transition-all flex items-center gap-3 ${
+                      selectedCategory === 'all'
+                        ? 'bg-gradient-to-r from-[#00d4aa] to-[#8b5cf6] text-[#0f0f12] shadow-lg'
+                        : 'text-[#fafafa] hover:bg-[#1a1a1f] border border-transparent hover:border-[#2a2a30]'
+                    }`}
+                  >
+                    <span className="text-lg">⭐</span>
+                    <span>All Products</span>
                   </button>
+
+                  {loadingCategories ? (
+                    Array.from({ length: 6 }, (_, index) => (
+                      <div key={index} className="px-5 py-3 rounded-2xl border border-[#2a2a30] bg-[#1a1a1f] animate-pulse">
+                        <div className="w-28 h-4 bg-[#2a2a30] rounded"></div>
+                      </div>
+                    ))
+                  ) : (
+                    allCategories.map((category) => (
+                      <button
+                        key={category.id}
+                        onClick={() => setSelectedCategory(category.slug)}
+                        className={`w-full text-left px-5 py-3 rounded-2xl text-sm font-medium transition-all flex items-center gap-3 ${
+                          selectedCategory === category.slug
+                            ? 'bg-gradient-to-r from-[#00d4aa] to-[#8b5cf6] text-[#0f0f12] shadow-lg'
+                            : 'text-[#fafafa] hover:bg-[#1a1a1f] border border-transparent hover:border-[#2a2a30]'
+                        }`}
+                      >
+                        <span className="text-xl flex-shrink-0">{categoryIconMap[category.slug.toLowerCase()] || '📌'}</span>
+                        <span className="truncate">{category.category_name}</span>
+                      </button>
+                    ))
+                  )}
+                </div>
+
+                {/* Premium Quick Search */}
+                <div className="mt-8 pt-6 border-t border-[#2a2a30]">
+                  <div className="relative">
+                    <input
+                      type="text"
+                      placeholder="Search products..."
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      className="w-full bg-[#0f0f12] border border-[#2a2a30] rounded-2xl pl-5 pr-11 py-3 text-sm text-[#fafafa] placeholder-[#555] focus:outline-none focus:border-[#00d4aa] transition-all"
+                    />
+                    <div className="absolute right-4 top-1/2 -translate-y-1/2 text-[#737373]">
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                      </svg>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
 
             {/* Right Side - Products with Search and Filter */}
             <div className="lg:col-span-3">
-              <div className="flex items-center justify-between mb-6">
-                <h3 className="text-lg font-semibold text-[#fafafa]">
-                  {filteredProducts.length} {selectedCategory === 'all' ? 'Products' : `${allCategories.find(c => c.slug === selectedCategory)?.category_name || selectedCategory}`}
-                  {searchQuery && ` matching "${searchQuery}"`}
-                </h3>
+              <div className="flex items-end justify-between mb-8">
+                <div>
+                  <div className="text-xs uppercase tracking-[3px] text-[#00d4aa] font-medium mb-1">RESULTS</div>
+                  <h3 className="text-2xl font-semibold text-[#fafafa]">
+                    {filteredProducts.length} {selectedCategory === 'all' ? 'Products' : allCategories.find(c => c.slug === selectedCategory)?.category_name || selectedCategory}
+                    {searchQuery && <span className="text-[#737373] text-lg font-normal"> matching “{searchQuery}”</span>}
+                  </h3>
+                </div>
+                <Link href="/products" className="hidden md:block text-sm text-[#00d4aa] hover:underline">View all products →</Link>
               </div>
 
               {loadingProducts ? (
@@ -741,84 +844,94 @@ export default function Home() {
                     <Link
                       key={product.id}
                       href={`/products/${product.slug}`}
-                      className="group glass-card rounded-2xl overflow-hidden border border-[#2a2a30] hover:border-[#00d4aa]/50 transition-all duration-300 animate-fade-in-up"
+                      className="group glass-card rounded-3xl overflow-hidden border border-[#2a2a30] hover:border-[#00d4aa]/40 transition-all duration-500 hover:-translate-y-1 hover:shadow-2xl hover:shadow-[#00d4aa]/10 flex flex-col"
                     >
                       <div className="relative aspect-video overflow-hidden">
                          {product.thumbnail ? (
                            <img
                              src={getStorageUrl(product.thumbnail)!}
                              alt={product.name}
-                             className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                            />
                          ) : (
                           <div className="w-full h-full bg-gradient-to-br from-[#1a1a1f] to-[#2a2a30] flex items-center justify-center">
                             <span className="text-[#737373]">No Image</span>
                           </div>
                         )}
-                        <div className="absolute inset-0 bg-gradient-to-t from-[#0f0f12] via-transparent to-transparent opacity-60" />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
+                        
                         {product.featured && (
-                          <div className="absolute top-3 right-3">
-                            <span className="px-2 py-1 rounded-full text-xs font-medium bg-gradient-to-r from-[#00d4aa] to-[#8b5cf6] text-[#0f0f12]">
-                              Featured
+                          <div className="absolute top-4 right-4">
+                            <span className="px-3 py-1 rounded-full text-[10px] font-bold tracking-wider bg-white/90 text-[#0f0f12] shadow-lg">
+                              FEATURED
                             </span>
                           </div>
                         )}
+                        
+                        <div className="absolute bottom-4 left-4">
+                          <span className="px-3 py-1 text-xs font-medium bg-black/60 backdrop-blur text-white rounded-full">
+                            {product.category}
+                          </span>
+                        </div>
                       </div>
-                      <div className="p-6">
-                        <span className="text-xs text-[#737373] font-medium uppercase tracking-wide">
-                          {product.category}
-                        </span>
-                        <h4 className="text-lg font-semibold text-[#fafafa] mt-2 mb-2 line-clamp-1">
+
+                      <div className="p-6 flex flex-col flex-1">
+                        <h4 className="text-lg font-semibold text-[#fafafa] tracking-[-0.3px] mb-2 line-clamp-2 group-hover:text-[#00d4aa] transition-colors">
                           {product.name}
                         </h4>
-                        <p className="text-sm text-[#737373] line-clamp-2 mb-4">
+                        
+                        <p className="text-sm text-[#737373] line-clamp-2 flex-1 mb-5">
                           {product.description}
                         </p>
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-baseline gap-2">
-                            <span className="text-xl font-bold text-[#00d4aa]">
-                               ৳{product.price}
+
+                        <div className="flex items-center justify-between mt-auto">
+                          <div>
+                            <span className="text-2xl font-bold text-[#00d4aa]">
+                              ৳{product.price}
                             </span>
                             {product.compare_price && product.compare_price > product.price && (
-                              <span className="text-sm text-[#737373] line-through">
-                                 ৳{product.compare_price}
+                              <span className="ml-2 text-sm text-[#737373] line-through">
+                                ৳{product.compare_price}
                               </span>
                             )}
                           </div>
-                          <span className="text-xs text-[#737373]">View Details →</span>
+                          <span className="text-xs font-medium text-[#00d4aa] group-hover:underline transition-all">View →</span>
                         </div>
                       </div>
                     </Link>
                   ))}
 
-                  {filteredProducts.length > 9 && (
-                    <div className="glass-card rounded-2xl border border-[#2a2a30] flex items-center justify-center p-8">
-                      <div className="text-center">
-                        <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-br from-[#00d4aa] to-[#8b5cf6] flex items-center justify-center">
-                          <ArrowRightIcon className="w-8 h-8 text-[#0f0f12]" />
-                        </div>
-                        <h4 className="text-lg font-semibold text-[#fafafa] mb-2">
-                          {filteredProducts.length - 9} More Products
-                        </h4>
-                        <p className="text-sm text-[#737373] mb-4">Explore the complete collection</p>
-                        <Link href="/products" className="inline-flex items-center px-6 py-2 bg-gradient-to-r from-[#00d4aa] to-[#8b5cf6] text-[#0f0f12] font-medium rounded-lg hover:scale-105 transition-transform">
-                          Browse All <ArrowRightIcon className="w-4 h-4 ml-1" />
-                        </Link>
-                      </div>
-                    </div>
-                  )}
+                   {filteredProducts.length > 9 && (
+                     <div className="glass-card rounded-3xl border border-[#2a2a30] flex items-center justify-center p-8 hover:border-[#00d4aa]/30 transition-all">
+                       <div className="text-center">
+                         <div className="w-16 h-16 mx-auto mb-5 rounded-2xl bg-gradient-to-br from-[#00d4aa] to-[#8b5cf6] flex items-center justify-center">
+                           <ArrowRightIcon className="w-8 h-8 text-[#0f0f12]" />
+                         </div>
+                         <h4 className="text-xl font-semibold text-[#fafafa] mb-1">
+                           {filteredProducts.length - 9} More Products
+                         </h4>
+                         <p className="text-sm text-[#737373] mb-6">Explore the complete collection</p>
+                         <Link href="/products" className="inline-flex items-center px-8 py-3 bg-[#1a1a1f] border border-[#2a2a30] hover:border-[#00d4aa] text-[#fafafa] text-sm font-medium rounded-2xl transition-all">
+                           Browse Full Catalog <ArrowRightIcon className="w-4 h-4 ml-2" />
+                         </Link>
+                       </div>
+                     </div>
+                   )}
 
-                  {filteredProducts.length === 0 && (
-                    <div className="col-span-full text-center py-20">
-                      <h4 className="text-xl font-semibold text-[#fafafa] mb-4">No products found</h4>
-                      <p className="text-[#737373] mb-8">Try adjusting your search or category filter</p>
-                      <button
-                        onClick={() => {
-                          setSearchQuery('');
-                          setSelectedCategory('all');
-                        }}
-                        className="px-6 py-3 bg-[#1a1a1f] border border-[#2a2a30] rounded-lg text-[#fafafa] hover:border-[#00d4aa]/50 transition-colors"
-                      >
+                   {filteredProducts.length === 0 && (
+                     <div className="col-span-full text-center py-16">
+                       <div className="mx-auto w-16 h-16 rounded-2xl bg-[#1a1a1f] border border-[#2a2a30] flex items-center justify-center mb-6">
+                         <span className="text-3xl">🔍</span>
+                       </div>
+                       <h4 className="text-2xl font-semibold text-[#fafafa] mb-3">No products found</h4>
+                       <p className="text-[#737373] max-w-xs mx-auto mb-8">Try adjusting your search or selecting a different category.</p>
+                       <button
+                         onClick={() => {
+                           setSearchQuery('');
+                           setSelectedCategory('all');
+                         }}
+                         className="px-8 py-3 bg-[#1a1a1f] border border-[#2a2a30] hover:border-[#00d4aa] text-[#fafafa] rounded-2xl text-sm font-medium transition-all"
+                       >
                         Clear Filters
                       </button>
                     </div>
@@ -935,6 +1048,45 @@ export default function Home() {
 
 
 
+
+      {/* Trust & Security Badges - Enhanced Trust Building */}
+      <section className="relative py-16 border-y border-[#2a2a30] bg-[#0a0a0d]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-10">
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-[#00d4aa]/30 bg-[#00d4aa]/5 backdrop-blur-md mb-4">
+              <span className="w-2 h-2 rounded-full bg-[#00d4aa] animate-pulse"></span>
+              <span className="text-sm font-semibold text-[#00d4aa]">TRUSTED WORLDWIDE</span>
+            </div>
+            <h2 className="text-3xl md:text-4xl font-bold mb-3 gradient-text">
+              Why 50,000+ Businesses Trust Us
+            </h2>
+            <p className="text-[#737373] max-w-xl mx-auto">Premium quality, secure transactions, and unmatched support — every time.</p>
+          </div>
+
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+            {[
+              { icon: "🛡️", title: "30-Day Guarantee", desc: "Full refund if not satisfied" },
+              { icon: "🔒", title: "SSL Secure", desc: "256-bit encryption" },
+              { icon: "⚡", title: "Instant Delivery", desc: "Download immediately" },
+              { icon: "✅", title: "Verified Products", desc: "100% authentic sources" },
+              { icon: "💬", title: "24/7 Support", desc: "Real humans, real help" },
+              { icon: "⭐", title: "4.8/5 Average", desc: "From 15K+ reviews" },
+            ].map((badge, index) => (
+              <div key={index} className="glass-card rounded-xl p-5 text-center border border-[#2a2a30] hover:border-[#00d4aa]/40 transition-all group">
+                <div className="text-3xl mb-3 group-hover:scale-110 transition-transform">{badge.icon}</div>
+                <h4 className="font-semibold text-[#fafafa] text-sm mb-1 tracking-wide">{badge.title}</h4>
+                <p className="text-[#737373] text-xs leading-tight">{badge.desc}</p>
+              </div>
+            ))}
+          </div>
+
+          <div className="mt-8 text-center">
+            <p className="text-xs text-[#737373] flex items-center justify-center gap-2">
+              <span>🔐</span> All payments secured &amp; encrypted. We never store your card details.
+            </p>
+          </div>
+        </div>
+      </section>
 
       {/* Real World Professional Use Cases Section */}
       <section className="relative py-24 overflow-hidden">
@@ -1121,14 +1273,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Back to Top Button */}
-      <button
-        onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-        className="fixed bottom-8 right-8 bg-gradient-to-br from-[#00d4aa] to-[#8b5cf6] text-[#0f0f12] p-3 rounded-full shadow-lg hover:shadow-2xl hover:scale-110 transition-all duration-300 font-bold z-30"
-        title="Back to top"
-      >
-        ↑
-      </button>
     </div>
   );
 }
