@@ -46,6 +46,10 @@ export const apiFetch = async <T = any>(
     const response = await fetch(url, fetchOptions);
 
     if (!response.ok) {
+      const errorText = await response.text();
+      if (!options.silent) {
+        console.error(`API Error ${response.status} from ${endpoint}:`, errorText);
+      }
       throw new Error(`API Error: ${response.status} ${response.statusText}`);
     }
 
@@ -54,7 +58,7 @@ export const apiFetch = async <T = any>(
   } catch (error) {
     // Only log if not silent
     if (!options.silent) {
-      console.error(`Failed to fetch from ${endpoint}:`, error);
+      console.error(`Failed to fetch from ${endpoint}:`, error instanceof Error ? error.message : error);
     }
     throw error;
   }
@@ -75,6 +79,15 @@ export const getStorageUrl = (path: string | null | undefined): string | null =>
   if (path.startsWith('http')) return path;
   const cleanPath = path.replace(/^\/+/, '');
   return `${BACKEND_BASE_URL}/storage/${cleanPath}`;
+};
+
+// Helper for logo URLs from admin resources
+export const getLogoUrl = (filename: string | null | undefined): string | null => {
+  if (!filename) return null;
+  if (filename.startsWith('http')) return filename;
+  // Remove any leading slashes from the filename
+  const cleanFilename = filename.replace(/^\/+/, '');
+  return `${BACKEND_BASE_URL}/api/logo/${cleanFilename}`;
 };
 
 // Helper for public folder assets (e.g. /public/images/payment/*.jpg)

@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
 import { ShoppingCartIcon, Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
-import { apiFetch, BACKEND_BASE_URL, getStorageUrl, getPublicUrl } from './utils/api';
+import { apiFetch, BACKEND_BASE_URL, getStorageUrl, getPublicUrl, getLogoUrl } from './utils/api';
 
 export default function ClientLayout({
   children,
@@ -21,12 +21,18 @@ export default function ClientLayout({
   const [subscribed, setSubscribed] = useState(false);
   const [isHydrated, setIsHydrated] = useState(false);
    const [settings, setSettings] = useState<{
-     site_logo?: string;
-     admin_logo?: string;
+     site_logo?: string | null;
+     admin_logo?: string | null;
      site_title?: string;
      admin_title?: string;
      site_description?: string;
      admin_description?: string;
+     seo_enabled?: boolean;
+     seo_meta_title?: string;
+     seo_meta_description?: string;
+     seo_meta_keywords?: string;
+     seo_og_image?: string | null;
+     google_analytics_id?: string | null;
    } | null>({ site_title: 'Next Digi Home' });  // Simple default, no localStorage access to avoid hydration mismatch
 
   const [categories, setCategories] = useState<Array<{
@@ -113,21 +119,8 @@ export default function ClientLayout({
           return; // Success, exit the function
         } catch (error) {
           if (i === maxRetries - 1) {
-            // Last attempt: log as info and try fallback
-            console.log('Failed to fetch settings after retries, using fallback.');
-            // Try to load from localStorage as fallback
-            try {
-              const saved = localStorage.getItem('nextdigihome_settings');
-              if (saved) {
-                const parsed = JSON.parse(saved);
-                setSettings(parsed);
-                setIsLoading(false);
-                return;
-              }
-            } catch (storageError) {
-              console.error('Failed to load settings from localStorage:', storageError);
-            }
-            // Keep current settings (from localStorage initial state or previous)
+            // Last attempt: log as info and keep current settings (which might be from localStorage or initial)
+            console.log('Failed to fetch settings after retries, keeping current settings.');
             setIsLoading(false);
             return;
           } else {
@@ -194,18 +187,19 @@ export default function ClientLayout({
           <div className="flex justify-between items-center py-2 md:py-1 gap-4">
             <Link href="/" className="flex items-center group flex-shrink-0 gap-3">
               <div className="w-14 h-14 md:w-20 md:h-20 rounded-2xl flex items-center justify-center group-hover:scale-105 transition-transform duration-300 overflow-hidden border border-[#2a2a30] bg-[#1a1a1f]">
-                {(() => {
-                  const isAdminPage = pathname.startsWith('/admin');
-                  const logoToUse = isAdminPage
-                    ? settings?.admin_logo
-                    : settings?.site_logo;
+                {isHydrated && (() => {
+                  // Use site_logo, or fall back to admin_logo if site_logo is not set
+                  const logoToUse = settings?.site_logo || settings?.admin_logo;
+                  const logoUrl = logoToUse ? getLogoUrl(logoToUse) : null;
 
-                  return logoToUse ? (
+                  return logoUrl ? (
                     <img
-                      src={`${BACKEND_BASE_URL}/api/logo/${logoToUse}`}
-                      alt={isAdminPage ? "Admin Logo" : "Site Logo"}
+                      key={logoToUse}
+                      src={logoUrl}
+                      alt="Site Logo"
                       className="w-full h-full object-contain p-1"
                       onError={(e) => {
+                        console.warn(`Logo failed to load from: ${logoUrl}`);
                         e.currentTarget.style.display = 'none';
                         const fallback = e.currentTarget.nextElementSibling;
                         if (fallback) fallback.classList.remove('hidden');
@@ -215,11 +209,7 @@ export default function ClientLayout({
                 })()}
 
                 <svg 
-                  className={`w-9 h-9 text-[#00d4aa] ${(() => {
-                    const isAdminPage = pathname.startsWith('/admin');
-                    const hasLogo = isAdminPage ? settings?.admin_logo : settings?.site_logo;
-                    return hasLogo ? 'hidden' : '';
-                  })()}`} 
+                  className="w-9 h-9 text-[#00d4aa]" 
                   fill="none" 
                   stroke="currentColor" 
                   viewBox="0 0 24 24"
@@ -462,18 +452,25 @@ export default function ClientLayout({
             <div className="space-y-5">
               <div className="flex items-center space-x-3 group">
                 <div className="w-16 h-16 rounded-2xl flex items-center justify-center overflow-hidden bg-[#1a1a1f] border border-[#2a2a30] group-hover:border-[#00d4aa]/40 transition-all">
-                  {settings?.site_logo ? (
-                    <img
-                      src={`${BACKEND_BASE_URL}/api/logo/${settings.site_logo}`}
-                      alt="Site Logo"
-                      className="w-full h-full object-cover"
-                      onError={(e) => {
-                        e.currentTarget.style.display = 'none';
-                        e.currentTarget.nextElementSibling?.classList.remove('hidden');
-                      }}
-                    />
-                  ) : null}
-                  <svg className={`w-7 h-7 text-[#00d4aa] ${isHydrated && settings?.site_logo ? 'hidden' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  {isHydrated && (() => {
+                    // Use site_logo, or fall back to admin_logo if site_logo is not set
+                    const logoToUse = settings?.site_logo || settings?.admin_logo;
+                    const logoUrl = logoToUse ? getLogoUrl(logoToUse) : null;
+                    return logoUrl ? (
+                      <img
+                        key={logoToUse}
+                        src={logoUrl}
+                        alt="Site Logo"
+                        className="w-full h-full object-cover"
+                        onError={(e) => {
+                          console.warn(`Footer logo failed to load from: ${logoUrl}`);
+                          e.currentTarget.style.display = 'none';
+                          e.currentTarget.nextElementSibling?.classList.remove('hidden');
+                        }}
+                      />
+                    ) : null;
+                  })()}
+                  <svg className={`w-7 h-7 text-[#00d4aa] ${isHydrated && (settings?.site_logo || settings?.admin_logo) ? 'hidden' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
                   </svg>
                 </div>
@@ -485,9 +482,9 @@ export default function ClientLayout({
                 </div>
               </div>
 
-              <p className="text-[#737373] text-sm leading-relaxed pr-2">
-                {isHydrated ? (settings?.site_description || "Premium digital products engineered for modern businesses. Transform your business with our curated collection.") : "Premium digital products engineered for modern businesses. Transform your business with our curated collection."}
-              </p>
+               <p className="text-[#737373] text-sm leading-relaxed pr-2" suppressHydrationWarning>
+                 {isHydrated ? (settings?.site_description || "Premium digital products engineered for modern businesses. Transform your business with our curated collection.") : "Premium digital products engineered for modern businesses. Transform your business with our curated collection."}
+               </p>
 
               {/* Premium Social Icons */}
               <div className="flex gap-2 pt-1">

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+import Head from "next/head";
 import "./globals.css";
 import ClientLayout from "./ClientLayout";
 
@@ -24,19 +25,12 @@ export const metadata: Metadata = {
   publisher: "Next Digi Home",
   applicationName: "Next Digi Home",
   category: "Digital Marketplace",
-  icons: {
-    icon: [
-      { url: "/favicon.ico", sizes: "any" },
-    ],
-    shortcut: "/favicon.ico",
-    apple: "/favicon.ico",
-  },
   openGraph: {
     title: "Next Digi Home | Premium Digital Products for Modern Businesses",
     description: "Premium digital products, templates, UI kits & business tools. Instant downloads. Trusted by 50K+ businesses worldwide.",
     images: [
       {
-        url: "/og-image.jpg",
+        url: "/og-image.svg",
         width: 1200,
         height: 630,
         alt: "Next Digi Home - Premium Digital Products Marketplace",
@@ -50,7 +44,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Next Digi Home | Premium Digital Products",
     description: "Premium digital products engineered for modern businesses. 10K+ resources, instant downloads.",
-    images: ["/og-image.jpg"],
+    images: ["/og-image.svg"],
     creator: "@nextdigihome",
   },
   robots: {
@@ -81,6 +75,19 @@ export default function RootLayout({
       className={`${inter.variable} h-full antialiased`}
       suppressHydrationWarning={true}
     >
+      <Head>
+        <link
+          rel="icon"
+          type="image/png"
+          href={`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost/NEXTDIGIHOMEBACKEND'}/public/admin_resource/assets/images/1778659354.png`}
+        />
+        <link rel="shortcut icon" href={`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost/NEXTDIGIHOMEBACKEND'}/public/admin_resource/assets/images/1778659354.png`} />
+        <link rel="apple-touch-icon" href={`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost/NEXTDIGIHOMEBACKEND'}/public/admin_resource/assets/images/1778659354.png`} />
+        {/* Fallback favicons */}
+        <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+        <link rel="shortcut icon" href="/favicon.ico" />
+        <link rel="apple-touch-icon" href="/favicon.ico" />
+      </Head>
       <body suppressHydrationWarning={true} className="min-h-full flex flex-col bg-[#0f0f12] text-[#fafafa] selection:bg-[#00d4aa] selection:text-[#0f0f12]">
         <ClientLayout>{children}</ClientLayout>
         {/* Organization Structured Data for SEO & Trust */}

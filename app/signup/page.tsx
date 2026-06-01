@@ -147,10 +147,14 @@ export default function SignUpPage() {
       const response = await fetch(`${BACKEND_BASE_URL}/api/settings`);
       if (response.ok) {
         const data = await response.json();
-        setSettings(data);
+        // Safely extract settings data
+        const settingsData = data?.data?.data || data?.data || data || {};
+        setSettings(settingsData);
+      } else {
+        console.warn(`Settings API returned ${response.status}, using defaults`);
       }
     } catch (error) {
-      console.error('Failed to fetch settings:', error);
+      console.warn('Failed to fetch settings, using defaults:', error instanceof Error ? error.message : error);
     }
   };
 

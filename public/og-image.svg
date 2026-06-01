@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630">
+  <!-- Background gradient -->
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0f0f12;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#1a1a1f;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="textGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#00d4aa;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#8b5cf6;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="1200" height="630" fill="url(#bgGrad)"/>
+  
+  <!-- Decorative circles -->
+  <circle cx="150" cy="150" r="120" fill="#00d4aa" opacity="0.1"/>
+  <circle cx="1050" cy="500" r="150" fill="#8b5cf6" opacity="0.1"/>
+  
+  <!-- Main text -->
+  <text x="600" y="200" font-family="Arial, sans-serif" font-size="80" font-weight="bold" text-anchor="middle" fill="url(#textGrad)">
+    Next Digi Home
+  </text>
+  
+  <!-- Tagline -->
+  <text x="600" y="300" font-family="Arial, sans-serif" font-size="42" text-anchor="middle" fill="#fafafa">
+    Premium Digital Products
+  </text>
+  
+  <!-- Description -->
+  <text x="600" y="380" font-family="Arial, sans-serif" font-size="28" text-anchor="middle" fill="#737373">
+    Templates • Tools • Assets • Engineered for Success
+  </text>
+  
+  <!-- Lightning bolt icon -->
+  <g transform="translate(600, 500)">
+    <path d="M 0 -40 L 20 -12 L 12 0 L 32 40 L -4 16 L -12 28 Z" fill="#00d4aa" stroke="none"/>
+  </g>
+</svg>
