@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import Head from "next/head";
 import "./globals.css";
 import ClientLayout from "./ClientLayout";
 
@@ -25,6 +24,13 @@ export const metadata: Metadata = {
   publisher: "Next Digi Home",
   applicationName: "Next Digi Home",
   category: "Digital Marketplace",
+  icons: {
+    icon: [
+      { type: "image/svg+xml", url: "/favicon.svg" },
+    ],
+    shortcut: "/favicon.svg",
+    apple: "/favicon.svg",
+  },
   openGraph: {
     title: "Next Digi Home | Premium Digital Products for Modern Businesses",
     description: "Premium digital products, templates, UI kits & business tools. Instant downloads. Trusted by 50K+ businesses worldwide.",
@@ -75,19 +81,6 @@ export default function RootLayout({
       className={`${inter.variable} h-full antialiased`}
       suppressHydrationWarning={true}
     >
-      <Head>
-        <link
-          rel="icon"
-          type="image/png"
-          href={`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost/NEXTDIGIHOMEBACKEND'}/public/admin_resource/assets/images/1778659354.png`}
-        />
-        <link rel="shortcut icon" href={`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost/NEXTDIGIHOMEBACKEND'}/public/admin_resource/assets/images/1778659354.png`} />
-        <link rel="apple-touch-icon" href={`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost/NEXTDIGIHOMEBACKEND'}/public/admin_resource/assets/images/1778659354.png`} />
-        {/* Fallback favicons */}
-        <link rel="icon" type="image/x-icon" href="/favicon.ico" />
-        <link rel="shortcut icon" href="/favicon.ico" />
-        <link rel="apple-touch-icon" href="/favicon.ico" />
-      </Head>
       <body suppressHydrationWarning={true} className="min-h-full flex flex-col bg-[#0f0f12] text-[#fafafa] selection:bg-[#00d4aa] selection:text-[#0f0f12]">
         <ClientLayout>{children}</ClientLayout>
         {/* Organization Structured Data for SEO & Trust */}

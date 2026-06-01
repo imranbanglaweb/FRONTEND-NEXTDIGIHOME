@@ -6,6 +6,22 @@ import { useState, useEffect } from "react";
 import { ShoppingCartIcon, Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import { apiFetch, BACKEND_BASE_URL, getStorageUrl, getPublicUrl, getLogoUrl } from './utils/api';
 
+// Helper to get favicon URL - always use proxy to avoid CORS issues
+const getFaviconUrl = (path: string | null | undefined): string | null => {
+  if (!path) return null;
+  // If it's already a full URL, extract the path after /public/
+  if (path.startsWith('http')) {
+    // Extract path after /public/ like admin_resource/assets/images/1780312398.ico
+    const match = path.match(/\/public\/(.+)$/);
+    if (match) {
+      return `/api/logo/${match[1]}`;
+    }
+    return null;
+  }
+  // Otherwise use the proxy with the path
+  return `/api/logo/${path}`;
+};
+
 export default function ClientLayout({
   children,
 }: Readonly<{
@@ -20,20 +36,21 @@ export default function ClientLayout({
   const [isLoading, setIsLoading] = useState(true);
   const [subscribed, setSubscribed] = useState(false);
   const [isHydrated, setIsHydrated] = useState(false);
-   const [settings, setSettings] = useState<{
-     site_logo?: string | null;
-     admin_logo?: string | null;
-     site_title?: string;
-     admin_title?: string;
-     site_description?: string;
-     admin_description?: string;
-     seo_enabled?: boolean;
-     seo_meta_title?: string;
-     seo_meta_description?: string;
-     seo_meta_keywords?: string;
-     seo_og_image?: string | null;
-     google_analytics_id?: string | null;
-   } | null>({ site_title: 'Next Digi Home' });  // Simple default, no localStorage access to avoid hydration mismatch
+const [settings, setSettings] = useState<{
+      site_logo?: string | null;
+      admin_logo?: string | null;
+      site_title?: string;
+      admin_title?: string;
+      site_description?: string;
+      admin_description?: string;
+      seo_enabled?: boolean;
+      seo_meta_title?: string;
+      seo_meta_description?: string;
+      seo_meta_keywords?: string;
+      seo_og_image?: string | null;
+      google_analytics_id?: string | null;
+      favicon?: string | null;
+    } | null>({ site_title: 'Next Digi Home' });  // Simple default, no localStorage access to avoid hydration mismatch
 
   const [categories, setCategories] = useState<Array<{
     id: number;
@@ -59,18 +76,41 @@ export default function ClientLayout({
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Mark component as hydrated and load settings from localStorage
-  useEffect(() => {
-    setIsHydrated(true);
-    try {
-      const saved = localStorage.getItem('nextdigihome_settings');
-      if (saved) {
-        setSettings(JSON.parse(saved));
+// Mark component as hydrated and load settings from localStorage
+   useEffect(() => {
+     setIsHydrated(true);
+     try {
+       const saved = localStorage.getItem('nextdigihome_settings');
+       if (saved) {
+         setSettings(JSON.parse(saved));
+       }
+     } catch (error) {
+       console.error('Failed to load settings from localStorage:', error);
+     }
+   }, []);
+
+// Update favicon dynamically when settings change
+    useEffect(() => {
+      if (!isHydrated || !settings?.favicon) return;
+      const faviconUrl = getFaviconUrl(settings.favicon);
+      if (faviconUrl) {
+        let link = document.querySelector('link[rel="icon"]');
+        if (!link) {
+          link = document.createElement('link');
+          link.setAttribute('rel', 'icon');
+          document.head.appendChild(link);
+        }
+        link.setAttribute('href', faviconUrl);
+        // Set correct MIME type based on file extension
+        const ext = settings.favicon.toLowerCase().split('.').pop();
+        const typeMap: Record<string, string> = {
+          'ico': 'image/x-icon',
+          'png': 'image/png',
+          'svg': 'image/svg+xml',
+        };
+        link.setAttribute('type', typeMap[ext || ''] || 'image/x-icon');
       }
-    } catch (error) {
-      console.error('Failed to load settings from localStorage:', error);
-    }
-  }, []);
+    }, [isHydrated, settings?.favicon]);
 
   useEffect(() => {
     // Check authentication
