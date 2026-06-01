@@ -9,16 +9,17 @@ import { apiFetch, BACKEND_BASE_URL, getStorageUrl, getPublicUrl, getLogoUrl } f
 // Helper to get favicon URL - always use proxy to avoid CORS issues
 const getFaviconUrl = (path: string | null | undefined): string | null => {
   if (!path) return null;
+  
   // If it's already a full URL, extract the path after /public/
   if (path.startsWith('http')) {
-    // Extract path after /public/ like admin_resource/assets/images/1780312398.ico
     const match = path.match(/\/public\/(.+)$/);
     if (match) {
       return `/api/logo/${match[1]}`;
     }
     return null;
   }
-  // Otherwise use the proxy with the path
+  
+  // Otherwise use the proxy with the path (handles both filename and relative path)
   return `/api/logo/${path}`;
 };
 
