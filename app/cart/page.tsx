@@ -99,9 +99,16 @@ export default function CartPage() {
     }
   };
 
-  useEffect(() => {
-    fetchCart();
-  }, []);
+   useEffect(() => {
+     fetchCart();
+     
+     // Listen for cart updates from other components
+     const handleCartUpdate = () => {
+       fetchCart();
+     };
+     window.addEventListener('cartUpdated', handleCartUpdate);
+     return () => window.removeEventListener('cartUpdated', handleCartUpdate);
+   }, []);
 
   const subtotal = items.reduce((sum, item) => sum + item.total, 0);
   const itemCount = items.reduce((sum, item) => sum + item.quantity, 0);

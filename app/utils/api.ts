@@ -23,6 +23,7 @@ export const getApiUrl = (endpoint: string): string => {
 
 export interface FetchOptions extends RequestInit {
   cacheTime?: number;
+  silent?: boolean;
 }
 
 export const apiFetch = async <T = any>(
@@ -51,7 +52,10 @@ export const apiFetch = async <T = any>(
     const data = await response.json();
     return data;
   } catch (error) {
-    console.error(`Failed to fetch from ${endpoint}:`, error);
+    // Only log if not silent
+    if (!options.silent) {
+      console.error(`Failed to fetch from ${endpoint}:`, error);
+    }
     throw error;
   }
 };

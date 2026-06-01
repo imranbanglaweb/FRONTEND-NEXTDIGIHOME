@@ -19,14 +19,15 @@ export default function ClientLayout({
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [subscribed, setSubscribed] = useState(false);
-  const [settings, setSettings] = useState<{
-    site_logo?: string;
-    admin_logo?: string;
-    site_title?: string;
-    admin_title?: string;
-    site_description?: string;
-    admin_description?: string;
-  } | null>({ site_title: 'Next Digi Home' });  // No fake logo in initial state to avoid 404 flash
+  const [isHydrated, setIsHydrated] = useState(false);
+   const [settings, setSettings] = useState<{
+     site_logo?: string;
+     admin_logo?: string;
+     site_title?: string;
+     admin_title?: string;
+     site_description?: string;
+     admin_description?: string;
+   } | null>({ site_title: 'Next Digi Home' });  // Simple default, no localStorage access to avoid hydration mismatch
 
   const [categories, setCategories] = useState<Array<{
     id: number;
@@ -50,6 +51,19 @@ export default function ClientLayout({
     };
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  // Mark component as hydrated and load settings from localStorage
+  useEffect(() => {
+    setIsHydrated(true);
+    try {
+      const saved = localStorage.getItem('nextdigihome_settings');
+      if (saved) {
+        setSettings(JSON.parse(saved));
+      }
+    } catch (error) {
+      console.error('Failed to load settings from localStorage:', error);
+    }
   }, []);
 
   useEffect(() => {
@@ -78,16 +92,55 @@ export default function ClientLayout({
     }
   };
 
-  const fetchSettings = async () => {
-    try {
-      const res = await apiFetch('/api/settings');
-      // Very flexible extraction for different backend response shapes
-      const settingsData = res?.data?.data || res?.data || res || {};
-      setSettings(settingsData);
-    } catch (error) {
-      console.error('Failed to fetch settings:', error);
-    }
-  };
+    const fetchSettings = async () => {
+      setIsLoading(true);
+      const maxRetries = 3;
+      const baseDelay = 1000; // 1 second
+      
+      for (let i = 0; i < maxRetries; i++) {
+        try {
+          const res = await apiFetch('/api/settings', { silent: true });
+          // Very flexible extraction for different backend response shapes
+          const settingsData = res?.data?.data || res?.data || res || {};
+          setSettings(settingsData);
+          // Save to localStorage for offline fallback
+          try {
+            localStorage.setItem('nextdigihome_settings', JSON.stringify(settingsData));
+          } catch (storageError) {
+            console.warn('Failed to save settings to localStorage:', storageError);
+          }
+          setIsLoading(false);
+          return; // Success, exit the function
+        } catch (error) {
+          if (i === maxRetries - 1) {
+            // Last attempt: log as info and try fallback
+            console.log('Failed to fetch settings after retries, using fallback.');
+            // Try to load from localStorage as fallback
+            try {
+              const saved = localStorage.getItem('nextdigihome_settings');
+              if (saved) {
+                const parsed = JSON.parse(saved);
+                setSettings(parsed);
+                setIsLoading(false);
+                return;
+              }
+            } catch (storageError) {
+              console.error('Failed to load settings from localStorage:', storageError);
+            }
+            // Keep current settings (from localStorage initial state or previous)
+            setIsLoading(false);
+            return;
+          } else {
+            // Not the last attempt: log as info and retry
+            console.log(`Settings fetch attempt ${i + 1} failed, retrying...`);
+          }
+          
+          // Wait before retrying with exponential backoff
+          const delay = baseDelay * Math.pow(2, i);
+          await new Promise(resolve => setTimeout(resolve, delay));
+        }
+      }
+    };
 
   const fetchCategories = async () => {
     try {
@@ -420,20 +473,20 @@ export default function ClientLayout({
                       }}
                     />
                   ) : null}
-                  <svg className={`w-7 h-7 text-[#00d4aa] ${settings?.site_logo ? 'hidden' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className={`w-7 h-7 text-[#00d4aa] ${isHydrated && settings?.site_logo ? 'hidden' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
                   </svg>
                 </div>
                 <div>
                   <span className="block text-2xl font-bold gradient-text tracking-tight">
-                    {settings?.site_title || 'Next Digi Home'}
+                    {isHydrated ? (settings?.site_title || 'Next Digi Home') : 'Next Digi Home'}
                   </span>
                   <span className="text-[10px] text-[#737373] tracking-[2px] uppercase">Premium Digital Marketplace</span>
                 </div>
               </div>
 
               <p className="text-[#737373] text-sm leading-relaxed pr-2">
-                {settings?.site_description || "Premium digital products engineered for modern businesses. Transform your business with our curated collection."}
+                {isHydrated ? (settings?.site_description || "Premium digital products engineered for modern businesses. Transform your business with our curated collection.") : "Premium digital products engineered for modern businesses. Transform your business with our curated collection."}
               </p>
 
               {/* Premium Social Icons */}

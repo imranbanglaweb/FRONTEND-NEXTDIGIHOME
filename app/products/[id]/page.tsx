@@ -216,15 +216,18 @@ export default function ProductDetailPage() {
 
       const data = await response.json();
 
-      if (data.success) {
-        Swal.fire({
-          title: 'Added to Cart',
-          text: `${product.name} added successfully`,
-          icon: 'success',
-          background: '#111',
-          color: '#fff',
-        });
-      }
+       if (data.success) {
+         // Trigger cart count update
+         window.dispatchEvent(new Event('cartUpdated'));
+         
+         Swal.fire({
+           title: 'Added to Cart',
+           text: `${product.name} added successfully`,
+           icon: 'success',
+           background: '#111',
+           color: '#fff',
+         });
+       }
     } catch (error) {
       Swal.fire({
         title: 'Error',
