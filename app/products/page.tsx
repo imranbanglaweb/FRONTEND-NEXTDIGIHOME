@@ -147,12 +147,12 @@ export default function ProductsPage() {
         headers['Authorization'] = `Bearer ${token}`;
       }
 
-      const response = await fetch(`${BACKEND_BASE_URL}/api/cart`, {
-        method: 'POST',
-        headers,
-        credentials: 'include',
-        body: JSON.stringify({
-          product_id: product.id,
+const response = await fetch('/api/cart', {
+         method: 'POST',
+         headers,
+         credentials: 'include',
+         body: JSON.stringify({
+           product_id: product.id,
           quantity: 1,
         }),
       });

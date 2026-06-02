@@ -199,20 +199,20 @@ export default function ProductDetailPage() {
     try {
       setIsLoadingCart(true);
 
-      const response = await fetch(
-         `${BACKEND_BASE_URL}/api/cart`,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          credentials: 'include',
-          body: JSON.stringify({
-            product_id: product.id,
-            quantity,
-          }),
-        }
-      );
+const response = await fetch(
+          `/api/cart`,
+          {
+           method: 'POST',
+           headers: {
+             'Content-Type': 'application/json',
+           },
+           credentials: 'include',
+           body: JSON.stringify({
+             product_id: product.id,
+             quantity,
+           }),
+         }
+       );
 
       const data = await response.json();
 

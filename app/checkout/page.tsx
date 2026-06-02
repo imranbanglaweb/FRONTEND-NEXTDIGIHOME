@@ -126,7 +126,7 @@ export default function CheckoutPage() {
 
   const fetchCart = async () => {
     try {
-      const response = await fetch(`${BACKEND_BASE_URL}/api/cart`, {
+      const response = await fetch('/api/cart', {
         credentials: 'include',
       });
       if (response.ok) {
@@ -235,13 +235,13 @@ export default function CheckoutPage() {
           // Save email for dashboard lookup
           localStorage.setItem('customer_email', formData.customer_email);
           setStep('payment');
-          await fetch(`${BACKEND_BASE_URL}/api/cart`, { 
-            method: 'DELETE',
-            headers: {
-              'Authorization': `Bearer ${token}`,
-            },
-            credentials: 'include' 
-          });
+await fetch('/api/cart', { 
+             method: 'DELETE',
+             headers: {
+               'Authorization': `Bearer ${token}`,
+             },
+             credentials: 'include' 
+           });
           window.dispatchEvent(new Event('cartUpdated'));
         } else {
           alert(data.message || 'Checkout failed');

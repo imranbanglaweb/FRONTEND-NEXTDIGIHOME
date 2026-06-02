@@ -9,7 +9,6 @@ export async function GET(request: NextRequest) {
       'Content-Type': 'application/json',
     };
 
-    // Forward Authorization header if present
     const authHeader = request.headers.get('authorization');
     if (authHeader) {
       headers['Authorization'] = authHeader;
@@ -40,7 +39,6 @@ export async function POST(request: NextRequest) {
       'Content-Type': 'application/json',
     };
 
-    // Forward Authorization header if present
     const authHeader = request.headers.get('authorization');
     if (authHeader) {
       headers['Authorization'] = authHeader;
@@ -64,6 +62,44 @@ export async function POST(request: NextRequest) {
   }
 }
 
+export async function PUT(request: NextRequest) {
+  const url = new URL(request.url);
+  const id = url.searchParams.get('id');
+  const body = await request.json();
+  
+  if (!id) {
+    return NextResponse.json({ error: 'Missing item id' }, { status: 400 });
+  }
+
+  try {
+    const backendUrl = `${BACKEND_BASE_URL}/api/cart/${id}`;
+    const headers: Record<string, string> = {
+      'Content-Type': 'application/json',
+    };
+
+    const authHeader = request.headers.get('authorization');
+    if (authHeader) {
+      headers['Authorization'] = authHeader;
+    }
+
+    const response = await fetch(backendUrl, {
+      method: 'PUT',
+      headers,
+      credentials: 'include',
+      body: JSON.stringify(body),
+    });
+
+    const data = await response.json();
+    return NextResponse.json(data, { status: response.status });
+  } catch (error) {
+    console.error('Cart PUT error:', error);
+    return NextResponse.json(
+      { error: 'Failed to update cart' },
+      { status: 500 }
+    );
+  }
+}
+
 export async function DELETE(request: NextRequest) {
   try {
     const url = new URL(request.url);
@@ -76,7 +112,6 @@ export async function DELETE(request: NextRequest) {
       'Content-Type': 'application/json',
     };
 
-    // Forward Authorization header if present
     const authHeader = request.headers.get('authorization');
     if (authHeader) {
       headers['Authorization'] = authHeader;

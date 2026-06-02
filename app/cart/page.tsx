@@ -57,7 +57,7 @@ export default function CartPage() {
         headers['Authorization'] = `Bearer ${token}`;
       }
 
-      const response = await fetch(`/api/cart/${itemId}`, {
+      const response = await fetch(`/api/cart?id=${itemId}`, {
         method: 'PUT',
         headers,
         credentials: 'include',
@@ -68,6 +68,8 @@ export default function CartPage() {
           item.id === itemId ? { ...item, quantity: newQuantity, total: item.price * newQuantity } : item
         ));
         window.dispatchEvent(new Event('cartUpdated'));
+      } else {
+        console.error('Failed to update cart, response not ok');
       }
     } catch (error) {
       console.error('Failed to update cart:', error);
@@ -85,7 +87,7 @@ export default function CartPage() {
         headers['Authorization'] = `Bearer ${token}`;
       }
 
-      const response = await fetch(`/api/cart/${itemId}`, {
+      const response = await fetch(`/api/cart?id=${itemId}`, {
         method: 'DELETE',
         headers,
         credentials: 'include',
