@@ -16,6 +16,7 @@ export default function robots(): MetadataRoute.Robots {
            '/contact',
            '/blog',
            '/api/search',
+           '/sitemap.xml',
          ],
          disallow: [
            '/admin/',
