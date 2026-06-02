@@ -26,26 +26,40 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   try {
     const apiUrl = process.env.NEXT_PUBLIC_API_URL;
     if (!apiUrl) {
-      console.warn('API URL not configured, skipping dynamic products in sitemap');
+      console.warn('[sitemap.ts] API URL not configured, using static routes only');
       return staticUrls;
     }
 
+    // Use a more reliable fetch with shorter timeout
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 5000); // 5 second timeout
+    const timeoutId = setTimeout(() => controller.abort(), 8000); // 8 second timeout for build environment
 
-    const response = await fetch(`${apiUrl}/api/products?limit=1000`, {
-      signal: controller.signal,
-      next: { revalidate: 3600 },
-    });
+    try {
+      const response = await fetch(`${apiUrl}/api/products?limit=1000`, {
+        signal: controller.signal,
+        headers: {
+          'Accept': 'application/json',
+          'User-Agent': 'Next.js-Sitemap-Generator',
+        },
+        // Don't cache during build
+      });
 
-    clearTimeout(timeoutId);
+      clearTimeout(timeoutId);
 
-    if (response.ok) {
+      if (!response.ok) {
+        throw new Error(`API responded with status ${response.status}`);
+      }
+
+      const contentType = response.headers.get('content-type');
+      if (!contentType?.includes('application/json')) {
+        throw new Error(`Unexpected content type: ${contentType}`);
+      }
+
       const data = await response.json();
       const products = Array.isArray(data) ? data : data.data || [];
 
       productUrls = products
-        .filter((product: any) => product?.id)
+        .filter((product: any) => product?.id && typeof product.id === 'number')
         .slice(0, 50000) // Google Sitemap limit
         .map((product: any) => ({
           url: `${baseUrl}/products/${product.id}`,
@@ -55,10 +69,22 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
           changeFrequency: 'weekly' as const,
           priority: 0.80,
         }));
+
+      console.log(`[sitemap.ts] Successfully fetched ${productUrls.length} products for sitemap`);
+    } catch (fetchError) {
+      clearTimeout(timeoutId);
+      if (fetchError instanceof Error) {
+        if (fetchError.name === 'AbortError') {
+          console.warn('[sitemap.ts] Product fetch timeout (API took too long), using static routes only');
+        } else {
+          console.warn('[sitemap.ts] Product fetch error:', fetchError.message);
+        }
+      }
+      // Return static routes if API fetch fails - this ensures sitemap is always generated
     }
   } catch (error) {
-    console.warn('Failed to fetch products for sitemap:', error instanceof Error ? error.message : String(error));
-    // Return only static routes if API fetch fails - this is fine
+    console.error('[sitemap.ts] Unexpected error in sitemap generation:', error instanceof Error ? error.message : String(error));
+    // Return static routes as fallback - sitemap will still be generated
   }
 
   return [
