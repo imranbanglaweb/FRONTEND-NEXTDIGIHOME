@@ -22,25 +22,25 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: route.priority,
   }));
 
-  // Fetch dynamic products from API (if available)
-  let productUrls: MetadataRoute.Sitemap = [];
-  try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/products?limit=10000`, {
-      next: { revalidate: 3600 }, // Cache for 1 hour
-    });
-    if (response.ok) {
-      const products = await response.json();
-      productUrls = products.data?.map((product: any) => ({
-        url: `${baseUrl}/products/${product.id}`,
-        lastModified: new Date(product.updated_at || new Date()),
-        changeFrequency: 'weekly' as const,
-        priority: 0.80,
-      })) || [];
-    }
-  } catch (error) {
-    console.warn('Failed to fetch products for sitemap:', error);
-    // Fallback: return only static routes
-  }
+   // Fetch dynamic products from API (if available)
+   let productUrls: MetadataRoute.Sitemap = [];
+   try {
+     const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/products?limit=10000`, {
+       next: { revalidate: 3600 }, // Cache for 1 hour
+     });
+     if (response.ok) {
+       const products = await response.json();
+       productUrls = products.data?.map((product: { id: string; updated_at?: string | Date }) => ({
+         url: `${baseUrl}/products/${product.id}`,
+         lastModified: new Date(product.updated_at || new Date()),
+         changeFrequency: 'weekly' as const,
+         priority: 0.80,
+       })) || [];
+     }
+   } catch (error) {
+     console.warn('Failed to fetch products for sitemap:', error);
+     // Fallback: return only static routes
+   }
 
   return [
     ...staticUrls,
