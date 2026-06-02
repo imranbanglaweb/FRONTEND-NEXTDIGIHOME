@@ -27,7 +27,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   let productUrls: MetadataRoute.Sitemap = [];
   try {
     const response = await fetch(`${apiUrl}/api/products?limit=10000`, {
-      next: { revalidate: 3600 }, // revalidate every hour
+      next: { revalidate: 3600 },
     });
     if (response.ok) {
       const products = await response.json();
@@ -42,11 +42,32 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     }
   } catch (error) {
     console.warn('Failed to fetch products for sitemap:', error);
-    // Fallback: return only static routes
+  }
+
+  // Fetch dynamic blog posts from API (if available)
+  let blogUrls: MetadataRoute.Sitemap = [];
+  try {
+    const response = await fetch(`${apiUrl}/api/blog?limit=1000`, {
+      next: { revalidate: 3600 },
+    });
+    if (response.ok) {
+      const posts = await response.json();
+      blogUrls = posts.data?.map((post: { slug: string; updated_at?: string | Date }) => ({
+        url: `https://nextdigihome.com/blog/${post.slug}`,
+        lastModified: post.updated_at 
+          ? new Date(post.updated_at).toISOString().split('T')[0]
+          : new Date().toISOString().split('T')[0],
+        changeFrequency: 'weekly' as const,
+        priority: 0.75,
+      })) || [];
+    }
+  } catch (error) {
+    console.warn('Failed to fetch blog posts for sitemap:', error);
   }
 
   return [
     ...staticUrls,
     ...productUrls,
+    ...blogUrls,
   ];
 }

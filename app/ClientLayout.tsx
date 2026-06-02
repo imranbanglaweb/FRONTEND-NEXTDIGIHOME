@@ -224,7 +224,7 @@ const [settings, setSettings] = useState<{
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-2 md:py-1 gap-4">
             <Link href="/" className="flex items-center group flex-shrink-0 gap-3">
-              <div className="w-14 h-14 md:w-20 md:h-20 rounded-2xl flex items-center justify-center group-hover:scale-105 transition-transform duration-300 overflow-hidden border border-[#2a2a30] bg-[#1a1a1f]">
+              <div className="w-14 h-14 md:w-20 md:h-20 rounded-2xl flex items-center justify-center group-hover:scale-105 transition-transform duration-300 overflow-hidden border border-[#2a2a30]">
                 {isHydrated && (() => {
                   // Use site_logo, or fall back to admin_logo if site_logo is not set
                   const logoToUse = settings?.site_logo || settings?.admin_logo;
@@ -259,7 +259,7 @@ const [settings, setSettings] = useState<{
               {/* Site Title - Now shows from API */}
               <div className="hidden sm:block">
                 <span className="text-xl font-bold gradient-text tracking-tight">
-                  {settings?.site_title || 'Next Digi Home'}
+                  {settings?.admin_title || 'Next Digi Home'}
                 </span>
               </div>
             </Link>
@@ -274,6 +274,9 @@ const [settings, setSettings] = useState<{
               </Link>
               <Link href="/about" className={`px-4 py-2 rounded-lg transition-all duration-200 text-sm font-medium ${pathname === '/about' ? 'text-[#00d4aa] bg-[#2a2a30]/50' : 'text-[#fafafa] hover:text-[#00d4aa] hover:bg-[#2a2a30]/50'}`}>
                 About
+              </Link>
+              <Link href="/blog" className={`px-4 py-2 rounded-lg transition-all duration-200 text-sm font-medium ${pathname.startsWith('/blog') ? 'text-[#00d4aa] bg-[#2a2a30]/50' : 'text-[#fafafa] hover:text-[#00d4aa] hover:bg-[#2a2a30]/50'}`}>
+                Blog
               </Link>
               <Link href="/services" className={`px-4 py-2 rounded-lg transition-all duration-200 text-sm font-medium ${pathname === '/services' ? 'text-[#00d4aa] bg-[#2a2a30]/50' : 'text-[#fafafa] hover:text-[#00d4aa] hover:bg-[#2a2a30]/50'}`}>
                 Services
@@ -377,6 +380,13 @@ const [settings, setSettings] = useState<{
                 className={`block px-4 py-3 rounded-lg text-lg font-medium transition-all ${pathname === '/about' ? 'text-[#00d4aa] bg-[#2a2a30]/50' : 'text-[#fafafa] hover:text-[#00d4aa] hover:bg-[#2a2a30]/50'}`}
               >
                 About
+              </Link>
+              <Link
+                href="/blog"
+                onClick={() => setMobileMenuOpen(false)}
+                className={`block px-4 py-3 rounded-lg text-lg font-medium transition-all ${pathname.startsWith('/blog') ? 'text-[#00d4aa] bg-[#2a2a30]/50' : 'text-[#fafafa] hover:text-[#00d4aa] hover:bg-[#2a2a30]/50'}`}
+              >
+                Blog
               </Link>
               <Link
                 href="/services"
@@ -489,7 +499,7 @@ const [settings, setSettings] = useState<{
             {/* Brand Column - Now fully dynamic */}
             <div className="space-y-5">
               <div className="flex items-center space-x-3 group">
-                <div className="w-16 h-16 rounded-2xl flex items-center justify-center overflow-hidden bg-[#1a1a1f] border border-[#2a2a30] group-hover:border-[#00d4aa]/40 transition-all">
+                <div className="w-16 h-16 rounded-2xl flex items-center justify-center overflow-hidden border border-[#2a2a30] group-hover:border-[#00d4aa]/40 transition-all">
                   {isHydrated && (() => {
                     // Use site_logo, or fall back to admin_logo if site_logo is not set
                     const logoToUse = settings?.site_logo || settings?.admin_logo;
@@ -514,7 +524,7 @@ const [settings, setSettings] = useState<{
                 </div>
                 <div>
                   <span className="block text-2xl font-bold gradient-text tracking-tight">
-                    {isHydrated ? (settings?.site_title || 'Next Digi Home') : 'Next Digi Home'}
+                    {isHydrated ? (settings?.admin_title || 'Next Digi Home') : 'Next Digi Home'}
                   </span>
                   <span className="text-[10px] text-[#737373] tracking-[2px] uppercase">Premium Digital Marketplace</span>
                 </div>
@@ -587,9 +597,10 @@ const [settings, setSettings] = useState<{
                  <span className="h-px flex-1 bg-gradient-to-r from-[#00d4aa]/30 to-transparent"></span>
                </h4>
                 <ul className="space-y-2.5 text-sm">
-                  {[
-                    { label: "About Us", href: "/about", icon: "M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" },
-                    { label: "Services", href: "/services", icon: "M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 001.065 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" },
+{[
+                     { label: "About Us", href: "/about", icon: "M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" },
+                     { label: "Blog", href: "/blog", icon: "M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v12a2 2 0 01-2 2z" },
+                     { label: "Services", href: "/services", icon: "M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 001.065 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" },
                     { label: "Sitemap", href: "/sitemap", icon: "M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" },
                     { label: "Contact", href: "/contact", icon: "M3 8l7.89 5.26a2.01 2.01 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2-2v10a2 2 0 002 2z" },
                     { label: "Privacy Policy", href: "/privacy", icon: "M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2-2v6a2 2 0 002 2zm10-10V9a4 4 0 00-8 0v1" },
