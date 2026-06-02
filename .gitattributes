@@ -1,0 +1,49 @@
+# Auto detect text files and normalize line endings to LF
+* text=auto
+
+# JavaScript, TypeScript, and React files
+*.js text eol=lf
+*.jsx text eol=lf
+*.ts text eol=lf
+*.tsx text eol=lf
+*.mjs text eol=lf
+
+# JSON files
+*.json text eol=lf
+
+# Markdown files
+*.md text eol=lf
+*.markdown text eol=lf
+
+# Configuration files
+.env* text eol=lf
+*.config.* text eol=lf
+*.config text eol=lf
+.gitignore text eol=lf
+.prettierrc text eol=lf
+.eslintrc text eol=lf
+
+# CSS and styling
+*.css text eol=lf
+*.scss text eol=lf
+*.sass text eol=lf
+
+# HTML
+*.html text eol=lf
+*.htm text eol=lf
+
+# Shell scripts
+*.sh text eol=lf
+*.bash text eol=lf
+
+# Binary files
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.mov binary
+*.mp4 binary
+*.mp3 binary
+*.gz binary
+*.zip binary
