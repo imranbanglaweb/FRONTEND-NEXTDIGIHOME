@@ -1,33 +1,49 @@
 import { MetadataRoute } from 'next';
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = 'https://nextdigihome.com';
 
-  // Static routes
+  // Static routes with priority
   const staticRoutes = [
-    '',
-    '/about',
-    '/services',
-    '/products',
-    '/contact',
-    '/privacy',
-    '/terms',
-    '/signin',
-    '/signup',
+    { path: '', priority: 1.0, changeFrequency: 'daily' as const },
+    { path: '/products', priority: 0.95, changeFrequency: 'daily' as const },
+    { path: '/services', priority: 0.90, changeFrequency: 'weekly' as const },
+    { path: '/about', priority: 0.80, changeFrequency: 'monthly' as const },
+    { path: '/contact', priority: 0.75, changeFrequency: 'monthly' as const },
+    { path: '/privacy', priority: 0.60, changeFrequency: 'yearly' as const },
+    { path: '/terms', priority: 0.60, changeFrequency: 'yearly' as const },
+    { path: '/blog', priority: 0.85, changeFrequency: 'weekly' as const },
   ];
 
   const staticUrls = staticRoutes.map((route) => ({
-    url: `${baseUrl}${route}`,
+    url: `${baseUrl}${route.path}`,
     lastModified: new Date(),
-    changeFrequency: 'weekly' as const,
-    priority: route === '' ? 1.0 : 0.8,
+    changeFrequency: route.changeFrequency,
+    priority: route.priority,
   }));
 
-  // Dynamic product pages would require API call, but for now static + note
-  // In production, fetch products and add /products/${slug}
+  // Fetch dynamic products from API (if available)
+  let productUrls: MetadataRoute.Sitemap = [];
+  try {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/products?limit=10000`, {
+      next: { revalidate: 3600 }, // Cache for 1 hour
+    });
+    if (response.ok) {
+      const products = await response.json();
+      productUrls = products.data?.map((product: any) => ({
+        url: `${baseUrl}/products/${product.id}`,
+        lastModified: new Date(product.updated_at || new Date()),
+        changeFrequency: 'weekly' as const,
+        priority: 0.80,
+      })) || [];
+    }
+  } catch (error) {
+    console.warn('Failed to fetch products for sitemap:', error);
+    // Fallback: return only static routes
+  }
 
   return [
     ...staticUrls,
-    // Example for products index with lower priority? already included
+    ...productUrls,
   ];
 }
