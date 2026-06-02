@@ -139,11 +139,17 @@ export default function ProductsPage() {
     try {
 
     try {
+      const token = localStorage.getItem('auth_token');
+      const headers: Record<string, string> = {
+        'Content-Type': 'application/json',
+      };
+      if (token) {
+        headers['Authorization'] = `Bearer ${token}`;
+      }
+
       const response = await fetch(`${BACKEND_BASE_URL}/api/cart`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers,
         credentials: 'include',
         body: JSON.stringify({
           product_id: product.id,

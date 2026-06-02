@@ -22,8 +22,15 @@ export default function CartPage() {
 
   const fetchCart = async () => {
     try {
+      const token = localStorage.getItem('auth_token');
+      const headers: Record<string, string> = {};
+      if (token) {
+        headers['Authorization'] = `Bearer ${token}`;
+      }
+
       const response = await fetch('/api/cart', {
         credentials: 'include',
+        headers,
       });
       if (response.ok) {
         const data = await response.json();
@@ -44,9 +51,15 @@ export default function CartPage() {
     if (newQuantity < 1) return;
     setUpdating(true);
     try {
+      const token = localStorage.getItem('auth_token');
+      const headers: Record<string, string> = { 'Content-Type': 'application/json' };
+      if (token) {
+        headers['Authorization'] = `Bearer ${token}`;
+      }
+
       const response = await fetch(`/api/cart/${itemId}`, {
         method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
+        headers,
         credentials: 'include',
         body: JSON.stringify({ quantity: newQuantity }),
       });
@@ -66,8 +79,15 @@ export default function CartPage() {
   const removeItem = async (itemId: string) => {
     setUpdating(true);
     try {
+      const token = localStorage.getItem('auth_token');
+      const headers: Record<string, string> = {};
+      if (token) {
+        headers['Authorization'] = `Bearer ${token}`;
+      }
+
       const response = await fetch(`/api/cart/${itemId}`, {
         method: 'DELETE',
+        headers,
         credentials: 'include',
       });
       if (response.ok) {
@@ -84,8 +104,15 @@ export default function CartPage() {
   const clearCart = async () => {
     setUpdating(true);
     try {
+      const token = localStorage.getItem('auth_token');
+      const headers: Record<string, string> = {};
+      if (token) {
+        headers['Authorization'] = `Bearer ${token}`;
+      }
+
       const response = await fetch('/api/cart', {
         method: 'DELETE',
+        headers,
         credentials: 'include',
       });
       if (response.ok) {
