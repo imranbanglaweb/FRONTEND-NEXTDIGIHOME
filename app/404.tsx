@@ -1,14 +1,16 @@
 export default function NotFound() {
+  const Link = require('next/link').default;
+  
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-[#0f0f12] text-[#fafafa]">
       <h1 className="text-6xl font-bold mb-4">404</h1>
       <p className="text-xl text-[#737373] mb-8">This page could not be found.</p>
-      <a
+      <Link
         href="/"
         className="px-6 py-3 bg-[#00d4aa] text-[#0f0f12] rounded-lg hover:bg-[#00b894] transition"
       >
         Go Back Home
-      </a>
+      </Link>
     </div>
   );
 }

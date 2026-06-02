@@ -27,7 +27,7 @@ export default function CartPage() {
       });
       if (response.ok) {
         const data = await response.json();
-        setItems((data.items || []).map((item: any) => ({
+        setItems((data.items || []).map((item: CartItem) => ({
           ...item,
           price: Number(item.price),
           total: Number(item.total)

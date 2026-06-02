@@ -20,7 +20,11 @@ interface ContactContent {
     description: string;
   };
   contact_info: ContactInfo[];
-  faq: any[];
+  faq: Array<{
+    id: number;
+    question: string;
+    answer: string;
+  }>;
 }
 
 export default function ContactPage() {

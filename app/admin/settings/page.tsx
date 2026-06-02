@@ -36,10 +36,6 @@ export default function SettingsPage() {
   const [adminLogoPreview, setAdminLogoPreview] = useState<string | null>(null);
   const [faviconPreview, setFaviconPreview] = useState<string | null>(null);
 
-  useEffect(() => {
-    fetchSettings();
-  }, []);
-
   const fetchSettings = async () => {
     try {
       const response = await fetch('/api/admin/settings');
@@ -55,6 +51,10 @@ export default function SettingsPage() {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    fetchSettings();
+  }, []);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>, type: 'site_logo' | 'admin_logo' | 'favicon') => {
     const file = e.target.files?.[0];

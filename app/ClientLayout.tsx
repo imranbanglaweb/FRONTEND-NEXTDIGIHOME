@@ -68,6 +68,56 @@ const [settings, setSettings] = useState<{
     { id: 8, category_name: 'Video & Animation', slug: 'video-animation' },
   ]);
 
+  // Function declarations before useEffect hooks
+  const fetchCartCount = async () => {
+    try {
+      const data = await apiFetch('/api/cart', { credentials: 'include' });
+      setCartCount(data.items?.length || 0);
+    } catch (error) {
+      console.error('Failed to fetch cart count:', error);
+    }
+  };
+
+  const fetchSettings = async () => {
+    setIsLoading(true);
+    const maxRetries = 3;
+    const baseDelay = 1000;
+    
+    for (let i = 0; i < maxRetries; i++) {
+      try {
+        const res = await apiFetch('/api/settings', { silent: true });
+        const settingsData = res?.data?.data || res?.data || res || {};
+        setSettings(settingsData);
+        try {
+          localStorage.setItem('nextdigihome_settings', JSON.stringify(settingsData));
+        } catch (storageError) {
+          console.warn('Failed to save settings to localStorage:', storageError);
+        }
+        setIsLoading(false);
+        return;
+      } catch (error) {
+        if (i === maxRetries - 1) {
+          console.log('Failed to fetch settings after retries, keeping current settings.');
+          setIsLoading(false);
+          return;
+        } else {
+          console.log(`Settings fetch attempt ${i + 1} failed, retrying...`);
+        }
+        const delay = baseDelay * Math.pow(2, i);
+        await new Promise(resolve => setTimeout(resolve, delay));
+      }
+    }
+  };
+
+  const fetchCategories = async () => {
+    try {
+      const data = await apiFetch('/api/categories');
+      setCategories(data);
+    } catch (error) {
+      console.error('Failed to fetch categories:', error);
+    }
+  };
+
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 50);
@@ -78,17 +128,18 @@ const [settings, setSettings] = useState<{
   }, []);
 
 // Mark component as hydrated and load settings from localStorage
-   useEffect(() => {
-     setIsHydrated(true);
-     try {
-       const saved = localStorage.getItem('nextdigihome_settings');
-       if (saved) {
-         setSettings(JSON.parse(saved));
-       }
-     } catch (error) {
-       console.error('Failed to load settings from localStorage:', error);
-     }
-   }, []);
+  useEffect(() => {
+    setIsHydrated(true);
+    try {
+      const saved = localStorage.getItem('nextdigihome_settings');
+      if (saved) {
+        setSettings(JSON.parse(saved));
+      }
+    } catch (error) {
+      console.error('Failed to load settings from localStorage:', error);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
 // Update favicon dynamically when settings change
     useEffect(() => {
@@ -128,62 +179,8 @@ const [settings, setSettings] = useState<{
     };
     window.addEventListener('cartUpdated', handleCartUpdate);
     return () => window.removeEventListener('cartUpdated', handleCartUpdate);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  const fetchCartCount = async () => {
-    try {
-      const data = await apiFetch('/api/cart', { credentials: 'include' });
-      setCartCount(data.items?.length || 0);
-    } catch (error) {
-      console.error('Failed to fetch cart count:', error);
-    }
-  };
-
-    const fetchSettings = async () => {
-      setIsLoading(true);
-      const maxRetries = 3;
-      const baseDelay = 1000; // 1 second
-      
-      for (let i = 0; i < maxRetries; i++) {
-        try {
-          const res = await apiFetch('/api/settings', { silent: true });
-          // Very flexible extraction for different backend response shapes
-          const settingsData = res?.data?.data || res?.data || res || {};
-          setSettings(settingsData);
-          // Save to localStorage for offline fallback
-          try {
-            localStorage.setItem('nextdigihome_settings', JSON.stringify(settingsData));
-          } catch (storageError) {
-            console.warn('Failed to save settings to localStorage:', storageError);
-          }
-          setIsLoading(false);
-          return; // Success, exit the function
-        } catch (error) {
-          if (i === maxRetries - 1) {
-            // Last attempt: log as info and keep current settings (which might be from localStorage or initial)
-            console.log('Failed to fetch settings after retries, keeping current settings.');
-            setIsLoading(false);
-            return;
-          } else {
-            // Not the last attempt: log as info and retry
-            console.log(`Settings fetch attempt ${i + 1} failed, retrying...`);
-          }
-          
-          // Wait before retrying with exponential backoff
-          const delay = baseDelay * Math.pow(2, i);
-          await new Promise(resolve => setTimeout(resolve, delay));
-        }
-      }
-    };
-
-  const fetchCategories = async () => {
-    try {
-      const data = await apiFetch('/api/categories');
-      setCategories(data);
-    } catch (error) {
-      console.error('Failed to fetch categories:', error);
-    }
-  };
 
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
