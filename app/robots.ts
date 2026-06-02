@@ -3,39 +3,41 @@ import { MetadataRoute } from 'next';
 export default function robots(): MetadataRoute.Robots {
   const baseUrl = 'https://nextdigihome.com';
 
-  return {
-    rules: [
-      // Main crawler rules
-      {
-        userAgent: '*',
-        allow: [
-          '/',
-          '/products',
-          '/services',
-          '/about',
-          '/contact',
-          '/blog',
-          '/api/search',
-        ],
-        disallow: [
-          '/admin/',
-          '/dashboard/',
-          '/api/',
-          '/checkout/',
-          '/cart/',
-          '/signin/',
-          '/signup/',
-          '/*.json$',
-          '/private',
-          '/temp',
-          '/*?*sort=',
-          '/*&filter=',
-        ],
-        crawlDelay: 1,
-        userAgent: 'Googlebot',
-        crawlDelay: 0,
-      },
-      // Specific rules for GPTBot
+   return {
+     rules: [
+       // Main crawler rules
+       {
+         userAgent: '*',
+         allow: [
+           '/',
+           '/products',
+           '/services',
+           '/about',
+           '/contact',
+           '/blog',
+           '/api/search',
+         ],
+         disallow: [
+           '/admin/',
+           '/dashboard/',
+           '/api/',
+           '/checkout/',
+           '/cart/',
+           '/signin/',
+           '/signup/',
+           '/*.json$',
+           '/private',
+           '/temp',
+           '/*?*sort=',
+           '/*&filter=',
+         ],
+         crawlDelay: 1,
+       },
+       {
+         userAgent: 'Googlebot',
+         crawlDelay: 0,
+       },
+       // Specific rules for GPTBot
       {
         userAgent: 'GPTBot',
         disallow: '/',

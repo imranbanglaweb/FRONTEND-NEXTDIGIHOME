@@ -23,23 +23,23 @@ export const metadata: Metadata = generatePageMetadata({
 export default function ProductsPage() {
   // Breadcrumb Schema
   const breadcrumbs = [
-    { name: "Home", url: "/" },
-    { name: "Products", url: "/products" },
+    { label: "Home", path: "/" },
+    { label: "Products", path: "/products" },
   ];
 
   return (
     <main>
-      {/* Breadcrumb Navigation - improves UX and SEO */}
-      <nav aria-label="Breadcrumb">
-        <ol>
-          {breadcrumbs.map((crumb, index) => (
-            <li key={index}>
-              <a href={crumb.url}>{crumb.name}</a>
-              {index < breadcrumbs.length - 1 && " / "}
-            </li>
-          ))}
-        </ol>
-      </nav>
+       {/* Breadcrumb Navigation - improves UX and SEO */}
+       <nav aria-label="Breadcrumb">
+         <ol>
+           {breadcrumbs.map((crumb, index) => (
+             <li key={index}>
+               <a href={crumb.path}>{crumb.label}</a>
+               {index < breadcrumbs.length - 1 && " / "}
+             </li>
+           ))}
+         </ol>
+       </nav>
 
       {/* Main Content */}
       <section>

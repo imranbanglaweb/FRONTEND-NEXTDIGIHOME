@@ -76,39 +76,45 @@ export default async function ProductDetailPage(props: ProductPageProps) {
     );
   }
 
-  // Breadcrumb Schema
-  const breadcrumbs = [
-    { name: "Home", url: "/" },
-    { name: "Products", url: "/products" },
-    { name: product.name, url: `/products/${product.id}` },
-  ];
+   // Breadcrumb Schema
+   const breadcrumbs = [
+     { label: "Home", path: "/" },
+     { label: "Products", path: "/products" },
+     { label: product.name, path: `/products/${product.id}` },
+   ];
 
-  // Product Schema
-  const productSchema = generateProductSchema({
-    id: product.id,
-    name: product.name,
-    description: product.description,
-    price: product.price,
-    currency: "USD",
-    image: product.image,
-    rating: product.rating,
-    ratingCount: 100,
-    availability: "InStock",
-  });
+   // Product Schema
+   const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://nextdigihome.com";
+   const productSchema = generateProductSchema({
+     id: product.id,
+     name: product.name,
+     description: product.description,
+     image: product.image,
+     sku: `sku-${product.id}`,
+     brand: "NextDigiHome",
+     offers: [
+       {
+         price: product.price.toString(),
+         priceCurrency: "USD",
+         availability: "InStock",
+         url: `${BASE_URL}/products/${product.id}`,
+       },
+     ],
+   });
 
   return (
     <main>
       {/* Breadcrumb Navigation */}
-      <nav aria-label="Breadcrumb">
-        <ol>
-          {breadcrumbs.map((crumb, index) => (
-            <li key={index}>
-              <a href={crumb.url}>{crumb.name}</a>
-              {index < breadcrumbs.length - 1 && " / "}
-            </li>
-          ))}
-        </ol>
-      </nav>
+       <nav aria-label="Breadcrumb">
+         <ol>
+           {breadcrumbs.map((crumb, index) => (
+             <li key={index}>
+               <a href={crumb.path}>{crumb.label}</a>
+               {index < breadcrumbs.length - 1 && " / "}
+             </li>
+           ))}
+         </ol>
+       </nav>
 
       {/* Product Content */}
       <article>
