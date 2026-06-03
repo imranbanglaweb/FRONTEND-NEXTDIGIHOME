@@ -76,12 +76,12 @@ export const getStorageUrl = (path: string | null | undefined): string | null =>
   return `${BACKEND_BASE_URL}/storage/${cleanPath}`;
 };
 
-// Logo URLs from admin resources
+// Logo URLs - use local proxy route to avoid CORS issues
 export const getLogoUrl = (filename: string | null | undefined): string | null => {
   if (!filename) return null;
   if (filename.startsWith('http')) return filename;
   const cleanFilename = filename.replace(/^\/+/, '');
-  return `${BACKEND_BASE_URL}/api/logo/${cleanFilename}`;
+  return `/api/logo/${cleanFilename}`;
 };
 
 // Public folder assets

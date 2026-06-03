@@ -704,7 +704,7 @@ const [settings, setSettings] = useState<{
               <div className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded bg-gradient-to-r from-[#00d4aa] to-[#8b5cf6] text-[#0f0f12] font-medium">
                 <div className="w-3.5 h-3.5 rounded bg-[#0f0f12]/80 flex items-center justify-center overflow-hidden">
                   {settings?.site_logo ? (
-                    <img src={`${BACKEND_BASE_URL}/api/logo/${settings.site_logo}`} alt="" className="w-full h-full object-cover" />
+                    <img src={getLogoUrl(settings.site_logo)!} alt="" className="w-full h-full object-cover" />
                   ) : (
                     <svg className="w-2 h-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
                   )}
