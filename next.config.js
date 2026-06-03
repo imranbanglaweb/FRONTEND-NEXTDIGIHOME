@@ -19,36 +19,8 @@ const nextConfig = {
     const apiBase = (process.env.NEXT_PUBLIC_API_URL || 'https://backend.nextdigihome.com').replace(/\/$/, '');
     return [
       {
-        source: '/api/admin/:path*',
-        destination: `${apiBase}/api/admin/:path*`,
-      },
-      {
-        source: '/api/auth/:path*',
-        destination: `${apiBase}/api/auth/:path*`,
-      },
-      {
-        source: '/api/login',
-        destination: `${apiBase}/api/login`,
-      },
-      {
-        source: '/api/cart/:path*',
-        destination: `${apiBase}/api/cart/:path*`,
-      },
-      {
-        source: '/api/products/:path*',
-        destination: `${apiBase}/api/products/:path*`,
-      },
-      {
-        source: '/api/content/:path*',
-        destination: `${apiBase}/api/content/:path*`,
-      },
-      {
-        source: '/api/categories/:path*',
-        destination: `${apiBase}/api/categories/:path*`,
-      },
-      {
-        source: '/api/settings',
-        destination: `${apiBase}/api/settings`,
+        source: '/api/:path*',
+        destination: `${apiBase}/api/:path*`,
       },
     ];
   },
