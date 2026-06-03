@@ -1,7 +1,7 @@
 // utils/api.ts
 
 // Clean base URL (always without trailing /api)
-const RAW_API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost/NEXTDIGIHOMEBACKEND';
+const RAW_API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://backend.nextdigihome.com';
 export const BACKEND_BASE_URL = RAW_API_URL.replace(/\/api\/?$/, '');
 
 const API_BASE_PATH = process.env.NEXT_PUBLIC_API_BASE_PATH || '/api';

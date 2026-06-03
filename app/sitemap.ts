@@ -2,7 +2,7 @@ import { MetadataRoute } from 'next';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = 'https://nextdigihome.com';
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost/NEXTDIGIHOMEBACKEND';
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://backend.nextdigihome.com';
 
   // Static routes with priority
   const staticRoutes = [
