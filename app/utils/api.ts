@@ -1,24 +1,21 @@
 // utils/api.ts
 
-// Clean base URL (always without trailing /api)
-const RAW_API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://backend.nextdigihome.com';
-export const BACKEND_BASE_URL = RAW_API_URL.replace(/\/api\/?$/, '');
+function detectBackendBaseUrl(): string {
+  const envUrl = process.env.NEXT_PUBLIC_API_URL;
+  if (envUrl) return envUrl;
+  return 'https://backend.nextdigihome.com';
+}
+
+const BACKEND_BASE_URL = detectBackendBaseUrl();
 
 const API_BASE_PATH = process.env.NEXT_PUBLIC_API_BASE_PATH || '/api';
 
+export { BACKEND_BASE_URL };
+
 export const getApiUrl = (endpoint: string): string => {
-  // If endpoint starts with http, use it as-is
-  if (endpoint.startsWith('http')) {
-    return endpoint;
-  }
-
-  // If endpoint starts with /, prepend BACKEND_BASE_URL
-  if (endpoint.startsWith('/')) {
-    return `${BACKEND_BASE_URL}${endpoint}`;
-  }
-
-  // Otherwise, prepend BACKEND_BASE_URL + API_BASE_PATH
-  return `${BACKEND_BASE_URL}${API_BASE_PATH}/${endpoint}`;
+  if (endpoint.startsWith('http')) return endpoint;
+  if (endpoint.startsWith('/api/')) return endpoint;
+  return `/api/${endpoint.replace(/^\//, '')}`;
 };
 
 export interface FetchOptions extends RequestInit {
@@ -32,7 +29,6 @@ export const apiFetch = async <T = any>(
 ): Promise<T> => {
   const url = getApiUrl(endpoint);
   
-  // Set default fetch options
   const fetchOptions: RequestInit = {
     cache: 'no-store',
     headers: {
@@ -56,7 +52,6 @@ export const apiFetch = async <T = any>(
     const data = await response.json();
     return data;
   } catch (error) {
-    // Only log if not silent
     if (!options.silent) {
       console.error(`Failed to fetch from ${endpoint}:`, error instanceof Error ? error.message : error);
     }
@@ -64,16 +59,16 @@ export const apiFetch = async <T = any>(
   }
 };
 
-// Specific API methods for content
-export const fetchHomeContent = () => apiFetch('/api/content/home');
-export const fetchAboutContent = () => apiFetch('/api/content/about');
-export const fetchContactContent = () => apiFetch('/api/content/contact');
-export const fetchPrivacyContent = () => apiFetch('/api/content/privacy');
-export const fetchTermsContent = () => apiFetch('/api/content/terms');
+// Public API methods
+export const fetchHomeContent = () => apiFetch('content/home');
+export const fetchAboutContent = () => apiFetch('content/about');
+export const fetchContactContent = () => apiFetch('content/contact');
+export const fetchPrivacyContent = () => apiFetch('content/privacy');
+export const fetchTermsContent = () => apiFetch('content/terms');
 export const fetchProducts = (page: number = 1, perPage: number = 12) =>
-  apiFetch(`/api/products?page=${page}&per_page=${perPage}`);
+  apiFetch(`products?page=${page}&per_page=${perPage}`);
 
-// Helper for Laravel storage URLs (thumbnails, logos, etc.)
+// Laravel storage URLs
 export const getStorageUrl = (path: string | null | undefined): string | null => {
   if (!path) return null;
   if (path.startsWith('http')) return path;
@@ -81,16 +76,15 @@ export const getStorageUrl = (path: string | null | undefined): string | null =>
   return `${BACKEND_BASE_URL}/storage/${cleanPath}`;
 };
 
-// Helper for logo URLs from admin resources
+// Logo URLs from admin resources
 export const getLogoUrl = (filename: string | null | undefined): string | null => {
   if (!filename) return null;
   if (filename.startsWith('http')) return filename;
-  // Remove any leading slashes from the filename
   const cleanFilename = filename.replace(/^\/+/, '');
   return `${BACKEND_BASE_URL}/api/logo/${cleanFilename}`;
 };
 
-// Helper for public folder assets (e.g. /public/images/payment/*.jpg)
+// Public folder assets
 export const getPublicUrl = (path: string | null | undefined): string => {
   if (!path) return '';
   if (path.startsWith('http')) return path;

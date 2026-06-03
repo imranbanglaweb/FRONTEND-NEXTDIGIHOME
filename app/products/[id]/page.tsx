@@ -65,7 +65,7 @@ export default function ProductDetailPage() {
       setLoading(true);
 
       const response = await fetch(
-         `${BACKEND_BASE_URL}/api/products/${params.id}`,
+        `/api/products/${params.id}`,
         {
           credentials: 'include',
         }
@@ -82,7 +82,7 @@ export default function ProductDetailPage() {
       // Fetch related products (same category, exclude current)
       try {
         const relatedRes = await fetch(
-          `${BACKEND_BASE_URL}/api/products?category=${encodeURIComponent(data.category)}&per_page=12`
+          `/api/products?category=${encodeURIComponent(data.category)}&per_page=12`
         );
         if (relatedRes.ok) {
           const relatedData = await relatedRes.json();
@@ -94,7 +94,7 @@ export default function ProductDetailPage() {
         console.error('Failed to load related products');
         // Fallback: show some other products if category filter fails
         try {
-          const fallbackRes = await fetch(`${BACKEND_BASE_URL}/api/products?per_page=8`);
+          const fallbackRes = await fetch(`/api/products?per_page=8`);
           if (fallbackRes.ok) {
             const fbData = await fallbackRes.json();
             const all = fbData.data || fbData || [];
@@ -199,24 +199,24 @@ export default function ProductDetailPage() {
     try {
       setIsLoadingCart(true);
 
-const response = await fetch(
-          `/api/cart`,
-          {
-           method: 'POST',
-           headers: {
-             'Content-Type': 'application/json',
-           },
-           credentials: 'include',
-           body: JSON.stringify({
-             product_id: product.id,
-             quantity,
-           }),
-         }
-       );
+      const response = await fetch(
+        `${BACKEND_BASE_URL}/api/cart`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          credentials: 'include',
+          body: JSON.stringify({
+            product_id: product.id,
+            quantity: quantity,
+          }),
+        }
+      );
 
       const data = await response.json();
 
-       if (data.success) {
+      if (data.success) {
          // Trigger cart count update
          window.dispatchEvent(new Event('cartUpdated'));
          

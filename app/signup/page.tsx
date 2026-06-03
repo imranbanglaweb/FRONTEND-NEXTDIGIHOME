@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { EyeIcon, EyeSlashIcon, ArrowRightIcon, UserPlusIcon, CheckCircleIcon, XCircleIcon } from '@heroicons/react/24/outline';
-import { BACKEND_BASE_URL } from '../utils/api';
+import { getLogoUrl } from '../utils/api';
 
 export default function SignUpPage() {
   const [formData, setFormData] = useState({
@@ -109,7 +109,7 @@ export default function SignUpPage() {
 
     try {
       // Call API register
-      const response = await fetch(`${BACKEND_BASE_URL}/api/register`, {
+      const response = await fetch(`/api/register`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -144,7 +144,7 @@ export default function SignUpPage() {
 
   const fetchSettings = async () => {
     try {
-      const response = await fetch(`${BACKEND_BASE_URL}/api/settings`);
+      const response = await fetch(`/api/settings`);
       if (response.ok) {
         const data = await response.json();
         // Safely extract settings data
@@ -182,7 +182,7 @@ export default function SignUpPage() {
             <div className="w-16 h-16 bg-gradient-to-r from-[#8b5cf6] to-[#00d4aa] rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg overflow-hidden">
               {settings?.site_logo ? (
                 <img
-                   src={`${BACKEND_BASE_URL}/api/logo/${settings.site_logo}`}
+                   src={getLogoUrl(settings.site_logo)!}
                   alt="Site Logo"
                   className="w-full h-full object-cover"
                   onError={(e) => {

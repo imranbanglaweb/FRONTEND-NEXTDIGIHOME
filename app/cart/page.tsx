@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { TrashIcon, PlusIcon, MinusIcon, ShoppingBagIcon, ArrowRightIcon } from "@heroicons/react/24/outline";
-import { getStorageUrl } from '../utils/api';
+import { getStorageUrl, BACKEND_BASE_URL } from '../utils/api';
 
 interface CartItem {
   id: string;
@@ -28,7 +28,7 @@ export default function CartPage() {
         headers['Authorization'] = `Bearer ${token}`;
       }
 
-      const response = await fetch('/api/cart', {
+      const response = await fetch(`${BACKEND_BASE_URL}/api/cart`, {
         credentials: 'include',
         headers,
       });
@@ -57,7 +57,7 @@ export default function CartPage() {
         headers['Authorization'] = `Bearer ${token}`;
       }
 
-      const response = await fetch(`/api/cart?id=${itemId}`, {
+      const response = await fetch(`${BACKEND_BASE_URL}/api/cart?id=${itemId}`, {
         method: 'PUT',
         headers,
         credentials: 'include',
@@ -87,7 +87,7 @@ export default function CartPage() {
         headers['Authorization'] = `Bearer ${token}`;
       }
 
-      const response = await fetch(`/api/cart?id=${itemId}`, {
+      const response = await fetch(`${BACKEND_BASE_URL}/api/cart?id=${itemId}`, {
         method: 'DELETE',
         headers,
         credentials: 'include',
@@ -112,7 +112,7 @@ export default function CartPage() {
         headers['Authorization'] = `Bearer ${token}`;
       }
 
-      const response = await fetch('/api/cart', {
+      const response = await fetch(`${BACKEND_BASE_URL}/api/cart`, {
         method: 'DELETE',
         headers,
         credentials: 'include',

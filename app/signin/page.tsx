@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { EyeIcon, EyeSlashIcon, ArrowRightIcon, ShieldCheckIcon } from '@heroicons/react/24/outline';
-import { apiFetch, BACKEND_BASE_URL } from '../utils/api';
+import { apiFetch, getLogoUrl } from '../utils/api';
 
 export default function SignInPage() {
   const [formData, setFormData] = useState({
@@ -83,7 +83,7 @@ export default function SignInPage() {
     setError('');
 
     try {
-      const response = await fetch(`${BACKEND_BASE_URL}/api/auth/google`);
+      const response = await fetch(`/api/auth/google`);
       const data = await response.json();
 
       if (data.success) {
@@ -103,7 +103,7 @@ export default function SignInPage() {
     setError('');
 
     try {
-      const response = await fetch(`${BACKEND_BASE_URL}/api/auth/facebook`);
+      const response = await fetch(`/api/auth/facebook`);
       const data = await response.json();
 
       if (data.success) {
@@ -138,7 +138,7 @@ export default function SignInPage() {
 
     try {
       // Call API login
-      const response = await fetch(`${BACKEND_BASE_URL}/api/login`, {
+      const response = await fetch(`/api/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -174,7 +174,7 @@ export default function SignInPage() {
 
   const fetchSettings = async () => {
     try {
-      const response = await fetch(`${BACKEND_BASE_URL}/api/settings`);
+      const response = await fetch(`/api/settings`);
       if (response.ok) {
         const data = await response.json();
         // Safely extract settings data
@@ -212,7 +212,7 @@ export default function SignInPage() {
             <div className="w-16 h-16 bg-gradient-to-r from-[#00d4aa] to-[#8b5cf6] rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg overflow-hidden">
               {settings?.site_logo ? (
                 <img
-                   src={`${BACKEND_BASE_URL}/api/logo/${settings.site_logo}`}
+                   src={getLogoUrl(settings.site_logo)!}
                   alt="Site Logo"
                   className="w-full h-full object-cover"
                   onError={(e) => {
@@ -292,7 +292,7 @@ export default function SignInPage() {
                   <span className="ml-2 text-sm text-[#737373]">Remember me</span>
                 </label>
                 <a
-                   href={`${BACKEND_BASE_URL}/password/reset`}
+                    href={`/password/reset`}
                   className="text-sm text-[#00d4aa] hover:text-[#8b5cf6] transition-colors font-medium"
                 >
                   Forgot password?

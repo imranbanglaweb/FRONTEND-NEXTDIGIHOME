@@ -4,7 +4,7 @@ const nextConfig: NextConfig = {
 
   // Proxy API requests to Laravel backend
   async rewrites() {
-    const apiBase = (process.env.NEXT_PUBLIC_API_URL || 'https://backend.nextdigihome.com').replace(/\/$/, '');
+    const apiBase = (process.env.NEXT_PUBLIC_API_URL || 'http://localhost/NEXTDIGIHOMEBACKEND').replace(/\/$/, '');
     return [
       {
         source: '/api/:path*',
@@ -14,7 +14,7 @@ const nextConfig: NextConfig = {
   },
   // Environment variables
   env: {
-    BACKEND_URL: process.env.NEXT_PUBLIC_API_URL || 'https://backend.nextdigihome.com',
+    BACKEND_URL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost/NEXTDIGIHOMEBACKEND',
   },
   // Headers for favicon and static assets
   async headers() {

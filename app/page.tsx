@@ -5,7 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ArrowRightIcon, CogIcon, ShoppingCartIcon, ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/outline";
 import Swal from 'sweetalert2';
-import { getStorageUrl, BACKEND_BASE_URL } from './utils/api';
+import { getStorageUrl } from './utils/api';
 
 // Category Icons Mapping
 const categoryIconMap: Record<string, string> = {
@@ -106,7 +106,7 @@ export default function Home() {
   useEffect(() => {
     const fetchHomeContent = async () => {
       try {
-        const response = await fetch(`${BACKEND_BASE_URL}/api/content/home`);
+        const response = await fetch(`/api/content/home`);
 
         if (response.ok) {
           const contentType = response.headers.get('content-type');
@@ -136,7 +136,7 @@ export default function Home() {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await fetch(`${BACKEND_BASE_URL}/api/products?per_page=50`);
+        const response = await fetch(`/api/products?per_page=50`);
         if (response.ok) {
           const contentType = response.headers.get('content-type');
           if (contentType && contentType.includes('application/json')) {
@@ -161,7 +161,7 @@ export default function Home() {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await fetch(`${BACKEND_BASE_URL}/api/categories`);
+        const response = await fetch(`/api/categories`);
         if (response.ok) {
           const contentType = response.headers.get('content-type');
           if (contentType && contentType.includes('application/json')) {

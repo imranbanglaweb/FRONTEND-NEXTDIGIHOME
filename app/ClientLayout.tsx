@@ -71,7 +71,7 @@ const [settings, setSettings] = useState<{
   // Function declarations before useEffect hooks
   const fetchCartCount = async () => {
     try {
-      const data = await apiFetch('/api/cart', { credentials: 'include' });
+      const data = await apiFetch(`${BACKEND_BASE_URL}/api/cart`, { silent: true, credentials: 'include' });
       setCartCount(data.items?.length || 0);
     } catch (error) {
       console.error('Failed to fetch cart count:', error);

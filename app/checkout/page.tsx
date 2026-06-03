@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { CheckCircleIcon, ArrowLeftIcon, BanknotesIcon, PhotoIcon, CreditCardIcon, BuildingStorefrontIcon, DevicePhoneMobileIcon, BuildingLibraryIcon, ClockIcon, CloudArrowUpIcon, EyeIcon, ArrowDownTrayIcon } from "@heroicons/react/24/outline";
-import { BACKEND_BASE_URL } from '../utils/api';
+import { getStorageUrl, BACKEND_BASE_URL } from '../utils/api';
 
 interface CartItem {
   id: string;
@@ -41,7 +41,7 @@ export default function CheckoutPage() {
 
   const fetchUser = async (token: string) => {
     try {
-      const response = await fetch(`${BACKEND_BASE_URL}/api/user`, {
+      const response = await fetch(`/api/user`, {
         method: 'GET',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -95,7 +95,7 @@ export default function CheckoutPage() {
 
     try {
       // Try to access a protected API endpoint to check authentication
-      const response = await fetch(`${BACKEND_BASE_URL}/api/checkout/purchases`, {
+      const response = await fetch(`/api/checkout/purchases`, {
         method: 'GET',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -207,7 +207,7 @@ export default function CheckoutPage() {
         formDataToSend.append('payment_proof', paymentProof);
       }
 
-      const response = await fetch(`${BACKEND_BASE_URL}/api/checkout`, {
+      const response = await fetch(`/api/checkout`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -284,7 +284,7 @@ await fetch('/api/cart', {
         formDataVerification.append('notes', formData.notes);
       }
 
-      const response = await fetch(`${BACKEND_BASE_URL}/api/checkout/verify`, {
+      const response = await fetch(`/api/checkout/verify`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
