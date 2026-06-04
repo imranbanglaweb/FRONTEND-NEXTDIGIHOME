@@ -65,7 +65,7 @@ export default function SignUpPage() {
     }));
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setError('');
@@ -109,7 +109,7 @@ export default function SignUpPage() {
 
     try {
       // Call API register
-      const response = await apiFetch('register', {
+      const data = await apiFetch('register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -121,19 +121,14 @@ export default function SignUpPage() {
         }),
       });
 
-      if (response.ok) {
-        const data = await response.json();
-        if (data.success) {
-          // Registration successful, redirect to signin
-          router.push('/signin?message=Registration successful! Please sign in.');
-        } else {
-          setError(data.message || 'Registration failed');
-        }
+      if (data.success) {
+        // Registration successful, redirect to signin
+        router.push('/signin?message=Registration successful! Please sign in.');
       } else {
-        const errorData = await response.json().catch(() => ({}));
-        setError(errorData.message || 'Registration failed. Please try again.');
+        setError(data.message || 'Registration failed');
       }
     } catch (err) {
+      // The apiFetch function throws an error for non-ok responses
       setError('Failed to connect to registration service. Please try again.');
     } finally {
       setLoading(false);
