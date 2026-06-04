@@ -56,29 +56,23 @@ export default function ProductsPage() {
   const [quickViewProduct, setQuickViewProduct] = useState<Product | null>(null);
   const [showQuickView, setShowQuickView] = useState<boolean>(false);
 
-  const fetchProducts = useCallback(async () => {
-    try {
-         const response = await apiFetch(`products?page=${page}&per_page=100`);
+    const fetchProducts = useCallback(async () => {
+        try {
+          const data = await apiFetch(`products?page=${page}&per_page=100`);
 
-      if (!response.ok) {
-        throw new Error('Failed to fetch products');
-      }
+          if (page === 1) {
+            setProducts(data.data);
+          } else {
+            setProducts(prev => [...prev, ...data.data]);
+          }
 
-      const data = await response.json();
-
-      if (page === 1) {
-        setProducts(data.data);
-      } else {
-        setProducts(prev => [...prev, ...data.data]);
-      }
-
-      setHasMore(data.current_page < data.last_page);
-      setLoading(false);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'An error occurred');
-      setLoading(false);
-    }
-  }, [page]);
+          setHasMore(data.current_page < data.last_page);
+          setLoading(false);
+        } catch (err) {
+          setError(err instanceof Error ? err.message : 'An error occurred');
+          setLoading(false);
+        }
+      }, [page]);
 
   useEffect(() => {
     fetchProducts();

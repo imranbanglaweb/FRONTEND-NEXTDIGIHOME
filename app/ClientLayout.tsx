@@ -51,7 +51,7 @@ const [settings, setSettings] = useState<{
       seo_og_image?: string | null;
       google_analytics_id?: string | null;
       favicon?: string | null;
-    } | null>({ site_title: 'Next Digi Home' });  // Simple default, no localStorage access to avoid hydration mismatch
+    } | null>({ admin_title: 'Next Digi Home' });  // Simple default, no localStorage access to avoid hydration mismatch
 
   const [categories, setCategories] = useState<Array<{
     id: number;
@@ -227,7 +227,7 @@ const [settings, setSettings] = useState<{
               <div className="w-14 h-14 md:w-20 md:h-20 rounded-2xl flex items-center justify-center group-hover:scale-105 transition-transform duration-300 overflow-hidden border border-[#2a2a30]">
                 {isHydrated && (() => {
                   // Use site_logo, or fall back to admin_logo if site_logo is not set
-                  const logoToUse = settings?.site_logo || settings?.admin_logo;
+                  const logoToUse = settings?.admin_logo || settings?.admin_logo;
                   const logoUrl = logoToUse ? getLogoUrl(logoToUse) : null;
 
                   return logoUrl ? (
@@ -502,7 +502,7 @@ const [settings, setSettings] = useState<{
                 <div className="w-16 h-16 rounded-2xl flex items-center justify-center overflow-hidden border border-[#2a2a30] group-hover:border-[#00d4aa]/40 transition-all">
                   {isHydrated && (() => {
                     // Use site_logo, or fall back to admin_logo if site_logo is not set
-                    const logoToUse = settings?.site_logo || settings?.admin_logo;
+                    const logoToUse = settings?.admin_logo || settings?.admin_logo;
                     const logoUrl = logoToUse ? getLogoUrl(logoToUse) : null;
                     return logoUrl ? (
                       <img
@@ -518,7 +518,7 @@ const [settings, setSettings] = useState<{
                       />
                     ) : null;
                   })()}
-                  <svg className={`w-7 h-7 text-[#00d4aa] ${isHydrated && (settings?.site_logo || settings?.admin_logo) ? 'hidden' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className={`w-7 h-7 text-[#00d4aa] ${isHydrated && (settings?.admin_logo || settings?.admin_logo) ? 'hidden' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
                   </svg>
                 </div>
@@ -531,7 +531,7 @@ const [settings, setSettings] = useState<{
               </div>
 
                <p className="text-[#737373] text-sm leading-relaxed pr-2" suppressHydrationWarning>
-                 {isHydrated ? (settings?.site_description || "Premium digital products engineered for modern businesses. Transform your business with our curated collection.") : "Premium digital products engineered for modern businesses. Transform your business with our curated collection."}
+                 {isHydrated ? (settings?.admin_description || "Premium digital products engineered for modern businesses. Transform your business with our curated collection.") : "Premium digital products engineered for modern businesses. Transform your business with our curated collection."}
                </p>
 
               {/* Premium Social Icons */}
@@ -703,8 +703,8 @@ const [settings, setSettings] = useState<{
               <span>Powered by</span>
               <div className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded bg-gradient-to-r from-[#00d4aa] to-[#8b5cf6] text-[#0f0f12] font-medium">
                 <div className="w-3.5 h-3.5 rounded bg-[#0f0f12]/80 flex items-center justify-center overflow-hidden">
-                  {settings?.site_logo ? (
-                    <img src={getLogoUrl(settings.site_logo)!} alt="" className="w-full h-full object-cover" />
+                  {settings?.admin_logo ? (
+                    <img src={getLogoUrl(settings.admin_logo)!} alt="" className="w-full h-full object-cover" />
                   ) : (
                     <svg className="w-2 h-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
                   )}
