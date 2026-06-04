@@ -83,7 +83,7 @@ export default function SignInPage() {
     setError('');
 
     try {
-      const response = await fetch(`/api/auth/google`);
+      const response = await apiFetch('auth/google');
       const data = await response.json();
 
       if (data.success) {
@@ -103,7 +103,7 @@ export default function SignInPage() {
     setError('');
 
     try {
-      const response = await fetch(`/api/auth/facebook`);
+      const response = await apiFetch('auth/facebook');
       const data = await response.json();
 
       if (data.success) {
@@ -138,14 +138,14 @@ export default function SignInPage() {
 
     try {
       // Call API login
-      const response = await fetch(`/api/login`, {
+      const response = await apiFetch('login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          email: formData.email,
-          password: formData.password,
+          email,
+          password,
         }),
       });
 
@@ -174,7 +174,7 @@ export default function SignInPage() {
 
   const fetchSettings = async () => {
     try {
-      const response = await fetch(`/api/settings`);
+      const response = await apiFetch('settings');
       if (response.ok) {
         const data = await response.json();
         // Safely extract settings data

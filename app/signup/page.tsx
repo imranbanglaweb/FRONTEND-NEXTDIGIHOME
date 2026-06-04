@@ -109,7 +109,7 @@ export default function SignUpPage() {
 
     try {
       // Call API register
-      const response = await fetch(`/api/register`, {
+      const response = await apiFetch('register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -117,9 +117,7 @@ export default function SignUpPage() {
         body: JSON.stringify({
           name: formData.name,
           email: formData.email,
-          phone: formData.phone,
           password: formData.password,
-          password_confirmation: formData.password_confirmation,
         }),
       });
 
