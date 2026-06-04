@@ -14,7 +14,8 @@ export { BACKEND_BASE_URL, API_BASE_PATH };
 
 export const getApiUrl = (endpoint: string): string => {
   if (endpoint.startsWith('http')) return endpoint;
-  return `${BACKEND_BASE_URL}${API_BASE_PATH}/${endpoint.replace(/^\//, '')}`;
+  if (endpoint.startsWith('/api/')) return endpoint;
+  return `/api/${endpoint.replace(/^\//, '')}`;
 };
 
 export interface FetchOptions extends RequestInit {
