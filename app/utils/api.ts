@@ -80,7 +80,7 @@ export const getLogoUrl = (filename: string | null | undefined): string | null =
   if (!filename) return null;
   if (filename.startsWith('http')) return filename;
   const cleanFilename = filename.replace(/^\/+/, '');
-  return `${BACKEND_BASE_URL}/admin_resource/assets/images/${cleanFilename}`;
+  return `${BACKEND_BASE_URL}/public/admin_resource/assets/images/${cleanFilename}`;
 };
 
 // Public folder assets
