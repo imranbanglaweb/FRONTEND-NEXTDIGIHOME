@@ -85,7 +85,7 @@ const [settings, setSettings] = useState<{
     
     for (let i = 0; i < maxRetries; i++) {
       try {
-        const res = await apiFetch('/api/settings', { silent: true });
+        const res = await apiFetch('/settings', { silent: true });
         const settingsData = res?.data?.data || res?.data || res || {};
         setSettings(settingsData);
         try {
