@@ -20,7 +20,7 @@ export default function SignUpPage() {
   const [error, setError] = useState('');
   const [mounted, setMounted] = useState(false);
   const [passwordStrength, setPasswordStrength] = useState(0);
-  const [settings, setSettings] = useState<{site_logo?: string; site_title?: string} | null>(null);
+  const [settings, setSettings] = useState<{admin_logo?: string; admin_title?: string} | null>(null);
   const router = useRouter();
 
   useEffect(() => {
@@ -178,9 +178,9 @@ export default function SignUpPage() {
           {/* Header */}
           <div className="text-center mb-8">
             <div className="w-16 h-16 bg-gradient-to-r from-[#8b5cf6] to-[#00d4aa] rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg overflow-hidden">
-              {settings?.site_logo ? (
+              {settings?.admin_logo ? (
                 <img
-                   src={getLogoUrl(settings.site_logo)!}
+                   src={getLogoUrl(settings.admin_logo)!}
                   alt="Site Logo"
                   className="w-full h-full object-cover"
                   onError={(e) => {
@@ -189,7 +189,7 @@ export default function SignUpPage() {
                   }}
                 />
               ) : null}
-              <UserPlusIcon className={`w-8 h-8 text-white ${settings?.site_logo ? 'hidden' : ''}`} />
+              <UserPlusIcon className={`w-8 h-8 text-white ${settings?.admin_logo ? 'hidden' : ''}`} />
             </div>
             <h1 className="text-4xl font-bold text-[#fafafa] mb-2">Create Account</h1>
             <p className="text-[#737373]">Join our community and start exploring</p>
