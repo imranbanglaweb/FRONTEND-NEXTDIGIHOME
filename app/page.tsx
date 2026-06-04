@@ -106,7 +106,7 @@ export default function Home() {
   useEffect(() => {
     const fetchHomeContent = async () => {
       try {
-        const response = await fetch(`/api/content/home`);
+        const response = await apiFetch('content/home');
 
         if (response.ok) {
           const contentType = response.headers.get('content-type');
@@ -136,7 +136,7 @@ export default function Home() {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await fetch(`/api/products?per_page=50`);
+        const response = await apiFetch(`products?per_page=${50}`);
         if (response.ok) {
           const contentType = response.headers.get('content-type');
           if (contentType && contentType.includes('application/json')) {
@@ -161,7 +161,7 @@ export default function Home() {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await fetch(`/api/categories`);
+        const response = await apiFetch('categories');
         if (response.ok) {
           const contentType = response.headers.get('content-type');
           if (contentType && contentType.includes('application/json')) {

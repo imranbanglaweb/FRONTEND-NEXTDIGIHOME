@@ -142,7 +142,7 @@ export default function SignUpPage() {
 
   const fetchSettings = async () => {
     try {
-      const response = await fetch(`/api/settings`);
+      const response = await apiFetch('settings');
       if (response.ok) {
         const data = await response.json();
         // Safely extract settings data
