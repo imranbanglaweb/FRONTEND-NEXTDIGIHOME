@@ -103,85 +103,54 @@ export default function Home() {
     }
   }, [homeContent]);
 
-  useEffect(() => {
-    const fetchHomeContent = async () => {
-      try {
-        const response = await apiFetch('content/home');
-
-        if (response.ok) {
-          const contentType = response.headers.get('content-type');
-          if (contentType && contentType.includes('application/json')) {
-            const data = await response.json();
-            if (data.success && data.data) {
-              setHomeContent(data.data);
-            } else {
-              console.warn('API returned success but no data:', data);
-            }
-          } else {
-            console.warn('Home content API returned non-JSON response');
-          }
-        } else {
-          console.error('API request failed:', response.status, response.statusText);
-        }
-      } catch (error) {
-        console.error('Failed to fetch home content:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchHomeContent();
-  }, []);
-
-  useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const response = await apiFetch(`products?per_page=${50}`);
-        if (response.ok) {
-          const contentType = response.headers.get('content-type');
-          if (contentType && contentType.includes('application/json')) {
-            const data = await response.json();
-            setAllProducts(data.data);
-          } else {
-            console.warn('Products API returned non-JSON response');
-          }
-        } else {
-          console.error('Failed to fetch products');
-        }
-      } catch (error) {
-        console.error('Failed to fetch products:', error);
-      } finally {
-        setLoadingProducts(false);
-      }
-    };
-
-    fetchProducts();
-  }, []);
-
-  useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        const response = await apiFetch('categories');
-        if (response.ok) {
-          const contentType = response.headers.get('content-type');
-          if (contentType && contentType.includes('application/json')) {
-            const data = await response.json();
-            setAllCategories(data);
-          } else {
-            console.warn('Categories API returned non-JSON response');
-          }
-       } else {
-         console.error('Failed to fetch categories');
+   useEffect(() => {
+     const fetchHomeContent = async () => {
+       try {
+         const data = await apiFetch('content/home');
+         if (data.success && data.data) {
+           setHomeContent(data.data);
+         } else {
+           console.warn('API returned success but no data:', data);
+         }
+       } catch (error) {
+         console.error('Failed to fetch home content:', error);
+       } finally {
+         setLoading(false);
        }
-      } catch (error) {
-        console.error('Failed to fetch categories:', error);
-      } finally {
-        setLoadingCategories(false);
-      }
-    };
+     };
 
-    fetchCategories();
-  }, []);
+     fetchHomeContent();
+   }, []);
+
+   useEffect(() => {
+     const fetchProducts = async () => {
+       try {
+         const data = await apiFetch(`products?per_page=${50}`);
+         setAllProducts(data.data);
+       } catch (error) {
+         console.error('Failed to fetch products:', error);
+       } finally {
+         setLoadingProducts(false);
+       }
+     };
+
+     fetchProducts();
+   }, []);
+
+   useEffect(() => {
+     const fetchCategories = async () => {
+       try {
+         const data = await apiFetch('categories');
+         setAllCategories(data);
+       } catch (error) {
+         console.error('Failed to fetch categories:', error);
+       } finally {
+         setLoadingCategories(false);
+       }
+     };
+
+     fetchCategories();
+   }, []);
 
   useEffect(() => {
     if (homeContent?.hero_sliders?.length) {
