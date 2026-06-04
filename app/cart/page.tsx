@@ -20,113 +20,102 @@ export default function CartPage() {
   const [loading, setLoading] = useState(true);
   const [updating, setUpdating] = useState(false);
 
-  const fetchCart = async () => {
-    try {
-      const token = localStorage.getItem('auth_token');
-      const headers: Record<string, string> = {};
-      if (token) {
-        headers['Authorization'] = `Bearer ${token}`;
-      }
+    const fetchCart = async () => {
+        try {
+          const token = localStorage.getItem('auth_token');
+          const headers: Record<string, string> = {};
+          if (token) {
+            headers['Authorization'] = `Bearer ${token}`;
+          }
 
-       const response = await apiFetch('/cart', {
-         credentials: 'include',
-         headers,
-       });
-      if (response.ok) {
-        const data = await response.json();
-        setItems((data.items || []).map((item: CartItem) => ({
-          ...item,
-          price: Number(item.price),
-          total: Number(item.total)
-        })));
-      }
-    } catch (error) {
-      console.error('Failed to fetch cart:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
+          const data = await apiFetch('/cart', {
+            credentials: 'include',
+            headers,
+          });
+          setItems((data.items || []).map((item: CartItem) => ({
+            ...item,
+            price: Number(item.price),
+            total: Number(item.total)
+          })));
+        } catch (error) {
+          console.error('Failed to fetch cart:', error);
+        } finally {
+          setLoading(false);
+        }
+      };
 
-  const updateQuantity = async (itemId: string, newQuantity: number) => {
-    if (newQuantity < 1) return;
-    setUpdating(true);
-    try {
-      const token = localStorage.getItem('auth_token');
-      const headers: Record<string, string> = { 'Content-Type': 'application/json' };
-      if (token) {
-        headers['Authorization'] = `Bearer ${token}`;
-      }
+    const updateQuantity = async (itemId: string, newQuantity: number) => {
+        if (newQuantity < 1) return;
+        setUpdating(true);
+        try {
+          const token = localStorage.getItem('auth_token');
+          const headers: Record<string, string> = { 'Content-Type': 'application/json' };
+          if (token) {
+            headers['Authorization'] = `Bearer ${token}`;
+          }
 
-       const response = await apiFetch(`/cart?id=${itemId}`, {
-         method: 'PUT',
-         headers,
-         credentials: 'include',
-         body: JSON.stringify({ quantity: newQuantity }),
-       });
-      if (response.ok) {
-        setItems(items.map(item =>
-          item.id === itemId ? { ...item, quantity: newQuantity, total: item.price * newQuantity } : item
-        ));
-        window.dispatchEvent(new Event('cartUpdated'));
-      } else {
-        console.error('Failed to update cart, response not ok');
-      }
-    } catch (error) {
-      console.error('Failed to update cart:', error);
-    } finally {
-      setUpdating(false);
-    }
-  };
+          const data = await apiFetch(`/cart?id=${itemId}`, {
+            method: 'PUT',
+            headers,
+            credentials: 'include',
+            body: JSON.stringify({ quantity: newQuantity }),
+          });
+          setItems(items.map(item =>
+            item.id === itemId ? { ...item, quantity: newQuantity, total: item.price * newQuantity } : item
+          ));
+          window.dispatchEvent(new Event('cartUpdated'));
+        } catch (error) {
+          console.error('Failed to update cart:', error);
+        } finally {
+          setUpdating(false);
+        }
+      };
 
-  const removeItem = async (itemId: string) => {
-    setUpdating(true);
-    try {
-      const token = localStorage.getItem('auth_token');
-      const headers: Record<string, string> = {};
-      if (token) {
-        headers['Authorization'] = `Bearer ${token}`;
-      }
+    const removeItem = async (itemId: string) => {
+        setUpdating(true);
+        try {
+          const token = localStorage.getItem('auth_token');
+          const headers: Record<string, string> = {};
+          if (token) {
+            headers['Authorization'] = `Bearer ${token}`;
+          }
 
-       const response = await apiFetch(`/api/cart?id=${itemId}`, {
-         method: 'DELETE',
-         headers,
-         credentials: 'include',
-       });
-      if (response.ok) {
-        setItems(items.filter(item => item.id !== itemId));
-        window.dispatchEvent(new Event('cartUpdated'));
-      }
-    } catch (error) {
-      console.error('Failed to remove item:', error);
-    } finally {
-      setUpdating(false);
-    }
-  };
+          const data = await apiFetch(`/api/cart?id=${itemId}`, {
+            method: 'DELETE',
+            headers,
+            credentials: 'include',
+          });
+          setItems(items.filter(item => item.id !== itemId));
+          window.dispatchEvent(new Event('cartUpdated'));
+        } catch (error) {
+          console.error('Failed to remove item:', error);
+        } finally {
+          setUpdating(false);
+        }
+      };
 
-  const clearCart = async () => {
-    setUpdating(true);
-    try {
-      const token = localStorage.getItem('auth_token');
-      const headers: Record<string, string> = {};
-      if (token) {
-        headers['Authorization'] = `Bearer ${token}`;
-      }
+    const clearCart = async () => {
+        setUpdating(true);
+        try {
+          const token = localStorage.getItem('auth_token');
+          const headers: Record<string, string> = {};
+          if (token) {
+            headers['Authorization'] = `Bearer ${token}`;
+          }
 
-       const response = await apiFetch('/api/cart', {
-         method: 'DELETE',
-         headers,
-         credentials: 'include',
-       });
-      if (response.ok) {
-        setItems([]);
-        window.dispatchEvent(new Event('cartUpdated'));
-      }
-    } catch (error) {
-      console.error('Failed to clear cart:', error);
-    } finally {
-      setUpdating(false);
-    }
-  };
+          const data = await apiFetch('/api/cart', {
+            method: 'DELETE',
+            headers,
+            credentials: 'include',
+          });
+          setItems([]);
+          window.dispatchEvent(new Event('cartUpdated'));
+        } catch (error) {
+          console.error('Failed to clear cart:', error);
+        } finally {
+          setUpdating(false);
+        }
+      };
 
    useEffect(() => {
      fetchCart();
