@@ -14,13 +14,13 @@ const getFaviconUrl = (path: string | null | undefined): string | null => {
   if (path.startsWith('http')) {
     const match = path.match(/\/public\/(.+)$/);
     if (match) {
-      return `/api/logo/${match[1]}`;
+      return `/logo/${match[1]}`;
     }
     return null;
   }
   
   // Otherwise use the proxy with the path (handles both filename and relative path)
-  return `/api/logo/${path}`;
+  return `/logo/${path}`;
 };
 
 export default function ClientLayout({
@@ -71,7 +71,7 @@ const [settings, setSettings] = useState<{
   // Function declarations before useEffect hooks
   const fetchCartCount = async () => {
     try {
-      const data = await apiFetch('/api/cart', { silent: true, credentials: 'include' });
+      const data = await apiFetch('/cart', { silent: true, credentials: 'include' });
       setCartCount(data.items?.length || 0);
     } catch (error) {
       console.error('Failed to fetch cart count:', error);
@@ -111,7 +111,7 @@ const [settings, setSettings] = useState<{
 
   const fetchCategories = async () => {
     try {
-      const data = await apiFetch('/api/categories');
+      const data = await apiFetch('/categories');
       setCategories(data);
     } catch (error) {
       console.error('Failed to fetch categories:', error);
