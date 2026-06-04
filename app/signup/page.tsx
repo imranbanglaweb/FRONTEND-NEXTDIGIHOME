@@ -135,21 +135,16 @@ export default function SignUpPage() {
     }
   };
 
-  const fetchSettings = async () => {
-    try {
-      const response = await apiFetch('settings');
-      if (response.ok) {
-        const data = await response.json();
-        // Safely extract settings data
-        const settingsData = data?.data?.data || data?.data || data || {};
-        setSettings(settingsData);
-      } else {
-        console.warn(`Settings API returned ${response.status}, using defaults`);
-      }
-    } catch (error) {
-      console.warn('Failed to fetch settings, using defaults:', error instanceof Error ? error.message : error);
-    }
-  };
+    const fetchSettings = async () => {
+     try {
+       const data = await apiFetch('settings');
+       // Safely extract settings data
+       const settingsData = data?.data?.data || data?.data || data || {};
+       setSettings(settingsData);
+     } catch (error) {
+       console.warn('Failed to fetch settings, using defaults:', error instanceof Error ? error.message : error);
+     }
+   };
 
   if (!mounted) {
     return (
