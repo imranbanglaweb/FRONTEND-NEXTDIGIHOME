@@ -15,6 +15,7 @@ const nextConfig: NextConfig = {
   // Environment variables
   env: {
     BACKEND_URL: process.env.NEXT_PUBLIC_API_URL || 'https://backend.nextdigihome.com',
+    NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL || 'https://backend.nextdigihome.com',
   },
   // Headers for favicon and static assets
   async headers() {
