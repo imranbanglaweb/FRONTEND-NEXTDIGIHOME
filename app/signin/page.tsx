@@ -143,10 +143,10 @@ export default function SignInPage() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          email,
-          password,
-        }),
+         body: JSON.stringify({
+           email: formData.email,
+           password: formData.password,
+         }),
       });
 
       if (response.ok) {

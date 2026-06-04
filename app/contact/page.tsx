@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { PhoneIcon, EnvelopeIcon, MapPinIcon, ClockIcon, CheckCircleIcon } from "@heroicons/react/24/outline";
-import { BACKEND_BASE_URL } from '../utils/api';
+import { BACKEND_BASE_URL, apiFetch } from '../utils/api';
 
 interface ContactInfo {
   id: number;
@@ -41,7 +41,7 @@ export default function ContactPage() {
   useEffect(() => {
     const fetchContactContent = async () => {
       try {
-        const response = await fetch(`/api/content/contact`);
+        const response = await apiFetch('/api/content/contact');
         if (response.ok) {
           const contentType = response.headers.get('content-type');
           if (contentType && contentType.includes('application/json')) {

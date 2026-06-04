@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { TrashIcon, PlusIcon, MinusIcon, ShoppingBagIcon, ArrowRightIcon } from "@heroicons/react/24/outline";
-import { getStorageUrl, BACKEND_BASE_URL } from '../utils/api';
+import { getStorageUrl, apiFetch } from '../utils/api';
 
 interface CartItem {
   id: string;
@@ -28,10 +28,10 @@ export default function CartPage() {
         headers['Authorization'] = `Bearer ${token}`;
       }
 
-      const response = await fetch(`${BACKEND_BASE_URL}/api/cart`, {
-        credentials: 'include',
-        headers,
-      });
+       const response = await apiFetch('/api/cart', {
+         credentials: 'include',
+         headers,
+       });
       if (response.ok) {
         const data = await response.json();
         setItems((data.items || []).map((item: CartItem) => ({
@@ -57,12 +57,12 @@ export default function CartPage() {
         headers['Authorization'] = `Bearer ${token}`;
       }
 
-      const response = await fetch(`${BACKEND_BASE_URL}/api/cart?id=${itemId}`, {
-        method: 'PUT',
-        headers,
-        credentials: 'include',
-        body: JSON.stringify({ quantity: newQuantity }),
-      });
+       const response = await apiFetch(`/api/cart?id=${itemId}`, {
+         method: 'PUT',
+         headers,
+         credentials: 'include',
+         body: JSON.stringify({ quantity: newQuantity }),
+       });
       if (response.ok) {
         setItems(items.map(item =>
           item.id === itemId ? { ...item, quantity: newQuantity, total: item.price * newQuantity } : item
@@ -87,11 +87,11 @@ export default function CartPage() {
         headers['Authorization'] = `Bearer ${token}`;
       }
 
-      const response = await fetch(`${BACKEND_BASE_URL}/api/cart?id=${itemId}`, {
-        method: 'DELETE',
-        headers,
-        credentials: 'include',
-      });
+       const response = await apiFetch(`/api/cart?id=${itemId}`, {
+         method: 'DELETE',
+         headers,
+         credentials: 'include',
+       });
       if (response.ok) {
         setItems(items.filter(item => item.id !== itemId));
         window.dispatchEvent(new Event('cartUpdated'));
@@ -112,11 +112,11 @@ export default function CartPage() {
         headers['Authorization'] = `Bearer ${token}`;
       }
 
-      const response = await fetch(`${BACKEND_BASE_URL}/api/cart`, {
-        method: 'DELETE',
-        headers,
-        credentials: 'include',
-      });
+       const response = await apiFetch('/api/cart', {
+         method: 'DELETE',
+         headers,
+         credentials: 'include',
+       });
       if (response.ok) {
         setItems([]);
         window.dispatchEvent(new Event('cartUpdated'));

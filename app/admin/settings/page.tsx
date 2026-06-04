@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { PhotoIcon, CogIcon, EnvelopeIcon, CheckIcon, ArrowPathIcon } from '@heroicons/react/24/outline';
+import { apiFetch } from '../../utils/api';
 
 interface Settings {
   site_title: string;
@@ -37,19 +38,19 @@ export default function SettingsPage() {
   const [faviconPreview, setFaviconPreview] = useState<string | null>(null);
 
   const fetchSettings = async () => {
-    try {
-      const response = await fetch('/api/admin/settings');
-      if (response.ok) {
-        const data = await response.json();
-        if (data.success) {
-          setSettings(data.data);
-        }
-      }
-    } catch (error) {
-      console.error('Failed to fetch settings:', error);
-    } finally {
-      setLoading(false);
-    }
+     try {
+       const response = await apiFetch('/api/admin/settings');
+       if (response.ok) {
+         const data = await response.json();
+         if (data.success) {
+           setSettings(data.data);
+         }
+       }
+     } catch (error) {
+       console.error('Failed to fetch settings:', error);
+     } finally {
+       setLoading(false);
+     }
   };
 
   useEffect(() => {
@@ -93,10 +94,10 @@ export default function SettingsPage() {
       if (adminLogoFile) formData.append('admin_logo', adminLogoFile);
       if (faviconFile) formData.append('favicon', faviconFile);
 
-      const response = await fetch('/api/admin/settings', {
-        method: 'POST',
-        body: formData,
-      });
+       const response = await apiFetch('/api/admin/settings', {
+         method: 'POST',
+         body: formData,
+       });
 
       const data = await response.json();
 

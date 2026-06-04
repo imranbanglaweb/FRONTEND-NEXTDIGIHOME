@@ -5,7 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ArrowRightIcon, CogIcon, ShoppingCartIcon, ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/outline";
 import Swal from 'sweetalert2';
-import { getStorageUrl } from './utils/api';
+import { getStorageUrl, apiFetch } from './utils/api';
 
 // Category Icons Mapping
 const categoryIconMap: Record<string, string> = {

@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { EyeIcon, EyeSlashIcon, ArrowRightIcon, UserPlusIcon, CheckCircleIcon, XCircleIcon } from '@heroicons/react/24/outline';
-import { getLogoUrl } from '../utils/api';
+import { getLogoUrl, apiFetch } from '../utils/api';
 
 export default function SignUpPage() {
   const [formData, setFormData] = useState({

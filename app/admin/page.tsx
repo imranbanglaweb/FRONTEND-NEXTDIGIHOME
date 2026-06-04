@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { apiFetch } from '../utils/api';
 
 interface ContentItem {
   id: number;
@@ -21,13 +22,13 @@ export default function AdminPage() {
     fetchContent();
   }, []);
 
-  const fetchContent = async () => {
-    try {
-      const response = await fetch('/api/content/all');
-      if (response.ok) {
-        const contentType = response.headers.get('content-type');
-        if (contentType && contentType.includes('application/json')) {
-          const data = await response.json();
+   const fetchContent = async () => {
+     try {
+       const response = await apiFetch('/api/content/all');
+       if (response.ok) {
+         const contentType = response.headers.get('content-type');
+         if (contentType && contentType.includes('application/json')) {
+           const data = await response.json();
           if (data.success) {
             // Flatten the content from different models
             const allContent: ContentItem[] = [];
@@ -71,19 +72,19 @@ export default function AdminPage() {
     }
   };
 
-  const updateContent = async (item: ContentItem) => {
-    try {
-      const response = await fetch(`/api/page-content/${item.id}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          title: item.title,
-          content: item.content,
-          is_active: item.is_active,
-        }),
-      });
+   const updateContent = async (item: ContentItem) => {
+     try {
+       const response = await apiFetch(`/api/page-content/${item.id}`, {
+         method: 'PUT',
+         headers: {
+           'Content-Type': 'application/json',
+         },
+         body: JSON.stringify({
+           title: item.title,
+           content: item.content,
+           is_active: item.is_active,
+         }),
+       });
 
       if (response.ok) {
         await fetchContent();

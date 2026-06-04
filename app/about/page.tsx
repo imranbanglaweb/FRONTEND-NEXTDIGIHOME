@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { ArrowLeftIcon, CheckCircleIcon, GlobeAltIcon, UsersIcon } from "@heroicons/react/24/outline";
-import { BACKEND_BASE_URL } from '../utils/api';
+import { BACKEND_BASE_URL, apiFetch } from '../utils/api';
 
 interface Mission {
   id: number;
@@ -48,7 +48,7 @@ export default function AboutPage() {
   useEffect(() => {
     const fetchAboutContent = async () => {
       try {
-        const response = await fetch(`/api/content/about`);
+        const response = await apiFetch('/api/content/about');
         if (response.ok) {
           const contentType = response.headers.get('content-type');
           if (contentType && contentType.includes('application/json')) {

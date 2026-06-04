@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { getStorageUrl, BACKEND_BASE_URL } from '../utils/api';
+import { getStorageUrl, apiFetch } from '../utils/api';
 import {
   ArrowDownTrayIcon,
   CheckCircleIcon,
@@ -74,7 +74,7 @@ export default function DashboardPage() {
     setSearched(true);
 
     try {
-      const response = await fetch(`/api/checkout/purchases?email=${encodeURIComponent(email)}`, {
+      const response = await apiFetch(`/api/checkout/purchases?email=${encodeURIComponent(email)}`, {
         credentials: 'include',
       });
       if (response.ok) {
@@ -117,7 +117,7 @@ export default function DashboardPage() {
     setSearched(true);
 
     try {
-      const response = await fetch(`/api/checkout/purchases`, {
+      const response = await apiFetch(`/api/checkout/purchases`, {
         headers: {
           'Authorization': `Bearer ${token}`,
         },
@@ -241,7 +241,7 @@ export default function DashboardPage() {
 
     try {
       // Try to access a protected API endpoint to check authentication
-      const response = await fetch(`/api/cart`, {
+      const response = await apiFetch(`/api/cart`, {
         headers: {
           'Authorization': `Bearer ${token}`,
         },
@@ -265,11 +265,11 @@ export default function DashboardPage() {
     }
   };
 
-  const handleDownload = async (token: string, fileName?: string) => {
-    try {
-      const response = await fetch(`/api/download?token=${token}`, {
-        credentials: 'include',
-      });
+    const handleDownload = async (token: string, fileName?: string) => {
+     try {
+       const response = await apiFetch(`/api/download?token=${token}`, {
+         credentials: 'include',
+       });
       if (response.ok) {
         const contentType = response.headers.get('content-type');
         if (contentType && contentType.includes('application/json')) {

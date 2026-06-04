@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { CheckCircleIcon, ArrowLeftIcon, BanknotesIcon, PhotoIcon, CreditCardIcon, BuildingStorefrontIcon, DevicePhoneMobileIcon, BuildingLibraryIcon, ClockIcon, CloudArrowUpIcon, EyeIcon, ArrowDownTrayIcon } from "@heroicons/react/24/outline";
-import { getStorageUrl, BACKEND_BASE_URL } from '../utils/api';
+import { getStorageUrl, apiFetch } from '../utils/api';
 
 interface CartItem {
   id: string;
@@ -41,15 +41,14 @@ export default function CheckoutPage() {
 
   const fetchUser = async (token: string) => {
     try {
-      const response = await fetch(`/api/user`, {
-        method: 'GET',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Accept': 'application/json',
-          'Content-Type': 'application/json',
-        },
-        credentials: 'include',
-      });
+       const response = await apiFetch('/api/user', {
+         method: 'GET',
+         headers: {
+           'Authorization': `Bearer ${token}`,
+           'Accept': 'application/json',
+         },
+         credentials: 'include',
+       });
 
       if (response.status === 401) {
         throw new Error('Token expired or invalid');
@@ -95,15 +94,14 @@ export default function CheckoutPage() {
 
     try {
       // Try to access a protected API endpoint to check authentication
-      const response = await fetch(`/api/checkout/purchases`, {
-        method: 'GET',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Accept': 'application/json',
-          'Content-Type': 'application/json',
-        },
-        credentials: 'include',
-      });
+       const response = await apiFetch('/api/checkout/purchases', {
+         method: 'GET',
+         headers: {
+           'Authorization': `Bearer ${token}`,
+           'Accept': 'application/json',
+         },
+         credentials: 'include',
+       });
 
       if (response.status === 401) {
         throw new Error('Token expired or invalid');
@@ -126,9 +124,9 @@ export default function CheckoutPage() {
 
   const fetchCart = async () => {
     try {
-      const response = await fetch('/api/cart', {
-        credentials: 'include',
-      });
+       const response = await apiFetch('/api/cart', {
+         credentials: 'include',
+       });
       if (response.ok) {
         const data = await response.json();
         if (data.items.length === 0) {
@@ -207,15 +205,15 @@ export default function CheckoutPage() {
         formDataToSend.append('payment_proof', paymentProof);
       }
 
-      const response = await fetch(`/api/checkout`, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Accept': 'application/json',
-        },
-        credentials: 'include',
-        body: formDataToSend,
-      });
+       const response = await apiFetch('/api/checkout', {
+         method: 'POST',
+         headers: {
+           'Authorization': `Bearer ${token}`,
+           'Accept': 'application/json',
+         },
+         credentials: 'include',
+         body: formDataToSend,
+       });
 
       if (response.status === 401) {
         localStorage.removeItem('auth_token');
@@ -235,13 +233,13 @@ export default function CheckoutPage() {
           // Save email for dashboard lookup
           localStorage.setItem('customer_email', formData.customer_email);
           setStep('payment');
-await fetch('/api/cart', { 
-             method: 'DELETE',
-             headers: {
-               'Authorization': `Bearer ${token}`,
-             },
-             credentials: 'include' 
-           });
+            await apiFetch('/api/cart', { 
+                 method: 'DELETE',
+                 headers: {
+                   'Authorization': `Bearer ${token}`,
+                 },
+                 credentials: 'include' 
+               });
           window.dispatchEvent(new Event('cartUpdated'));
         } else {
           alert(data.message || 'Checkout failed');
@@ -284,14 +282,14 @@ await fetch('/api/cart', {
         formDataVerification.append('notes', formData.notes);
       }
 
-      const response = await fetch(`/api/checkout/verify`, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-        },
-        credentials: 'include',
-        body: formDataVerification,
-      });
+       const response = await apiFetch(`/api/checkout/verify`, {
+         method: 'POST',
+         headers: {
+           'Authorization': `Bearer ${token}`,
+         },
+         credentials: 'include',
+         body: formDataVerification,
+       });
 
       if (response.status === 401) {
         localStorage.removeItem('auth_token');

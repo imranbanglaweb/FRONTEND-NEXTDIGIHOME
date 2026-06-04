@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { MagnifyingGlassIcon, ArrowDownTrayIcon, StarIcon, ArrowPathIcon, AdjustmentsHorizontalIcon, HeartIcon, EyeIcon, XMarkIcon, BarsArrowDownIcon, BarsArrowUpIcon } from "@heroicons/react/24/outline";
 import { HeartIcon as HeartIconSolid } from "@heroicons/react/24/solid";
 import Swal from 'sweetalert2';
-import { getStorageUrl, BACKEND_BASE_URL } from '../utils/api';
+import { getStorageUrl, apiFetch } from '../utils/api';
 
 interface Product {
   id: number;
@@ -58,7 +58,7 @@ export default function ProductsPage() {
 
   const fetchProducts = useCallback(async () => {
     try {
-        const response = await fetch(`${BACKEND_BASE_URL}/api/products?page=${page}&per_page=100`);
+         const response = await apiFetch(`products?page=${page}&per_page=100`);
 
       if (!response.ok) {
         throw new Error('Failed to fetch products');
@@ -147,12 +147,12 @@ export default function ProductsPage() {
         headers['Authorization'] = `Bearer ${token}`;
       }
 
-const response = await fetch('/api/cart', {
-         method: 'POST',
-         headers,
-         credentials: 'include',
-         body: JSON.stringify({
-           product_id: product.id,
+      const response = await apiFetch('/api/cart', {
+        method: 'POST',
+        headers,
+        credentials: 'include',
+        body: JSON.stringify({
+          product_id: product.id,
           quantity: 1,
         }),
       });
