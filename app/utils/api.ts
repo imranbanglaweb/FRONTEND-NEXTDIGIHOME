@@ -8,7 +8,7 @@ function detectBackendBaseUrl(): string {
 
 const BACKEND_BASE_URL = detectBackendBaseUrl();
 
-const API_BASE_PATH = process.env.NEXT_PUBLIC_API_BASE_PATH;
+const API_BASE_PATH = process.env.NEXT_PUBLIC_API_BASE_PATH || '/api';
 
 export { BACKEND_BASE_URL, API_BASE_PATH };
 

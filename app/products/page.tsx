@@ -147,7 +147,7 @@ export default function ProductsPage() {
         headers['Authorization'] = `Bearer ${token}`;
       }
 
-      const response = await apiFetch('/api/cart', {
+      const response = await apiFetch('/cart', {
         method: 'POST',
         headers,
         credentials: 'include',
