@@ -170,9 +170,9 @@ export default function Home() {
           } else {
             console.warn('Categories API returned non-JSON response');
           }
-        } else {
-          console.error('Failed to fetch categories');
-        }
+       } else {
+         console.error('Failed to fetch categories');
+       }
       } catch (error) {
         console.error('Failed to fetch categories:', error);
       } finally {

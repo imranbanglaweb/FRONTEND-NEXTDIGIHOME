@@ -14,8 +14,7 @@ export { BACKEND_BASE_URL, API_BASE_PATH };
 
 export const getApiUrl = (endpoint: string): string => {
   if (endpoint.startsWith('http')) return endpoint;
-  if (endpoint.startsWith('/api/')) return endpoint;
-  return `/api/${endpoint.replace(/^\//, '')}`;
+  return `${BACKEND_BASE_URL}${API_BASE_PATH}/${endpoint.replace(/^\//, '')}`;
 };
 
 export interface FetchOptions extends RequestInit {
@@ -51,12 +50,12 @@ export const apiFetch = async <T = any>(
 
     const data = await response.json();
     return data;
-  } catch (error) {
-    if (!options.silent) {
-      console.error(`Failed to fetch from ${endpoint}:`, error instanceof Error ? error.message : error);
-    }
-    throw error;
-  }
+   } catch (error) {
+     if (!options.silent) {
+       console.error(`Failed to fetch from ${endpoint}:`, error instanceof Error ? error.message : error);
+     }
+     throw error;
+   }
 };
 
 // Public API methods
