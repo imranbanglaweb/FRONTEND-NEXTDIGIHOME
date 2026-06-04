@@ -24,7 +24,7 @@ export default function AdminPage() {
 
    const fetchContent = async () => {
      try {
-       const response = await apiFetch('/api/content/all');
+       const response = await apiFetch('/content/all');
        if (response.ok) {
          const contentType = response.headers.get('content-type');
          if (contentType && contentType.includes('application/json')) {
@@ -74,7 +74,7 @@ export default function AdminPage() {
 
    const updateContent = async (item: ContentItem) => {
      try {
-       const response = await apiFetch(`/api/page-content/${item.id}`, {
+       const response = await apiFetch(`/page-content/${item.id}`, {
          method: 'PUT',
          headers: {
            'Content-Type': 'application/json',

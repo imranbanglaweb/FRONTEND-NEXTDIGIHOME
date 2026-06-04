@@ -39,7 +39,7 @@ export default function SettingsPage() {
 
   const fetchSettings = async () => {
      try {
-       const response = await apiFetch('/api/admin/settings');
+       const response = await apiFetch('/admin/settings');
        if (response.ok) {
          const data = await response.json();
          if (data.success) {
@@ -94,7 +94,7 @@ export default function SettingsPage() {
       if (adminLogoFile) formData.append('admin_logo', adminLogoFile);
       if (faviconFile) formData.append('favicon', faviconFile);
 
-       const response = await apiFetch('/api/admin/settings', {
+       const response = await apiFetch('/admin/settings', {
          method: 'POST',
          body: formData,
        });
@@ -210,10 +210,10 @@ export default function SettingsPage() {
               <div className="space-y-4">
                 <label className="block text-sm font-medium text-[#fafafa]">Site Logo</label>
                 <div className="space-y-2">
-                  {siteLogoPreview || settings?.site_logo ? (
+                  {siteLogoPreview || settings?.admin_logo ? (
                     <img
-                      src={siteLogoPreview || (settings?.site_logo ? `/api/logo/${settings.site_logo}` : '')}
-                      alt="Site Logo"
+                      src={siteLogoPreview || (settings?.admin_logo ? `/logo/${settings.admin_logo}` : '')} 
+                      alt="Admin Logo"
                       className="w-full h-32 object-contain bg-[#1a1a1f] rounded-lg border border-[#2a2a30]"
                     />
                   ) : (
@@ -224,7 +224,7 @@ export default function SettingsPage() {
                   <input
                     type="file"
                     accept="image/*"
-                    onChange={(e) => handleFileChange(e, 'site_logo')}
+                    onChange={(e) => handleFileChange(e, 'admin_logo')} 
                     className="w-full text-sm text-[#737373] file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-[#00d4aa] file:text-[#0f0f12] hover:file:bg-[#00d4aa]/80"
                   />
                 </div>
@@ -236,7 +236,7 @@ export default function SettingsPage() {
                 <div className="space-y-2">
                   {adminLogoPreview || settings?.admin_logo ? (
                     <img
-                      src={adminLogoPreview || (settings?.admin_logo ? `/api/logo/${settings.admin_logo}` : '')}
+                      src={adminLogoPreview || (settings?.admin_logo ? `/logo/${settings.admin_logo}` : '')}
                       alt="Admin Logo"
                       className="w-full h-32 object-contain bg-[#1a1a1f] rounded-lg border border-[#2a2a30]"
                     />
@@ -260,7 +260,7 @@ export default function SettingsPage() {
                 <div className="space-y-2">
                   {faviconPreview || settings?.favicon ? (
                     <img
-                      src={faviconPreview || (settings?.favicon ? `/api/logo/${settings.favicon}` : '')}
+                      src={faviconPreview || (settings?.favicon ? `/logo/${settings.favicon}` : '')}
                       alt="Favicon"
                       className="w-16 h-16 object-contain bg-[#1a1a1f] rounded-lg border border-[#2a2a30]"
                     />

@@ -24,7 +24,7 @@ function copyHeaders(source: Headers, target: Headers) {
 
 export async function GET(request: NextRequest) {
   try {
-    const backendUrl = `${BACKEND_BASE_URL(request)}/api/cart`;
+    const backendUrl = `${BACKEND_BASE_URL(request)}/cart`;
     const headers: Record<string, string> = {
       'Content-Type': 'application/json',
     };
@@ -61,7 +61,7 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const backendUrl = `${BACKEND_BASE_URL(request)}/api/cart`;
+    const backendUrl = `${BACKEND_BASE_URL(request)}/cart`;
     const headers: Record<string, string> = {
       'Content-Type': 'application/json',
     };
@@ -106,7 +106,7 @@ export async function PUT(request: NextRequest) {
   }
 
   try {
-    const backendUrl = `${BACKEND_BASE_URL(request)}/api/cart/${id}`;
+    const backendUrl = `${BACKEND_BASE_URL(request)}/cart/${id}`;
     const headers: Record<string, string> = {
       'Content-Type': 'application/json',
     };
@@ -146,8 +146,8 @@ export async function DELETE(request: NextRequest) {
     const url = new URL(request.url);
     const id = url.searchParams.get('id');
     const backendUrl = id
-      ? `${BACKEND_BASE_URL(request)}/api/cart/${id}`
-      : `${BACKEND_BASE_URL(request)}/api/cart`;
+      ? `${BACKEND_BASE_URL(request)}/cart/${id}`
+      : `${BACKEND_BASE_URL(request)}/cart`;
     
     const headers: Record<string, string> = {
       'Content-Type': 'application/json',

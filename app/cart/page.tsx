@@ -28,7 +28,7 @@ export default function CartPage() {
         headers['Authorization'] = `Bearer ${token}`;
       }
 
-       const response = await apiFetch('/api/cart', {
+       const response = await apiFetch('/cart', {
          credentials: 'include',
          headers,
        });
@@ -57,7 +57,7 @@ export default function CartPage() {
         headers['Authorization'] = `Bearer ${token}`;
       }
 
-       const response = await apiFetch(`/api/cart?id=${itemId}`, {
+       const response = await apiFetch(`/cart?id=${itemId}`, {
          method: 'PUT',
          headers,
          credentials: 'include',

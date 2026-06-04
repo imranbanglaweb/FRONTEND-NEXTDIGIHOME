@@ -19,7 +19,7 @@ const BACKEND_BASE_URL = getBackendBaseUrl;
 export async function GET(request: NextRequest) {
   const url = new URL(request.url);
   const pathname = url.pathname;
-  const pathSegments = pathname.split('/api/logo/')[1] || '';
+  const pathSegments = pathname.split('/logo/')[1] || '';
   const filename = pathSegments ? decodeURIComponent(pathSegments) : null;
   const queryFilename = url.searchParams.get('file');
   const finalFilename = filename || queryFilename;

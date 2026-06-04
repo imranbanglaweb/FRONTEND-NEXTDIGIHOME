@@ -89,7 +89,7 @@ export default function ProductDetailPage() {
         console.error('Failed to load related products');
         // Fallback: show some other products if category filter fails
         try {
-           const fallbackRes = await apiFetch(`/api/products?per_page=8`);
+           const fallbackRes = await apiFetch(`/products?per_page=8`);
           if (fallbackRes.ok) {
             const fbData = await fallbackRes.json();
             const all = fbData.data || fbData || [];
@@ -194,7 +194,7 @@ export default function ProductDetailPage() {
     try {
       setIsLoadingCart(true);
 
-       const response = await apiFetch('/api/cart', {
+       const response = await apiFetch('/cart', {
          method: 'POST',
          headers: {
            'Content-Type': 'application/json',

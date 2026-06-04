@@ -41,7 +41,7 @@ export default function ContactPage() {
   useEffect(() => {
     const fetchContactContent = async () => {
       try {
-        const response = await apiFetch('/api/content/contact');
+        const response = await apiFetch('/content/contact');
         if (response.ok) {
           const contentType = response.headers.get('content-type');
           if (contentType && contentType.includes('application/json')) {
