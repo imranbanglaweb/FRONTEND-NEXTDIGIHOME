@@ -108,14 +108,12 @@ export default function DashboardPage() {
           'Authorization': `Bearer ${token}`,
         },
       });
-      const purchasesData = Array.isArray(data) ? data : [];
+      const purchasesData = Array.isArray(data) ? data : (data.purchases || []);
       setPurchases(purchasesData);
       setFilteredPurchases(purchasesData);
       calculateStats(purchasesData);
     } catch (error) {
       console.error('Failed to fetch purchases:', error);
-      localStorage.removeItem('auth_token');
-      setAuthenticated(false);
       setPurchases([]);
       setFilteredPurchases([]);
       setStats(null);
