@@ -154,7 +154,10 @@ export default function SignInPage() {
         setError(data?.message || 'Login failed');
       }
     } catch (err) {
-      setError('Failed to connect to authentication service. Please try again.');
+      const errorMessage = err instanceof Error && (err as any).data?.message 
+        ? (err as any).data.message 
+        : 'Failed to connect to authentication service. Please try again.';
+      setError(errorMessage);
     } finally {
       setLoading(false);
     }

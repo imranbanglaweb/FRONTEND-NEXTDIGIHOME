@@ -24,7 +24,7 @@ export interface FetchOptions extends RequestInit {
 
 export const apiFetch = async <T = any>(
   endpoint: string,
-  options: FetchOptions = {}
+  options: FetchOptions = {},
 ): Promise<T> => {
   const url = getApiUrl(endpoint);
   
@@ -41,21 +41,30 @@ export const apiFetch = async <T = any>(
     const response = await fetch(url, fetchOptions);
 
     if (!response.ok) {
-      const errorText = await response.text();
-      if (!options.silent) {
-        console.error(`API Error ${response.status} from ${endpoint}:`, errorText);
+      let errorData: any = null;
+      try {
+        errorData = await response.json();
+      } catch {
+        const errorText = await response.text();
+        errorData = { message: errorText };
       }
-      throw new Error(`API Error: ${response.status} ${response.statusText}`);
+      if (!options.silent) {
+        console.error(`API Error ${response.status} from ${endpoint}:`, errorData);
+      }
+      const error: any = new Error(`API Error: ${response.status} ${response.statusText}`);
+      error.data = errorData;
+      error.status = response.status;
+      throw error;
     }
 
-    const data = await response.json();
+const data = await response.json();
     return data;
-   } catch (error) {
-     if (!options.silent) {
-       console.error(`Failed to fetch from ${endpoint}:`, error instanceof Error ? error.message : error);
-     }
-     throw error;
-   }
+  } catch (error) {
+    if (!options.silent && !(error instanceof Error && (error as any).status)) {
+      console.error(`Failed to fetch from ${endpoint}:`, error instanceof Error ? error.message : error);
+    }
+    throw error;
+  }
 };
 
 // Public API methods
