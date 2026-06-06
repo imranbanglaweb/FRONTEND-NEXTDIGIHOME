@@ -19,9 +19,20 @@ import Swal from 'sweetalert2';
 import { getStorageUrl, apiFetch } from '../../utils/api';
 
 const stripHtmlAndCode = (content: string): string => {
-  return content
+  let result = content
     .replace(/<script[^>]*>[\s\S]*?<\/script>/gi, '')
-    .replace(/<style[^>]*>[\s\S]*?<\/style>/gi, '')
+    .replace(/<style[^>]*>[\s\S]*?<\/style>/gi, '');
+
+  const listItems: string[] = [];
+  result = result.replace(/<li[^>]*>([\s\S]*?)<\/li>/gi, (match, content) => {
+    const cleanContent = content.replace(/<[^>]+>/g, '').trim();
+    if (cleanContent) {
+      listItems.push(cleanContent);
+    }
+    return '';
+  });
+
+  result = result
     .replace(/<\/?p[^>]*>/gi, '\n')
     .replace(/<br[^>]*\/?>/gi, '\n')
     .replace(/<[^>]+>/g, '')
@@ -31,8 +42,14 @@ const stripHtmlAndCode = (content: string): string => {
     .replace(/\*([^*]+)\*/g, '$1')
     .replace(/#{1,6}\s*/g, '')
     .replace(/\s+/g, ' ')
-    .replace(/\n\s*\n/g, '\n\n')
     .trim();
+
+  if (listItems.length > 0) {
+    const listHtml = `<ul class="list-disc list-inside space-y-2 mb-4 text-[#c8c8c8]">${listItems.map(item => `<li>${item}</li>`).join('')}</ul>`;
+    result = result + '\n\n' + listHtml;
+  }
+
+  return result;
 };
 
 const beautifyText = (text: string): string => {
@@ -42,6 +59,8 @@ const beautifyText = (text: string): string => {
     .map(paragraph => {
       const trimmed = paragraph.trim();
       if (!trimmed) return '';
+      
+      if (trimmed.startsWith('<ul')) return trimmed;
       
       const sentences = trimmed.split(/(?<=[.!?])\s+/).filter(s => s.trim().length > 0);
       const formattedSentences = sentences.map(sentence => {
