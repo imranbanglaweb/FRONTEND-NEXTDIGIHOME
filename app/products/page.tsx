@@ -117,10 +117,7 @@ export default function ProductsPage() {
     event.preventDefault();
     event.stopPropagation();
 
-    // Set loading state
     setLoadingButtons(prev => new Set(prev).add(product.id));
-
-    // Trigger animation
     setAnimatingButtons(prev => new Set(prev).add(product.id));
     setTimeout(() => {
       setAnimatingButtons(prev => {
@@ -128,9 +125,7 @@ export default function ProductsPage() {
         newSet.delete(product.id);
         return newSet;
       });
-    }, 600); // Match animation duration
-
-    try {
+    }, 600);
 
     try {
       const token = localStorage.getItem('auth_token');
@@ -141,7 +136,7 @@ export default function ProductsPage() {
         headers['Authorization'] = `Bearer ${token}`;
       }
 
-      const response = await apiFetch('/cart', {
+      const data = await apiFetch('/cart', {
         method: 'POST',
         headers,
         credentials: 'include',
@@ -151,84 +146,40 @@ export default function ProductsPage() {
         }),
       });
 
-      if (response.ok) {
-        const contentType = response.headers.get('content-type');
-        if (contentType && contentType.includes('application/json')) {
-          const data = await response.json();
-          if (data.success) {
-            // Trigger cart count update
-            window.dispatchEvent(new Event('cartUpdated'));
+      if (data?.success) {
+        window.dispatchEvent(new Event('cartUpdated'));
 
-            // Premium SweetAlert
-            Swal.fire({
-              title: 'Added to Cart! 🛒',
-              text: `${product.name} has been added to your cart`,
-              icon: 'success',
-              background: '#0f0f12',
-              color: '#fafafa',
-              confirmButtonColor: '#00d4aa',
-              confirmButtonText: 'Continue Shopping',
-              showClass: {
-                popup: 'swal2-show',
-                backdrop: 'swal2-backdrop-show',
-                icon: 'swal2-icon-show'
-              },
-              hideClass: {
-                popup: 'swal2-hide',
-                backdrop: 'swal2-backdrop-hide',
-                icon: 'swal2-icon-hide'
-              },
-              customClass: {
-                popup: 'glass-card border border-[#2a2a30] rounded-2xl',
-                confirmButton: 'bg-gradient-to-r from-[#00d4aa] to-[#8b5cf6] text-[#0f0f12] font-bold px-6 py-3 rounded-xl hover:scale-105 transition-all',
-                title: 'text-2xl font-bold text-[#fafafa] mb-4',
-                htmlContainer: 'text-[#737373] text-lg'
-              },
-              buttonsStyling: false,
-              timer: 3000,
-              timerProgressBar: true,
-              showCloseButton: true,
-              closeButtonHtml: '<span style="color: #737373; font-size: 24px;">&times;</span>',
-            });
-          } else {
-            Swal.fire({
-              title: 'Failed to Add',
-              text: 'Could not add item to cart. Please try again.',
-              icon: 'error',
-              background: '#0f0f12',
-              color: '#fafafa',
-              confirmButtonColor: '#ff4444',
-              confirmButtonText: 'Try Again',
-              customClass: {
-                popup: 'glass-card border border-red-500/30 rounded-2xl',
-                confirmButton: 'bg-red-500 text-white font-bold px-6 py-3 rounded-xl hover:bg-red-600 transition-all',
-                title: 'text-2xl font-bold text-red-400 mb-4',
-                htmlContainer: 'text-[#737373] text-lg'
-              },
-              buttonsStyling: false,
-            });
-          }
-        } else {
-          console.warn('Cart API returned non-JSON response');
-          Swal.fire({
-            title: 'Server Error',
-            text: 'Unable to connect to server. Please check your connection.',
-            icon: 'warning',
-            background: '#0f0f12',
-            color: '#fafafa',
-            confirmButtonColor: '#f59e0b',
-            confirmButtonText: 'OK',
-            customClass: {
-              popup: 'glass-card border border-yellow-500/30 rounded-2xl',
-              confirmButton: 'bg-yellow-500 text-[#0f0f12] font-bold px-6 py-3 rounded-xl hover:bg-yellow-600 transition-all',
-              title: 'text-2xl font-bold text-yellow-400 mb-4',
-              htmlContainer: 'text-[#737373] text-lg'
-            },
-            buttonsStyling: false,
-          });
-        }
+        Swal.fire({
+          title: 'Added to Cart! 🛒',
+          text: `${product.name} has been added to your cart`,
+          icon: 'success',
+          background: '#0f0f12',
+          color: '#fafafa',
+          confirmButtonColor: '#00d4aa',
+          confirmButtonText: 'Continue Shopping',
+          showClass: {
+            popup: 'swal2-show',
+            backdrop: 'swal2-backdrop-show',
+            icon: 'swal2-icon-show'
+          },
+          hideClass: {
+            popup: 'swal2-hide',
+            backdrop: 'swal2-backdrop-hide',
+            icon: 'swal2-icon-hide'
+          },
+          customClass: {
+            popup: 'glass-card border border-[#2a2a30] rounded-2xl',
+            confirmButton: 'bg-gradient-to-r from-[#00d4aa] to-[#8b5cf6] text-[#0f0f12] font-bold px-6 py-3 rounded-xl hover:scale-105 transition-all',
+            title: 'text-2xl font-bold text-[#fafafa] mb-4',
+            htmlContainer: 'text-[#737373] text-lg'
+          },
+          buttonsStyling: false,
+          timer: 3000,
+          timerProgressBar: true,
+          showCloseButton: true,
+          closeButtonHtml: '<span style="color: #737373; font-size: 24px;">&times;</span>',
+        });
       } else {
-        console.warn('Cart API request failed');
         Swal.fire({
           title: 'Failed to Add',
           text: 'Could not add item to cart. Please try again.',
@@ -264,9 +215,7 @@ export default function ProductsPage() {
         },
         buttonsStyling: false,
       });
-    }
     } finally {
-      // Clear loading state
       setLoadingButtons(prev => {
         const newSet = new Set(prev);
         newSet.delete(product.id);
@@ -514,24 +463,27 @@ export default function ProductsPage() {
               Featured Products
             </h3>
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-4">
-               {featuredProducts.slice(0, 6).map((product) => (
-                <Link
-                  key={product.id}
-                  href={`/products/${product.id}`}
-                  className="group glass-card rounded-2xl overflow-hidden border border-[#2a2a30] hover:border-[#00d4aa]/50 transition-all duration-300 animate-fade-in-up"
-                >
-                   <div className="relative aspect-video overflow-hidden">
-                      {product.thumbnail ? (
-                        <img
-                            src={getStorageUrl(product.thumbnail)!}
-                          alt={product.name}
-                          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                        />
-                      ) : (
-                       <div className="w-full h-full bg-gradient-to-br from-[#1a1a1f] to-[#2a2a30] flex items-center justify-center">
-                         <span className="text-[#737373]">No Image</span>
-                       </div>
-                     )}
+{featuredProducts.slice(0, 6).map((product) => (
+                 <Link
+                   key={product.id}
+                   href={`/products/${product.id}`}
+                   className="group glass-card rounded-2xl overflow-hidden border border-[#2a2a30] hover:border-[#00d4aa]/50 transition-all duration-300 animate-fade-in-up"
+                 >
+                    <div className="relative aspect-video overflow-hidden">
+                       {product.thumbnail ? (
+                         <img
+                             src={getStorageUrl(product.thumbnail) || '/placeholder.png'}
+                           alt={product.name}
+                           className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                           onError={(e) => {
+                             (e.target as HTMLImageElement).style.display = 'none';
+                           }}
+                         />
+                       ) : (
+                        <div className="w-full h-full bg-gradient-to-br from-[#1a1a1f] to-[#2a2a30] flex items-center justify-center">
+                          <span className="text-[#737373]">No Image</span>
+                        </div>
+                      )}
 
                      {/* Overlay Actions */}
                      <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-300">
@@ -624,24 +576,27 @@ export default function ProductsPage() {
               All Products
             </h3>
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-4">
-               {regularProducts.map((product) => (
-                <Link
-                  key={product.id}
-                  href={`/products/${product.id}`}
-                  className="group glass-card rounded-2xl overflow-hidden border border-[#2a2a30] hover:border-[#00d4aa]/50 transition-all duration-300 animate-fade-in-up"
-                >
-                   <div className="relative aspect-video overflow-hidden">
-                      {product.thumbnail ? (
-                        <img
-                            src={getStorageUrl(product.thumbnail)!}
-                          alt={product.name}
-                          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                        />
-                      ) : (
-                       <div className="w-full h-full bg-gradient-to-br from-[#1a1a1f] to-[#2a2a30] flex items-center justify-center">
-                         <span className="text-[#737373]">No Image</span>
-                       </div>
-                     )}
+{regularProducts.map((product) => (
+                 <Link
+                   key={product.id}
+                   href={`/products/${product.id}`}
+                   className="group glass-card rounded-2xl overflow-hidden border border-[#2a2a30] hover:border-[#00d4aa]/50 transition-all duration-300 animate-fade-in-up"
+                 >
+                    <div className="relative aspect-video overflow-hidden">
+                       {product.thumbnail ? (
+                         <img
+                             src={getStorageUrl(product.thumbnail) || '/placeholder.png'}
+                           alt={product.name}
+                           className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                           onError={(e) => {
+                             (e.target as HTMLImageElement).style.display = 'none';
+                           }}
+                         />
+                       ) : (
+                        <div className="w-full h-full bg-gradient-to-br from-[#1a1a1f] to-[#2a2a30] flex items-center justify-center">
+                          <span className="text-[#737373]">No Image</span>
+                        </div>
+                      )}
 
                      {/* Overlay Actions */}
                      <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-300">
@@ -761,13 +716,16 @@ export default function ProductsPage() {
             <div className="flex flex-col lg:flex-row">
               {/* Product Image */}
               <div className="lg:w-1/2 relative">
-                {quickViewProduct.thumbnail ? (
-                   <img
-                     src={getStorageUrl(quickViewProduct.thumbnail)!}
-                     alt={quickViewProduct.name}
-                    className="w-full h-64 lg:h-full object-cover"
-                  />
-                ) : (
+{quickViewProduct.thumbnail ? (
+                    <img
+                      src={getStorageUrl(quickViewProduct.thumbnail) || '/placeholder.png'}
+                      alt={quickViewProduct.name}
+                     className="w-full h-64 lg:h-full object-cover"
+                     onError={(e) => {
+                       (e.target as HTMLImageElement).style.display = 'none';
+                     }}
+                   />
+                 ) : (
                   <div className="w-full h-64 lg:h-full bg-gradient-to-br from-[#1a1a1f] to-[#2a2a30] flex items-center justify-center">
                     <span className="text-[#737373]">No Image</span>
                   </div>

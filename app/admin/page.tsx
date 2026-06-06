@@ -22,48 +22,37 @@ export default function AdminPage() {
     fetchContent();
   }, []);
 
-   const fetchContent = async () => {
-     try {
-       const response = await apiFetch('/content/all');
-       if (response.ok) {
-         const contentType = response.headers.get('content-type');
-         if (contentType && contentType.includes('application/json')) {
-           const data = await response.json();
-          if (data.success) {
-            // Flatten the content from different models
-            const allContent: ContentItem[] = [];
+const fetchContent = async () => {
+    try {
+      const data = await apiFetch('/content/all');
+       if (data?.success) {
+        const allContent: ContentItem[] = [];
 
-          // Add hero sliders
-          data.data.hero_sliders?.forEach((item: any) => {
-            allContent.push({
-              id: item.id,
-              page: 'home',
-              section: 'hero_slider',
-              title: item.title,
-              content: item.description,
-              sort_order: item.sort_order,
-              is_active: item.is_active,
-            });
+        data.data.hero_sliders?.forEach((item: any) => {
+          allContent.push({
+            id: item.id,
+            page: 'home',
+            section: 'hero_slider',
+            title: item.title,
+            content: item.description,
+            sort_order: item.sort_order,
+            is_active: item.is_active,
           });
+        });
 
-          // Add page content
-          data.data.page_contents?.forEach((item: any) => {
-            allContent.push({
-              id: item.id,
-              page: item.page,
-              section: item.section,
-              title: item.title,
-              content: item.content,
-              sort_order: item.sort_order,
-              is_active: item.is_active,
-            });
+        data.data.page_contents?.forEach((item: any) => {
+          allContent.push({
+            id: item.id,
+            page: item.page,
+            section: item.section,
+            title: item.title,
+            content: item.content,
+            sort_order: item.sort_order,
+            is_active: item.is_active,
           });
+        });
 
-            setContent(allContent);
-          }
-        } else {
-          console.warn('Content API returned non-JSON response');
-        }
+        setContent(allContent);
       }
     } catch (error) {
       console.error('Failed to fetch content:', error);
@@ -73,23 +62,21 @@ export default function AdminPage() {
   };
 
    const updateContent = async (item: ContentItem) => {
-     try {
-       const response = await apiFetch(`/page-content/${item.id}`, {
-         method: 'PUT',
-         headers: {
-           'Content-Type': 'application/json',
-         },
-         body: JSON.stringify({
-           title: item.title,
-           content: item.content,
-           is_active: item.is_active,
-         }),
-       });
+    try {
+      await apiFetch(`/page-content/${item.id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          title: item.title,
+          content: item.content,
+          is_active: item.is_active,
+        }),
+      });
 
-      if (response.ok) {
-        await fetchContent();
-        setSelectedItem(null);
-      }
+      await fetchContent();
+      setSelectedItem(null);
     } catch (error) {
       console.error('Failed to update content:', error);
     }

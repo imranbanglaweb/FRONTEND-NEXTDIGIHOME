@@ -41,19 +41,9 @@ export default function ContactPage() {
   useEffect(() => {
     const fetchContactContent = async () => {
       try {
-        const response = await apiFetch('/content/contact');
-        if (response.ok) {
-          const contentType = response.headers.get('content-type');
-          if (contentType && contentType.includes('application/json')) {
-            const data = await response.json();
-            if (data.success && data.data) {
-              setContent(data.data);
-            }
-          } else {
-            console.warn('Contact content API returned non-JSON response');
-          }
-        } else {
-          console.warn('Contact content API request failed');
+        const data = await apiFetch('/content/contact');
+        if (data) {
+          setContent(data);
         }
       } catch (error) {
         console.error('Failed to fetch contact content:', error);

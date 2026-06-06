@@ -39,41 +39,30 @@ export default function CheckoutPage() {
   const [notification, setNotification] = useState<{message: string, type: 'success' | 'error', visible: boolean} | null>(null);
   const [copiedStates, setCopiedStates] = useState<Record<number, boolean>>({});
 
-  const fetchUser = async (token: string) => {
+const fetchUser = async (token: string) => {
     try {
-       const response = await apiFetch('/user', {
-         method: 'GET',
-         headers: {
-           'Authorization': `Bearer ${token}`,
-           'Accept': 'application/json',
-         },
-         credentials: 'include',
-       });
+      const data = await apiFetch('/user', {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Accept': 'application/json',
+        },
+      });
 
-      if (response.status === 401) {
-        throw new Error('Token expired or invalid');
-      }
-
-      if (response.ok) {
-        const data = await response.json();
-        const userData = data.user;
-        setUser(userData);
-
-        // Prepare form data for pre-fill
+      if (data?.user) {
+        setUser(data.user);
         const autoFillFormData = {
-          customer_name: userData.name,
-          customer_email: userData.email,
-          customer_phone: userData.phone || '',
+          customer_name: data.user.name,
+          customer_email: data.user.email,
+          customer_phone: data.user.phone || '',
           payment_method: 'bkash',
           notes: '',
           sender_number: '',
           transaction_id: '',
         };
-
-        // Update state for display
         setFormData(autoFillFormData);
       } else {
-        throw new Error(`Failed to fetch user: ${response.statusText}`);
+        throw new Error('Failed to fetch user data');
       }
     } catch (error) {
       console.error('Failed to fetch user:', error);
@@ -83,36 +72,28 @@ export default function CheckoutPage() {
     }
   };
 
-  const checkAuthentication = async () => {
+const checkAuthentication = async () => {
     const token = localStorage.getItem('auth_token');
     if (!token) {
       setIsAuthenticated(false);
-      // Redirect to signup for unauthenticated users
       window.location.href = '/signup';
       return;
     }
 
     try {
-      // Try to access a protected API endpoint to check authentication
-       const response = await apiFetch('/checkout/purchases', {
-         method: 'GET',
-         headers: {
-           'Authorization': `Bearer ${token}`,
-           'Accept': 'application/json',
-         },
-         credentials: 'include',
-       });
+      const data = await apiFetch('/checkout/purchases', {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Accept': 'application/json',
+        },
+      });
 
-      if (response.status === 401) {
-        throw new Error('Token expired or invalid');
-      }
-
-      if (response.ok) {
+      if (data) {
         setIsAuthenticated(true);
-        // Fetch user data
         fetchUser(token);
       } else {
-        throw new Error(`Auth check failed: ${response.statusText}`);
+        throw new Error('Auth check failed');
       }
     } catch (error) {
       console.error('Authentication check failed:', error);
@@ -122,19 +103,14 @@ export default function CheckoutPage() {
     }
   };
 
-  const fetchCart = async () => {
+const fetchCart = async () => {
     try {
-       const response = await apiFetch('/cart', {
-         credentials: 'include',
-       });
-      if (response.ok) {
-        const data = await response.json();
-        if (data.items.length === 0) {
-          window.location.href = '/cart';
-          return;
-        }
-        setItems(data.items);
+      const data = await apiFetch('/cart');
+      if (data?.items?.length === 0) {
+        window.location.href = '/cart';
+        return;
       }
+      setItems(data?.items || []);
     } catch (error) {
       console.error('Failed to fetch cart:', error);
     } finally {

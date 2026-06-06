@@ -28,9 +28,11 @@ export const apiFetch = async <T = any>(
 ): Promise<T> => {
   const url = getApiUrl(endpoint);
   
+  const isFormData = options.body instanceof FormData;
+  
   const fetchOptions: RequestInit = {
     cache: 'no-store',
-    headers: {
+    headers: isFormData ? {} : {
       'Content-Type': 'application/json',
       ...options.headers,
     },
@@ -76,20 +78,21 @@ export const fetchTermsContent = () => apiFetch('content/terms');
 export const fetchProducts = (page: number = 1, perPage: number = 12) =>
   apiFetch(`products?page=${page}&per_page=${perPage}`);
 
-// Laravel storage URLs
+// Laravel storage URLs - use proxy to avoid CORS issues
 export const getStorageUrl = (path: string | null | undefined): string | null => {
   if (!path) return null;
   if (path.startsWith('http')) return path;
   const cleanPath = path.replace(/^\/+/, '');
-  return `${BACKEND_BASE_URL}/storage/${cleanPath}`;
+  // Use proxy endpoint for images to avoid CORS issues
+  return `/api/storage/${cleanPath}`;
 };
 
-// Logo URLs - fetch from backend public folder
+// Logo URLs - use proxy endpoint
 export const getLogoUrl = (filename: string | null | undefined): string | null => {
   if (!filename) return null;
   if (filename.startsWith('http')) return filename;
   const cleanFilename = filename.replace(/^\/+/, '');
-  return `${BACKEND_BASE_URL}/public/admin_resource/assets/images/${cleanFilename}`;
+  return `/api/logo?file=admin_resource/assets/images/${encodeURIComponent(cleanFilename)}`;
 };
 
 // Public folder assets

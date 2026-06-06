@@ -37,20 +37,17 @@ export default function SettingsPage() {
   const [adminLogoPreview, setAdminLogoPreview] = useState<string | null>(null);
   const [faviconPreview, setFaviconPreview] = useState<string | null>(null);
 
-  const fetchSettings = async () => {
+const fetchSettings = async () => {
      try {
-       const response = await apiFetch('/admin/settings');
-       if (response.ok) {
-         const data = await response.json();
-         if (data.success) {
-           setSettings(data.data);
-         }
-       }
-     } catch (error) {
-       console.error('Failed to fetch settings:', error);
-     } finally {
-       setLoading(false);
-     }
+      const data = await apiFetch('/admin/settings');
+      if (data?.success) {
+        setSettings(data.data);
+      }
+    } catch (error) {
+      console.error('Failed to fetch settings:', error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -73,14 +70,13 @@ export default function SettingsPage() {
     }
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSaving(true);
 
     try {
       const formData = new FormData();
 
-      // Add text fields
       if (settings) {
         Object.entries(settings).forEach(([key, value]) => {
           if (value !== null && value !== undefined && typeof value === 'string') {
@@ -89,22 +85,18 @@ export default function SettingsPage() {
         });
       }
 
-      // Add files
       if (siteLogoFile) formData.append('site_logo', siteLogoFile);
       if (adminLogoFile) formData.append('admin_logo', adminLogoFile);
       if (faviconFile) formData.append('favicon', faviconFile);
 
-       const response = await apiFetch('/admin/settings', {
-         method: 'POST',
-         body: formData,
-       });
+      const data = await apiFetch('/admin/settings', {
+        method: 'POST',
+        body: formData,
+      });
 
-      const data = await response.json();
-
-      if (data.success) {
+      if (data?.success) {
         alert('Settings updated successfully!');
-        fetchSettings(); // Refresh data
-        // Clear file states
+        fetchSettings();
         setSiteLogoFile(null);
         setAdminLogoFile(null);
         setFaviconFile(null);
@@ -112,7 +104,7 @@ export default function SettingsPage() {
         setAdminLogoPreview(null);
         setFaviconPreview(null);
       } else {
-        alert('Failed to update settings: ' + (data.message || 'Unknown error'));
+        alert('Failed to update settings: ' + (data?.message || 'Unknown error'));
       }
     } catch (error) {
       console.error('Failed to update settings:', error);

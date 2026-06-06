@@ -48,19 +48,9 @@ export default function AboutPage() {
   useEffect(() => {
     const fetchAboutContent = async () => {
       try {
-        const response = await apiFetch('/content/about');
-        if (response.ok) {
-          const contentType = response.headers.get('content-type');
-          if (contentType && contentType.includes('application/json')) {
-            const data = await response.json();
-            if (data.success && data.data) {
-              setContent(data.data);
-            }
-          } else {
-            console.warn('About content API returned non-JSON response');
-          }
-        } else {
-          console.warn('About content API request failed');
+        const data = await apiFetch('/content/about');
+        if (data) {
+          setContent(data);
         }
       } catch (error) {
         console.error('Failed to fetch about content:', error);

@@ -64,38 +64,26 @@ export default function ProductDetailPage() {
     try {
       setLoading(true);
 
-      const response = await apiFetch(`products/${params.id}`, {
+      const data = await apiFetch(`products/${params.id}`, {
         credentials: 'include',
       });
 
-      if (!response.ok) {
-        throw new Error('Product not found');
-      }
-
-      const data = await response.json();
-
-      setProduct(data);
+      setProduct(data.data || data);
 
       // Fetch related products (same category, exclude current)
       try {
-        const relatedRes = await apiFetch(`products?category=${encodeURIComponent(data.category)}&per_page=12`);
-        if (relatedRes.ok) {
-          const relatedData = await relatedRes.json();
-          const all = relatedData.data || relatedData || [];
-          const filtered = all.filter((p: Product) => p.id !== data.id);
-          setRelatedProducts(filtered.slice(0, 8));
-        }
+        const relatedData = await apiFetch(`products?category=${encodeURIComponent((data.data || data).category)}&per_page=12`);
+        const all = relatedData.data || relatedData || [];
+        const filtered = all.filter((p: Product) => p.id !== (data.data || data).id);
+        setRelatedProducts(filtered.slice(0, 8));
       } catch (e) {
         console.error('Failed to load related products');
         // Fallback: show some other products if category filter fails
         try {
-           const fallbackRes = await apiFetch(`/products?per_page=8`);
-          if (fallbackRes.ok) {
-            const fbData = await fallbackRes.json();
-            const all = fbData.data || fbData || [];
-            const filtered = all.filter((p: Product) => p.id !== data.id);
-            setRelatedProducts(filtered.slice(0, 8));
-          }
+          const fbData = await apiFetch(`/products?per_page=8`);
+          const all = fbData.data || fbData || [];
+          const filtered = all.filter((p: Product) => p.id !== (data.data || data).id);
+          setRelatedProducts(filtered.slice(0, 8));
         } catch {}
       }
     } catch (err) {
