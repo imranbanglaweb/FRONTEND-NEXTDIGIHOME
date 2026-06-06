@@ -74,7 +74,7 @@ export default function DashboardPage() {
     setSearched(true);
 
     try {
-      const response = await apiFetch(`/api/checkout/purchases?email=${encodeURIComponent(email)}`, {
+      const response = await apiFetch(`/checkout/purchases?email=${encodeURIComponent(email)}`, {
         credentials: 'include',
       });
       if (response.ok) {
@@ -117,7 +117,7 @@ export default function DashboardPage() {
     setSearched(true);
 
     try {
-      const response = await apiFetch(`/api/checkout/purchases`, {
+      const response = await apiFetch(`/checkout/purchases`, {
         headers: {
           'Authorization': `Bearer ${token}`,
         },
@@ -241,7 +241,7 @@ export default function DashboardPage() {
 
     try {
       // Try to access a protected API endpoint to check authentication
-      const response = await apiFetch(`/api/cart`, {
+      const response = await apiFetch(`/cart`, {
         headers: {
           'Authorization': `Bearer ${token}`,
         },
@@ -267,7 +267,7 @@ export default function DashboardPage() {
 
     const handleDownload = async (token: string, fileName?: string) => {
      try {
-       const response = await apiFetch(`/api/download?token=${token}`, {
+       const response = await apiFetch(`/download?token=${token}`, {
          credentials: 'include',
        });
       if (response.ok) {
