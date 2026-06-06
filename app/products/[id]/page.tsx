@@ -21,11 +21,23 @@ import { getStorageUrl, apiFetch } from '../../utils/api';
 const stripHtmlAndCode = (content: string): string => {
   let result = content
     .replace(/<script[^>]*>[\s\S]*?<\/script>/gi, '')
-    .replace(/<style[^>]*>[\s\S]*?<\/style>/gi, '');
+    .replace(/<style[^>]*>[\s\S]*?<\/style>/gi, '')
+    .replace(/<\/?p[^>]*>/gi, '\n\n')
+    .replace(/<br[^>]*\/?>/gi, '\n\n')
+    .replace(/<\/?strong[^>]*>/gi, '')
+    .replace(/<\/?b[^>]*>/gi, '')
+    .replace(/<\/?em[^>]*>/gi, '')
+    .replace(/<\/?i[^>]*>/gi, '')
+    .replace(/```[\s\S]*?```/g, '')
+    .replace(/`[^`]+`/g, '')
+    .replace(/\*\*([^*]+)\*\*/g, '$1')
+    .replace(/\*([^*]+)\*/g, '$1')
+    .replace(/#{1,6}\s*/g, '')
+    .trim();
 
   const listItems: string[] = [];
   result = result.replace(/<li[^>]*>([\s\S]*?)<\/li>/gi, (match, content) => {
-    const cleanContent = content.replace(/<[^>]+>/g, '').trim();
+    const cleanContent = content.replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim();
     if (cleanContent) {
       listItems.push(cleanContent);
     }
@@ -33,19 +45,13 @@ const stripHtmlAndCode = (content: string): string => {
   });
 
   result = result
-    .replace(/<\/?p[^>]*>/gi, '\n')
-    .replace(/<br[^>]*\/?>/gi, '\n')
     .replace(/<[^>]+>/g, '')
-    .replace(/```[\s\S]*?```/g, '')
-    .replace(/`[^`]+`/g, '')
-    .replace(/\*\*([^*]+)\*\*/g, '$1')
-    .replace(/\*([^*]+)\*/g, '$1')
-    .replace(/#{1,6}\s*/g, '')
     .replace(/\s+/g, ' ')
+    .replace(/\n\s*\n/g, '\n\n')
     .trim();
 
   if (listItems.length > 0) {
-    const listHtml = `<ul class="list-disc list-inside space-y-2 mb-4 text-[#c8c8c8]">${listItems.map(item => `<li>${item}</li>`).join('')}</ul>`;
+    const listHtml = `<ul class="list-disc list-inside space-y-2 mb-4 pl-4 text-[#c8c8c8]">${listItems.map(item => `<li class="mb-1">${item}</li>`).join('')}</ul>`;
     result = result + '\n\n' + listHtml;
   }
 
