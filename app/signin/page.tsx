@@ -83,13 +83,12 @@ export default function SignInPage() {
     setError('');
 
     try {
-      const response = await apiFetch('auth/google');
-      const data = await response.json();
+      const data = await apiFetch('auth/google');
 
-      if (data.success) {
+      if (data?.success) {
         window.location.href = data.redirect_url;
       } else {
-        setError(data.message || 'Failed to initiate Google login');
+        setError(data?.message || 'Failed to initiate Google login');
       }
     } catch (err) {
       setError('Failed to connect to Google authentication');
@@ -103,13 +102,12 @@ export default function SignInPage() {
     setError('');
 
     try {
-      const response = await apiFetch('auth/facebook');
-      const data = await response.json();
+      const data = await apiFetch('auth/facebook');
 
-      if (data.success) {
+      if (data?.success) {
         window.location.href = data.redirect_url;
       } else {
-        setError(data.message || 'Failed to initiate Facebook login');
+        setError(data?.message || 'Failed to initiate Facebook login');
       }
     } catch (err) {
       setError('Failed to connect to Facebook authentication');
@@ -137,8 +135,7 @@ export default function SignInPage() {
     }
 
     try {
-      // Call API login
-      const response = await apiFetch('login', {
+      const data = await apiFetch('login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -149,21 +146,12 @@ export default function SignInPage() {
          }),
       });
 
-      if (response.ok) {
-        const data = await response.json();
-        if (data.success) {
-          // Store token in localStorage
-          localStorage.setItem('auth_token', data.token);
-          localStorage.setItem('customer_email', formData.email);
-
-          // Redirect to dashboard
-          window.location.href = '/dashboard';
-        } else {
-          setError(data.message || 'Login failed');
-        }
+      if (data?.success) {
+        localStorage.setItem('auth_token', data.token);
+        localStorage.setItem('customer_email', formData.email);
+        window.location.href = '/dashboard';
       } else {
-        const errorData = await response.json().catch(() => ({}));
-        setError(errorData.message || 'Login failed. Please check your credentials.');
+        setError(data?.message || 'Login failed');
       }
     } catch (err) {
       setError('Failed to connect to authentication service. Please try again.');
@@ -174,14 +162,10 @@ export default function SignInPage() {
 
   const fetchSettings = async () => {
     try {
-      const response = await apiFetch('settings');
-      if (response.ok) {
-        const data = await response.json();
-        // Safely extract settings data
+      const data = await apiFetch('settings');
+      if (data) {
         const settingsData = data?.data?.data || data?.data || data || {};
         setSettings(settingsData);
-      } else {
-        console.warn(`Settings API returned ${response.status}, using defaults`);
       }
     } catch (error) {
       console.warn('Failed to fetch settings, using defaults:', error instanceof Error ? error.message : error);
