@@ -36,7 +36,7 @@ export async function GET(request: NextRequest) {
   }
 
   try {
-    const storageUrl = `${BACKEND_BASE_URL(request)}/storage/${cleanPath}`;
+    const storageUrl = `${BACKEND_BASE_URL(request)}/public/storage/${cleanPath}`;
     const response = await fetch(storageUrl);
 
     if (!response.ok) {
