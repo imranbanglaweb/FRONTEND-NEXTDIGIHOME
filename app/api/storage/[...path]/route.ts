@@ -10,15 +10,19 @@ function getBackendBaseUrl(request: NextRequest): string {
   if (isLocal) return 'http://localhost/BACKEND-NEXTDIGIHOME';
 
   const parts = host.split('.');
-  const subdomain = parts[0] === 'www' ? 'backend' : parts[0];
-  return `https://${subdomain}.${parts.slice(1).join('.')}`;
+  if (parts[0] === 'backend') {
+    return `https://${host}`;
+  }
+
+  const domain = parts[0] === 'www' ? parts.slice(1).join('.') : host;
+  return `https://backend.${domain}`;
 }
 
 const BACKEND_BASE_URL = getBackendBaseUrl;
 
 export async function GET(request: NextRequest) {
   const url = new URL(request.url);
-  const pathSegments = url.pathname.replace('/storage', '');
+  const pathSegments = url.pathname.replace('/api/storage', '');
   const cleanPath = pathSegments.startsWith('/') ? pathSegments.slice(1) : pathSegments;
 
   if (!cleanPath) {
