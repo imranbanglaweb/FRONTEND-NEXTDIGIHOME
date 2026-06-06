@@ -208,20 +208,13 @@ export default function DashboardPage() {
     }
 
     try {
-      const data = await apiFetch(`/cart`, {
+      await apiFetch(`/cart`, {
         headers: {
           'Authorization': `Bearer ${token}`,
         },
       });
-
-      if (data) {
-        setAuthenticated(true);
-        searchPurchasesForAuthenticatedUser();
-      } else {
-        localStorage.removeItem('auth_token');
-        setAuthenticated(false);
-        setLoading(false);
-      }
+      setAuthenticated(true);
+      searchPurchasesForAuthenticatedUser();
     } catch (err) {
       const error = err as any;
       if (error?.status === 401 || error?.status === 403) {

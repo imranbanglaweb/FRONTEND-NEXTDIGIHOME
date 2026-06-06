@@ -40,7 +40,7 @@ export const apiFetch = async <T = any>(
   try {
     const response = await fetch(url, fetchOptions);
 
-if (!response.ok) {
+    if (!response.ok) {
       let errorData: any = null;
       try {
         errorData = await response.json();
