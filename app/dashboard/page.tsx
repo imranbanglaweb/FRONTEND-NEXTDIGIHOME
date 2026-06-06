@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { getStorageUrl, apiFetch } from '../utils/api';
+import { getStorageUrl, apiFetch, getApiUrl } from '../utils/api';
 import {
   ArrowDownTrayIcon,
   CheckCircleIcon,
@@ -74,27 +74,13 @@ export default function DashboardPage() {
     setSearched(true);
 
     try {
-      const response = await apiFetch(`/checkout/purchases?email=${encodeURIComponent(email)}`, {
+      const data = await apiFetch(`/checkout/purchases?email=${encodeURIComponent(email)}`, {
         credentials: 'include',
       });
-      if (response.ok) {
-        const contentType = response.headers.get('content-type');
-        if (contentType && contentType.includes('application/json')) {
-          const data = await response.json();
-          setPurchases(Array.isArray(data) ? data : (data.purchases || []));
-          setFilteredPurchases(Array.isArray(data) ? data : (data.purchases || []));
-          calculateStats(Array.isArray(data) ? data : (data.purchases || []));
-        } else {
-          console.warn('Purchases API returned non-JSON response');
-          setPurchases([]);
-          setFilteredPurchases([]);
-          setStats(null);
-        }
-      } else {
-        setPurchases([]);
-        setFilteredPurchases([]);
-        setStats(null);
-      }
+      const purchasesData = Array.isArray(data) ? data : (data.purchases || []);
+      setPurchases(purchasesData);
+      setFilteredPurchases(purchasesData);
+      calculateStats(purchasesData);
     } catch (error) {
       console.error('Failed to fetch purchases:', error);
       setPurchases([]);
@@ -117,33 +103,15 @@ export default function DashboardPage() {
     setSearched(true);
 
     try {
-      const response = await apiFetch(`/checkout/purchases`, {
+      const data = await apiFetch(`/checkout/purchases`, {
         headers: {
           'Authorization': `Bearer ${token}`,
         },
       });
-      if (response.ok) {
-        const contentType = response.headers.get('content-type');
-        if (contentType && contentType.includes('application/json')) {
-          const data = await response.json();
-          const purchasesData = Array.isArray(data) ? data : [];
-          setPurchases(purchasesData);
-          setFilteredPurchases(purchasesData);
-          calculateStats(purchasesData);
-        } else {
-          console.warn('Purchases API returned non-JSON response');
-          setPurchases([]);
-          setFilteredPurchases([]);
-          setStats(null);
-        }
-      } else {
-        // Token might be invalid
-        localStorage.removeItem('auth_token');
-        setAuthenticated(false);
-        setPurchases([]);
-        setFilteredPurchases([]);
-        setStats(null);
-      }
+      const purchasesData = Array.isArray(data) ? data : [];
+      setPurchases(purchasesData);
+      setFilteredPurchases(purchasesData);
+      calculateStats(purchasesData);
     } catch (error) {
       console.error('Failed to fetch purchases:', error);
       localStorage.removeItem('auth_token');
@@ -240,36 +208,37 @@ export default function DashboardPage() {
     }
 
     try {
-      // Try to access a protected API endpoint to check authentication
-      const response = await apiFetch(`/cart`, {
+      const data = await apiFetch(`/cart`, {
         headers: {
           'Authorization': `Bearer ${token}`,
         },
       });
 
-      if (response.ok) {
+      if (data) {
         setAuthenticated(true);
-        // Get purchases for authenticated user
         searchPurchasesForAuthenticatedUser();
       } else {
-        // Token invalid, clear it
         localStorage.removeItem('auth_token');
         setAuthenticated(false);
         setLoading(false);
       }
-    } catch (error) {
-      // If API call fails, assume user is not authenticated
-      localStorage.removeItem('auth_token');
+    } catch (err) {
+      const error = err as any;
+      if (error?.status === 401 || error?.status === 403) {
+        localStorage.removeItem('auth_token');
+      }
       setAuthenticated(false);
       setLoading(false);
     }
   };
 
     const handleDownload = async (token: string, fileName?: string) => {
-     try {
-       const response = await apiFetch(`/download?token=${token}`, {
-         credentials: 'include',
-       });
+    try {
+      const url = getApiUrl(`/download?token=${token}`);
+      const response = await fetch(url, {
+        credentials: 'include',
+      });
+      
       if (response.ok) {
         const contentType = response.headers.get('content-type');
         if (contentType && contentType.includes('application/json')) {
@@ -278,18 +247,16 @@ export default function DashboardPage() {
           return;
         }
 
-        // Handle file download
         const blob = await response.blob();
-        const url = window.URL.createObjectURL(blob);
+        const downloadUrl = window.URL.createObjectURL(blob);
         const a = document.createElement('a');
-        a.href = url;
+        a.href = downloadUrl;
         a.download = fileName || 'digital-product.zip';
         document.body.appendChild(a);
         a.click();
-        window.URL.revokeObjectURL(url);
+        window.URL.revokeObjectURL(downloadUrl);
         document.body.removeChild(a);
 
-        // Refresh data after successful download
         if (searched) {
           searchPurchases(email);
         }
