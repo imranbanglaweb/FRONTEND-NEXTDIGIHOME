@@ -7,6 +7,10 @@ const nextConfig: NextConfig = {
     const apiBase = (process.env.NEXT_PUBLIC_API_URL || 'https://backend.nextdigihome.com').replace(/\/$/, '');
     return [
       {
+        source: '/api/storage/:path*',
+        destination: `${apiBase}/public/storage/:path*`,
+      },
+      {
         source: '/api/:path*',
         destination: `${apiBase}/api/:path*`,
       },
