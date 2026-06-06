@@ -18,7 +18,7 @@ const BACKEND_BASE_URL = getBackendBaseUrl;
 
 export async function GET(request: NextRequest) {
   const url = new URL(request.url);
-  const pathSegments = url.pathname.replace('/api/storage', '');
+  const pathSegments = url.pathname.replace('/storage', '');
   const cleanPath = pathSegments.startsWith('/') ? pathSegments.slice(1) : pathSegments;
 
   if (!cleanPath) {
