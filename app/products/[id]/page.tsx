@@ -18,6 +18,45 @@ import {
 import Swal from 'sweetalert2';
 import { getStorageUrl, apiFetch } from '../../utils/api';
 
+const stripHtmlAndCode = (content: string): string => {
+  return content
+    .replace(/<script[^>]*>[\s\S]*?<\/script>/gi, '')
+    .replace(/<style[^>]*>[\s\S]*?<\/style>/gi, '')
+    .replace(/<\/?p[^>]*>/gi, '\n')
+    .replace(/<br[^>]*\/?>/gi, '\n')
+    .replace(/<[^>]+>/g, '')
+    .replace(/```[\s\S]*?```/g, '')
+    .replace(/`[^`]+`/g, '')
+    .replace(/\*\*([^*]+)\*\*/g, '$1')
+    .replace(/\*([^*]+)\*/g, '$1')
+    .replace(/#{1,6}\s*/g, '')
+    .replace(/\s+/g, ' ')
+    .replace(/\n\s*\n/g, '\n\n')
+    .trim();
+};
+
+const beautifyText = (text: string): string => {
+  const paragraphs = text.split('\n\n').filter(p => p.trim().length > 0);
+  
+  return paragraphs
+    .map(paragraph => {
+      const trimmed = paragraph.trim();
+      if (!trimmed) return '';
+      
+      const sentences = trimmed.split(/(?<=[.!?])\s+/).filter(s => s.trim().length > 0);
+      const formattedSentences = sentences.map(sentence => {
+        const s = sentence.trim();
+        if (s.length < 80) {
+          return `<p class="font-semibold text-white mb-3 text-base">${s}</p>`;
+        }
+        return `<p class="text-[#c8c8c8] mb-4 leading-relaxed">${s}</p>`;
+      });
+      
+      return formattedSentences.join('');
+    })
+    .join('');
+};
+
 interface Product {
   id: number;
   name: string;
@@ -760,24 +799,23 @@ export default function ProductDetailPage() {
         </div>
 
         {/* FULL WIDTH DESCRIPTION - Moved to bottom single column as requested */}
-        {product.detailed_description && (
-          <div className="max-w-7xl mx-auto px-4 mt-10">
-            <div className="bg-gradient-to-br from-[#16161a] to-[#1a1a1f] border border-[#2a2a30] rounded-3xl p-8 sm:p-10 shadow-xl">
-              <div className="flex items-center gap-4 mb-6">
-                <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-[#8b5cf6]/20 to-[#00d4aa]/20 border border-[#8b5cf6]/30 flex items-center justify-center">
-                  <DocumentTextIcon className="w-6 h-6 text-[#8b5cf6]" />
-                </div>
-                <h2 className="text-2xl font-bold tracking-tight">About This Product</h2>
-              </div>
+{product.detailed_description && (
+           <div className="max-w-7xl mx-auto px-4 mt-10">
+             <div className="bg-gradient-to-br from-[#16161a] to-[#1a1a1f] border border-[#2a2a30] rounded-3xl p-8 sm:p-10 shadow-xl">
+               <div className="flex items-center gap-4 mb-6">
+                 <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-[#8b5cf6]/20 to-[#00d4aa]/20 border border-[#8b5cf6]/30 flex items-center justify-center">
+                   <DocumentTextIcon className="w-6 h-6 text-[#8b5cf6]" />
+                 </div>
+                 <h2 className="text-2xl font-bold tracking-tight">About This Product</h2>
+               </div>
 
-              <div className="prose prose-invert max-w-none text-gray-300 leading-relaxed text-base">
-                <p className="whitespace-pre-wrap text-[#c8c8c8]">
-                  {product.detailed_description}
-                </p>
-              </div>
-            </div>
-          </div>
-        )}
+               <div 
+                 className="prose prose-invert max-w-none text-gray-300 leading-relaxed text-base"
+                 dangerouslySetInnerHTML={{ __html: beautifyText(stripHtmlAndCode(product.detailed_description)) }}
+               />
+             </div>
+           </div>
+         )}
 
         {/* CUSTOMER REVIEWS SECTION */}
         <div className="mt-20">
