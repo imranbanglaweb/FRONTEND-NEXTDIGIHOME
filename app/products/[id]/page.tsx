@@ -16,6 +16,10 @@ import {
   VideoCameraIcon,
   PlayCircleIcon,
   ArrowTopRightOnSquareIcon,
+  SparklesIcon,
+  ShieldCheckIcon,
+  ClipboardDocumentCheckIcon,
+  RocketLaunchIcon,
 } from '@heroicons/react/24/outline';
 import Swal from 'sweetalert2';
 import { getStorageUrl, apiFetch } from '../../utils/api';
@@ -247,6 +251,7 @@ export default function ProductDetailPage() {
     : isVideoAsset(product?.file_url)
       ? fileUrl
       : null;
+  const productDescriptionContent = product?.detailed_description || product?.description || '';
 
   // =========================
   // AUTO SLIDER
@@ -918,35 +923,112 @@ export default function ProductDetailPage() {
         </div>
 
         {/* FULL WIDTH DESCRIPTION - Moved to bottom single column as requested */}
-        {product.detailed_description && (
-          <div className="mt-10">
-            <div className="overflow-hidden rounded-2xl sm:rounded-3xl border border-[#2a2a30] bg-gradient-to-br from-[#16161a] to-[#1a1a1f] shadow-xl">
-              <div className="border-b border-[#2a2a30] px-6 py-5 sm:px-8">
-                <div className="flex items-center gap-4">
-                  <div className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-2xl border border-[#8b5cf6]/30 bg-gradient-to-br from-[#8b5cf6]/20 to-[#00d4aa]/20">
-                    <DocumentTextIcon className="h-6 w-6 text-[#8b5cf6]" />
-                  </div>
-                  <div>
-                    <h2 className="text-2xl font-bold tracking-tight text-white">
-                      About This Product
-                    </h2>
-                    {product.description && (
-                      <p className="mt-1 text-sm leading-6 text-gray-400">
-                        {product.description}
-                      </p>
-                    )}
-                  </div>
+        {productDescriptionContent && (
+          <section className="mt-14">
+            <div className="mb-7 flex flex-col gap-4 border-t border-[#2a2a30] pt-9 lg:flex-row lg:items-end lg:justify-between">
+              <div className="max-w-3xl">
+                <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-[#00d4aa]/30 bg-[#00d4aa]/10 px-4 py-2 text-xs font-bold uppercase tracking-widest text-[#00d4aa]">
+                  <SparklesIcon className="h-4 w-4" />
+                  Product Experience
                 </div>
+                <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl">
+                  Built for everyday use, not just a product listing
+                </h2>
+                <p className="mt-3 text-base leading-7 text-gray-400">
+                  Review the details, delivery expectations, and what this product is designed to help you complete.
+                </p>
               </div>
 
-              <div className="px-6 py-7 text-left sm:px-8 sm:py-9">
-                <div
-                  className="max-w-5xl text-left text-gray-300"
-                  dangerouslySetInnerHTML={{ __html: beautifyText(stripHtmlAndCode(product.detailed_description)) }}
-                />
+              <div className="flex flex-wrap gap-2 text-sm">
+                <span className="rounded-full border border-[#2a2a30] bg-[#16161a] px-4 py-2 text-gray-300">
+                  {product.digital ? 'Digital delivery' : 'Physical delivery'}
+                </span>
+                <span className="rounded-full border border-[#2a2a30] bg-[#16161a] px-4 py-2 text-gray-300">
+                  {product.stock > 0 ? 'Available now' : 'Currently unavailable'}
+                </span>
               </div>
             </div>
-          </div>
+
+            <div className="grid gap-6 lg:grid-cols-12">
+              <article className="overflow-hidden rounded-2xl border border-[#2a2a30] bg-[#16161a] shadow-2xl lg:col-span-8">
+                <div className="border-b border-[#2a2a30] bg-gradient-to-r from-[#00d4aa]/10 via-transparent to-[#8b5cf6]/10 px-6 py-6 sm:px-8">
+                  <div className="flex items-start gap-4">
+                    <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-2xl border border-[#8b5cf6]/30 bg-[#8b5cf6]/15">
+                      <DocumentTextIcon className="h-6 w-6 text-[#8b5cf6]" />
+                    </div>
+                    <div className="min-w-0">
+                      <p className="mb-1 text-xs font-bold uppercase tracking-widest text-gray-500">
+                        Overview
+                      </p>
+                      <h3 className="text-2xl font-bold text-white">
+                        About This Product
+                      </h3>
+                      {product.description && product.detailed_description && (
+                        <p className="mt-2 text-sm leading-6 text-gray-400">
+                          {product.description}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="px-6 py-7 text-left sm:px-8 sm:py-9">
+                  <div
+                    className="max-w-none text-left text-gray-300 [&_p:last-child]:mb-0"
+                    dangerouslySetInnerHTML={{ __html: beautifyText(stripHtmlAndCode(productDescriptionContent)) }}
+                  />
+                </div>
+              </article>
+
+              <aside className="space-y-4 lg:col-span-4">
+                <div className="rounded-2xl border border-[#2a2a30] bg-[#16161a] p-5 transition-colors hover:border-[#00d4aa]/40">
+                  <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-xl border border-[#00d4aa]/30 bg-[#00d4aa]/15">
+                    <ClipboardDocumentCheckIcon className="h-6 w-6 text-[#00d4aa]" />
+                  </div>
+                  <h3 className="text-lg font-bold text-white">What You Get</h3>
+                  <p className="mt-2 text-sm leading-6 text-gray-400">
+                    Clear product information, category context, and access to available preview media before checkout.
+                  </p>
+                </div>
+
+                <div className="rounded-2xl border border-[#2a2a30] bg-[#16161a] p-5 transition-colors hover:border-blue-400/40">
+                  <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-xl border border-blue-400/30 bg-blue-500/15">
+                    <RocketLaunchIcon className="h-6 w-6 text-blue-300" />
+                  </div>
+                  <h3 className="text-lg font-bold text-white">Best For</h3>
+                  <p className="mt-2 text-sm leading-6 text-gray-400">
+                    Buyers who want a practical {product.category} solution with a straightforward product page and fast decision flow.
+                  </p>
+                </div>
+
+                <div className="rounded-2xl border border-[#2a2a30] bg-[#16161a] p-5 transition-colors hover:border-green-400/40">
+                  <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-xl border border-green-400/30 bg-green-500/15">
+                    {product.digital ? (
+                      <BoltIcon className="h-6 w-6 text-green-300" />
+                    ) : (
+                      <TruckIcon className="h-6 w-6 text-green-300" />
+                    )}
+                  </div>
+                  <h3 className="text-lg font-bold text-white">Delivery</h3>
+                  <p className="mt-2 text-sm leading-6 text-gray-400">
+                    {product.digital
+                      ? 'Digital products are prepared for quick access after purchase confirmation.'
+                      : 'Physical products are prepared for standard delivery after order confirmation.'}
+                  </p>
+                </div>
+
+                <div className="rounded-2xl border border-[#2a2a30] bg-[#16161a] p-5 transition-colors hover:border-purple-400/40">
+                  <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-xl border border-purple-400/30 bg-purple-500/15">
+                    <ShieldCheckIcon className="h-6 w-6 text-purple-300" />
+                  </div>
+                  <h3 className="text-lg font-bold text-white">Purchase Confidence</h3>
+                  <p className="mt-2 text-sm leading-6 text-gray-400">
+                    Preview links, product status, stock details, and secure cart actions are available before you complete the order.
+                  </p>
+                </div>
+              </aside>
+            </div>
+          </section>
         )}
 
         {/* CUSTOMER REVIEWS SECTION */}
