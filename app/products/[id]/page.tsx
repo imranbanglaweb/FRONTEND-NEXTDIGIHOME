@@ -52,10 +52,32 @@ const isVideoAsset = (path: string | null | undefined): boolean => {
   return VIDEO_EXTENSIONS.some((extension) => cleanPath.endsWith(extension));
 };
 
+const decodeBasicHtmlEntities = (content: string): string => {
+  return content
+    .replace(/&lt;/gi, '<')
+    .replace(/&gt;/gi, '>')
+    .replace(/&quot;/gi, '"')
+    .replace(/&#39;/gi, "'")
+    .replace(/&apos;/gi, "'")
+    .replace(/&amp;/gi, '&')
+    .replace(/&nbsp;/gi, ' ');
+};
+
+const escapeHtml = (content: string): string => {
+  return content
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+};
+
 const stripHtmlAndCode = (content: string): string => {
-  let result = content
+  let result = decodeBasicHtmlEntities(content)
     .replace(/<script[^>]*>[\s\S]*?<\/script>/gi, '')
     .replace(/<style[^>]*>[\s\S]*?<\/style>/gi, '')
+    .replace(/<pre[^>]*>[\s\S]*?<\/pre>/gi, '')
+    .replace(/<code[^>]*>[\s\S]*?<\/code>/gi, '')
     .replace(/<\/?p[^>]*>/gi, '\n\n')
     .replace(/<br[^>]*\/?>/gi, '\n\n')
     .replace(/<\/?strong[^>]*>/gi, '')
@@ -85,7 +107,7 @@ const stripHtmlAndCode = (content: string): string => {
     .trim();
 
   if (listItems.length > 0) {
-    const listHtml = `<ul class="list-disc space-y-3 pl-6 text-left text-[#c8c8c8]">${listItems.map(item => `<li class="pl-1 leading-8">${item}</li>`).join('')}</ul>`;
+    const listHtml = `<ul class="list-disc space-y-3 pl-6 text-left text-[#c8c8c8]">${listItems.map(item => `<li class="pl-1 leading-8">${escapeHtml(item)}</li>`).join('')}</ul>`;
     result = result + '\n\n' + listHtml;
   }
 
@@ -102,7 +124,7 @@ const beautifyText = (text: string): string => {
       
       if (trimmed.startsWith('<ul')) return trimmed;
       
-      return `<p class="mb-5 text-left text-base leading-8 text-[#c8c8c8] sm:text-lg">${trimmed}</p>`;
+      return `<p class="mb-5 text-left text-base leading-8 text-[#c8c8c8] sm:text-lg">${escapeHtml(trimmed)}</p>`;
     })
     .join('');
 };
