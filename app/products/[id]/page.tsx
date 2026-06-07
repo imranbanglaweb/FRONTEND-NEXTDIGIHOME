@@ -381,27 +381,27 @@ export default function ProductDetailPage() {
       </div>
 
       {/* MAIN */}
-      <div className="max-w-7xl mx-auto px-4 py-8 lg:py-10">
+      <div className="max-w-7xl mx-auto px-4 py-6 sm:px-6 lg:px-8 lg:py-8">
         {/* TITLE */}
-        <div className="mb-8 lg:mb-10">
-          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4 leading-tight">
+        <div className="mb-6">
+          <h1 className="max-w-5xl text-2xl font-bold leading-tight tracking-tight text-white sm:text-3xl lg:text-4xl">
             {product.name}
           </h1>
 
-          <div className="flex flex-wrap items-center gap-3 mb-5">
-            <span className="px-4 py-2 rounded-full bg-[#00d4aa]/20 text-[#00d4aa] border border-[#00d4aa]/30 text-sm">
+          <div className="mt-4 flex flex-wrap items-center gap-2">
+            <span className="rounded-lg border border-[#00d4aa]/30 bg-[#00d4aa]/10 px-3 py-1.5 text-xs font-semibold text-[#00d4aa]">
               {product.category}
             </span>
 
             {product.featured && (
-              <span className="px-4 py-2 rounded-full bg-yellow-500/20 text-yellow-400 border border-yellow-500/30 flex items-center gap-2 text-sm">
+              <span className="flex items-center gap-1.5 rounded-lg border border-yellow-500/30 bg-yellow-500/10 px-3 py-1.5 text-xs font-semibold text-yellow-300">
                 <StarIcon className="w-4 h-4" />
                 Featured
               </span>
             )}
 
             {product.digital && (
-              <span className="px-4 py-2 rounded-full bg-purple-500/20 text-purple-400 border border-purple-500/30 flex items-center gap-2 text-sm">
+              <span className="flex items-center gap-1.5 rounded-lg border border-purple-500/30 bg-purple-500/10 px-3 py-1.5 text-xs font-semibold text-purple-300">
                 <CheckIcon className="w-4 h-4" />
                 Digital Product
               </span>
@@ -412,12 +412,12 @@ export default function ProductDetailPage() {
         </div>
 
         {/* GRID */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 items-start">
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-12 lg:gap-7 items-start">
           {/* IMAGE SECTION */}
           <div className="lg:col-span-6 w-full">
-            <div className="sticky top-20 sm:top-24 space-y-3 sm:space-y-4">
+            <div className="sticky top-20 space-y-3">
               {/* MAIN IMAGE */}
-              <div className="relative overflow-hidden rounded-xl sm:rounded-2xl lg:rounded-3xl border border-[#2a2a30] bg-[#16161a] w-full shadow-2xl">
+              <div className="relative overflow-hidden rounded-2xl border border-[#2a2a30] bg-[#16161a] w-full shadow-xl">
                 {images.length > 0 ? (
                   <>
                     <div
@@ -431,7 +431,7 @@ export default function ProductDetailPage() {
                           key={index}
                           className="min-w-full flex-shrink-0"
                         >
-                           <div className="relative w-full aspect-square sm:aspect-[4/3] md:aspect-[16/10] lg:aspect-[4/3] xl:aspect-[16/9] overflow-hidden bg-[#0f0f12]">
+                           <div className="relative w-full aspect-square sm:aspect-[4/3] lg:aspect-[4/3] xl:aspect-[16/10] overflow-hidden bg-[#0f0f12]">
                               <img
                                 src={getStorageUrl(image)!}
                                alt={`${product.name}-${index}`}
@@ -439,7 +439,7 @@ export default function ProductDetailPage() {
                                loading={index === 0 ? "eager" : "lazy"}
                              />
                              {/* Image overlay indicator */}
-                             <div className="absolute top-3 left-3 sm:top-4 sm:left-4 md:top-6 md:left-6 bg-black/70 backdrop-blur-xl px-2 py-1 sm:px-3 sm:py-1.5 md:px-4 md:py-2 rounded-full text-xs sm:text-sm text-white font-semibold border border-[#00d4aa]/40 shadow-lg">
+                             <div className="absolute top-3 left-3 bg-black/65 backdrop-blur-xl px-3 py-1.5 rounded-lg text-xs text-white font-semibold border border-white/10 shadow-lg">
                                <span className="text-[#00d4aa] font-bold">{index + 1}</span>
                                <span className="mx-1 text-white/70">/</span>
                                <span className="text-white/90">{totalImages}</span>
@@ -452,7 +452,7 @@ export default function ProductDetailPage() {
                      {/* PREV */}
                      <button
                        onClick={prevImage}
-                       className="absolute left-2 sm:left-3 md:left-4 top-1/2 -translate-y-1/2 w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 rounded-full bg-black/70 backdrop-blur-md border border-white/20 flex items-center justify-center text-white hover:bg-black/90 hover:scale-110 transition-all duration-200 z-20 shadow-lg"
+                       className="absolute left-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/65 backdrop-blur-md border border-white/15 flex items-center justify-center text-white hover:bg-black/90 transition-all duration-200 z-20 shadow-lg"
                      >
                        <svg className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M15 19l-7-7 7-7" />
@@ -462,7 +462,7 @@ export default function ProductDetailPage() {
                      {/* NEXT */}
                      <button
                        onClick={nextImage}
-                       className="absolute right-2 sm:right-3 md:right-4 top-1/2 -translate-y-1/2 w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 rounded-full bg-black/70 backdrop-blur-md border border-white/20 flex items-center justify-center text-white hover:bg-black/90 hover:scale-110 transition-all duration-200 z-20 shadow-lg"
+                       className="absolute right-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/65 backdrop-blur-md border border-white/15 flex items-center justify-center text-white hover:bg-black/90 transition-all duration-200 z-20 shadow-lg"
                      >
                        <svg className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M9 5l7 7-7 7" />
@@ -470,7 +470,7 @@ export default function ProductDetailPage() {
                      </button>
 
                      {/* DOTS */}
-                     <div className="absolute bottom-3 sm:bottom-4 md:bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-2 sm:gap-3 px-3 sm:px-4 py-2 sm:py-3 rounded-full bg-black/60 backdrop-blur-md z-20 border border-white/10">
+                     <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex items-center gap-2 px-3 py-2 rounded-full bg-black/55 backdrop-blur-md z-20 border border-white/10">
                        {images.map((_, index) => (
                          <button
                            key={index}
@@ -574,30 +574,30 @@ export default function ProductDetailPage() {
           </div>
 
           {/* CONTENT SECTION */}
-          <div className="lg:col-span-6 space-y-4 sm:space-y-6">
+          <div className="lg:col-span-6 space-y-4">
             {/* PREMIUM PRICE CARD */}
-            <div className="relative bg-gradient-to-br from-[#16161a] to-[#1a1a1f] border border-[#2a2a30] rounded-xl sm:rounded-2xl lg:rounded-3xl p-6 sm:p-7 md:p-8 shadow-2xl overflow-hidden">
+            <div className="relative overflow-hidden rounded-2xl border border-[#2a2a30] bg-[#16161a] p-5 shadow-xl sm:p-6">
               {/* GRADIENT BACKGROUND ACCENT */}
               <div className="absolute top-0 right-0 w-40 h-40 bg-gradient-to-br from-[#00d4aa]/10 to-transparent rounded-full blur-3xl" />
               
               <div className="relative z-10">
                 {/* PRICE SECTION */}
-                <div className="mb-8">
-                  <div className="flex flex-wrap items-end gap-4 mb-4">
+                <div className="mb-5">
+                  <div className="flex flex-wrap items-end gap-4">
                     <div>
-                      <p className="text-sm text-gray-400 mb-2">Price</p>
-                      <span className="text-5xl sm:text-6xl font-bold bg-gradient-to-r from-[#00d4aa] to-[#8b5cf6] bg-clip-text text-transparent">
+                      <p className="mb-1.5 text-xs font-semibold uppercase tracking-wide text-gray-500">Price</p>
+                      <span className="text-4xl font-bold tracking-tight bg-gradient-to-r from-[#00d4aa] to-[#8b5cf6] bg-clip-text text-transparent sm:text-5xl">
                         ৳{product.price}
                       </span>
                     </div>
 
                     {product.compare_price &&
                       product.compare_price > product.price && (
-                        <div className="flex flex-col items-end gap-2">
-                          <span className="text-lg sm:text-xl text-gray-500 line-through">
+                        <div className="flex flex-col items-start gap-1.5 sm:items-end">
+                          <span className="text-base text-gray-500 line-through">
                             ৳{product.compare_price}
                           </span>
-                          <span className="px-4 py-2 rounded-lg bg-gradient-to-r from-red-600/30 to-red-500/20 text-red-300 border border-red-500/40 font-bold text-sm shadow-lg">
+                          <span className="rounded-lg border border-red-500/35 bg-red-500/10 px-3 py-1.5 text-xs font-bold text-red-300">
                             Save {discount}%
                           </span>
                         </div>
@@ -606,8 +606,8 @@ export default function ProductDetailPage() {
                 </div>
 
                 {/* STOCK INDICATOR - ENHANCED */}
-                <div className="mb-8 p-5 rounded-2xl bg-[#0f0f12]/60 backdrop-blur border border-[#2a2a30] hover:border-[#00d4aa]/30 transition-colors">
-                  <div className="flex items-center justify-between mb-3">
+                <div className="mb-5 rounded-xl border border-[#2a2a30] bg-[#0f0f12]/55 p-4 backdrop-blur">
+                  <div className="mb-3 flex items-center justify-between gap-3">
                     <div className="flex items-center gap-3">
                       <div
                         className={`w-3 h-3 rounded-full shadow-lg ${
@@ -616,13 +616,13 @@ export default function ProductDetailPage() {
                             : 'bg-red-400'
                         }`}
                       />
-                      <span className="font-semibold text-[#fafafa]">
+                      <span className="text-sm font-semibold text-[#fafafa]">
                         {product.stock > 0
                           ? `${product.stock} Items Available`
                           : 'Out of Stock'}
                       </span>
                     </div>
-                    <span className={`text-xs font-bold px-3 py-1 rounded-full ${
+                    <span className={`rounded-lg px-2.5 py-1 text-xs font-bold ${
                       product.stock > 10 ? 'bg-green-500/20 text-green-300' : product.stock > 0 ? 'bg-yellow-500/20 text-yellow-300' : 'bg-red-500/20 text-red-300'
                     }`}>
                       {product.stock > 10 ? 'In Stock' : product.stock > 0 ? 'Low Stock' : 'Unavailable'}
@@ -644,24 +644,24 @@ export default function ProductDetailPage() {
                 </div>
 
                 {/* QUANTITY SELECTOR - PREMIUM */}
-                <div className="mb-8">
-                  <label className="block mb-4 text-sm font-semibold text-[#fafafa]">
+                <div className="mb-5">
+                  <label className="mb-2.5 block text-sm font-semibold text-[#fafafa]">
                     Quantity
                   </label>
 
-                  <div className="flex items-center gap-2 bg-[#0f0f12]/60 backdrop-blur rounded-2xl p-1 border border-[#2a2a30] w-fit">
+                  <div className="flex w-fit items-center gap-1 rounded-xl border border-[#2a2a30] bg-[#0f0f12]/60 p-1 backdrop-blur">
                     <button
                       onClick={() =>
                         setQuantity((prev) => Math.max(1, prev - 1))
                       }
-                      className="w-12 h-12 rounded-xl hover:bg-[#00d4aa]/20 text-[#00d4aa] font-bold transition-all duration-200 flex items-center justify-center"
+                      className="flex h-10 w-10 items-center justify-center rounded-lg font-bold text-[#00d4aa] transition-all duration-200 hover:bg-[#00d4aa]/15"
                     >
                       <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M20 12H4" />
                       </svg>
                     </button>
 
-                    <div className="w-16 h-12 flex items-center justify-center text-2xl font-bold text-[#fafafa] bg-[#1a1a1f] rounded-xl border border-[#2a2a30]">
+                    <div className="flex h-10 w-14 items-center justify-center rounded-lg border border-[#2a2a30] bg-[#1a1a1f] text-lg font-bold text-[#fafafa]">
                       {quantity}
                     </div>
 
@@ -671,7 +671,7 @@ export default function ProductDetailPage() {
                           Math.min(product.stock, prev + 1)
                         )
                       }
-                      className="w-12 h-12 rounded-xl hover:bg-[#00d4aa]/20 text-[#00d4aa] font-bold transition-all duration-200 flex items-center justify-center"
+                      className="flex h-10 w-10 items-center justify-center rounded-lg font-bold text-[#00d4aa] transition-all duration-200 hover:bg-[#00d4aa]/15"
                     >
                       <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M12 4v16m8-8H4" />
@@ -681,10 +681,10 @@ export default function ProductDetailPage() {
                 </div>
 
                 {/* ACTION BUTTONS - PREMIUM */}
-                <div className="space-y-3 mb-8">
+                <div className="mb-5 space-y-2.5">
                   <button 
                     disabled={product.stock === 0}
-                    className="w-full h-14 rounded-2xl bg-gradient-to-r from-[#00d4aa] to-[#00b88e] text-black font-bold text-lg hover:shadow-lg hover:shadow-[#00d4aa]/50 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                    className="flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#00d4aa] to-[#00b88e] text-base font-bold text-black transition-all duration-300 hover:shadow-lg hover:shadow-[#00d4aa]/30 disabled:cursor-not-allowed disabled:opacity-50"
                   >
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
@@ -695,7 +695,7 @@ export default function ProductDetailPage() {
                   <button
                     onClick={addToCart}
                     disabled={isLoadingCart || product.stock === 0}
-                    className="w-full h-14 rounded-2xl border-2 border-[#00d4aa] text-[#00d4aa] font-bold text-lg hover:bg-[#00d4aa]/10 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                    className="flex h-12 w-full items-center justify-center gap-2 rounded-xl border border-[#00d4aa] text-base font-bold text-[#00d4aa] transition-all duration-300 hover:bg-[#00d4aa]/10 disabled:cursor-not-allowed disabled:opacity-50"
                   >
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4" />
@@ -705,7 +705,7 @@ export default function ProductDetailPage() {
                       : 'Add To Cart'}
                   </button>
 
-                  <button className="w-full h-12 rounded-2xl border border-[#2a2a30] text-gray-300 font-semibold hover:border-[#8b5cf6] hover:bg-[#8b5cf6]/5 transition-all duration-300 flex items-center justify-center gap-2">
+                  <button className="flex h-11 w-full items-center justify-center gap-2 rounded-xl border border-[#2a2a30] font-semibold text-gray-300 transition-all duration-300 hover:border-[#8b5cf6]/70 hover:bg-[#8b5cf6]/5">
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
                     </svg>
@@ -714,8 +714,8 @@ export default function ProductDetailPage() {
                 </div>
 
                 {/* TRUST BADGES */}
-                <div className="grid grid-cols-2 gap-3">
-                  <div className="flex items-center gap-2 p-3 rounded-xl bg-[#0f0f12]/60 backdrop-blur border border-[#2a2a30] hover:border-green-500/30 transition-colors">
+                <div className="grid grid-cols-2 gap-2.5">
+                  <div className="flex items-center gap-2 rounded-xl border border-[#2a2a30] bg-[#0f0f12]/55 p-3 backdrop-blur">
                     <div className="w-8 h-8 rounded-lg bg-green-500/20 flex items-center justify-center flex-shrink-0">
                       <svg className="w-4 h-4 text-green-400" fill="currentColor" viewBox="0 0 24 24">
                         <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" />
@@ -724,7 +724,7 @@ export default function ProductDetailPage() {
                     <div className="text-xs font-semibold text-gray-300">Verified Seller</div>
                   </div>
 
-                  <div className="flex items-center gap-2 p-3 rounded-xl bg-[#0f0f12]/60 backdrop-blur border border-[#2a2a30] hover:border-blue-500/30 transition-colors">
+                  <div className="flex items-center gap-2 rounded-xl border border-[#2a2a30] bg-[#0f0f12]/55 p-3 backdrop-blur">
                     <div className="w-8 h-8 rounded-lg bg-blue-500/20 flex items-center justify-center flex-shrink-0">
                       <svg className="w-4 h-4 text-blue-400" fill="currentColor" viewBox="0 0 24 24">
                         <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z" />
@@ -733,7 +733,7 @@ export default function ProductDetailPage() {
                     <div className="text-xs font-semibold text-gray-300">Secure Payment</div>
                   </div>
 
-                  <div className="flex items-center gap-2 p-3 rounded-xl bg-[#0f0f12]/60 backdrop-blur border border-[#2a2a30] hover:border-purple-500/30 transition-colors">
+                  <div className="flex items-center gap-2 rounded-xl border border-[#2a2a30] bg-[#0f0f12]/55 p-3 backdrop-blur">
                     <div className="w-8 h-8 rounded-lg bg-purple-500/20 flex items-center justify-center flex-shrink-0">
                       <svg className="w-4 h-4 text-purple-400" fill="currentColor" viewBox="0 0 24 24">
                         <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" />
@@ -742,7 +742,7 @@ export default function ProductDetailPage() {
                     <div className="text-xs font-semibold text-gray-300">Easy Return</div>
                   </div>
 
-                  <div className="flex items-center gap-2 p-3 rounded-xl bg-[#0f0f12]/60 backdrop-blur border border-[#2a2a30] hover:border-yellow-500/30 transition-colors">
+                  <div className="flex items-center gap-2 rounded-xl border border-[#2a2a30] bg-[#0f0f12]/55 p-3 backdrop-blur">
                     <div className="w-8 h-8 rounded-lg bg-yellow-500/20 flex items-center justify-center flex-shrink-0">
                       <svg className="w-4 h-4 text-yellow-400" fill="currentColor" viewBox="0 0 24 24">
                         <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
@@ -754,45 +754,59 @@ export default function ProductDetailPage() {
               </div>
             </div>
 
-            {/* DETAILS - PREMIUM SECTION */}
-            <div className="bg-gradient-to-br from-[#16161a] to-[#1a1a1f] border border-[#2a2a30] rounded-xl sm:rounded-2xl lg:rounded-3xl p-6 sm:p-7 md:p-8 shadow-xl">
-              <div className="flex items-center gap-3 mb-8">
-                <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-[#00d4aa] to-[#8b5cf6] flex items-center justify-center">
-                  <BoltIcon className="w-5 h-5 text-black" />
+            {/* DETAILS SECTION */}
+            <div className="product-spec-card overflow-hidden rounded-2xl border border-[#2a2a30] bg-[#16161a] shadow-xl">
+              <div className="flex items-center justify-between gap-3 border-b border-[#2a2a30] px-5 py-4 sm:px-6">
+                <div className="flex min-w-0 items-center gap-3">
+                  <div className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-xl border border-[#00d4aa]/25 bg-[#00d4aa]/10">
+                    <BoltIcon className="h-5 w-5 text-[#00d4aa]" />
+                  </div>
+                  <div className="min-w-0">
+                    <h2 className="text-lg font-bold tracking-tight text-white">Product Details</h2>
+                    <p className="mt-0.5 text-xs text-gray-500">Key information before checkout</p>
+                  </div>
                 </div>
-                <h2 className="text-2xl font-bold tracking-tight">Product Details</h2>
+                <span
+                  className={`flex-shrink-0 rounded-lg border px-2.5 py-1 text-xs font-bold ${
+                    product.active
+                      ? 'border-green-500/30 bg-green-500/10 text-green-300'
+                      : 'border-gray-500/30 bg-gray-500/10 text-gray-400'
+                  }`}
+                >
+                  {product.active ? 'Active' : 'Inactive'}
+                </span>
               </div>
 
-              <div className="space-y-5">
+              <div className="grid grid-cols-1 sm:grid-cols-2">
                 {/* Product Type */}
-                <div className="flex items-start gap-4 pb-5 border-b border-[#2a2a30] hover:border-[#00d4aa]/30 transition-colors">
-                  <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#00d4aa]/20 to-[#8b5cf6]/20 border border-[#00d4aa]/30 flex items-center justify-center flex-shrink-0">
+                <div className="flex items-start gap-3 border-b border-[#2a2a30] pb-4">
+                  <div className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-xl border border-[#00d4aa]/30 bg-[#00d4aa]/10">
                     <CheckIcon className="w-5 h-5 text-[#00d4aa]" />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <div className="text-xs uppercase tracking-widest text-gray-500 font-semibold">Product Type</div>
-                    <div className="font-semibold text-[#fafafa] mt-1.5 text-sm">
-                      {product.digital ? '🔹 Digital Product' : '📦 Physical Product'}
+                    <div className="text-[11px] font-semibold uppercase tracking-wide text-gray-500">Product Type</div>
+                    <div className="mt-1 text-sm font-semibold text-[#fafafa]">
+                      {product.digital ? 'Digital Product' : 'Physical Product'}
                     </div>
                   </div>
                 </div>
 
                 {/* Category */}
-                <div className="flex items-start gap-4 pb-5 border-b border-[#2a2a30] hover:border-[#00d4aa]/30 transition-colors">
-                  <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500/20 to-[#8b5cf6]/20 border border-blue-500/30 flex items-center justify-center flex-shrink-0">
+                <div className="flex items-start gap-3 border-b border-[#2a2a30] pb-4">
+                  <div className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-xl border border-blue-500/30 bg-blue-500/10">
                     <FolderIcon className="w-5 h-5 text-blue-400" />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <div className="text-xs uppercase tracking-widest text-gray-500 font-semibold">Category</div>
-                    <div className="font-semibold text-[#fafafa] mt-1.5 text-sm">
+                    <div className="text-[11px] font-semibold uppercase tracking-wide text-gray-500">Category</div>
+                    <div className="mt-1 text-sm font-semibold text-[#fafafa]">
                       {product.category}
                     </div>
                   </div>
                 </div>
 
                 {/* Delivery */}
-                <div className="flex items-start gap-4 pb-5 border-b border-[#2a2a30] hover:border-[#00d4aa]/30 transition-colors">
-                  <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-green-500/20 to-[#00d4aa]/20 border border-green-500/30 flex items-center justify-center flex-shrink-0">
+                <div className="flex items-start gap-3 border-b border-[#2a2a30] pb-4">
+                  <div className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-xl border border-green-500/30 bg-green-500/10">
                     {product.digital ? (
                       <BoltIcon className="w-5 h-5 text-green-400" />
                     ) : (
@@ -800,21 +814,21 @@ export default function ProductDetailPage() {
                     )}
                   </div>
                   <div className="flex-1 min-w-0">
-                    <div className="text-xs uppercase tracking-widest text-gray-500 font-semibold">Delivery & Shipping</div>
-                    <div className="font-semibold text-[#fafafa] mt-1.5 text-sm">
-                      {product.digital ? '⚡ Instant Download' : '🚚 Standard Shipping (3-5 days)'}
+                    <div className="text-[11px] font-semibold uppercase tracking-wide text-gray-500">Delivery & Shipping</div>
+                    <div className="mt-1 text-sm font-semibold text-[#fafafa]">
+                      {product.digital ? 'Instant Download' : 'Standard Shipping (3-5 days)'}
                     </div>
                   </div>
                 </div>
 
                 {/* Last Updated */}
-                <div className="flex items-start gap-4 pb-5 border-b border-[#2a2a30] hover:border-[#00d4aa]/30 transition-colors">
-                  <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-500/20 to-[#8b5cf6]/20 border border-purple-500/30 flex items-center justify-center flex-shrink-0">
+                <div className="flex items-start gap-3 border-b border-[#2a2a30] pb-4">
+                  <div className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-xl border border-purple-500/30 bg-purple-500/10">
                     <ClockIcon className="w-5 h-5 text-purple-400" />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <div className="text-xs uppercase tracking-widest text-gray-500 font-semibold">Last Updated</div>
-                    <div className="font-semibold text-[#fafafa] mt-1.5 text-sm">
+                    <div className="text-[11px] font-semibold uppercase tracking-wide text-gray-500">Last Updated</div>
+                    <div className="mt-1 text-sm font-semibold text-[#fafafa]">
                       {new Date(product.updated_at).toLocaleDateString('en-US', {
                         month: 'short',
                         day: 'numeric',
@@ -825,25 +839,25 @@ export default function ProductDetailPage() {
                 </div>
 
                 {/* Status */}
-                <div className="flex items-start gap-4 pb-0 hover:border-[#00d4aa]/30 transition-colors">
-                  <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#00d4aa]/20 to-green-500/20 border border-[#00d4aa]/30 flex items-center justify-center flex-shrink-0">
+                <div className="flex items-start gap-3 pb-0">
+                  <div className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-xl border border-[#00d4aa]/30 bg-[#00d4aa]/10">
                     <StarIcon className="w-5 h-5 text-[#00d4aa]" />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <div className="text-xs uppercase tracking-widest text-gray-500 font-semibold">Availability</div>
-                    <div className="font-semibold text-[#fafafa] mt-1.5 text-sm flex items-center gap-2">
+                    <div className="text-[11px] font-semibold uppercase tracking-wide text-gray-500">Availability</div>
+                    <div className="mt-1 flex items-center gap-2 text-sm font-semibold text-[#fafafa]">
                       {product.featured && (
                         <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-yellow-500/20 border border-yellow-500/30 text-yellow-400 text-xs font-bold">
-                          ⭐ Featured
+                          Featured
                         </span>
                       )}
                       {product.active ? (
                         <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-green-500/20 border border-green-500/30 text-green-400 text-xs font-bold">
-                          ✓ Active
+                          Active
                         </span>
                       ) : (
                         <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-gray-500/20 border border-gray-500/30 text-gray-400 text-xs font-bold">
-                          ✗ Inactive
+                          Inactive
                         </span>
                       )}
                     </div>
@@ -852,13 +866,13 @@ export default function ProductDetailPage() {
 
                 {/* Tags */}
                 {product.tags && product.tags.length > 0 && (
-                  <div className="pt-5 border-t border-[#2a2a30]">
-                    <div className="text-xs uppercase tracking-widest text-gray-500 font-semibold mb-3">Tags</div>
+                  <div className="border-t border-[#2a2a30] pt-4">
+                    <div className="mb-2.5 text-[11px] font-semibold uppercase tracking-wide text-gray-500">Tags</div>
                     <div className="flex flex-wrap gap-2">
                       {product.tags.map((tag, index) => (
                         <span
                           key={index}
-                          className="inline-flex items-center gap-1 px-3 py-1.5 rounded-full bg-gradient-to-r from-[#00d4aa]/10 to-[#8b5cf6]/10 border border-[#00d4aa]/30 text-sm text-[#00d4aa] font-semibold hover:border-[#00d4aa]/60 hover:bg-[#00d4aa]/20 transition-all cursor-pointer"
+                          className="inline-flex items-center gap-1 rounded-lg border border-[#00d4aa]/30 bg-[#00d4aa]/10 px-2.5 py-1.5 text-xs font-semibold text-[#00d4aa]"
                         >
                           <span>#</span>{tag}
                         </span>
@@ -945,16 +959,16 @@ export default function ProductDetailPage() {
         )}
 
         {/* CUSTOMER REVIEWS SECTION */}
-        <div className="mt-20">
-          <div className="mb-8">
-            <h2 className="text-3xl font-bold tracking-tight text-white mb-2">Customer Reviews</h2>
+        <div className="mt-14">
+          <div className="mb-5">
+            <h2 className="mb-1.5 text-2xl font-bold tracking-tight text-white">Customer Reviews</h2>
             <p className="text-gray-400 text-sm">See what our customers think about this product</p>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 gap-5 lg:grid-cols-3">
             {/* REVIEW SUMMARY */}
-            <div className="bg-gradient-to-br from-[#16161a] to-[#1a1a1f] border border-[#2a2a30] rounded-2xl p-8 flex flex-col items-center justify-center">
-              <div className="text-6xl font-bold text-[#00d4aa] mb-3">4.8</div>
+            <div className="flex flex-col items-center justify-center rounded-2xl border border-[#2a2a30] bg-[#16161a] p-6">
+              <div className="mb-2 text-5xl font-bold text-[#00d4aa]">4.8</div>
               <div className="flex items-center gap-1 mb-4">
                 {[...Array(5)].map((_, i) => (
                   <svg key={i} className="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 24 24">
@@ -969,9 +983,9 @@ export default function ProductDetailPage() {
             </div>
 
             {/* REVIEWS LIST */}
-            <div className="lg:col-span-2 space-y-4">
+            <div className="space-y-3.5 lg:col-span-2">
               {/* REVIEW ITEM 1 */}
-              <div className="bg-gradient-to-br from-[#16161a] to-[#1a1a1f] border border-[#2a2a30] rounded-xl p-5 hover:border-[#00d4aa]/30 transition-colors">
+              <div className="rounded-xl border border-[#2a2a30] bg-[#16161a] p-4 transition-colors hover:border-[#00d4aa]/30">
                 <div className="flex items-start justify-between mb-3">
                   <div>
                     <div className="font-semibold text-white mb-1">Excellent Quality!</div>
@@ -993,7 +1007,7 @@ export default function ProductDetailPage() {
               </div>
 
               {/* REVIEW ITEM 2 */}
-              <div className="bg-gradient-to-br from-[#16161a] to-[#1a1a1f] border border-[#2a2a30] rounded-xl p-5 hover:border-[#00d4aa]/30 transition-colors">
+              <div className="rounded-xl border border-[#2a2a30] bg-[#16161a] p-4 transition-colors hover:border-[#00d4aa]/30">
                 <div className="flex items-start justify-between mb-3">
                   <div>
                     <div className="font-semibold text-white mb-1">Worth Every Taka</div>
@@ -1020,10 +1034,10 @@ export default function ProductDetailPage() {
           </div>
         </div>
         
-        <div className="mt-20 grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
+        <div className="mt-14 grid grid-cols-1 gap-4 md:grid-cols-3">
           {/* FREE SHIPPING */}
-          <div className="bg-gradient-to-br from-[#16161a] to-[#1a1a1f] border border-[#2a2a30] rounded-xl p-6 hover:border-green-500/30 transition-colors group">
-            <div className="w-12 h-12 rounded-xl bg-green-500/20 border border-green-500/30 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+          <div className="group rounded-xl border border-[#2a2a30] bg-[#16161a] p-5 transition-colors hover:border-green-500/30">
+            <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-xl border border-green-500/30 bg-green-500/15">
               <svg className="w-6 h-6 text-green-400" fill="currentColor" viewBox="0 0 24 24">
                 <path d="M13 6V3L8 8l5 5v-3c3.31 0 6 2.69 6 6 0 1.01-.25 1.97-.7 2.8l1.46 1.46C19.54 15.03 20 13.57 20 12c0-3.9-3.1-7-7-7zm0 5v2.07C9.67 13.23 7.42 11.17 7.42 8.5c0-1.47.78-2.74 1.93-3.45L13 8z" />
               </svg>
@@ -1033,8 +1047,8 @@ export default function ProductDetailPage() {
           </div>
 
           {/* EASY RETURNS */}
-          <div className="bg-gradient-to-br from-[#16161a] to-[#1a1a1f] border border-[#2a2a30] rounded-xl p-6 hover:border-blue-500/30 transition-colors group">
-            <div className="w-12 h-12 rounded-xl bg-blue-500/20 border border-blue-500/30 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+          <div className="group rounded-xl border border-[#2a2a30] bg-[#16161a] p-5 transition-colors hover:border-blue-500/30">
+            <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-xl border border-blue-500/30 bg-blue-500/15">
               <svg className="w-6 h-6 text-blue-400" fill="currentColor" viewBox="0 0 24 24">
                 <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z" />
               </svg>
@@ -1044,8 +1058,8 @@ export default function ProductDetailPage() {
           </div>
 
           {/* SECURE PAYMENT */}
-          <div className="bg-gradient-to-br from-[#16161a] to-[#1a1a1f] border border-[#2a2a30] rounded-xl p-6 hover:border-purple-500/30 transition-colors group">
-            <div className="w-12 h-12 rounded-xl bg-purple-500/20 border border-purple-500/30 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+          <div className="group rounded-xl border border-[#2a2a30] bg-[#16161a] p-5 transition-colors hover:border-purple-500/30">
+            <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-xl border border-purple-500/30 bg-purple-500/15">
               <svg className="w-6 h-6 text-purple-400" fill="currentColor" viewBox="0 0 24 24">
                 <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z" />
               </svg>
@@ -1056,13 +1070,13 @@ export default function ProductDetailPage() {
         </div>
 
         {/* FAQ SECTION */}
-        <div className="mt-20">
-          <div className="mb-8">
-            <h2 className="text-3xl font-bold tracking-tight text-white mb-2">Frequently Asked Questions</h2>
+        <div className="mt-14">
+          <div className="mb-5">
+            <h2 className="mb-1.5 text-2xl font-bold tracking-tight text-white">Frequently Asked Questions</h2>
             <p className="text-gray-400 text-sm">Common questions about this product</p>
           </div>
 
-          <div className="space-y-3 sm:space-y-4 bg-gradient-to-br from-[#16161a] to-[#1a1a1f] border border-[#2a2a30] rounded-2xl p-6 sm:p-8">
+          <div className="space-y-3 rounded-2xl border border-[#2a2a30] bg-[#16161a] p-5 sm:p-6">
             {/* FAQ ITEM 1 */}
             <details className="group border-b border-[#2a2a30] last:border-0 pb-4 last:pb-0 cursor-pointer">
               <summary className="flex items-center justify-between font-semibold text-white hover:text-[#00d4aa] transition-colors py-2">
@@ -1129,10 +1143,10 @@ export default function ProductDetailPage() {
           </div>
         </div>
         
-        <div className="mt-20">
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
+        <div className="mt-14">
+          <div className="mb-5 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div>
-              <h2 className="text-3xl font-bold tracking-tight text-white mb-2">You Might Also Like</h2>
+              <h2 className="mb-1.5 text-2xl font-bold tracking-tight text-white">You Might Also Like</h2>
               <p className="text-gray-400 text-sm">Discover similar products from our collection</p>
             </div>
             <Link 
@@ -1225,6 +1239,77 @@ export default function ProductDetailPage() {
       </div>
 
       <style jsx global>{`
+        .product-spec-card > div:first-child {
+          background: linear-gradient(90deg, rgba(0, 212, 170, 0.08), rgba(139, 92, 246, 0.05));
+        }
+
+        .product-spec-card > .grid {
+          gap: 0;
+        }
+
+        .product-spec-card > .grid > div {
+          min-height: 84px;
+          padding: 1rem 1.25rem;
+          border-bottom: 1px solid #2a2a30;
+        }
+
+        @media (min-width: 640px) {
+          .product-spec-card > .grid > div:nth-child(odd) {
+            border-right: 1px solid #2a2a30;
+          }
+        }
+
+        .product-spec-card > .grid > div:not(.border-t) > div:first-child {
+          width: 2rem;
+          height: 2rem;
+          border-radius: 0.75rem;
+        }
+
+        .product-spec-card > .grid > div:not(.border-t) > div:first-child svg {
+          width: 1rem;
+          height: 1rem;
+        }
+
+        .product-spec-card > .grid > div:not(.border-t) > div:nth-child(2) {
+          display: block;
+          min-width: 0;
+        }
+
+        .product-spec-card > .grid > div:not(.border-t) > div:nth-child(2) > div:first-child {
+          color: #71717a;
+          font-size: 0.68rem;
+          font-weight: 700;
+          letter-spacing: 0.06em;
+          line-height: 1rem;
+        }
+
+        .product-spec-card > .grid > div:not(.border-t) > div:nth-child(2) > div:nth-child(2),
+        .product-spec-card > .grid > div:not(.border-t) > div:nth-child(2) > div:last-child {
+          color: #fafafa;
+          font-size: 0.9rem;
+          font-weight: 650;
+          line-height: 1.45;
+        }
+
+        .product-spec-card .rounded-full {
+          border-radius: 0.5rem;
+          padding: 0.25rem 0.6rem;
+          font-size: 0.72rem;
+          line-height: 1rem;
+        }
+
+        .product-spec-card .border-t {
+          grid-column: 1 / -1;
+          margin-top: 0;
+          padding: 1rem 1.25rem;
+        }
+
+        .product-spec-card .border-t .rounded-lg {
+          border-color: #2a2a30;
+          background: rgba(15, 15, 18, 0.75);
+          color: #d4d4d8;
+        }
+
         .ck-content {
           color: #d4d4d8;
           font-size: 0.95rem;
