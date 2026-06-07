@@ -7,16 +7,50 @@ import {
   ArrowLeftIcon,
   StarIcon,
   CheckIcon,
-  TagIcon,
   FolderIcon,
   ClockIcon,
   BoltIcon,
   TruckIcon,
   ArrowRightIcon,
   DocumentTextIcon,
+  VideoCameraIcon,
+  PlayCircleIcon,
+  ArrowTopRightOnSquareIcon,
 } from '@heroicons/react/24/outline';
 import Swal from 'sweetalert2';
 import { getStorageUrl, apiFetch } from '../../utils/api';
+
+const VIDEO_EXTENSIONS = ['.mp4', '.webm', '.ogg', '.mov', '.m4v'];
+
+const getProductAssetUrl = (path: string | null | undefined): string | null => {
+  if (!path) return null;
+
+  const cleanPath = path.trim();
+  if (!cleanPath) return null;
+
+  if (/^www\./i.test(cleanPath)) {
+    return `https://${cleanPath}`;
+  }
+
+  if (
+    cleanPath.startsWith('http') ||
+    cleanPath.startsWith('//') ||
+    cleanPath.startsWith('/') ||
+    cleanPath.startsWith('#') ||
+    cleanPath.startsWith('mailto:') ||
+    cleanPath.startsWith('tel:')
+  ) {
+    return cleanPath;
+  }
+
+  return getStorageUrl(cleanPath);
+};
+
+const isVideoAsset = (path: string | null | undefined): boolean => {
+  if (!path) return false;
+  const cleanPath = path.split('?')[0].toLowerCase();
+  return VIDEO_EXTENSIONS.some((extension) => cleanPath.endsWith(extension));
+};
 
 const stripHtmlAndCode = (content: string): string => {
   let result = content
@@ -41,17 +75,17 @@ const stripHtmlAndCode = (content: string): string => {
     if (cleanContent) {
       listItems.push(cleanContent);
     }
-    return '';
+    return '\n';
   });
 
   result = result
     .replace(/<[^>]+>/g, '')
-    .replace(/\s+/g, ' ')
+    .replace(/[ \t]+/g, ' ')
     .replace(/\n\s*\n/g, '\n\n')
     .trim();
 
   if (listItems.length > 0) {
-    const listHtml = `<ul class="list-disc list-inside space-y-2 mb-4 pl-4 text-[#c8c8c8]">${listItems.map(item => `<li class="mb-1">${item}</li>`).join('')}</ul>`;
+    const listHtml = `<ul class="list-disc space-y-3 pl-6 text-left text-[#c8c8c8]">${listItems.map(item => `<li class="pl-1 leading-8">${item}</li>`).join('')}</ul>`;
     result = result + '\n\n' + listHtml;
   }
 
@@ -68,16 +102,7 @@ const beautifyText = (text: string): string => {
       
       if (trimmed.startsWith('<ul')) return trimmed;
       
-      const sentences = trimmed.split(/(?<=[.!?])\s+/).filter(s => s.trim().length > 0);
-      const formattedSentences = sentences.map(sentence => {
-        const s = sentence.trim();
-        if (s.length < 80) {
-          return `<p class="font-semibold text-white mb-3 text-base">${s}</p>`;
-        }
-        return `<p class="text-[#c8c8c8] mb-4 leading-relaxed">${s}</p>`;
-      });
-      
-      return formattedSentences.join('');
+      return `<p class="mb-5 text-left text-base leading-8 text-[#c8c8c8] sm:text-lg">${trimmed}</p>`;
     })
     .join('');
 };
@@ -115,7 +140,7 @@ export default function ProductDetailPage() {
   const [quantity, setQuantity] = useState<number>(1);
   const [currentIndex, setCurrentIndex] = useState<number>(0);
   const [isLoadingCart, setIsLoadingCart] = useState<boolean>(false);
-  const [isPlaying, setIsPlaying] = useState<boolean>(true);
+  const [isPlaying] = useState<boolean>(true);
 
   const [relatedProducts, setRelatedProducts] = useState<Product[]>([]);
 
@@ -140,7 +165,7 @@ export default function ProductDetailPage() {
         const all = relatedData.data || relatedData || [];
         const filtered = all.filter((p: Product) => p.id !== (data.data || data).id);
         setRelatedProducts(filtered.slice(0, 8));
-      } catch (e) {
+      } catch {
         console.error('Failed to load related products');
         // Fallback: show some other products if category filter fails
         try {
@@ -176,8 +201,8 @@ export default function ProductDetailPage() {
         // Handle legacy double-encoded JSON strings
         const parsed = JSON.parse(product.images);
         productImages = Array.isArray(parsed) ? parsed.filter(Boolean) : [];
-      } catch (e) {
-        console.error('Failed to parse images:', e);
+      } catch (error) {
+        console.error('Failed to parse images:', error);
       }
     }
 
@@ -193,6 +218,13 @@ export default function ProductDetailPage() {
   }, [product]);
 
   const totalImages = images.length;
+  const previewUrl = getProductAssetUrl(product?.preview_url);
+  const fileUrl = getProductAssetUrl(product?.file_url);
+  const videoUrl = isVideoAsset(product?.preview_url)
+    ? previewUrl
+    : isVideoAsset(product?.file_url)
+      ? fileUrl
+      : null;
 
   // =========================
   // AUTO SLIDER
@@ -272,7 +304,7 @@ export default function ProductDetailPage() {
            color: '#fff',
          });
        }
-    } catch (error) {
+    } catch {
       Swal.fire({
         title: 'Error',
         text: 'Failed to add cart',
@@ -505,6 +537,49 @@ export default function ProductDetailPage() {
                     </div>
                   </div>
                 </div>
+              )}
+
+              {videoUrl && (
+                <section className="overflow-hidden rounded-xl sm:rounded-2xl border border-[#2a2a30] bg-gradient-to-br from-[#16161a] to-[#1a1a1f] shadow-xl">
+                  <div className="flex items-center justify-between gap-3 border-b border-[#2a2a30] px-4 py-3 sm:px-5">
+                    <div className="flex min-w-0 items-center gap-3">
+                      <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl border border-[#00d4aa]/30 bg-[#00d4aa]/15">
+                        <VideoCameraIcon className="h-5 w-5 text-[#00d4aa]" />
+                      </div>
+                      <div className="min-w-0">
+                        <h2 className="truncate text-base font-bold text-white sm:text-lg">
+                          Product Video
+                        </h2>
+                        <p className="text-xs text-gray-400">
+                          Watch the preview before purchase
+                        </p>
+                      </div>
+                    </div>
+
+                    <a
+                      href={videoUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl border border-[#2a2a30] text-gray-300 transition hover:border-[#00d4aa]/50 hover:text-[#00d4aa]"
+                      title="Open video in new tab"
+                    >
+                      <ArrowTopRightOnSquareIcon className="h-5 w-5" />
+                    </a>
+                  </div>
+
+                  <div className="relative aspect-video bg-black">
+                    <video
+                      src={videoUrl}
+                      controls
+                      preload="metadata"
+                      playsInline
+                      className="absolute inset-0 h-full w-full bg-black object-contain"
+                      poster={images[0] ? getStorageUrl(images[0]) || undefined : undefined}
+                    >
+                      Your browser does not support the video tag.
+                    </video>
+                  </div>
+                </section>
               )}
             </div>
           </div>
@@ -806,17 +881,14 @@ export default function ProductDetailPage() {
             </div>
 
             {/* PREVIEW SECTION (keep in sidebar) */}
-            {product.preview_url && (
+            {previewUrl && (
               <a
-                href={product.preview_url}
+                href={previewUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center justify-center w-full h-14 rounded-2xl border-2 border-purple-500 text-purple-400 font-bold hover:bg-purple-500/10 hover:shadow-lg hover:shadow-purple-500/20 transition-all duration-300 gap-2"
               >
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                </svg>
+                <PlayCircleIcon className="h-5 w-5" />
                 Preview Product
               </a>
             )}
@@ -824,23 +896,36 @@ export default function ProductDetailPage() {
         </div>
 
         {/* FULL WIDTH DESCRIPTION - Moved to bottom single column as requested */}
-{product.detailed_description && (
-           <div className="max-w-7xl mx-auto px-4 mt-10">
-             <div className="bg-gradient-to-br from-[#16161a] to-[#1a1a1f] border border-[#2a2a30] rounded-3xl p-8 sm:p-10 shadow-xl">
-               <div className="flex items-center gap-4 mb-6">
-                 <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-[#8b5cf6]/20 to-[#00d4aa]/20 border border-[#8b5cf6]/30 flex items-center justify-center">
-                   <DocumentTextIcon className="w-6 h-6 text-[#8b5cf6]" />
-                 </div>
-                 <h2 className="text-2xl font-bold tracking-tight">About This Product</h2>
-               </div>
+        {product.detailed_description && (
+          <div className="mt-10">
+            <div className="overflow-hidden rounded-2xl sm:rounded-3xl border border-[#2a2a30] bg-gradient-to-br from-[#16161a] to-[#1a1a1f] shadow-xl">
+              <div className="border-b border-[#2a2a30] px-6 py-5 sm:px-8">
+                <div className="flex items-center gap-4">
+                  <div className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-2xl border border-[#8b5cf6]/30 bg-gradient-to-br from-[#8b5cf6]/20 to-[#00d4aa]/20">
+                    <DocumentTextIcon className="h-6 w-6 text-[#8b5cf6]" />
+                  </div>
+                  <div>
+                    <h2 className="text-2xl font-bold tracking-tight text-white">
+                      About This Product
+                    </h2>
+                    {product.description && (
+                      <p className="mt-1 text-sm leading-6 text-gray-400">
+                        {product.description}
+                      </p>
+                    )}
+                  </div>
+                </div>
+              </div>
 
-               <div 
-                 className="prose prose-invert max-w-none text-gray-300 leading-relaxed text-base"
-                 dangerouslySetInnerHTML={{ __html: beautifyText(stripHtmlAndCode(product.detailed_description)) }}
-               />
-             </div>
-           </div>
-         )}
+              <div className="px-6 py-7 text-left sm:px-8 sm:py-9">
+                <div
+                  className="max-w-5xl text-left text-gray-300"
+                  dangerouslySetInnerHTML={{ __html: beautifyText(stripHtmlAndCode(product.detailed_description)) }}
+                />
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* CUSTOMER REVIEWS SECTION */}
         <div className="mt-20">
@@ -974,7 +1059,7 @@ export default function ProductDetailPage() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
                 </svg>
               </summary>
-              <p className="text-gray-400 text-sm ml-9 mt-3">We offer a 30-day return window. If you're not satisfied with your purchase, you can return it for a full refund or exchange.</p>
+              <p className="text-gray-400 text-sm ml-9 mt-3">We offer a 30-day return window. If you are not satisfied with your purchase, you can return it for a full refund or exchange.</p>
             </details>
 
             {/* FAQ ITEM 2 */}
