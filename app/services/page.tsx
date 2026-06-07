@@ -137,7 +137,7 @@ export default function ServicesPage() {
                 className="group relative p-8 bg-[#1a1a1f] border border-[#2a2a30] rounded-2xl hover:border-[#00d4aa]/50 transition-all duration-500 hover:shadow-2xl hover:shadow-[#00d4aa]/10 overflow-hidden"
               >
                 {/* Gradient Background */}
-                <div className={`absolute inset-0 bg-gradient-to-br ${service.gradient} opacity-0 group-hover:opacity-10 transition-opacity duration-500`} />
+                <div className={`absolute inset-0 bg-linear-to-br ${service.gradient} opacity-0 group-hover:opacity-10 transition-opacity duration-500`} />
                 
                 {/* Top accent bar */}
                 <div className={`absolute top-0 left-0 right-0 h-1 bg-gradient-to-r ${service.gradient} transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left`} />
@@ -180,21 +180,21 @@ export default function ServicesPage() {
           </h2>
           <div className="grid md:grid-cols-3 gap-8">
             <div className="text-center">
-              <div className="w-16 h-16 rounded-full bg-gradient-to-br from-[#00d4aa] to-[#00b894] flex items-center justify-center mx-auto mb-6">
+              <div className="w-16 h-16 rounded-full bg-linear-to-br from-[#00d4aa] to-[#00b894] flex items-center justify-center mx-auto mb-6">
                 <StarIcon className="w-8 h-8 text-[#0f0f12]" />
               </div>
               <h3 className="text-2xl font-bold text-[#fafafa] mb-3">Proven Excellence</h3>
               <p className="text-[#737373]">Years of expertise delivering world-class solutions to industry leaders and innovative startups.</p>
             </div>
             <div className="text-center">
-              <div className="w-16 h-16 rounded-full bg-gradient-to-br from-[#8b5cf6] to-[#6d28d9] flex items-center justify-center mx-auto mb-6">
+              <div className="w-16 h-16 rounded-full bg-linear-to-br from-[#8b5cf6] to-[#6d28d9] flex items-center justify-center mx-auto mb-6">
                 <ShieldCheckIcon className="w-8 h-8 text-[#0f0f12]" />
               </div>
               <h3 className="text-2xl font-bold text-[#fafafa] mb-3">Total Security</h3>
               <p className="text-[#737373]">Enterprise-grade security protocols ensuring your data and business are always protected.</p>
             </div>
             <div className="text-center">
-              <div className="w-16 h-16 rounded-full bg-gradient-to-br from-[#ff6b6b] to-[#ee5a6f] flex items-center justify-center mx-auto mb-6">
+              <div className="w-16 h-16 rounded-full bg-linear-to-br from-[#ff6b6b] to-[#ee5a6f] flex items-center justify-center mx-auto mb-6">
                 <CogIcon className="w-8 h-8 text-[#0f0f12]" />
               </div>
               <h3 className="text-2xl font-bold text-[#fafafa] mb-3">24/7 Support</h3>

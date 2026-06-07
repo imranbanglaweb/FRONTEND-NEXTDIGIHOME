@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback, useMemo } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import Link from 'next/link';
 import { MagnifyingGlassIcon, ArrowDownTrayIcon, StarIcon, ArrowPathIcon, AdjustmentsHorizontalIcon, HeartIcon, EyeIcon, XMarkIcon, BarsArrowDownIcon, BarsArrowUpIcon } from "@heroicons/react/24/outline";
 import { HeartIcon as HeartIconSolid } from "@heroicons/react/24/solid";
@@ -56,27 +56,35 @@ export default function ProductsPage() {
   const [quickViewProduct, setQuickViewProduct] = useState<Product | null>(null);
   const [showQuickView, setShowQuickView] = useState<boolean>(false);
 
-    const fetchProducts = useCallback(async () => {
-        try {
-          const data = await apiFetch(`products?page=${page}&per_page=100`);
-
-          if (page === 1) {
-            setProducts(data.data);
-          } else {
-            setProducts(prev => [...prev, ...data.data]);
-          }
-
-          setHasMore(data.current_page < data.last_page);
-          setLoading(false);
-        } catch (err) {
-          setError(err instanceof Error ? err.message : 'An error occurred');
-          setLoading(false);
-        }
-      }, [page]);
-
   useEffect(() => {
-    fetchProducts();
-  }, [fetchProducts]);
+    let cancelled = false;
+
+    const loadProducts = async () => {
+      try {
+        const data = await apiFetch(`products?page=${page}&per_page=100`);
+        if (cancelled) return;
+
+        if (page === 1) {
+          setProducts(data.data);
+        } else {
+          setProducts(prev => [...prev, ...data.data]);
+        }
+
+        setHasMore(data.current_page < data.last_page);
+        setLoading(false);
+      } catch (err) {
+        if (cancelled) return;
+        setError(err instanceof Error ? err.message : 'An error occurred');
+        setLoading(false);
+      }
+    };
+
+    loadProducts();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [page]);
 
   // Debounced search
   useEffect(() => {
@@ -169,7 +177,7 @@ export default function ProductsPage() {
           },
           customClass: {
             popup: 'glass-card border border-[#2a2a30] rounded-2xl',
-            confirmButton: 'bg-gradient-to-r from-[#00d4aa] to-[#8b5cf6] text-[#0f0f12] font-bold px-6 py-3 rounded-xl hover:scale-105 transition-all',
+            confirmButton: 'bg-linear-to-r from-[#00d4aa] to-[#8b5cf6] text-[#0f0f12] font-bold px-6 py-3 rounded-xl hover:scale-105 transition-all',
             title: 'text-2xl font-bold text-[#fafafa] mb-4',
             htmlContainer: 'text-[#737373] text-lg'
           },
@@ -290,7 +298,7 @@ export default function ProductsPage() {
     <div className="min-h-screen bg-[#0f0f12]">
       {/* Hero Banner */}
       <div className="relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-[#00d4aa]/10 via-transparent to-[#8b5cf6]/10" />
+        <div className="absolute inset-0 bg-linear-to-br from-[#00d4aa]/10 via-transparent to-[#8b5cf6]/10" />
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_50%_0%,rgba(0,212,170,0.15)_0%,rgba(8,8,8,0)_60%)]" />
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
           <div className="text-center">
@@ -480,7 +488,7 @@ export default function ProductsPage() {
                            }}
                          />
                        ) : (
-                        <div className="w-full h-full bg-gradient-to-br from-[#1a1a1f] to-[#2a2a30] flex items-center justify-center">
+                        <div className="w-full h-full bg-linear-to-br from-[#1a1a1f] to-[#2a2a30] flex items-center justify-center">
                           <span className="text-[#737373]">No Image</span>
                         </div>
                       )}
@@ -515,12 +523,12 @@ export default function ProductsPage() {
 
                      {product.featured && (
                        <div className="absolute top-4 left-4">
-                         <span className="px-3 py-1 rounded-full text-xs font-medium bg-gradient-to-r from-[#00d4aa] to-[#8b5cf6] text-[#0f0f12]">
+                         <span className="px-3 py-1 rounded-full text-xs font-medium bg-linear-to-r from-[#00d4aa] to-[#8b5cf6] text-[#0f0f12]">
                            Featured
                          </span>
                        </div>
                      )}
-                     <div className="absolute inset-0 bg-gradient-to-t from-[#0f0f12] via-transparent to-transparent opacity-60" />
+                     <div className="absolute inset-0 bg-linear-to-t from-[#0f0f12] via-transparent to-transparent opacity-60" />
                    </div>
                   <div className="p-6">
                     <span className="text-xs text-[#00d4aa] font-medium uppercase tracking-wide">
@@ -547,7 +555,7 @@ export default function ProductsPage() {
                           <button
                             onClick={(e) => addToCart(product, e)}
                             disabled={loadingButtons.has(product.id)}
-                            className={`px-3 py-1 bg-gradient-to-r from-[#00d4aa] to-[#8b5cf6] text-[#0f0f12] text-xs font-bold rounded hover:shadow-lg hover:scale-105 transition-all disabled:opacity-70 disabled:cursor-not-allowed ${
+                            className={`px-3 py-1 bg-linear-to-r from-[#00d4aa] to-[#8b5cf6] text-[#0f0f12] text-xs font-bold rounded hover:shadow-lg hover:scale-105 transition-all disabled:opacity-70 disabled:cursor-not-allowed ${
                               animatingButtons.has(product.id) ? 'animate-bounce' : ''
                             }`}
                           >
@@ -593,7 +601,7 @@ export default function ProductsPage() {
                            }}
                          />
                        ) : (
-                        <div className="w-full h-full bg-gradient-to-br from-[#1a1a1f] to-[#2a2a30] flex items-center justify-center">
+                        <div className="w-full h-full bg-linear-to-br from-[#1a1a1f] to-[#2a2a30] flex items-center justify-center">
                           <span className="text-[#737373]">No Image</span>
                         </div>
                       )}
@@ -626,7 +634,7 @@ export default function ProductsPage() {
                        </div>
                      </div>
 
-                     <div className="absolute inset-0 bg-gradient-to-t from-[#0f0f12] via-transparent to-transparent opacity-60" />
+                     <div className="absolute inset-0 bg-linear-to-t from-[#0f0f12] via-transparent to-transparent opacity-60" />
                    </div>
                   <div className="p-6">
                     <span className="text-xs text-[#737373] font-medium uppercase tracking-wide">
@@ -653,7 +661,7 @@ export default function ProductsPage() {
                         <button
                           onClick={(e) => addToCart(product, e)}
                           disabled={loadingButtons.has(product.id)}
-                          className={`px-3 py-1 bg-gradient-to-r from-[#00d4aa] to-[#8b5cf6] text-[#0f0f12] text-xs font-bold rounded hover:shadow-lg hover:scale-105 transition-all disabled:opacity-70 disabled:cursor-not-allowed ${
+                          className={`px-3 py-1 bg-linear-to-r from-[#00d4aa] to-[#8b5cf6] text-[#0f0f12] text-xs font-bold rounded hover:shadow-lg hover:scale-105 transition-all disabled:opacity-70 disabled:cursor-not-allowed ${
                             animatingButtons.has(product.id) ? 'animate-bounce' : ''
                           }`}
                         >
@@ -697,7 +705,7 @@ export default function ProductsPage() {
             <button
               onClick={loadMore}
               disabled={loading}
-              className="group relative px-8 py-4 bg-gradient-to-r from-[#00d4aa] to-[#8b5cf6] text-[#0f0f12] font-bold rounded-xl overflow-hidden transition-all duration-300 hover:scale-105"
+              className="group relative px-8 py-4 bg-linear-to-r from-[#00d4aa] to-[#8b5cf6] text-[#0f0f12] font-bold rounded-xl overflow-hidden transition-all duration-300 hover:scale-105"
             >
               <span className="absolute inset-0 bg-white/20 opacity-0 group-hover:opacity-100 transition-opacity"></span>
               <span className="relative flex items-center gap-2">
@@ -726,7 +734,7 @@ export default function ProductsPage() {
                      }}
                    />
                  ) : (
-                  <div className="w-full h-64 lg:h-full bg-gradient-to-br from-[#1a1a1f] to-[#2a2a30] flex items-center justify-center">
+                  <div className="w-full h-64 lg:h-full bg-linear-to-br from-[#1a1a1f] to-[#2a2a30] flex items-center justify-center">
                     <span className="text-[#737373]">No Image</span>
                   </div>
                 )}
@@ -773,7 +781,7 @@ export default function ProductsPage() {
                       closeQuickView();
                     }}
                     disabled={loadingButtons.has(quickViewProduct.id)}
-                    className={`flex-1 px-6 py-3 bg-gradient-to-r from-[#00d4aa] to-[#8b5cf6] text-[#0f0f12] font-bold rounded-xl hover:shadow-lg hover:scale-105 transition-all disabled:opacity-70 disabled:cursor-not-allowed ${
+                    className={`flex-1 px-6 py-3 bg-linear-to-r from-[#00d4aa] to-[#8b5cf6] text-[#0f0f12] font-bold rounded-xl hover:shadow-lg hover:scale-105 transition-all disabled:opacity-70 disabled:cursor-not-allowed ${
                       animatingButtons.has(quickViewProduct.id) ? 'animate-bounce' : ''
                     }`}
                   >

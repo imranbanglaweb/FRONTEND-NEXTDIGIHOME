@@ -223,7 +223,7 @@ export default function AboutPage() {
             {content?.team && content.team.length > 0 ? (
               content.team.map((member) => (
                 <div key={member.id} className="text-center">
-                  <div className="w-32 h-32 mx-auto bg-gradient-to-br from-[#00d4aa] to-[#8b5cf6] rounded-full flex items-center justify-center mb-6">
+                  <div className="w-32 h-32 mx-auto bg-linear-to-br from-[#00d4aa] to-[#8b5cf6] rounded-full flex items-center justify-center mb-6">
                     {member.image ? (
                       <img src={member.image} alt={member.name} className="w-full h-full rounded-full object-cover" />
                     ) : (
@@ -240,7 +240,7 @@ export default function AboutPage() {
             ) : (
               <>
                 <div className="text-center">
-                  <div className="w-32 h-32 mx-auto bg-gradient-to-br from-[#00d4aa] to-[#8b5cf6] rounded-full flex items-center justify-center mb-6">
+                  <div className="w-32 h-32 mx-auto bg-linear-to-br from-[#00d4aa] to-[#8b5cf6] rounded-full flex items-center justify-center mb-6">
                     <span className="text-4xl text-[#0f0f12] font-bold">IR</span>
                   </div>
                   <h3 className="text-xl font-bold text-[#fafafa] mb-2">Imran Rahman</h3>
@@ -249,7 +249,7 @@ export default function AboutPage() {
                 </div>
 
                 <div className="text-center">
-                  <div className="w-32 h-32 mx-auto bg-gradient-to-br from-[#8b5cf6] to-[#00d4aa] rounded-full flex items-center justify-center mb-6">
+                  <div className="w-32 h-32 mx-auto bg-linear-to-br from-[#8b5cf6] to-[#00d4aa] rounded-full flex items-center justify-center mb-6">
                     <span className="text-4xl text-[#0f0f12] font-bold">BA</span>
                   </div>
                   <h3 className="text-xl font-bold text-[#fafafa] mb-2">Bristy Akter</h3>
@@ -258,7 +258,7 @@ export default function AboutPage() {
                 </div>
 
                 <div className="text-center">
-                  <div className="w-32 h-32 mx-auto bg-gradient-to-br from-[#00d4aa] to-[#ff6b6b] rounded-full flex items-center justify-center mb-6">
+                  <div className="w-32 h-32 mx-auto bg-linear-to-br from-[#00d4aa] to-[#ff6b6b] rounded-full flex items-center justify-center mb-6">
                     <span className="text-4xl text-[#0f0f12] font-bold">I</span>
                   </div>
                   <h3 className="text-xl font-bold text-[#fafafa] mb-2">Inaya</h3>

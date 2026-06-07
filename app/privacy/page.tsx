@@ -62,7 +62,7 @@ export default async function PrivacyPage() {
         <div className="absolute inset-0 bg-gradient-to-r from-[#00d4aa]/10 via-transparent to-[#8b5cf6]/10" />
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
-            <div className="w-20 h-20 mx-auto bg-gradient-to-br from-[#00d4aa] to-[#8b5cf6] rounded-2xl flex items-center justify-center mb-6">
+            <div className="w-20 h-20 mx-auto bg-linear-to-br from-[#00d4aa] to-[#8b5cf6] rounded-2xl flex items-center justify-center mb-6">
               <ShieldCheckIcon className="w-10 h-10 text-[#0f0f12]" />
             </div>
             <h1 className="text-5xl md:text-6xl font-bold mb-6 gradient-text">
@@ -171,7 +171,7 @@ export default async function PrivacyPage() {
         <div className="absolute inset-0 bg-gradient-to-r from-[#00d4aa]/10 via-[#8b5cf6]/10 to-[#00d4aa]/10" />
         <div className="relative z-10 max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8">
           <div className="glass-card rounded-3xl p-12 border border-[#2a2a30]">
-            <div className="w-16 h-16 mx-auto bg-gradient-to-br from-[#00d4aa] to-[#8b5cf6] rounded-2xl flex items-center justify-center mb-6">
+            <div className="w-16 h-16 mx-auto bg-linear-to-br from-[#00d4aa] to-[#8b5cf6] rounded-2xl flex items-center justify-center mb-6">
               <LockClosedIcon className="w-8 h-8 text-[#0f0f12]" />
             </div>
             <h2 className="text-3xl md:text-4xl font-bold mb-6 gradient-text">

@@ -360,7 +360,7 @@ export default function Home() {
 
                           <div className="relative bg-[#0a0a0d]/95 backdrop-blur-3xl border border-white/10 rounded-3xl p-5 md:p-6 shadow-[0_32px_100px_rgb(0,0,0,0.75)] ring-1 ring-white/5 overflow-hidden">
                             {/* Inner subtle glow */}
-                            <div className="absolute inset-0 bg-gradient-to-br from-[#00d4aa]/5 via-transparent to-[#8b5cf6]/5 pointer-events-none" />
+                            <div className="absolute inset-0 bg-linear-to-br from-[#00d4aa]/5 via-transparent to-[#8b5cf6]/5 pointer-events-none" />
                             
                            {(() => {
                               const top5 = (allProducts.length > 0 ? allProducts : fallbackProducts).slice(0, 6);
@@ -378,7 +378,7 @@ export default function Home() {
                                        className="w-full h-full object-cover transition-all duration-700 group-hover:scale-[1.03]"
                                      />
                                    ) : (
-                                     <div className="w-full h-full bg-gradient-to-br from-[#1a1a1f] to-[#2a2a30] flex items-center justify-center text-7xl">
+                                     <div className="w-full h-full bg-linear-to-br from-[#1a1a1f] to-[#2a2a30] flex items-center justify-center text-7xl">
                                        🚀
                                      </div>
                                    )}
@@ -531,7 +531,7 @@ export default function Home() {
                  key={feature.id || index}
                  className="group relative glass-card rounded-3xl p-8 border border-[#2a2a30] hover:border-[#00d4aa]/40 transition-all duration-500 hover:-translate-y-1 flex flex-col"
                >
-                 <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#00d4aa] to-[#8b5cf6] flex items-center justify-center text-3xl mb-6 group-hover:scale-110 transition-transform duration-300">
+                 <div className="w-14 h-14 rounded-2xl bg-linear-to-br from-[#00d4aa] to-[#8b5cf6] flex items-center justify-center text-3xl mb-6 group-hover:scale-110 transition-transform duration-300">
                    {feature.icon || '✨'}
                  </div>
 
@@ -577,7 +577,7 @@ export default function Home() {
                       className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                     />
                   ) : (
-                    <div className="w-full h-full bg-gradient-to-br from-[#1a1a1f] to-[#2a2a30] flex items-center justify-center">
+                    <div className="w-full h-full bg-linear-to-br from-[#1a1a1f] to-[#2a2a30] flex items-center justify-center">
                       <span className="text-[#737373]">No Image</span>
                     </div>
                   )}
@@ -656,7 +656,7 @@ export default function Home() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div className="text-center animate-fade-in-up">
               <div className="relative mb-8">
-                <div className="w-20 h-20 mx-auto bg-gradient-to-br from-[#00d4aa] to-[#8b5cf6] rounded-2xl flex items-center justify-center text-2xl font-bold text-[#0f0f12] mb-4">
+                <div className="w-20 h-20 mx-auto bg-linear-to-br from-[#00d4aa] to-[#8b5cf6] rounded-2xl flex items-center justify-center text-2xl font-bold text-[#0f0f12] mb-4">
                   1
                 </div>
                 <div className="absolute top-10 left-1/2 transform -translate-x-1/2 w-full h-0.5 bg-gradient-to-r from-[#00d4aa] to-[#8b5cf6] opacity-50 hidden md:block"></div>
@@ -669,7 +669,7 @@ export default function Home() {
 
             <div className="text-center animate-fade-in-up">
               <div className="relative mb-8">
-                <div className="w-20 h-20 mx-auto bg-gradient-to-br from-[#8b5cf6] to-[#00d4aa] rounded-2xl flex items-center justify-center text-2xl font-bold text-[#0f0f12] mb-4">
+                <div className="w-20 h-20 mx-auto bg-linear-to-br from-[#8b5cf6] to-[#00d4aa] rounded-2xl flex items-center justify-center text-2xl font-bold text-[#0f0f12] mb-4">
                   2
                 </div>
                 <div className="absolute top-10 left-0 w-1/2 h-0.5 bg-gradient-to-r from-[#8b5cf6] to-[#00d4aa] opacity-50 hidden md:block"></div>
@@ -683,7 +683,7 @@ export default function Home() {
 
             <div className="text-center animate-fade-in-up">
               <div className="relative mb-8">
-                <div className="w-20 h-20 mx-auto bg-gradient-to-br from-[#00d4aa] to-[#ff6b6b] rounded-2xl flex items-center justify-center text-2xl font-bold text-[#0f0f12] mb-4">
+                <div className="w-20 h-20 mx-auto bg-linear-to-br from-[#00d4aa] to-[#ff6b6b] rounded-2xl flex items-center justify-center text-2xl font-bold text-[#0f0f12] mb-4">
                   3
                 </div>
                 <div className="absolute top-10 right-1/2 transform translate-x-1/2 w-full h-0.5 bg-gradient-to-l from-[#00d4aa] to-[#ff6b6b] opacity-50 hidden md:block"></div>
@@ -823,7 +823,7 @@ export default function Home() {
                              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                            />
                          ) : (
-                          <div className="w-full h-full bg-gradient-to-br from-[#1a1a1f] to-[#2a2a30] flex items-center justify-center">
+                          <div className="w-full h-full bg-linear-to-br from-[#1a1a1f] to-[#2a2a30] flex items-center justify-center">
                             <span className="text-[#737373]">No Image</span>
                           </div>
                         )}
@@ -873,7 +873,7 @@ export default function Home() {
                    {filteredProducts.length > 9 && (
                      <div className="glass-card rounded-3xl border border-[#2a2a30] flex items-center justify-center p-8 hover:border-[#00d4aa]/30 transition-all">
                        <div className="text-center">
-                         <div className="w-16 h-16 mx-auto mb-5 rounded-2xl bg-gradient-to-br from-[#00d4aa] to-[#8b5cf6] flex items-center justify-center">
+                         <div className="w-16 h-16 mx-auto mb-5 rounded-2xl bg-linear-to-br from-[#00d4aa] to-[#8b5cf6] flex items-center justify-center">
                            <ArrowRightIcon className="w-8 h-8 text-[#0f0f12]" />
                          </div>
                          <h4 className="text-xl font-semibold text-[#fafafa] mb-1">
@@ -1074,7 +1074,7 @@ export default function Home() {
             {/* Use Case 1 */}
             <div className="glass-card rounded-2xl p-8 border border-[#2a2a30] hover:border-[#00d4aa]/30 transition-all duration-300 hover-lift animate-fade-in-up">
               <div className="flex items-center gap-4 mb-6">
-                <div className="w-12 h-12 rounded-full bg-gradient-to-br from-[#00d4aa] to-[#8b5cf6] flex items-center justify-center text-xl">🚀</div>
+                <div className="w-12 h-12 rounded-full bg-linear-to-br from-[#00d4aa] to-[#8b5cf6] flex items-center justify-center text-xl">🚀</div>
                 <h3 className="text-2xl font-bold text-[#fafafa]">Startup Launch</h3>
               </div>
               <p className="text-[#737373] mb-6 leading-relaxed">
@@ -1102,7 +1102,7 @@ export default function Home() {
             {/* Use Case 2 */}
             <div className="glass-card rounded-2xl p-8 border border-[#2a2a30] hover:border-[#8b5cf6]/30 transition-all duration-300 hover-lift animate-fade-in-up">
               <div className="flex items-center gap-4 mb-6">
-                <div className="w-12 h-12 rounded-full bg-gradient-to-br from-[#8b5cf6] to-[#00d4aa] flex items-center justify-center text-xl">💼</div>
+                <div className="w-12 h-12 rounded-full bg-linear-to-br from-[#8b5cf6] to-[#00d4aa] flex items-center justify-center text-xl">💼</div>
                 <h3 className="text-2xl font-bold text-[#fafafa]">Enterprise Solutions</h3>
               </div>
               <p className="text-[#737373] mb-6 leading-relaxed">
@@ -1130,7 +1130,7 @@ export default function Home() {
             {/* Use Case 3 */}
             <div className="glass-card rounded-2xl p-8 border border-[#2a2a30] hover:border-[#00d4aa]/30 transition-all duration-300 hover-lift animate-fade-in-up">
               <div className="flex items-center gap-4 mb-6">
-                <div className="w-12 h-12 rounded-full bg-gradient-to-br from-[#00d4aa] to-[#8b5cf6] flex items-center justify-center text-xl">🎨</div>
+                <div className="w-12 h-12 rounded-full bg-linear-to-br from-[#00d4aa] to-[#8b5cf6] flex items-center justify-center text-xl">🎨</div>
                 <h3 className="text-2xl font-bold text-[#fafafa]">Creative Agencies</h3>
               </div>
               <p className="text-[#737373] mb-6 leading-relaxed">
@@ -1158,7 +1158,7 @@ export default function Home() {
             {/* Use Case 4 */}
             <div className="glass-card rounded-2xl p-8 border border-[#2a2a30] hover:border-[#ff6b9d]/30 transition-all duration-300 hover-lift animate-fade-in-up">
               <div className="flex items-center gap-4 mb-6">
-                <div className="w-12 h-12 rounded-full bg-gradient-to-br from-[#ff6b9d] to-[#8b5cf6] flex items-center justify-center text-xl">📊</div>
+                <div className="w-12 h-12 rounded-full bg-linear-to-br from-[#ff6b9d] to-[#8b5cf6] flex items-center justify-center text-xl">📊</div>
                 <h3 className="text-2xl font-bold text-[#fafafa]">Data & Analytics</h3>
               </div>
               <p className="text-[#737373] mb-6 leading-relaxed">
@@ -1186,7 +1186,7 @@ export default function Home() {
             {/* Use Case 5 */}
             <div className="glass-card rounded-2xl p-8 border border-[#2a2a30] hover:border-[#00d4aa]/30 transition-all duration-300 hover-lift animate-fade-in-up">
               <div className="flex items-center gap-4 mb-6">
-                <div className="w-12 h-12 rounded-full bg-gradient-to-br from-[#00d4aa] to-[#ff6b9d] flex items-center justify-center text-xl">🎓</div>
+                <div className="w-12 h-12 rounded-full bg-linear-to-br from-[#00d4aa] to-[#ff6b9d] flex items-center justify-center text-xl">🎓</div>
                 <h3 className="text-2xl font-bold text-[#fafafa]">Education & Training</h3>
               </div>
               <p className="text-[#737373] mb-6 leading-relaxed">
@@ -1214,7 +1214,7 @@ export default function Home() {
             {/* Use Case 6 */}
             <div className="glass-card rounded-2xl p-8 border border-[#2a2a30] hover:border-[#8b5cf6]/30 transition-all duration-300 hover-lift animate-fade-in-up">
               <div className="flex items-center gap-4 mb-6">
-                <div className="w-12 h-12 rounded-full bg-gradient-to-br from-[#8b5cf6] to-[#ff6b9d] flex items-center justify-center text-xl">🛍️</div>
+                <div className="w-12 h-12 rounded-full bg-linear-to-br from-[#8b5cf6] to-[#ff6b9d] flex items-center justify-center text-xl">🛍️</div>
                 <h3 className="text-2xl font-bold text-[#fafafa]">E-Commerce</h3>
               </div>
               <p className="text-[#737373] mb-6 leading-relaxed">

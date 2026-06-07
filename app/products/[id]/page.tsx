@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
+import Image from 'next/image';
 import {
   ArrowLeftIcon,
   StarIcon,
@@ -95,6 +96,28 @@ const renderCkEditorContent = (content: string): string => {
     .replace(/\s(href|src)\s*=\s*javascript:[^\s>]*/gi, '');
 };
 
+const parseStringArray = (value: string[] | string | null | undefined): string[] => {
+  if (Array.isArray(value)) {
+    return value.filter((item): item is string => typeof item === 'string' && item.trim().length > 0);
+  }
+
+  if (typeof value !== 'string' || !value.trim()) {
+    return [];
+  }
+
+  try {
+    const parsed = JSON.parse(value);
+    return parseStringArray(parsed);
+  } catch {
+    return value
+      .split(',')
+      .map((item) => item.trim())
+      .filter(Boolean);
+  }
+};
+
+const formatPrice = (price: number): string => `৳${Number(price || 0).toLocaleString('en-BD')}`;
+
 interface Product {
   id: number;
   name: string;
@@ -108,9 +131,9 @@ interface Product {
   file_url: string | null;
   preview_url: string | null;
   category: string;
-  tags: string[] | null;
+  tags: string[] | string | null;
   thumbnail: string | null;
-  images: string[] | null;
+  images: string[] | string | null;
   featured: boolean;
   active: boolean;
   published_at: string | null;
@@ -145,13 +168,16 @@ export default function ProductDetailPage() {
         credentials: 'include',
       });
 
-      setProduct(data.data || data);
+      const currentProduct = data.data || data;
+      setProduct(currentProduct);
+      setQuantity(1);
+      setCurrentIndex(0);
 
       // Fetch related products (same category, exclude current)
       try {
-        const relatedData = await apiFetch(`products?category=${encodeURIComponent((data.data || data).category)}&per_page=12`);
+        const relatedData = await apiFetch(`products?category=${encodeURIComponent(currentProduct.category)}&per_page=12`);
         const all = relatedData.data || relatedData || [];
-        const filtered = all.filter((p: Product) => p.id !== (data.data || data).id);
+        const filtered = all.filter((p: Product) => p.id !== currentProduct.id);
         setRelatedProducts(filtered.slice(0, 8));
       } catch {
         console.error('Failed to load related products');
@@ -159,7 +185,7 @@ export default function ProductDetailPage() {
         try {
           const fbData = await apiFetch(`/products?per_page=8`);
           const all = fbData.data || fbData || [];
-          const filtered = all.filter((p: Product) => p.id !== (data.data || data).id);
+          const filtered = all.filter((p: Product) => p.id !== currentProduct.id);
           setRelatedProducts(filtered.slice(0, 8));
         } catch {}
       }
@@ -171,6 +197,7 @@ export default function ProductDetailPage() {
   }, [params.id]);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     fetchProduct();
   }, [fetchProduct]);
 
@@ -180,31 +207,21 @@ export default function ProductDetailPage() {
   const images = useMemo(() => {
     if (!product) return [];
 
-    let productImages = [];
-
-    if (Array.isArray(product.images)) {
-      productImages = product.images.filter(Boolean);
-    } else if (typeof product.images === 'string') {
-      try {
-        // Handle legacy double-encoded JSON strings
-        const parsed = JSON.parse(product.images);
-        productImages = Array.isArray(parsed) ? parsed.filter(Boolean) : [];
-      } catch (error) {
-        console.error('Failed to parse images:', error);
-      }
-    }
-
+    const productImages = parseStringArray(product.images)
+      .map(getProductAssetUrl)
+      .filter((image): image is string => Boolean(image));
+      
     if (productImages.length > 0) {
       return productImages;
     }
 
-    if (product.thumbnail) {
-      return [getStorageUrl(product.thumbnail)!];
-    }
+    const thumbnailUrl = getProductAssetUrl(product.thumbnail);
+    if (thumbnailUrl) return [thumbnailUrl];
 
     return [];
   }, [product]);
 
+  const tags = useMemo(() => parseStringArray(product?.tags), [product?.tags]);
   const totalImages = images.length;
   const previewUrl = getProductAssetUrl(product?.preview_url);
   const fileUrl = getProductAssetUrl(product?.file_url);
@@ -267,7 +284,7 @@ export default function ProductDetailPage() {
     try {
       setIsLoadingCart(true);
 
-       const response = await apiFetch('/cart', {
+      const data = await apiFetch('/cart', {
          method: 'POST',
          headers: {
            'Content-Type': 'application/json',
@@ -277,9 +294,7 @@ export default function ProductDetailPage() {
            product_id: product.id,
            quantity: quantity,
          }),
-       });
-
-      const data = await response.json();
+      });
 
       if (data.success) {
          // Trigger cart count update
@@ -348,7 +363,7 @@ export default function ProductDetailPage() {
     <div className="min-h-screen bg-[#0f0f12] text-white">
       {/* HEADER */}
       <div className="sticky top-0 z-50 bg-[#0f0f12]/95 backdrop-blur border-b border-[#2a2a30]">
-        <div className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
+        <div className="mx-auto flex h-16 w-full max-w-[1800px] items-center justify-between px-4 sm:px-6 lg:px-8 2xl:px-10">
           <button
             onClick={() => window.history.back()}
             className="flex items-center gap-2 text-gray-400 hover:text-[#00d4aa] transition"
@@ -381,14 +396,14 @@ export default function ProductDetailPage() {
       </div>
 
       {/* MAIN */}
-      <div className="max-w-7xl mx-auto px-4 py-6 sm:px-6 lg:px-8 lg:py-8">
+      <div className="mx-auto w-full max-w-[1800px] px-4 py-6 sm:px-6 lg:px-8 lg:py-10 2xl:px-10">
         {/* TITLE */}
-        <div className="mb-6">
-          <h1 className="max-w-5xl text-2xl font-bold leading-tight tracking-tight text-white sm:text-3xl lg:text-4xl">
+        <div className="mb-7 rounded-2xl border border-[#2a2a30]/80 bg-[#141418]/70 px-4 py-5 shadow-2xl shadow-black/20 sm:px-6 lg:px-7">
+          <h1 className="max-w-6xl text-2xl font-bold leading-tight tracking-tight text-white sm:text-3xl lg:text-5xl">
             {product.name}
           </h1>
 
-          <div className="mt-4 flex flex-wrap items-center gap-2">
+          <div className="mt-5 flex flex-wrap items-center gap-2.5">
             <span className="rounded-lg border border-[#00d4aa]/30 bg-[#00d4aa]/10 px-3 py-1.5 text-xs font-semibold text-[#00d4aa]">
               {product.category}
             </span>
@@ -407,17 +422,15 @@ export default function ProductDetailPage() {
               </span>
             )}
           </div>
-
-       
         </div>
 
         {/* GRID */}
-        <div className="grid grid-cols-1 gap-6 lg:grid-cols-12 lg:gap-7 items-start">
+        <div className="grid grid-cols-1 items-start gap-6 xl:grid-cols-12 xl:gap-8 2xl:gap-10">
           {/* IMAGE SECTION */}
-          <div className="lg:col-span-6 w-full">
-            <div className="sticky top-20 space-y-3">
+          <div className="w-full xl:col-span-7">
+            <div className="sticky top-20 space-y-4">
               {/* MAIN IMAGE */}
-              <div className="relative overflow-hidden rounded-2xl border border-[#2a2a30] bg-[#16161a] w-full shadow-xl">
+              <div className="relative w-full overflow-hidden rounded-2xl border border-[#2a2a30] bg-[#16161a] shadow-2xl shadow-black/30">
                 {images.length > 0 ? (
                   <>
                     <div
@@ -431,12 +444,14 @@ export default function ProductDetailPage() {
                           key={index}
                           className="min-w-full flex-shrink-0"
                         >
-                           <div className="relative w-full aspect-square sm:aspect-[4/3] lg:aspect-[4/3] xl:aspect-[16/10] overflow-hidden bg-[#0f0f12]">
-                              <img
-                                src={getStorageUrl(image)!}
+                           <div className="relative w-full aspect-square overflow-hidden bg-[#0f0f12] sm:aspect-[4/3] xl:aspect-[16/9]">
+                              <Image
+                                src={image}
                                alt={`${product.name}-${index}`}
                                className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 hover:scale-105"
-                               loading={index === 0 ? "eager" : "lazy"}
+                               fill
+                               priority={index === 0}
+                               sizes="(min-width: 1280px) 58vw, (min-width: 1024px) 55vw, 100vw"
                              />
                              {/* Image overlay indicator */}
                              <div className="absolute top-3 left-3 bg-black/65 backdrop-blur-xl px-3 py-1.5 rounded-lg text-xs text-white font-semibold border border-white/10 shadow-lg">
@@ -506,11 +521,12 @@ export default function ProductDetailPage() {
                               : 'border-[#2a2a30] hover:border-[#00d4aa]/60 hover:shadow-md'
                           }`}
                         >
-                          <img
-                            src={getStorageUrl(image)!}
+                          <Image
+                            src={image}
                             alt={`thumb-${index}`}
                             className="w-full h-full object-cover transition-all duration-300 group-hover:scale-105 group-hover:brightness-110"
-                            loading="lazy"
+                            fill
+                            sizes="(min-width: 1280px) 8vw, (min-width: 640px) 16vw, 25vw"
                           />
                           {currentIndex === index && (
                             <div className="absolute inset-0 bg-[#00d4aa]/25 backdrop-blur-[1px] flex items-center justify-center">
@@ -529,7 +545,7 @@ export default function ProductDetailPage() {
               )}
 
               {videoUrl && (
-                <section className="overflow-hidden rounded-xl sm:rounded-2xl border border-[#2a2a30] bg-gradient-to-br from-[#16161a] to-[#1a1a1f] shadow-xl">
+                <section className="overflow-hidden rounded-xl sm:rounded-2xl border border-[#2a2a30] bg-linear-to-br from-[#16161a] to-[#1a1a1f] shadow-xl">
                   <div className="flex items-center justify-between gap-3 border-b border-[#2a2a30] px-4 py-3 sm:px-5">
                     <div className="flex min-w-0 items-center gap-3">
                       <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl border border-[#00d4aa]/30 bg-[#00d4aa]/15">
@@ -563,7 +579,7 @@ export default function ProductDetailPage() {
                       preload="metadata"
                       playsInline
                       className="absolute inset-0 h-full w-full bg-black object-contain"
-                      poster={images[0] ? getStorageUrl(images[0]) || undefined : undefined}
+                      poster={images[0]}
                     >
                       Your browser does not support the video tag.
                     </video>
@@ -574,11 +590,11 @@ export default function ProductDetailPage() {
           </div>
 
           {/* CONTENT SECTION */}
-          <div className="lg:col-span-6 space-y-4">
+          <div className="space-y-4 xl:col-span-5">
             {/* PREMIUM PRICE CARD */}
-            <div className="relative overflow-hidden rounded-2xl border border-[#2a2a30] bg-[#16161a] p-5 shadow-xl sm:p-6">
+            <div className="relative overflow-hidden rounded-2xl border border-[#2a2a30] bg-[#16161a] p-5 shadow-2xl shadow-black/25 sm:p-6">
               {/* GRADIENT BACKGROUND ACCENT */}
-              <div className="absolute top-0 right-0 w-40 h-40 bg-gradient-to-br from-[#00d4aa]/10 to-transparent rounded-full blur-3xl" />
+              <div className="absolute top-0 right-0 w-40 h-40 bg-linear-to-br from-[#00d4aa]/10 to-transparent rounded-full blur-3xl" />
               
               <div className="relative z-10">
                 {/* PRICE SECTION */}
@@ -586,8 +602,8 @@ export default function ProductDetailPage() {
                   <div className="flex flex-wrap items-end gap-4">
                     <div>
                       <p className="mb-1.5 text-xs font-semibold uppercase tracking-wide text-gray-500">Price</p>
-                      <span className="text-4xl font-bold tracking-tight bg-gradient-to-r from-[#00d4aa] to-[#8b5cf6] bg-clip-text text-transparent sm:text-5xl">
-                        ৳{product.price}
+                      <span className="bg-linear-to-r from-[#00d4aa] to-[#8b5cf6] bg-clip-text text-4xl font-bold tracking-tight text-transparent sm:text-5xl">
+                        {formatPrice(product.price)}
                       </span>
                     </div>
 
@@ -595,7 +611,7 @@ export default function ProductDetailPage() {
                       product.compare_price > product.price && (
                         <div className="flex flex-col items-start gap-1.5 sm:items-end">
                           <span className="text-base text-gray-500 line-through">
-                            ৳{product.compare_price}
+                            {formatPrice(product.compare_price)}
                           </span>
                           <span className="rounded-lg border border-red-500/35 bg-red-500/10 px-3 py-1.5 text-xs font-bold text-red-300">
                             Save {discount}%
@@ -633,10 +649,10 @@ export default function ProductDetailPage() {
                     <div
                       className={`h-full rounded-full transition-all duration-500 ${
                         product.stock > 10 
-                          ? 'bg-gradient-to-r from-green-500 to-green-400' 
+                          ? 'bg-linear-to-r from-green-500 to-green-400' 
                           : product.stock > 0 
-                          ? 'bg-gradient-to-r from-yellow-500 to-yellow-400'
-                          : 'bg-gradient-to-r from-red-500 to-red-400'
+                          ? 'bg-linear-to-r from-yellow-500 to-yellow-400'
+                          : 'bg-linear-to-r from-red-500 to-red-400'
                       }`}
                       style={{ width: `${Math.min((product.stock / 50) * 100, 100)}%` }}
                     />
@@ -684,7 +700,7 @@ export default function ProductDetailPage() {
                 <div className="mb-5 space-y-2.5">
                   <button 
                     disabled={product.stock === 0}
-                    className="flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#00d4aa] to-[#00b88e] text-base font-bold text-black transition-all duration-300 hover:shadow-lg hover:shadow-[#00d4aa]/30 disabled:cursor-not-allowed disabled:opacity-50"
+                    className="flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-linear-to-r from-[#00d4aa] to-[#00b88e] text-base font-bold text-black transition-all duration-300 hover:shadow-lg hover:shadow-[#00d4aa]/30 disabled:cursor-not-allowed disabled:opacity-50"
                   >
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
@@ -865,11 +881,11 @@ export default function ProductDetailPage() {
                 </div>
 
                 {/* Tags */}
-                {product.tags && product.tags.length > 0 && (
+                {tags.length > 0 && (
                   <div className="border-t border-[#2a2a30] pt-4">
                     <div className="mb-2.5 text-[11px] font-semibold uppercase tracking-wide text-gray-500">Tags</div>
                     <div className="flex flex-wrap gap-2">
-                      {product.tags.map((tag, index) => (
+                      {tags.map((tag, index) => (
                         <span
                           key={index}
                           className="inline-flex items-center gap-1 rounded-lg border border-[#00d4aa]/30 bg-[#00d4aa]/10 px-2.5 py-1.5 text-xs font-semibold text-[#00d4aa]"
@@ -900,60 +916,70 @@ export default function ProductDetailPage() {
 
         {/* FULL WIDTH DESCRIPTION */}
         {productDescriptionContent && (
-          <section className="mt-10 border-t border-[#2a2a30] pt-7">
-            <div className="mb-5 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
-              <div className="max-w-3xl">
-                <div className="mb-3 inline-flex items-center gap-2 rounded-lg border border-[#00d4aa]/25 bg-[#00d4aa]/8 px-3 py-1.5 text-[11px] font-bold uppercase tracking-wide text-[#00d4aa]">
-                  <SparklesIcon className="h-4 w-4" />
-                  Description
+          <section className="mt-12 overflow-hidden rounded-2xl border border-[#2a2a30] bg-[#141418] shadow-2xl shadow-black/25">
+            <div className="border-b border-[#2a2a30] bg-linear-to-r from-[#16161a] via-[#171720] to-[#111115] px-4 py-6 sm:px-6 lg:px-8">
+              <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
+                <div className="max-w-5xl">
+                  <div className="mb-4 inline-flex items-center gap-2 rounded-lg border border-[#00d4aa]/25 bg-[#00d4aa]/10 px-3 py-1.5 text-[11px] font-bold uppercase tracking-wide text-[#00d4aa]">
+                    <SparklesIcon className="h-4 w-4" />
+                    Product Description
+                  </div>
+                  <h2 className="text-2xl font-bold tracking-tight text-white sm:text-3xl lg:text-4xl">
+                    About This Product
+                  </h2>
+                  {product.description && product.detailed_description && (
+                    <p className="mt-3 max-w-4xl text-base leading-7 text-gray-300">
+                      {product.description}
+                    </p>
+                  )}
                 </div>
-                <h2 className="text-2xl font-bold tracking-tight text-white sm:text-3xl">
-                  Product Details
-                </h2>
-                <p className="mt-2 max-w-2xl text-sm leading-6 text-gray-400">
-                  Complete information from the backend editor, formatted for easy reading.
-                </p>
+
+                <div className="flex flex-wrap gap-2 text-xs">
+                  <span className="rounded-lg border border-[#2a2a30] bg-[#0f0f12]/80 px-3 py-1.5 font-semibold text-gray-300">
+                    {product.digital ? 'Digital Product' : 'Physical Product'}
+                  </span>
+                  <span className="rounded-lg border border-[#2a2a30] bg-[#0f0f12]/80 px-3 py-1.5 font-semibold text-gray-300">
+                    {product.category}
+                  </span>
+                  <span className="rounded-lg border border-[#00d4aa]/25 bg-[#00d4aa]/10 px-3 py-1.5 font-semibold text-[#00d4aa]">
+                    {product.stock > 0 ? 'Available Now' : 'Unavailable'}
+                  </span>
+                </div>
               </div>
             </div>
 
-            <article className="overflow-hidden rounded-xl border border-[#2a2a30] bg-[#16161a] shadow-xl">
-              <div className="border-b border-[#2a2a30] bg-[#1a1a1f] px-4 py-4 sm:px-6">
-                <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-                  <div className="flex min-w-0 items-start gap-3">
-                    <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl border border-[#8b5cf6]/25 bg-[#8b5cf6]/10">
-                      <DocumentTextIcon className="h-5 w-5 text-[#a78bfa]" />
-                    </div>
-                    <div className="min-w-0">
-                      <p className="mb-0.5 text-[11px] font-bold uppercase tracking-wide text-gray-500">
-                        Overview
-                      </p>
-                      <h3 className="text-xl font-bold leading-tight text-white">
-                        About This Product
-                      </h3>
-                      {product.description && product.detailed_description && (
-                        <p className="mt-1.5 max-w-4xl text-sm leading-6 text-gray-400">
-                          {product.description}
-                        </p>
-                      )}
-                    </div>
-                  </div>
-                  <div className="flex flex-wrap gap-2 text-xs">
-                    <span className="rounded-lg border border-[#2a2a30] bg-[#0f0f12]/70 px-3 py-1.5 text-gray-300">
-                      {product.digital ? 'Digital' : 'Physical'}
-                    </span>
-                    <span className="rounded-lg border border-[#2a2a30] bg-[#0f0f12]/70 px-3 py-1.5 text-gray-300">
-                      {product.category}
-                    </span>
-                  </div>
-                </div>
-              </div>
-
-              <div className="px-4 py-5 text-left sm:px-6 sm:py-6 lg:px-7">
+            <article className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_320px]">
+              <div className="min-w-0 px-4 py-6 sm:px-6 sm:py-8 lg:px-8 xl:px-10">
                 <div
                   className="ck-content max-w-none text-left text-gray-300"
                   dangerouslySetInnerHTML={{ __html: renderCkEditorContent(productDescriptionContent) }}
                 />
               </div>
+
+              <aside className="border-t border-[#2a2a30] bg-[#101014] p-4 sm:p-6 lg:border-l lg:border-t-0">
+                <div className="sticky top-24 space-y-3">
+                  <div className="flex items-center gap-3 rounded-xl border border-[#2a2a30] bg-[#16161a] p-4">
+                    <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl border border-[#8b5cf6]/25 bg-[#8b5cf6]/10">
+                      <DocumentTextIcon className="h-5 w-5 text-[#a78bfa]" />
+                    </div>
+                    <div>
+                      <p className="text-[11px] font-bold uppercase tracking-wide text-gray-500">Overview</p>
+                      <p className="text-sm font-bold text-white">Details from the product editor</p>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-3 lg:grid-cols-1">
+                    <div className="rounded-xl border border-[#2a2a30] bg-[#16161a] p-4">
+                      <p className="text-[11px] font-bold uppercase tracking-wide text-gray-500">Type</p>
+                      <p className="mt-1 text-sm font-semibold text-white">{product.digital ? 'Digital' : 'Physical'}</p>
+                    </div>
+                    <div className="rounded-xl border border-[#2a2a30] bg-[#16161a] p-4">
+                      <p className="text-[11px] font-bold uppercase tracking-wide text-gray-500">Category</p>
+                      <p className="mt-1 text-sm font-semibold text-white">{product.category}</p>
+                    </div>
+                  </div>
+                </div>
+              </aside>
             </article>
           </section>
         )}
@@ -1165,19 +1191,21 @@ export default function ProductDetailPage() {
                   <Link
                     key={related.id}
                     href={`/products/${related.slug || related.id}`}
-                    className="group flex-shrink-0 w-80 sm:w-96 bg-gradient-to-br from-[#16161a] to-[#1a1a1f] border border-[#2a2a30] rounded-2xl overflow-hidden hover:border-[#00d4aa]/60 transition-all duration-300 snap-start shadow-lg hover:shadow-2xl hover:shadow-[#00d4aa]/10"
+                    className="group flex-shrink-0 w-80 sm:w-96 bg-linear-to-br from-[#16161a] to-[#1a1a1f] border border-[#2a2a30] rounded-2xl overflow-hidden hover:border-[#00d4aa]/60 transition-all duration-300 snap-start shadow-lg hover:shadow-2xl hover:shadow-[#00d4aa]/10"
                   >
                     {/* IMAGE SECTION */}
                     <div className="relative aspect-video bg-[#0f0f12] overflow-hidden">
                       {related.thumbnail ? (
                         <>
-                          <img
+                          <Image
                             src={getStorageUrl(related.thumbnail)!}
                             alt={related.name}
                             className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                            fill
+                            sizes="(min-width: 640px) 24rem, 20rem"
                           />
                           {/* GRADIENT OVERLAY */}
-                          <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                          <div className="absolute inset-0 bg-linear-to-t from-black via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
                         </>
                       ) : (
                         <div className="w-full h-full flex items-center justify-center text-4xl text-gray-600">
@@ -1209,7 +1237,7 @@ export default function ProductDetailPage() {
                       <div className="flex items-center justify-between pt-3 border-t border-[#2a2a30]">
                         <div className="flex items-baseline gap-2">
                           <span className="text-xl sm:text-2xl font-bold text-[#00d4aa]">
-                            ৳{related.price}
+                            {formatPrice(related.price)}
                           </span>
                         </div>
                         <div className={`text-xs font-bold px-2.5 py-1.5 rounded-full ${
@@ -1312,8 +1340,8 @@ export default function ProductDetailPage() {
 
         .ck-content {
           color: #d4d4d8;
-          font-size: 0.95rem;
-          line-height: 1.7;
+          font-size: 1rem;
+          line-height: 1.85;
           word-break: break-word;
         }
 
@@ -1326,7 +1354,8 @@ export default function ProductDetailPage() {
         }
 
         .ck-content p {
-          margin: 0 0 0.95rem;
+          max-width: 78rem;
+          margin: 0 0 1.15rem;
         }
 
         .ck-content h1,
@@ -1336,25 +1365,26 @@ export default function ProductDetailPage() {
         .ck-content h5,
         .ck-content h6 {
           color: #ffffff;
-          font-weight: 750;
+          font-weight: 800;
           line-height: 1.25;
-          margin: 1.4rem 0 0.65rem;
+          letter-spacing: 0;
+          margin: 2rem 0 0.8rem;
         }
 
         .ck-content h1 {
-          font-size: 1.75rem;
+          font-size: clamp(1.9rem, 3vw, 2.75rem);
         }
 
         .ck-content h2 {
-          font-size: 1.45rem;
+          font-size: clamp(1.55rem, 2vw, 2.1rem);
         }
 
         .ck-content h3 {
-          font-size: 1.2rem;
+          font-size: 1.35rem;
         }
 
         .ck-content h4 {
-          font-size: 1.05rem;
+          font-size: 1.1rem;
         }
 
         .ck-content strong,
@@ -1378,8 +1408,9 @@ export default function ProductDetailPage() {
 
         .ck-content ul,
         .ck-content ol {
-          margin: 0.95rem 0;
-          padding-left: 1.25rem;
+          max-width: 78rem;
+          margin: 1rem 0 1.35rem;
+          padding-left: 1.35rem;
         }
 
         .ck-content ul {
@@ -1391,26 +1422,28 @@ export default function ProductDetailPage() {
         }
 
         .ck-content li {
-          margin: 0.3rem 0;
-          padding-left: 0.15rem;
+          margin: 0.45rem 0;
+          padding-left: 0.25rem;
         }
 
         .ck-content blockquote {
-          margin: 1rem 0;
-          border-left: 3px solid #00d4aa;
-          border-radius: 0 10px 10px 0;
-          background: rgba(0, 212, 170, 0.08);
-          padding: 0.8rem 1rem;
+          max-width: 82rem;
+          margin: 1.5rem 0;
+          border-left: 4px solid #00d4aa;
+          border-radius: 0 14px 14px 0;
+          background: linear-gradient(90deg, rgba(0, 212, 170, 0.12), rgba(139, 92, 246, 0.06));
+          padding: 1rem 1.2rem;
           color: #f4f4f5;
         }
 
         .ck-content pre {
-          margin: 1rem 0;
+          max-width: 82rem;
+          margin: 1.5rem 0;
           overflow-x: auto;
           border: 1px solid #2a2a30;
-          border-radius: 12px;
+          border-radius: 14px;
           background: #0b0b0f;
-          padding: 0.85rem;
+          padding: 1rem;
           color: #d8fdf5;
           font-size: 0.85rem;
           line-height: 1.6;
@@ -1435,15 +1468,16 @@ export default function ProductDetailPage() {
         .ck-content table {
           display: block;
           width: 100%;
-          margin: 1rem 0;
+          margin: 1.5rem 0;
           overflow-x: auto;
           border-collapse: collapse;
+          border-radius: 14px;
         }
 
         .ck-content th,
         .ck-content td {
           border: 1px solid #2a2a30;
-          padding: 0.65rem 0.8rem;
+          padding: 0.8rem 0.95rem;
           text-align: left;
           vertical-align: top;
         }
@@ -1457,13 +1491,14 @@ export default function ProductDetailPage() {
         .ck-content img {
           max-width: 100%;
           height: auto;
-          margin: 1rem 0;
-          border-radius: 12px;
+          margin: 1.6rem auto;
+          border-radius: 16px;
           border: 1px solid #2a2a30;
+          box-shadow: 0 24px 70px rgba(0, 0, 0, 0.28);
         }
 
         .ck-content figure {
-          margin: 1rem 0;
+          margin: 1.6rem 0;
         }
 
         .ck-content figcaption {

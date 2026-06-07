@@ -395,7 +395,7 @@ const fetchCart = async () => {
         <div className="max-w-2xl mx-auto px-4">
           <div className="glass-card rounded-2xl p-8 border border-[#2a2a30] text-center relative overflow-hidden">
             <div className="absolute top-0 left-0 w-64 h-64 opacity-5">
-              <div className="w-full h-full bg-gradient-to-br from-[#00d4aa] to-[#8b5cf6] rounded-full blur-3xl"></div>
+              <div className="w-full h-full bg-linear-to-br from-[#00d4aa] to-[#8b5cf6] rounded-full blur-3xl"></div>
             </div>
 
             <div className="relative z-10">
@@ -505,7 +505,7 @@ const fetchCart = async () => {
 
           <div className="glass-card rounded-2xl p-8 border border-[#2a2a30] relative overflow-hidden">
             <div className="absolute top-0 left-0 w-96 h-96 opacity-5">
-              <div className="w-full h-full bg-gradient-to-br from-[#00d4aa] to-[#8b5cf6] rounded-full blur-3xl"></div>
+              <div className="w-full h-full bg-linear-to-br from-[#00d4aa] to-[#8b5cf6] rounded-full blur-3xl"></div>
             </div>
 
             <div className="relative z-10">
@@ -513,7 +513,7 @@ const fetchCart = async () => {
                 {/* Left Column: Payment Process and Payment Information */}
                 <div className="space-y-6">
                   {/* Process Steps */}
-                  <div className="bg-gradient-to-br from-[#1a1a1f] to-[#141418] rounded-xl p-6 border border-[#2a2a30]/50 shadow-lg">
+                  <div className="bg-linear-to-br from-[#1a1a1f] to-[#141418] rounded-xl p-6 border border-[#2a2a30]/50 shadow-lg">
                     <h3 className="text-lg font-semibold text-[#fafafa] mb-6 flex items-center gap-2">
                       <div className="w-8 h-8 bg-gradient-to-r from-[#00d4aa] to-[#8b5cf6] rounded-lg flex items-center justify-center">
                         <BanknotesIcon className="w-4 h-4 text-white" />
@@ -570,7 +570,7 @@ const fetchCart = async () => {
                   </div>
 
                   {/* Submit Payment Proof */}
-                  <div className="bg-gradient-to-br from-[#1a1a1f] to-[#141418] rounded-xl p-6 border border-[#2a2a30]/50 shadow-lg">
+                  <div className="bg-linear-to-br from-[#1a1a1f] to-[#141418] rounded-xl p-6 border border-[#2a2a30]/50 shadow-lg">
                     <h3 className="text-lg font-semibold text-[#fafafa] mb-6 flex items-center gap-2">
                       <div className="w-8 h-8 bg-gradient-to-r from-[#00d4aa] to-[#8b5cf6] rounded-lg flex items-center justify-center">
                         <CloudArrowUpIcon className="w-4 h-4 text-white" />
@@ -615,7 +615,7 @@ const fetchCart = async () => {
                           Upload Payment Proof <span className="text-[#737373]">(Optional)</span>
                         </label>
                         <div className="flex items-center justify-center w-full">
-                          <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-[#2a2a30] border-dashed rounded-2xl cursor-pointer bg-gradient-to-br from-[#0f0f12] to-[#1a1a1f] hover:border-[#00d4aa] hover:bg-gradient-to-br hover:from-[#00d4aa]/5 hover:to-[#8b5cf6]/5 transition-all duration-300 group">
+                          <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-[#2a2a30] border-dashed rounded-2xl cursor-pointer bg-linear-to-br from-[#0f0f12] to-[#1a1a1f] hover:border-[#00d4aa] hover:bg-linear-to-br hover:from-[#00d4aa]/5 hover:to-[#8b5cf6]/5 transition-all duration-300 group">
                             <div className="flex flex-col items-center justify-center pt-3 pb-4">
                               {paymentProofPreview ? (
                                 <div className="relative">
@@ -689,7 +689,7 @@ const fetchCart = async () => {
                 {/* Right Column: Payment Information, Order Summary and Customer Details */}
                 <div className="space-y-6">
                   {/* Payment Information - Right Column */}
-                  <div className="bg-gradient-to-br from-[#1a1a1f] to-[#141418] rounded-xl p-6 border border-[#2a2a30]/50 shadow-lg">
+                  <div className="bg-linear-to-br from-[#1a1a1f] to-[#141418] rounded-xl p-6 border border-[#2a2a30]/50 shadow-lg">
                     <h4 className="text-lg font-semibold text-[#fafafa] mb-6 flex items-center gap-2">
                       <div className="w-8 h-8 bg-gradient-to-r from-[#00d4aa] to-[#8b5cf6] rounded-lg flex items-center justify-center">
                         <CreditCardIcon className="w-4 h-4 text-white" />
@@ -776,7 +776,7 @@ const fetchCart = async () => {
                     })()}
                   </div>
 
-                  <div className="bg-gradient-to-br from-[#1a1a1f] to-[#141418] rounded-xl p-6 border border-[#2a2a30]/50 shadow-lg">
+                  <div className="bg-linear-to-br from-[#1a1a1f] to-[#141418] rounded-xl p-6 border border-[#2a2a30]/50 shadow-lg">
                     <h4 className="text-lg font-semibold text-[#fafafa] mb-6 flex items-center gap-2">
                       <div className="w-8 h-8 bg-gradient-to-r from-[#00d4aa] to-[#8b5cf6] rounded-lg flex items-center justify-center">
                         <BuildingStorefrontIcon className="w-4 h-4 text-white" />
@@ -802,7 +802,7 @@ const fetchCart = async () => {
                   </div>
 
                   {user && (
-                    <div className="bg-gradient-to-br from-[#1a1a1f] to-[#141418] rounded-xl p-6 border border-[#2a2a30]/50 shadow-lg">
+                    <div className="bg-linear-to-br from-[#1a1a1f] to-[#141418] rounded-xl p-6 border border-[#2a2a30]/50 shadow-lg">
                       <h4 className="text-sm font-semibold text-[#fafafa] mb-4 flex items-center gap-2">
                         <div className="w-6 h-6 bg-gradient-to-r from-[#00d4aa] to-[#8b5cf6] rounded-lg flex items-center justify-center">
                           <CheckCircleIcon className="w-3 h-3 text-white" />
@@ -901,7 +901,7 @@ const fetchCart = async () => {
         {/* Checkout Form */}
         <form onSubmit={handleSubmitOrder} className="glass-card rounded-2xl p-8 border border-[#2a2a30] space-y-8 relative overflow-hidden">
           <div className="absolute top-0 right-0 w-64 h-64 opacity-5">
-            <div className="w-full h-full bg-gradient-to-br from-[#00d4aa] to-[#8b5cf6] rounded-full blur-3xl"></div>
+            <div className="w-full h-full bg-linear-to-br from-[#00d4aa] to-[#8b5cf6] rounded-full blur-3xl"></div>
           </div>
 
           <div className="relative z-10">
@@ -986,8 +986,8 @@ const fetchCart = async () => {
               {/* bKash */}
               <div className={`relative overflow-hidden rounded-2xl border-2 transition-all duration-300 cursor-pointer group ${
                 formData.payment_method === 'bkash'
-                  ? 'border-[#e2136e] bg-gradient-to-br from-[#e2136e]/15 to-[#f15a29]/15 shadow-lg shadow-[#e2136e]/20'
-                  : 'border-[#2a2a30] bg-gradient-to-br from-[#1a1a1f] to-[#141418] hover:border-[#e2136e]/60 hover:shadow-lg hover:shadow-[#e2136e]/10'
+                  ? 'border-[#e2136e] bg-linear-to-br from-[#e2136e]/15 to-[#f15a29]/15 shadow-lg shadow-[#e2136e]/20'
+                  : 'border-[#2a2a30] bg-linear-to-br from-[#1a1a1f] to-[#141418] hover:border-[#e2136e]/60 hover:shadow-lg hover:shadow-[#e2136e]/10'
               }`}>
                 <input
                   type="radio"
@@ -1017,8 +1017,8 @@ const fetchCart = async () => {
               {/* Rocket */}
               <div className={`relative overflow-hidden rounded-2xl border-2 transition-all duration-300 cursor-pointer group ${
                 formData.payment_method === 'rocket'
-                  ? 'border-[#8b5cf6] bg-gradient-to-br from-[#8b5cf6]/15 to-[#a855f7]/15 shadow-lg shadow-[#8b5cf6]/20'
-                  : 'border-[#2a2a30] bg-gradient-to-br from-[#1a1a1f] to-[#141418] hover:border-[#8b5cf6]/60 hover:shadow-lg hover:shadow-[#8b5cf6]/10'
+                  ? 'border-[#8b5cf6] bg-linear-to-br from-[#8b5cf6]/15 to-[#a855f7]/15 shadow-lg shadow-[#8b5cf6]/20'
+                  : 'border-[#2a2a30] bg-linear-to-br from-[#1a1a1f] to-[#141418] hover:border-[#8b5cf6]/60 hover:shadow-lg hover:shadow-[#8b5cf6]/10'
               }`}>
                 <input
                   type="radio"
@@ -1048,8 +1048,8 @@ const fetchCart = async () => {
               {/* Nagad */}
               <div className={`relative overflow-hidden rounded-2xl border-2 transition-all duration-300 cursor-pointer group ${
                 formData.payment_method === 'nagad'
-                  ? 'border-[#f59e0b] bg-gradient-to-br from-[#f59e0b]/15 to-[#fbbf24]/15 shadow-lg shadow-[#f59e0b]/20'
-                  : 'border-[#2a2a30] bg-gradient-to-br from-[#1a1a1f] to-[#141418] hover:border-[#f59e0b]/60 hover:shadow-lg hover:shadow-[#f59e0b]/10'
+                  ? 'border-[#f59e0b] bg-linear-to-br from-[#f59e0b]/15 to-[#fbbf24]/15 shadow-lg shadow-[#f59e0b]/20'
+                  : 'border-[#2a2a30] bg-linear-to-br from-[#1a1a1f] to-[#141418] hover:border-[#f59e0b]/60 hover:shadow-lg hover:shadow-[#f59e0b]/10'
               }`}>
                 <input
                   type="radio"
@@ -1079,8 +1079,8 @@ const fetchCart = async () => {
               {/* Bank Transfer */}
               <div className={`relative overflow-hidden rounded-2xl border-2 transition-all duration-300 cursor-pointer group ${
                 formData.payment_method === 'bank'
-                  ? 'border-[#10b981] bg-gradient-to-br from-[#10b981]/15 to-[#34d399]/15 shadow-lg shadow-[#10b981]/20'
-                  : 'border-[#2a2a30] bg-gradient-to-br from-[#1a1a1f] to-[#141418] hover:border-[#10b981]/60 hover:shadow-lg hover:shadow-[#10b981]/10'
+                  ? 'border-[#10b981] bg-linear-to-br from-[#10b981]/15 to-[#34d399]/15 shadow-lg shadow-[#10b981]/20'
+                  : 'border-[#2a2a30] bg-linear-to-br from-[#1a1a1f] to-[#141418] hover:border-[#10b981]/60 hover:shadow-lg hover:shadow-[#10b981]/10'
               }`}>
                 <input
                   type="radio"

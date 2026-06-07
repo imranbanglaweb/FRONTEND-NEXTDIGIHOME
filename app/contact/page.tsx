@@ -166,7 +166,7 @@ export default function ContactPage() {
 
                   return (
                     <div key={info.id} className="flex items-start gap-4">
-                      <div className={`w-12 h-12 bg-gradient-to-br ${gradients[info.id % gradients.length]} rounded-xl flex items-center justify-center flex-shrink-0`}>
+                      <div className={`w-12 h-12 bg-linear-to-br ${gradients[info.id % gradients.length]} rounded-xl flex items-center justify-center flex-shrink-0`}>
                         {getIcon()}
                       </div>
                       <div>
@@ -181,7 +181,7 @@ export default function ContactPage() {
 
               {/* Map Placeholder */}
               <div className="mt-12 glass-card rounded-2xl p-8 border border-[#2a2a30]">
-                <div className="aspect-video bg-gradient-to-br from-[#1a1a1f] to-[#2a2a30] rounded-xl flex items-center justify-center">
+                <div className="aspect-video bg-linear-to-br from-[#1a1a1f] to-[#2a2a30] rounded-xl flex items-center justify-center">
                   <div className="text-center">
                     <MapPinIcon className="w-16 h-16 text-[#00d4aa] mx-auto mb-4" />
                     <p className="text-[#737373]">Interactive Map Coming Soon</p>
