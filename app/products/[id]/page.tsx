@@ -17,9 +17,6 @@ import {
   PlayCircleIcon,
   ArrowTopRightOnSquareIcon,
   SparklesIcon,
-  ShieldCheckIcon,
-  ClipboardDocumentCheckIcon,
-  RocketLaunchIcon,
 } from '@heroicons/react/24/outline';
 import Swal from 'sweetalert2';
 import { getStorageUrl, apiFetch } from '../../utils/api';
@@ -76,63 +73,26 @@ const escapeHtml = (content: string): string => {
     .replace(/'/g, '&#39;');
 };
 
-const stripHtmlAndCode = (content: string): string => {
-  let result = decodeBasicHtmlEntities(content)
-    .replace(/<script[^>]*>[\s\S]*?<\/script>/gi, '')
-    .replace(/<style[^>]*>[\s\S]*?<\/style>/gi, '')
-    .replace(/<pre[^>]*>/gi, '\n\n')
-    .replace(/<\/pre>/gi, '\n\n')
-    .replace(/<code[^>]*>/gi, '')
-    .replace(/<\/code>/gi, '')
-    .replace(/<\/?p[^>]*>/gi, '\n\n')
-    .replace(/<br[^>]*\/?>/gi, '\n\n')
-    .replace(/<\/?strong[^>]*>/gi, '')
-    .replace(/<\/?b[^>]*>/gi, '')
-    .replace(/<\/?em[^>]*>/gi, '')
-    .replace(/<\/?i[^>]*>/gi, '')
-    .replace(/```(?:\w+)?\s*([\s\S]*?)```/g, '\n\n$1\n\n')
-    .replace(/`([^`]+)`/g, '$1')
-    .replace(/\*\*([^*]+)\*\*/g, '$1')
-    .replace(/\*([^*]+)\*/g, '$1')
-    .replace(/#{1,6}\s*/g, '')
-    .trim();
+const renderCkEditorContent = (content: string): string => {
+  const decoded = decodeBasicHtmlEntities(content).trim();
+  const hasHtml = /<\/?[a-z][\s\S]*>/i.test(decoded);
 
-  const listItems: string[] = [];
-  result = result.replace(/<li[^>]*>([\s\S]*?)<\/li>/gi, (match, content) => {
-    const cleanContent = content.replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim();
-    if (cleanContent) {
-      listItems.push(cleanContent);
-    }
-    return '\n';
-  });
-
-  result = result
-    .replace(/<[^>]+>/g, '')
-    .replace(/[ \t]+/g, ' ')
-    .replace(/\n\s*\n/g, '\n\n')
-    .trim();
-
-  if (listItems.length > 0) {
-    const listHtml = `<ul class="list-disc space-y-3 pl-6 text-left text-[#c8c8c8]">${listItems.map(item => `<li class="pl-1 leading-8">${escapeHtml(item)}</li>`).join('')}</ul>`;
-    result = result + '\n\n' + listHtml;
+  if (!hasHtml) {
+    return decoded
+      .split(/\n{2,}/)
+      .map((paragraph) => paragraph.trim())
+      .filter(Boolean)
+      .map((paragraph) => `<p>${escapeHtml(paragraph).replace(/\n/g, '<br />')}</p>`)
+      .join('');
   }
 
-  return result;
-};
-
-const beautifyText = (text: string): string => {
-  const paragraphs = text.split('\n\n').filter(p => p.trim().length > 0);
-  
-  return paragraphs
-    .map(paragraph => {
-      const trimmed = paragraph.trim();
-      if (!trimmed) return '';
-      
-      if (trimmed.startsWith('<ul')) return trimmed;
-      
-      return `<p class="mb-5 text-left text-base leading-8 text-[#c8c8c8] sm:text-lg">${escapeHtml(trimmed)}</p>`;
-    })
-    .join('');
+  return decoded
+    .replace(/<script[^>]*>[\s\S]*?<\/script>/gi, '')
+    .replace(/<style[^>]*>[\s\S]*?<\/style>/gi, '')
+    .replace(/\s+on[a-z]+\s*=\s*(['"]).*?\1/gi, '')
+    .replace(/\s+on[a-z]+\s*=\s*[^\s>]+/gi, '')
+    .replace(/\s(href|src)\s*=\s*(['"])\s*javascript:[\s\S]*?\2/gi, '')
+    .replace(/\s(href|src)\s*=\s*javascript:[^\s>]*/gi, '');
 };
 
 interface Product {
@@ -924,112 +884,63 @@ export default function ProductDetailPage() {
           </div>
         </div>
 
-        {/* FULL WIDTH DESCRIPTION - Moved to bottom single column as requested */}
+        {/* FULL WIDTH DESCRIPTION */}
         {productDescriptionContent && (
-          <section className="mt-14">
-            <div className="mb-7 flex flex-col gap-4 border-t border-[#2a2a30] pt-9 lg:flex-row lg:items-end lg:justify-between">
+          <section className="mt-10 border-t border-[#2a2a30] pt-7">
+            <div className="mb-5 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
               <div className="max-w-3xl">
-                <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-[#00d4aa]/30 bg-[#00d4aa]/10 px-4 py-2 text-xs font-bold uppercase tracking-widest text-[#00d4aa]">
+                <div className="mb-3 inline-flex items-center gap-2 rounded-lg border border-[#00d4aa]/25 bg-[#00d4aa]/8 px-3 py-1.5 text-[11px] font-bold uppercase tracking-wide text-[#00d4aa]">
                   <SparklesIcon className="h-4 w-4" />
-                  Product Experience
+                  Description
                 </div>
-                <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl">
-                  Built for everyday use, not just a product listing
+                <h2 className="text-2xl font-bold tracking-tight text-white sm:text-3xl">
+                  Product Details
                 </h2>
-                <p className="mt-3 text-base leading-7 text-gray-400">
-                  Review the details, delivery expectations, and what this product is designed to help you complete.
+                <p className="mt-2 max-w-2xl text-sm leading-6 text-gray-400">
+                  Complete information from the backend editor, formatted for easy reading.
                 </p>
-              </div>
-
-              <div className="flex flex-wrap gap-2 text-sm">
-                <span className="rounded-full border border-[#2a2a30] bg-[#16161a] px-4 py-2 text-gray-300">
-                  {product.digital ? 'Digital delivery' : 'Physical delivery'}
-                </span>
-                <span className="rounded-full border border-[#2a2a30] bg-[#16161a] px-4 py-2 text-gray-300">
-                  {product.stock > 0 ? 'Available now' : 'Currently unavailable'}
-                </span>
               </div>
             </div>
 
-            <div className="grid gap-6 lg:grid-cols-12">
-              <article className="overflow-hidden rounded-2xl border border-[#2a2a30] bg-[#16161a] shadow-2xl lg:col-span-8">
-                <div className="border-b border-[#2a2a30] bg-gradient-to-r from-[#00d4aa]/10 via-transparent to-[#8b5cf6]/10 px-6 py-6 sm:px-8">
-                  <div className="flex items-start gap-4">
-                    <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-2xl border border-[#8b5cf6]/30 bg-[#8b5cf6]/15">
-                      <DocumentTextIcon className="h-6 w-6 text-[#8b5cf6]" />
+            <article className="overflow-hidden rounded-xl border border-[#2a2a30] bg-[#16161a] shadow-xl">
+              <div className="border-b border-[#2a2a30] bg-[#1a1a1f] px-4 py-4 sm:px-6">
+                <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+                  <div className="flex min-w-0 items-start gap-3">
+                    <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl border border-[#8b5cf6]/25 bg-[#8b5cf6]/10">
+                      <DocumentTextIcon className="h-5 w-5 text-[#a78bfa]" />
                     </div>
                     <div className="min-w-0">
-                      <p className="mb-1 text-xs font-bold uppercase tracking-widest text-gray-500">
+                      <p className="mb-0.5 text-[11px] font-bold uppercase tracking-wide text-gray-500">
                         Overview
                       </p>
-                      <h3 className="text-2xl font-bold text-white">
+                      <h3 className="text-xl font-bold leading-tight text-white">
                         About This Product
                       </h3>
                       {product.description && product.detailed_description && (
-                        <p className="mt-2 text-sm leading-6 text-gray-400">
+                        <p className="mt-1.5 max-w-4xl text-sm leading-6 text-gray-400">
                           {product.description}
                         </p>
                       )}
                     </div>
                   </div>
-                </div>
-
-                <div className="px-6 py-7 text-left sm:px-8 sm:py-9">
-                  <div
-                    className="max-w-none text-left text-gray-300 [&_p:last-child]:mb-0"
-                    dangerouslySetInnerHTML={{ __html: beautifyText(stripHtmlAndCode(productDescriptionContent)) }}
-                  />
-                </div>
-              </article>
-
-              <aside className="space-y-4 lg:col-span-4">
-                <div className="rounded-2xl border border-[#2a2a30] bg-[#16161a] p-5 transition-colors hover:border-[#00d4aa]/40">
-                  <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-xl border border-[#00d4aa]/30 bg-[#00d4aa]/15">
-                    <ClipboardDocumentCheckIcon className="h-6 w-6 text-[#00d4aa]" />
+                  <div className="flex flex-wrap gap-2 text-xs">
+                    <span className="rounded-lg border border-[#2a2a30] bg-[#0f0f12]/70 px-3 py-1.5 text-gray-300">
+                      {product.digital ? 'Digital' : 'Physical'}
+                    </span>
+                    <span className="rounded-lg border border-[#2a2a30] bg-[#0f0f12]/70 px-3 py-1.5 text-gray-300">
+                      {product.category}
+                    </span>
                   </div>
-                  <h3 className="text-lg font-bold text-white">What You Get</h3>
-                  <p className="mt-2 text-sm leading-6 text-gray-400">
-                    Clear product information, category context, and access to available preview media before checkout.
-                  </p>
                 </div>
+              </div>
 
-                <div className="rounded-2xl border border-[#2a2a30] bg-[#16161a] p-5 transition-colors hover:border-blue-400/40">
-                  <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-xl border border-blue-400/30 bg-blue-500/15">
-                    <RocketLaunchIcon className="h-6 w-6 text-blue-300" />
-                  </div>
-                  <h3 className="text-lg font-bold text-white">Best For</h3>
-                  <p className="mt-2 text-sm leading-6 text-gray-400">
-                    Buyers who want a practical {product.category} solution with a straightforward product page and fast decision flow.
-                  </p>
-                </div>
-
-                <div className="rounded-2xl border border-[#2a2a30] bg-[#16161a] p-5 transition-colors hover:border-green-400/40">
-                  <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-xl border border-green-400/30 bg-green-500/15">
-                    {product.digital ? (
-                      <BoltIcon className="h-6 w-6 text-green-300" />
-                    ) : (
-                      <TruckIcon className="h-6 w-6 text-green-300" />
-                    )}
-                  </div>
-                  <h3 className="text-lg font-bold text-white">Delivery</h3>
-                  <p className="mt-2 text-sm leading-6 text-gray-400">
-                    {product.digital
-                      ? 'Digital products are prepared for quick access after purchase confirmation.'
-                      : 'Physical products are prepared for standard delivery after order confirmation.'}
-                  </p>
-                </div>
-
-                <div className="rounded-2xl border border-[#2a2a30] bg-[#16161a] p-5 transition-colors hover:border-purple-400/40">
-                  <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-xl border border-purple-400/30 bg-purple-500/15">
-                    <ShieldCheckIcon className="h-6 w-6 text-purple-300" />
-                  </div>
-                  <h3 className="text-lg font-bold text-white">Purchase Confidence</h3>
-                  <p className="mt-2 text-sm leading-6 text-gray-400">
-                    Preview links, product status, stock details, and secure cart actions are available before you complete the order.
-                  </p>
-                </div>
-              </aside>
-            </div>
+              <div className="px-4 py-5 text-left sm:px-6 sm:py-6 lg:px-7">
+                <div
+                  className="ck-content max-w-none text-left text-gray-300"
+                  dangerouslySetInnerHTML={{ __html: renderCkEditorContent(productDescriptionContent) }}
+                />
+              </div>
+            </article>
           </section>
         )}
 
@@ -1312,6 +1223,171 @@ export default function ProductDetailPage() {
           )}
         </div>
       </div>
+
+      <style jsx global>{`
+        .ck-content {
+          color: #d4d4d8;
+          font-size: 0.95rem;
+          line-height: 1.7;
+          word-break: break-word;
+        }
+
+        .ck-content > *:first-child {
+          margin-top: 0;
+        }
+
+        .ck-content > *:last-child {
+          margin-bottom: 0;
+        }
+
+        .ck-content p {
+          margin: 0 0 0.95rem;
+        }
+
+        .ck-content h1,
+        .ck-content h2,
+        .ck-content h3,
+        .ck-content h4,
+        .ck-content h5,
+        .ck-content h6 {
+          color: #ffffff;
+          font-weight: 750;
+          line-height: 1.25;
+          margin: 1.4rem 0 0.65rem;
+        }
+
+        .ck-content h1 {
+          font-size: 1.75rem;
+        }
+
+        .ck-content h2 {
+          font-size: 1.45rem;
+        }
+
+        .ck-content h3 {
+          font-size: 1.2rem;
+        }
+
+        .ck-content h4 {
+          font-size: 1.05rem;
+        }
+
+        .ck-content strong,
+        .ck-content b {
+          color: #ffffff;
+          font-weight: 700;
+        }
+
+        .ck-content em,
+        .ck-content i {
+          color: #e5e7eb;
+        }
+
+        .ck-content a {
+          color: #00d4aa;
+          font-weight: 700;
+          text-decoration: underline;
+          text-decoration-color: rgba(0, 212, 170, 0.45);
+          text-underline-offset: 4px;
+        }
+
+        .ck-content ul,
+        .ck-content ol {
+          margin: 0.95rem 0;
+          padding-left: 1.25rem;
+        }
+
+        .ck-content ul {
+          list-style: disc;
+        }
+
+        .ck-content ol {
+          list-style: decimal;
+        }
+
+        .ck-content li {
+          margin: 0.3rem 0;
+          padding-left: 0.15rem;
+        }
+
+        .ck-content blockquote {
+          margin: 1rem 0;
+          border-left: 3px solid #00d4aa;
+          border-radius: 0 10px 10px 0;
+          background: rgba(0, 212, 170, 0.08);
+          padding: 0.8rem 1rem;
+          color: #f4f4f5;
+        }
+
+        .ck-content pre {
+          margin: 1rem 0;
+          overflow-x: auto;
+          border: 1px solid #2a2a30;
+          border-radius: 12px;
+          background: #0b0b0f;
+          padding: 0.85rem;
+          color: #d8fdf5;
+          font-size: 0.85rem;
+          line-height: 1.6;
+        }
+
+        .ck-content code {
+          border: 1px solid rgba(0, 212, 170, 0.25);
+          border-radius: 6px;
+          background: rgba(0, 212, 170, 0.1);
+          padding: 0.1rem 0.3rem;
+          color: #9fffea;
+          font-size: 0.9em;
+        }
+
+        .ck-content pre code {
+          border: 0;
+          background: transparent;
+          padding: 0;
+          color: inherit;
+        }
+
+        .ck-content table {
+          display: block;
+          width: 100%;
+          margin: 1rem 0;
+          overflow-x: auto;
+          border-collapse: collapse;
+        }
+
+        .ck-content th,
+        .ck-content td {
+          border: 1px solid #2a2a30;
+          padding: 0.65rem 0.8rem;
+          text-align: left;
+          vertical-align: top;
+        }
+
+        .ck-content th {
+          background: rgba(0, 212, 170, 0.12);
+          color: #ffffff;
+          font-weight: 700;
+        }
+
+        .ck-content img {
+          max-width: 100%;
+          height: auto;
+          margin: 1rem 0;
+          border-radius: 12px;
+          border: 1px solid #2a2a30;
+        }
+
+        .ck-content figure {
+          margin: 1rem 0;
+        }
+
+        .ck-content figcaption {
+          margin-top: 0.45rem;
+          color: #9ca3af;
+          font-size: 0.8rem;
+          text-align: center;
+        }
+      `}</style>
     </div>
   );
 }
