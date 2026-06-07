@@ -951,7 +951,7 @@ export default function ProductDetailPage() {
             <article className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_320px]">
               <div className="min-w-0 px-4 py-6 sm:px-6 sm:py-8 lg:px-8 xl:px-10">
                 <div
-                  className="ck-content max-w-none text-left text-gray-300"
+                  className="product-description"
                   dangerouslySetInnerHTML={{ __html: renderCkEditorContent(productDescriptionContent) }}
                 />
               </div>
