@@ -489,14 +489,14 @@ export default function ProductDetailPage() {
                           key={index}
                           className="min-w-full flex-shrink-0"
                         >
-                           <div className="relative w-full aspect-square overflow-hidden bg-[#0f0f12] sm:aspect-[4/3] xl:aspect-[16/9]">
+                           <div className="relative w-full aspect-[4/3] overflow-hidden bg-[#0f0f12] sm:aspect-[16/10] xl:aspect-[16/9]">
                               <Image
                                 src={image}
                                alt={`${product.name}-${index}`}
-                               className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 hover:scale-105"
+                               className="absolute inset-0 h-full w-full object-contain p-2 transition-transform duration-500 hover:scale-[1.02] sm:p-3"
                                fill
                                priority={index === 0}
-                               sizes="(min-width: 1280px) 58vw, (min-width: 1024px) 55vw, 100vw"
+                               sizes="(min-width: 1536px) 1050px, (min-width: 1280px) 58vw, (min-width: 1024px) 55vw, calc(100vw - 2rem)"
                              />
                              {/* Image overlay indicator */}
                              <div className="absolute top-3 left-3 bg-black/65 backdrop-blur-xl px-3 py-1.5 rounded-lg text-xs text-white font-semibold border border-white/10 shadow-lg">
@@ -555,7 +555,7 @@ export default function ProductDetailPage() {
               {images.length > 1 && (
                 <div className="w-full">
                   <div className="flex justify-center">
-                    <div className="grid grid-cols-4 sm:grid-cols-5 md:grid-cols-6 lg:grid-cols-5 xl:grid-cols-6 gap-2 sm:gap-3 max-w-2xl">
+                    <div className="grid w-full max-w-2xl grid-cols-4 gap-2 sm:grid-cols-5 sm:gap-3 md:grid-cols-6 lg:grid-cols-5 xl:grid-cols-6">
                       {images.map((image, index) => (
                         <button
                           key={index}
@@ -569,7 +569,7 @@ export default function ProductDetailPage() {
                           <Image
                             src={image}
                             alt={`thumb-${index}`}
-                            className="w-full h-full object-cover transition-all duration-300 group-hover:scale-105 group-hover:brightness-110"
+                            className="h-full w-full object-contain p-1 transition-all duration-300 group-hover:scale-105 group-hover:brightness-110"
                             fill
                             sizes="(min-width: 1280px) 8vw, (min-width: 640px) 16vw, 25vw"
                           />
@@ -1215,7 +1215,7 @@ export default function ProductDetailPage() {
                           <Image
                             src={getStorageUrl(related.thumbnail)!}
                             alt={related.name}
-                            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                            className="h-full w-full object-contain p-2 transition-transform duration-500 group-hover:scale-105"
                             fill
                             sizes="(min-width: 640px) 24rem, 20rem"
                           />

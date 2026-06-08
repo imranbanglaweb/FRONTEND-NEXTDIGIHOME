@@ -526,8 +526,22 @@ body {
 .ndh-product-content img,
 .ndh-product-content video,
 .ndh-product-content iframe {
+  display: block;
   max-width: 100% !important;
   height: auto !important;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.ndh-product-content figure {
+  max-width: 100%;
+  margin-left: 0;
+  margin-right: 0;
+}
+
+.ndh-product-content iframe {
+  width: 100%;
+  aspect-ratio: 16 / 9;
 }
 
 /* Responsive */
