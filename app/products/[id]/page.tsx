@@ -13,7 +13,6 @@ import {
   BoltIcon,
   TruckIcon,
   ArrowRightIcon,
-  DocumentTextIcon,
   VideoCameraIcon,
   PlayCircleIcon,
   ArrowTopRightOnSquareIcon,
@@ -917,21 +916,16 @@ export default function ProductDetailPage() {
         {/* FULL WIDTH DESCRIPTION */}
         {productDescriptionContent && (
           <section className="mt-12 overflow-hidden rounded-2xl border border-[#2a2a30] bg-[#141418] shadow-2xl shadow-black/25">
-            <div className="border-b border-[#2a2a30] bg-linear-to-r from-[#16161a] via-[#171720] to-[#111115] px-4 py-6 sm:px-6 lg:px-8">
-              <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
+            <div className="border-b border-[#2a2a30] bg-linear-to-r from-[#16161a] via-[#171720] to-[#111115] px-4 py-4 sm:px-6 lg:px-8">
+              <div className="flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
                 <div className="max-w-5xl">
-                  <div className="mb-4 inline-flex items-center gap-2 rounded-lg border border-[#00d4aa]/25 bg-[#00d4aa]/10 px-3 py-1.5 text-[11px] font-bold uppercase tracking-wide text-[#00d4aa]">
+                  <div className="mb-2 inline-flex items-center gap-2 rounded-lg border border-[#00d4aa]/25 bg-[#00d4aa]/10 px-3 py-1.5 text-[11px] font-bold uppercase tracking-wide text-[#00d4aa]">
                     <SparklesIcon className="h-4 w-4" />
                     Product Description
                   </div>
                   <h2 className="text-2xl font-bold tracking-tight text-white sm:text-3xl lg:text-4xl">
                     About This Product
                   </h2>
-                  {product.description && product.detailed_description && (
-                    <p className="mt-3 max-w-4xl text-base leading-7 text-gray-300">
-                      {product.description}
-                    </p>
-                  )}
                 </div>
 
                 <div className="flex flex-wrap gap-2 text-xs">
@@ -948,38 +942,13 @@ export default function ProductDetailPage() {
               </div>
             </div>
 
-            <article className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_320px]">
-              <div className="min-w-0 px-4 py-6 sm:px-6 sm:py-8 lg:px-8 xl:px-10">
+            <article>
+              <div className="min-w-0 px-4 pb-6 pt-0 sm:px-6 sm:pb-8 lg:px-8 xl:px-10">
                 <div
                   className="product-description"
                   dangerouslySetInnerHTML={{ __html: renderCkEditorContent(productDescriptionContent) }}
                 />
               </div>
-
-              <aside className="border-t border-[#2a2a30] bg-[#101014] p-4 sm:p-6 lg:border-l lg:border-t-0">
-                <div className="sticky top-24 space-y-3">
-                  <div className="flex items-center gap-3 rounded-xl border border-[#2a2a30] bg-[#16161a] p-4">
-                    <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl border border-[#8b5cf6]/25 bg-[#8b5cf6]/10">
-                      <DocumentTextIcon className="h-5 w-5 text-[#a78bfa]" />
-                    </div>
-                    <div>
-                      <p className="text-[11px] font-bold uppercase tracking-wide text-gray-500">Overview</p>
-                      <p className="text-sm font-bold text-white">Details from the product editor</p>
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-2 gap-3 lg:grid-cols-1">
-                    <div className="rounded-xl border border-[#2a2a30] bg-[#16161a] p-4">
-                      <p className="text-[11px] font-bold uppercase tracking-wide text-gray-500">Type</p>
-                      <p className="mt-1 text-sm font-semibold text-white">{product.digital ? 'Digital' : 'Physical'}</p>
-                    </div>
-                    <div className="rounded-xl border border-[#2a2a30] bg-[#16161a] p-4">
-                      <p className="text-[11px] font-bold uppercase tracking-wide text-gray-500">Category</p>
-                      <p className="mt-1 text-sm font-semibold text-white">{product.category}</p>
-                    </div>
-                  </div>
-                </div>
-              </aside>
             </article>
           </section>
         )}

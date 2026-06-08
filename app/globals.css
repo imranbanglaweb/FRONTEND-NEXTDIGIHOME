@@ -129,40 +129,125 @@ body {
   background: var(--accent);
 }
 
-.product-description {
-  width: 100%;
-  max-width: 100%;
-  overflow-x: auto;
-  color: #111827;
-  background: #ffffff;
-  line-height: 1.7;
-  font-size: 16px;
+/* new css for CK editor */
+
+
+.product-description{
+  width:100%;
+  max-width:100%;
+  color:#111827;
+  background:#fff;
 }
 
-.product-description * {
-  box-sizing: border-box;
+.product-description .ndh-section{
+  width:100%;
+  margin:0 0 18px;
 }
 
-.product-description table {
-  width: 100% !important;
-  max-width: 100% !important;
-  table-layout: fixed;
-  border-collapse: separate !important;
+.product-description .ndh-hero{
+  background:linear-gradient(135deg,#0f172a,#1d4ed8,#7c3aed);
+  color:#fff;
+  border-radius:18px;
+  padding:34px 24px;
+  text-align:center;
 }
 
-.product-description td {
-  word-break: break-word;
-  overflow-wrap: break-word;
-  color: #111827 !important;
-  vertical-align: top !important;
+.product-description .ndh-grid{
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:12px;
+  width:100%;
 }
 
-.product-description p {
-  color: #374151 !important;
+.product-description .ndh-card{
+  background:#fff;
+  border:1px solid #e5e7eb;
+  border-radius:14px;
+  padding:18px;
+  text-align:center;
+  box-shadow:0 2px 12px rgba(0,0,0,.05);
+  color:#111827;
+}
+
+.product-description .ndh-icon{
+  width:58px;
+  height:58px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  margin:0 auto 10px;
+  border-radius:50%;
+  background:#eff6ff;
+  font-size:28px;
 }
 
 .product-description h1,
 .product-description h2,
-.product-description h3 {
-  color: #111827;
+.product-description h3{
+  color:#111827;
+  margin-top:0;
+}
+
+.product-description p{
+  color:#374151;
+  margin:0;
+}
+
+.product-description .ndh-hero h1,
+.product-description .ndh-hero p{
+  color:#fff;
+}
+
+.product-description .ndh-hero h2{
+  color:#facc15;
+}
+
+.product-description .ndh-title{
+  text-align:center;
+  font-size:26px;
+  font-weight:800;
+  margin:26px 0 14px;
+  color:#111827;
+}
+
+.product-description .ndh-about{
+  background:#fff;
+  border:1px solid #e5e7eb;
+  border-left:6px solid #2563eb;
+  border-radius:14px;
+  padding:22px;
+  box-shadow:0 2px 12px rgba(0,0,0,.05);
+}
+
+.product-description .ndh-list{
+  text-align:left;
+  color:#374151;
+  line-height:1.8;
+  font-size:14px;
+}
+
+.product-description .ndh-cta{
+  background:linear-gradient(135deg,#2563eb,#7c3aed,#0f172a);
+  color:#fff;
+  border-radius:18px;
+  padding:32px 22px;
+  text-align:center;
+}
+
+.product-description .ndh-cta h1,
+.product-description .ndh-cta h2,
+.product-description .ndh-cta p{
+  color:#fff;
+}
+
+@media(max-width:1024px){
+  .product-description .ndh-grid{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+  }
+}
+
+@media(max-width:640px){
+  .product-description .ndh-grid{
+    grid-template-columns:1fr;
+  }
 }
