@@ -1099,10 +1099,10 @@ export default function ProductDetailPage() {
             <p className="text-gray-400 text-sm">Common questions about this product</p>
           </div>
 
-          <div className="premium-faq-shell space-y-3 rounded-2xl border border-white/10 bg-[#16161a] p-5 sm:p-6">
+          <div className="premium-faq-shell space-y-1.5 rounded-2xl border border-white/10 bg-[#16161a] p-3.5 sm:p-4">
             {/* FAQ ITEM 1 */}
-            <details className="premium-faq-item group border-b border-white/10 last:border-0 pb-4 last:pb-0 cursor-pointer">
-              <summary className="flex items-center justify-between font-semibold text-white hover:text-[#00d4aa] transition-colors py-2">
+            <details className="premium-faq-item group border-b border-white/10 last:border-0 pb-2.5 last:pb-0 cursor-pointer">
+              <summary className="flex items-center justify-between font-semibold text-white hover:text-[#00d4aa] transition-colors py-1.5">
                 <span className="flex items-center gap-3">
                   <span className="w-6 h-6 rounded-full bg-[#00d4aa]/20 border border-[#00d4aa]/40 text-[#00d4aa] text-xs font-bold flex items-center justify-center group-open:bg-[#00d4aa] group-open:text-black transition-all">
                     +
@@ -1113,12 +1113,12 @@ export default function ProductDetailPage() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
                 </svg>
               </summary>
-              <p className="text-gray-400 text-sm ml-9 mt-1 leading-6">We offer a 30-day return window. If you are not satisfied with your purchase, you can return it for a full refund or exchange.</p>
+              <p className="text-gray-400 text-sm ml-9 mt-0.5 leading-5">We offer a 30-day return window. If you are not satisfied with your purchase, you can return it for a full refund or exchange.</p>
             </details>
 
             {/* FAQ ITEM 2 */}
-            <details className="premium-faq-item group border-b border-white/10 last:border-0 pb-4 last:pb-0 cursor-pointer">
-              <summary className="flex items-center justify-between font-semibold text-white hover:text-[#00d4aa] transition-colors py-2">
+            <details className="premium-faq-item group border-b border-white/10 last:border-0 pb-2.5 last:pb-0 cursor-pointer">
+              <summary className="flex items-center justify-between font-semibold text-white hover:text-[#00d4aa] transition-colors py-1.5">
                 <span className="flex items-center gap-3">
                   <span className="w-6 h-6 rounded-full bg-[#00d4aa]/20 border border-[#00d4aa]/40 text-[#00d4aa] text-xs font-bold flex items-center justify-center group-open:bg-[#00d4aa] group-open:text-black transition-all">
                     +
@@ -1129,12 +1129,12 @@ export default function ProductDetailPage() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
                 </svg>
               </summary>
-              <p className="text-gray-400 text-sm ml-9 mt-1 leading-6">Standard shipping typically takes 3-5 business days. Express shipping options are available at checkout for faster delivery.</p>
+              <p className="text-gray-400 text-sm ml-9 mt-0.5 leading-5">Standard shipping typically takes 3-5 business days. Express shipping options are available at checkout for faster delivery.</p>
             </details>
 
             {/* FAQ ITEM 3 */}
-            <details className="premium-faq-item group border-b border-white/10 last:border-0 pb-4 last:pb-0 cursor-pointer">
-              <summary className="flex items-center justify-between font-semibold text-white hover:text-[#00d4aa] transition-colors py-2">
+            <details className="premium-faq-item group border-b border-white/10 last:border-0 pb-2.5 last:pb-0 cursor-pointer">
+              <summary className="flex items-center justify-between font-semibold text-white hover:text-[#00d4aa] transition-colors py-1.5">
                 <span className="flex items-center gap-3">
                   <span className="w-6 h-6 rounded-full bg-[#00d4aa]/20 border border-[#00d4aa]/40 text-[#00d4aa] text-xs font-bold flex items-center justify-center group-open:bg-[#00d4aa] group-open:text-black transition-all">
                     +
@@ -1145,12 +1145,12 @@ export default function ProductDetailPage() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
                 </svg>
               </summary>
-              <p className="text-gray-400 text-sm ml-9 mt-1 leading-6">Yes! All products are 100% authentic and sourced directly from authorized distributors. We guarantee authenticity or your money back.</p>
+              <p className="text-gray-400 text-sm ml-9 mt-0.5 leading-5">Yes! All products are 100% authentic and sourced directly from authorized distributors. We guarantee authenticity or your money back.</p>
             </details>
 
             {/* FAQ ITEM 4 */}
-            <details className="premium-faq-item group border-b border-white/10 last:border-0 pb-4 last:pb-0 cursor-pointer">
-              <summary className="flex items-center justify-between font-semibold text-white hover:text-[#00d4aa] transition-colors py-2">
+            <details className="premium-faq-item group border-b border-white/10 last:border-0 pb-2.5 last:pb-0 cursor-pointer">
+              <summary className="flex items-center justify-between font-semibold text-white hover:text-[#00d4aa] transition-colors py-1.5">
                 <span className="flex items-center gap-3">
                   <span className="w-6 h-6 rounded-full bg-[#00d4aa]/20 border border-[#00d4aa]/40 text-[#00d4aa] text-xs font-bold flex items-center justify-center group-open:bg-[#00d4aa] group-open:text-black transition-all">
                     +
@@ -1161,7 +1161,7 @@ export default function ProductDetailPage() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
                 </svg>
               </summary>
-              <p className="text-gray-400 text-sm ml-9 mt-1 leading-6">Yes! All products come with manufacturer warranty. Details vary by product type. Check the product documentation for specific warranty information.</p>
+              <p className="text-gray-400 text-sm ml-9 mt-0.5 leading-5">Yes! All products come with manufacturer warranty. Details vary by product type. Check the product documentation for specific warranty information.</p>
             </details>
           </div>
         </div>
@@ -1188,7 +1188,7 @@ export default function ProductDetailPage() {
                   <Link
                     key={related.id}
                     href={`/products/${related.slug || related.id}`}
-                    className="premium-related-card group flex-shrink-0 w-80 sm:w-96 bg-linear-to-br from-[#16161a] to-[#1a1a1f] border border-white/10 rounded-2xl overflow-hidden hover:border-[#00d4aa]/60 transition-all duration-300 snap-start shadow-lg hover:shadow-2xl hover:shadow-[#00d4aa]/10"
+                    className="premium-related-card group flex-shrink-0 w-[min(20rem,calc(100vw-2rem))] sm:w-96 bg-linear-to-br from-[#16161a] to-[#1a1a1f] border border-white/10 rounded-2xl overflow-hidden hover:border-[#00d4aa]/60 transition-all duration-300 snap-start shadow-lg hover:shadow-2xl hover:shadow-[#00d4aa]/10"
                   >
                     {/* IMAGE SECTION */}
                     <div className="relative aspect-video bg-[#0f0f12] overflow-hidden">
@@ -1337,8 +1337,8 @@ export default function ProductDetailPage() {
 
         .premium-faq-item[open] summary {
           background: rgba(0, 212, 170, 0.05);
-          padding-left: 0.5rem;
-          padding-right: 0.5rem;
+          padding-left: 0.4rem;
+          padding-right: 0.4rem;
         }
 
         .product-spec-card > div:first-child {
@@ -1416,6 +1416,9 @@ export default function ProductDetailPage() {
           color: #d4d4d8;
           font-size: 1rem;
           line-height: 1.85;
+          min-width: 0;
+          max-width: 100%;
+          overflow-wrap: anywhere;
           word-break: break-word;
         }
 
@@ -1430,6 +1433,13 @@ export default function ProductDetailPage() {
         .ck-content p {
           max-width: 78rem;
           margin: 0 0 1.15rem;
+        }
+
+        .ck-content .ndh-about p {
+          max-width: none;
+          width: 100%;
+          text-align: justify;
+          text-align-last: left;
         }
 
         .ck-content h1,
@@ -1542,6 +1552,7 @@ export default function ProductDetailPage() {
         .ck-content table {
           display: block;
           width: 100%;
+          max-width: 100%;
           margin: 1.5rem 0;
           overflow-x: auto;
           border-collapse: collapse;
@@ -1580,6 +1591,100 @@ export default function ProductDetailPage() {
           color: #9ca3af;
           font-size: 0.8rem;
           text-align: center;
+        }
+
+        @media (max-width: 640px) {
+          .premium-title-panel,
+          .premium-section-panel,
+          .premium-stat-card,
+          .premium-list-card,
+          .premium-feature-card,
+          .premium-faq-shell {
+            border-radius: 1rem;
+            box-shadow:
+              0 16px 42px rgba(0, 0, 0, 0.24),
+              inset 0 1px 0 rgba(255, 255, 255, 0.04);
+          }
+
+          .premium-section-heading {
+            padding-left: 0.75rem;
+          }
+
+          .premium-faq-item summary {
+            align-items: flex-start;
+            gap: 0.75rem;
+            line-height: 1.45;
+          }
+
+          .premium-faq-item summary > span {
+            min-width: 0;
+          }
+
+          .premium-faq-item p {
+            margin-left: 0 !important;
+            padding-left: 2rem;
+          }
+
+          .ck-content {
+            font-size: 0.92rem;
+            line-height: 1.68;
+          }
+
+          .ck-content p {
+            margin-bottom: 0.95rem;
+          }
+
+          .ck-content .ndh-about p {
+            text-align: left;
+          }
+
+          .ck-content h1 {
+            font-size: 1.7rem;
+          }
+
+          .ck-content h2 {
+            font-size: 1.35rem;
+          }
+
+          .ck-content h3 {
+            font-size: 1.12rem;
+          }
+
+          .ck-content h1,
+          .ck-content h2,
+          .ck-content h3,
+          .ck-content h4,
+          .ck-content h5,
+          .ck-content h6 {
+            margin: 1.35rem 0 0.65rem;
+          }
+
+          .ck-content ul,
+          .ck-content ol {
+            padding-left: 1.1rem;
+          }
+
+          .ck-content blockquote,
+          .ck-content pre {
+            border-radius: 12px;
+            margin: 1rem 0;
+            padding: 0.85rem;
+          }
+
+          .ck-content table {
+            margin: 1rem 0;
+            font-size: 0.82rem;
+          }
+
+          .ck-content th,
+          .ck-content td {
+            padding: 0.65rem 0.7rem;
+          }
+
+          .ck-content img,
+          .ck-content figure {
+            margin: 1rem 0;
+          }
         }
       `}</style>
     </div>

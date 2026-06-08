@@ -67,7 +67,7 @@
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: var(--font-inter);
+  font-family: 'Inter', sans-serif;
 }
 
 .gradient-text {
@@ -139,13 +139,16 @@ body {
 .ndh-product-content {
   width: 100% !important;
   max-width: 100% !important;
-  overflow-x: hidden;
+  min-width: 0;
+  overflow-x: clip;
   background: transparent !important;
   color: #e5e7eb !important;
 }
 
 .ndh-product-content * {
   box-sizing: border-box;
+  max-width: 100%;
+  overflow-wrap: anywhere;
 }
 
 .ndh-product-content h1,
@@ -166,6 +169,7 @@ body {
 .ndh-desc {
   width: 100%;
   max-width: 100%;
+  min-width: 0;
 }
 
 /* Hero */
@@ -180,14 +184,14 @@ body {
 }
 
 .ndh-hero h1 {
-  font-size: clamp(24px, 3vw, 38px);
+  font-size: 34px;
   font-weight: 800;
   margin: 0 0 12px;
   color: #ffffff !important;
 }
 
 .ndh-hero h2 {
-  font-size: clamp(20px, 2.3vw, 30px);
+  font-size: 28px;
   font-weight: 800;
   margin: 0 0 14px;
   color: #facc15 !important;
@@ -225,10 +229,14 @@ body {
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  flex: 0 1 auto;
   min-height: 44px;
+  max-width: 100%;
   padding: 10px 22px;
   border-radius: 12px;
   font-weight: 800;
+  text-align: center;
+  white-space: normal;
 }
 
 .ndh-price {
@@ -273,7 +281,7 @@ body {
   padding: 20px 16px !important;
   text-align: center !important;
   color: #ffffff !important;
-  min-height: 190px;
+  min-height: 0;
   box-shadow: 0 10px 28px rgba(0,0,0,.20);
 }
 
@@ -328,13 +336,14 @@ body {
   background: linear-gradient(180deg, #1a1a1f, #15151a);
   border: 1px solid #2a2a30;
   border-radius: 16px;
-  padding: 16px;
+  padding: 14px;
   color: #e5e7eb;
   box-shadow: 0 10px 28px rgba(0,0,0,.18);
 }
 
 .ndh-about {
   border-left: 5px solid #00d4aa;
+  width: 100%;
 }
 
 .ndh-about h2,
@@ -347,13 +356,20 @@ body {
 .ndh-faq p {
   color: #d1d5db !important;
   font-size: 15px !important;
-  line-height: 1.5 !important;
+  line-height: 1.42 !important;
+}
+
+.ndh-about p {
+  width: 100%;
+  max-width: none !important;
+  text-align: justify;
+  text-align-last: left;
 }
 
 /* Specification */
 .ndh-spec-row {
   display: grid;
-  grid-template-columns: 240px 1fr;
+  grid-template-columns: minmax(150px, 240px) minmax(0, 1fr);
   gap: 12px;
   padding: 13px 0;
   border-bottom: 1px solid #2a2a30;
@@ -373,13 +389,13 @@ body {
 
 /* FAQ */
 .ndh-faq {
-  margin-bottom: 8px;
+  margin-bottom: 6px;
 }
 
 .ndh-faq h3 {
-  margin: 0 0 4px !important;
-  font-size: 17px;
-  line-height: 1.35;
+  margin: 0 0 2px !important;
+  font-size: 16px;
+  line-height: 1.25;
 }
 
 .ndh-faq p {
@@ -409,13 +425,30 @@ body {
 
 /* Old inline table fallback */
 .ndh-product-content table {
+  display: block;
   width: 100% !important;
   max-width: 100% !important;
+  overflow-x: auto;
+  white-space: normal;
 }
 
 .ndh-product-content td {
   word-break: break-word !important;
   overflow-wrap: break-word !important;
+}
+
+.ndh-product-content pre,
+.ndh-product-content code {
+  max-width: 100%;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.ndh-product-content img,
+.ndh-product-content video,
+.ndh-product-content iframe {
+  max-width: 100% !important;
+  height: auto !important;
 }
 
 /* Responsive */
@@ -437,8 +470,49 @@ body {
 }
 
 @media (max-width: 640px) {
+  .ndh-product-content p,
+  .ndh-product-content li,
+  .ndh-product-content span {
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  .ndh-hero {
+    border-radius: 14px;
+    padding: 22px 14px;
+    margin-bottom: 16px;
+  }
+
+  .ndh-hero h1 {
+    font-size: 24px;
+    line-height: 1.22;
+  }
+
+  .ndh-hero h2 {
+    font-size: 20px;
+    line-height: 1.25;
+  }
+
+  .ndh-hero p {
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  .ndh-actions {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .ndh-price,
+  .ndh-download {
+    width: 100%;
+    font-size: 15px;
+    padding: 10px 14px;
+  }
+
   .ndh-grid {
     grid-template-columns: 1fr;
+    gap: 12px;
   }
 
   .ndh-hero,
@@ -446,10 +520,23 @@ body {
   .ndh-about,
   .ndh-spec,
   .ndh-faq {
-    padding: 20px;
+    padding: 16px;
+  }
+
+  .ndh-about p {
+    text-align: left;
   }
 
   .ndh-card {
+    padding: 16px !important;
     min-height: auto;
+  }
+
+  .ndh-icon {
+    width: 46px;
+    height: 46px;
+    min-width: 46px;
+    min-height: 46px;
+    font-size: 22px;
   }
 }
