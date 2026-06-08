@@ -92,6 +92,19 @@ const escapeHtml = (content: string): string => {
     .replace(/'/g, '&#39;');
 };
 
+const normalizeEditorWrappedHtml = (content: string): string => {
+  const blockTags = 'div|section|article|header|footer|main|aside|h[1-6]|p|ul|ol|li|table|thead|tbody|tr|td|th|blockquote|pre';
+  const beforeBlockTag = new RegExp(`<p>(?:\\s|&nbsp;|<br\\s*/?>)*(?=</?(?:${blockTags})\\b)`, 'gi');
+  const afterBlockTag = new RegExp(`(</(?:${blockTags})>)(?:\\s|&nbsp;|<br\\s*/?>)*</p>`, 'gi');
+  const emptyParagraph = /<p>(?:\s|&nbsp;|<br\s*\/?>)*<\/p>/gi;
+
+  return content
+    .replace(beforeBlockTag, '')
+    .replace(afterBlockTag, '$1')
+    .replace(emptyParagraph, '')
+    .replace(/(?:\s|&nbsp;|<br\s*\/?>)+(<\/?(?:div|section|h[1-6])\b)/gi, '$1');
+};
+
 const renderCkEditorContent = (content: string): string => {
   const decoded = decodeBasicHtmlEntities(content).trim();
   const hasHtml = /<\/?[a-z][\s\S]*>/i.test(decoded);
@@ -105,13 +118,18 @@ const renderCkEditorContent = (content: string): string => {
       .join('');
   }
 
-  return decoded
+  const sanitized = decoded
     .replace(/<script[^>]*>[\s\S]*?<\/script>/gi, '')
     .replace(/<style[^>]*>[\s\S]*?<\/style>/gi, '')
     .replace(/\s+on[a-z]+\s*=\s*(['"]).*?\1/gi, '')
     .replace(/\s+on[a-z]+\s*=\s*[^\s>]+/gi, '')
     .replace(/\s(href|src)\s*=\s*(['"])\s*javascript:[\s\S]*?\2/gi, '')
-    .replace(/\s(href|src)\s*=\s*javascript:[^\s>]*/gi, '');
+    .replace(/\s(href|src)\s*=\s*javascript:[^\s>]*/gi, '')
+    .replace(/<\/br>/gi, '<br />')
+    .replace(/<br\s*\/?>\s*(?=<\/?(?:div|section|h[1-6])\b)/gi, '')
+    .replace(/&nbsp;/gi, ' ');
+
+  return normalizeEditorWrappedHtml(sanitized);
 };
 
 const parseStringArray = (value: string[] | string | null | undefined): string[] => {
@@ -1412,186 +1430,7 @@ export default function ProductDetailPage() {
           color: #d4d4d8;
         }
 
-        .ck-content {
-          color: #d4d4d8;
-          font-size: 1rem;
-          line-height: 1.85;
-          min-width: 0;
-          max-width: 100%;
-          overflow-wrap: anywhere;
-          word-break: break-word;
-        }
-
-        .ck-content > *:first-child {
-          margin-top: 0;
-        }
-
-        .ck-content > *:last-child {
-          margin-bottom: 0;
-        }
-
-        .ck-content p {
-          max-width: 78rem;
-          margin: 0 0 1.15rem;
-        }
-
-        .ck-content .ndh-about p {
-          max-width: none;
-          width: 100%;
-          text-align: justify;
-          text-align-last: left;
-        }
-
-        .ck-content h1,
-        .ck-content h2,
-        .ck-content h3,
-        .ck-content h4,
-        .ck-content h5,
-        .ck-content h6 {
-          color: #ffffff;
-          font-weight: 800;
-          line-height: 1.25;
-          letter-spacing: 0;
-          margin: 2rem 0 0.8rem;
-        }
-
-        .ck-content h1 {
-          font-size: clamp(1.9rem, 3vw, 2.75rem);
-        }
-
-        .ck-content h2 {
-          font-size: clamp(1.55rem, 2vw, 2.1rem);
-        }
-
-        .ck-content h3 {
-          font-size: 1.35rem;
-        }
-
-        .ck-content h4 {
-          font-size: 1.1rem;
-        }
-
-        .ck-content strong,
-        .ck-content b {
-          color: #ffffff;
-          font-weight: 700;
-        }
-
-        .ck-content em,
-        .ck-content i {
-          color: #e5e7eb;
-        }
-
-        .ck-content a {
-          color: #00d4aa;
-          font-weight: 700;
-          text-decoration: underline;
-          text-decoration-color: rgba(0, 212, 170, 0.45);
-          text-underline-offset: 4px;
-        }
-
-        .ck-content ul,
-        .ck-content ol {
-          max-width: 78rem;
-          margin: 1rem 0 1.35rem;
-          padding-left: 1.35rem;
-        }
-
-        .ck-content ul {
-          list-style: disc;
-        }
-
-        .ck-content ol {
-          list-style: decimal;
-        }
-
-        .ck-content li {
-          margin: 0.45rem 0;
-          padding-left: 0.25rem;
-        }
-
-        .ck-content blockquote {
-          max-width: 82rem;
-          margin: 1.5rem 0;
-          border-left: 4px solid #00d4aa;
-          border-radius: 0 14px 14px 0;
-          background: linear-gradient(90deg, rgba(0, 212, 170, 0.12), rgba(139, 92, 246, 0.06));
-          padding: 1rem 1.2rem;
-          color: #f4f4f5;
-        }
-
-        .ck-content pre {
-          max-width: 82rem;
-          margin: 1.5rem 0;
-          overflow-x: auto;
-          border: 1px solid #2a2a30;
-          border-radius: 14px;
-          background: #0b0b0f;
-          padding: 1rem;
-          color: #d8fdf5;
-          font-size: 0.85rem;
-          line-height: 1.6;
-        }
-
-        .ck-content code {
-          border: 1px solid rgba(0, 212, 170, 0.25);
-          border-radius: 6px;
-          background: rgba(0, 212, 170, 0.1);
-          padding: 0.1rem 0.3rem;
-          color: #9fffea;
-          font-size: 0.9em;
-        }
-
-        .ck-content pre code {
-          border: 0;
-          background: transparent;
-          padding: 0;
-          color: inherit;
-        }
-
-        .ck-content table {
-          display: block;
-          width: 100%;
-          max-width: 100%;
-          margin: 1.5rem 0;
-          overflow-x: auto;
-          border-collapse: collapse;
-          border-radius: 14px;
-        }
-
-        .ck-content th,
-        .ck-content td {
-          border: 1px solid #2a2a30;
-          padding: 0.8rem 0.95rem;
-          text-align: left;
-          vertical-align: top;
-        }
-
-        .ck-content th {
-          background: rgba(0, 212, 170, 0.12);
-          color: #ffffff;
-          font-weight: 700;
-        }
-
-        .ck-content img {
-          max-width: 100%;
-          height: auto;
-          margin: 1.6rem auto;
-          border-radius: 16px;
-          border: 1px solid #2a2a30;
-          box-shadow: 0 24px 70px rgba(0, 0, 0, 0.28);
-        }
-
-        .ck-content figure {
-          margin: 1.6rem 0;
-        }
-
-        .ck-content figcaption {
-          margin-top: 0.45rem;
-          color: #9ca3af;
-          font-size: 0.8rem;
-          text-align: center;
-        }
+      
 
         @media (max-width: 640px) {
           .premium-title-panel,
