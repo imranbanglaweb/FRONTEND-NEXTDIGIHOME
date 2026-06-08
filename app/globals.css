@@ -130,6 +130,11 @@ body {
 }
 
 /* new css for CK editor */
+/* ===============================
+   Premium Product Description CSS
+   For NextDigiHome CKEditor Content
+================================ */
+
 .ndh-product-content {
   width: 100% !important;
   max-width: 100% !important;
@@ -142,156 +147,307 @@ body {
   box-sizing: border-box;
 }
 
-.ndh-product-content > div {
-  width: 100% !important;
-  max-width: 100% !important;
-  background: transparent !important;
-}
-
 .ndh-product-content h1,
 .ndh-product-content h2,
-.ndh-product-content h3 {
+.ndh-product-content h3,
+.ndh-product-content h4 {
   color: #ffffff !important;
 }
 
-.ndh-product-content p {
+.ndh-product-content p,
+.ndh-product-content li,
+.ndh-product-content span {
+  color: #d1d5db;
+  font-size: 15px;
+  line-height: 1.75;
+}
+
+.ndh-desc {
+  width: 100%;
+  max-width: 100%;
+}
+
+/* Hero */
+.ndh-hero {
+  width: 100%;
+  background: linear-gradient(135deg, #0f172a, #2563eb, #7c3aed);
+  padding: 32px 24px;
+  border-radius: 18px;
+  text-align: center;
+  color: #ffffff;
+  margin-bottom: 22px;
+}
+
+.ndh-hero h1 {
+  font-size: clamp(24px, 3vw, 38px);
+  font-weight: 800;
+  margin: 0 0 12px;
+  color: #ffffff !important;
+}
+
+.ndh-hero h2 {
+  font-size: clamp(20px, 2.3vw, 30px);
+  font-weight: 800;
+  margin: 0 0 14px;
+  color: #facc15 !important;
+}
+
+.ndh-hero p {
+  max-width: 900px;
+  margin: 0 auto 18px;
+  color: #e5e7eb !important;
+  font-size: 16px;
+}
+
+/* Badge */
+.ndh-badge {
+  display: inline-block;
+  background: rgba(255,255,255,.14);
+  border: 1px solid rgba(255,255,255,.22);
+  padding: 8px 16px;
+  border-radius: 999px;
+  font-size: 14px;
+  color: #ffffff;
+  margin-bottom: 14px;
+}
+
+/* Buttons */
+.ndh-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+}
+
+.ndh-price,
+.ndh-download {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 10px 22px;
+  border-radius: 12px;
+  font-weight: 800;
+}
+
+.ndh-price {
+  background: #facc15;
+  color: #111827 !important;
+  font-size: 22px;
+}
+
+.ndh-download {
+  background: #22c55e;
+  color: #ffffff !important;
+  font-size: 16px;
+}
+
+/* Sections */
+.ndh-section {
+  width: 100%;
+  margin: 0 0 22px;
+}
+
+.ndh-title {
+  text-align: center;
+  font-size: clamp(22px, 2vw, 30px);
+  font-weight: 800;
+  margin: 34px 0 18px;
+  color: #ffffff !important;
+}
+
+/* Grid */
+.ndh-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+  width: 100%;
+}
+
+/* Cards */
+.ndh-card {
+  background: linear-gradient(180deg, #1a1a1f, #15151a) !important;
+  border: 1px solid #2a2a30 !important;
+  border-radius: 16px !important;
+  padding: 20px 16px !important;
+  text-align: center !important;
+  color: #ffffff !important;
+  min-height: 190px;
+  box-shadow: 0 10px 28px rgba(0,0,0,.20);
+}
+
+.ndh-card h3 {
+  font-size: 17px !important;
+  font-weight: 800 !important;
+  color: #ffffff !important;
+  margin: 0 0 8px !important;
+}
+
+.ndh-card p {
+  color: #cbd5e1 !important;
+  font-size: 14px !important;
+  line-height: 1.7 !important;
+  margin: 0 !important;
+}
+
+.ndh-left {
+  text-align: left !important;
+}
+
+.ndh-left .ndh-icon {
+  margin-left: 0;
+  margin-right: 0;
+}
+
+.ndh-left h3 {
+  text-align: left !important;
+}
+
+/* Icons */
+.ndh-icon {
+  width: 58px;
+  height: 58px;
+  min-width: 58px;
+  min-height: 58px;
+  margin: 0 auto 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: rgba(37,99,235,.18);
+  border: 1px solid rgba(0,212,170,.16);
+  font-size: 28px;
+  line-height: 1;
+}
+
+/* About / Spec / FAQ */
+.ndh-about,
+.ndh-spec,
+.ndh-faq {
+  background: linear-gradient(180deg, #1a1a1f, #15151a);
+  border: 1px solid #2a2a30;
+  border-radius: 16px;
+  padding: 24px;
+  color: #e5e7eb;
+  box-shadow: 0 10px 28px rgba(0,0,0,.18);
+}
+
+.ndh-about {
+  border-left: 5px solid #00d4aa;
+}
+
+.ndh-about h2,
+.ndh-spec h2,
+.ndh-faq h3 {
+  color: #ffffff !important;
+}
+
+.ndh-about p,
+.ndh-faq p {
   color: #d1d5db !important;
-  font-size: 13px !important;
+  font-size: 15px !important;
   line-height: 1.8 !important;
 }
 
+/* Specification */
+.ndh-spec-row {
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  gap: 12px;
+  padding: 13px 0;
+  border-bottom: 1px solid #2a2a30;
+}
+
+.ndh-spec-row:last-child {
+  border-bottom: none;
+}
+
+.ndh-spec-row strong {
+  color: #ffffff;
+}
+
+.ndh-spec-row span {
+  color: #cbd5e1;
+}
+
+/* FAQ */
+.ndh-faq {
+  margin-bottom: 12px;
+}
+
+.ndh-faq h3 {
+  margin: 0 0 8px;
+  font-size: 17px;
+}
+
+.ndh-faq p {
+  margin: 0;
+}
+
+/* CTA */
+.ndh-cta {
+  background: linear-gradient(135deg, #2563eb, #7c3aed, #0f172a);
+  padding: 34px 24px;
+  border-radius: 18px;
+  text-align: center;
+  color: #ffffff;
+}
+
+.ndh-cta h1 {
+  color: #facc15 !important;
+  font-size: clamp(30px, 4vw, 46px);
+  margin: 8px 0;
+}
+
+.ndh-cta h2,
+.ndh-cta p,
+.ndh-cta strong {
+  color: #ffffff !important;
+}
+
+/* Old inline table fallback */
 .ndh-product-content table {
   width: 100% !important;
   max-width: 100% !important;
-  table-layout: fixed !important;
-  border-collapse: separate !important;
-  border-spacing: 10px !important;
 }
 
 .ndh-product-content td {
-  background: #1a1a1f !important;
-  border: 1px solid #2a2a30 !important;
-  color: #e5e7eb !important;
-  vertical-align: top !important;
   word-break: break-word !important;
   overflow-wrap: break-word !important;
-  border-radius: 14px !important;
 }
 
-.ndh-product-content td h3,
-.ndh-product-content td b {
-  color: #ffffff !important;
-}
-
-.ndh-product-content td p {
-  color: #cbd5e1 !important;
-}
-
-.ndh-product-content div[style*="background:#ffffff"],
-.ndh-product-content div[style*="background: #ffffff"] {
-  background: #1a1a1f !important;
-  border-color: #2a2a30 !important;
-}
-
-.ndh-product-content div[style*="color:#111827"],
-.ndh-product-content h2[style*="color:#111827"],
-.ndh-product-content h3[style*="color:#111827"] {
-  color: #ffffff !important;
-}
-
-.ndh-product-content p[style*="color:#374151"],
-.ndh-product-content p[style*="color:#6b7280"] {
-  color: #cbd5e1 !important;
-}
-
-@media (max-width: 768px) {
-  .ndh-product-content table,
-  .ndh-product-content tbody,
-  .ndh-product-content tr,
-  .ndh-product-content td {
-    display: block !important;
-    width: 100% !important;
-  }
-
-  .ndh-product-content td {
-    margin-bottom: 12px !important;
-    height: auto !important;
-  }
-}
-.ndh-grid{
-  display:grid;
-  grid-template-columns:repeat(4,minmax(0,1fr));
-  gap:16px;
-  margin:20px 0!important;;
-}
-
-.ndh-card{
-  background:#1a1a1f!important;;
-  border:1px solid #2a2a30!important;;
-  border-radius:16px!important;;
-  padding:10px!important;;
-  text-align:center!important;;
-  color:#fff !important;;
-  height:100% !important;;
-}
-.ndh-card, .ndh-card p{
-  font-size:10px !important;
-}
-
-.ndh-icon{
-  width:60px;
-  height:60px;
-  margin:0 auto 12px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  border-radius:50%;
-  background:#2563eb20;
-  font-size:28px;
-}
-
-.ndh-title{
-  text-align:center;
-  font-size:24px;
-  font-weight:700;
-  margin:30px 0 20px;
-  color:#fff;
-}
-
-.ndh-about,
-.ndh-spec,
-.ndh-faq{
-  background:#1a1a1f;
-  border:1px solid #2a2a30;
-  border-radius:16px;
-  padding:24px;
-  margin-bottom:20px;
-}
-
-.ndh-hero{
-  background:linear-gradient(135deg,#0f172a,#2563eb,#7c3aed);
-  padding:20px;
-  border-radius:18px;
-  text-align:center;
-  color:#fff;
-}
-
-.ndh-cta{
-  background:linear-gradient(135deg,#2563eb,#7c3aed);
-  padding:40px;
-  border-radius:18px;
-  text-align:center;
-  color:#fff;
-}
-
-@media(max-width:1024px){
-  .ndh-grid{
-    grid-template-columns:repeat(2,1fr);
+/* Responsive */
+@media (max-width: 1200px) {
+  .ndh-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }
 
-@media(max-width:768px){
-  .ndh-grid{
-    grid-template-columns:1fr;
+@media (max-width: 900px) {
+  .ndh-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .ndh-spec-row {
+    grid-template-columns: 1fr;
+    gap: 4px;
+  }
+}
+
+@media (max-width: 640px) {
+  .ndh-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .ndh-hero,
+  .ndh-cta,
+  .ndh-about,
+  .ndh-spec,
+  .ndh-faq {
+    padding: 20px;
+  }
+
+  .ndh-card {
+    min-height: auto;
   }
 }
