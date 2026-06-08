@@ -944,9 +944,11 @@ export default function ProductDetailPage() {
 
             <article>
               <div className="min-w-0 px-4 pb-6 pt-0 sm:px-6 sm:pb-8 lg:px-8 xl:px-10">
-                <div
-  className="ck-content product-description ndh-product-content"
-  dangerouslySetInnerHTML={{ __html: renderCkEditorContent(productDescriptionContent) }}
+    <div
+  className="product-description ndh-product-content"
+  dangerouslySetInnerHTML={{
+    __html: renderCkEditorContent(productDescriptionContent)
+  }}
 />
               </div>
             </article>

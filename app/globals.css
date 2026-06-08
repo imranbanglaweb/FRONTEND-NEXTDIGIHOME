@@ -131,8 +131,8 @@ body {
 
 /* new css for CK editor */
 .ndh-product-content {
-  width: 100%;
-  max-width: 100%;
+  width: 100% !important;
+  max-width: 100% !important;
   overflow-x: hidden;
   background: transparent !important;
   color: #e5e7eb !important;
@@ -156,7 +156,7 @@ body {
 
 .ndh-product-content p {
   color: #d1d5db !important;
-  font-size: 15px !important;
+  font-size: 13px !important;
   line-height: 1.8 !important;
 }
 
@@ -216,5 +216,82 @@ body {
   .ndh-product-content td {
     margin-bottom: 12px !important;
     height: auto !important;
+  }
+}
+.ndh-grid{
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:16px;
+  margin:20px 0!important;;
+}
+
+.ndh-card{
+  background:#1a1a1f!important;;
+  border:1px solid #2a2a30!important;;
+  border-radius:16px!important;;
+  padding:10px!important;;
+  text-align:center!important;;
+  color:#fff !important;;
+  height:100% !important;;
+}
+.ndh-card, .ndh-card p{
+  font-size:10px !important;
+}
+
+.ndh-icon{
+  width:60px;
+  height:60px;
+  margin:0 auto 12px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:50%;
+  background:#2563eb20;
+  font-size:28px;
+}
+
+.ndh-title{
+  text-align:center;
+  font-size:24px;
+  font-weight:700;
+  margin:30px 0 20px;
+  color:#fff;
+}
+
+.ndh-about,
+.ndh-spec,
+.ndh-faq{
+  background:#1a1a1f;
+  border:1px solid #2a2a30;
+  border-radius:16px;
+  padding:24px;
+  margin-bottom:20px;
+}
+
+.ndh-hero{
+  background:linear-gradient(135deg,#0f172a,#2563eb,#7c3aed);
+  padding:20px;
+  border-radius:18px;
+  text-align:center;
+  color:#fff;
+}
+
+.ndh-cta{
+  background:linear-gradient(135deg,#2563eb,#7c3aed);
+  padding:40px;
+  border-radius:18px;
+  text-align:center;
+  color:#fff;
+}
+
+@media(max-width:1024px){
+  .ndh-grid{
+    grid-template-columns:repeat(2,1fr);
+  }
+}
+
+@media(max-width:768px){
+  .ndh-grid{
+    grid-template-columns:1fr;
   }
 }
