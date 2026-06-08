@@ -33,6 +33,14 @@ const getProductAssetUrl = (path: string | null | undefined): string | null => {
     return `https://${cleanPath}`;
   }
 
+  if (/^\/?(public\/)?storage\//i.test(cleanPath)) {
+    return getStorageUrl(cleanPath);
+  }
+
+  if (cleanPath.startsWith('/api/storage/')) {
+    return cleanPath;
+  }
+
   if (
     cleanPath.startsWith('http') ||
     cleanPath.startsWith('//') ||
@@ -51,6 +59,17 @@ const isVideoAsset = (path: string | null | undefined): boolean => {
   if (!path) return false;
   const cleanPath = path.split('?')[0].toLowerCase();
   return VIDEO_EXTENSIONS.some((extension) => cleanPath.endsWith(extension));
+};
+
+const isPlaceholderPreviewUrl = (url: string | null | undefined): boolean => {
+  if (!url) return true;
+
+  try {
+    const parsed = new URL(url, 'http://localhost');
+    return parsed.hostname === 'example.com' || parsed.hostname.endsWith('.example.com');
+  } catch {
+    return false;
+  }
 };
 
 const decodeBasicHtmlEntities = (content: string): string => {
@@ -129,6 +148,7 @@ interface Product {
   digital: boolean;
   file_url: string | null;
   preview_url: string | null;
+  video_url?: string | null;
   category: string;
   tags: string[] | string | null;
   thumbnail: string | null;
@@ -224,11 +244,19 @@ export default function ProductDetailPage() {
   const totalImages = images.length;
   const previewUrl = getProductAssetUrl(product?.preview_url);
   const fileUrl = getProductAssetUrl(product?.file_url);
+  const productVideoUrl = getProductAssetUrl(product?.video_url);
   const videoUrl = isVideoAsset(product?.preview_url)
     ? previewUrl
+    : isVideoAsset(product?.video_url)
+      ? productVideoUrl
     : isVideoAsset(product?.file_url)
       ? fileUrl
       : null;
+  const previewLink = !isPlaceholderPreviewUrl(previewUrl)
+    ? previewUrl
+    : !isPlaceholderPreviewUrl(productVideoUrl)
+      ? productVideoUrl
+      : images[0] || null;
   const productDescriptionContent = product?.detailed_description || product?.description || '';
 
   // =========================
@@ -359,9 +387,9 @@ export default function ProductDetailPage() {
   // UI
   // =========================
   return (
-    <div className="min-h-screen bg-[#0f0f12] text-white">
+    <div className="product-detail-page min-h-screen bg-[#0f0f12] text-white">
       {/* HEADER */}
-      <div className="sticky top-0 z-50 bg-[#0f0f12]/95 backdrop-blur border-b border-[#2a2a30]">
+      <div className="sticky top-0 z-50 border-b border-white/10 bg-[#0f0f12]/90 backdrop-blur-xl">
         <div className="mx-auto flex h-16 w-full max-w-[1800px] items-center justify-between px-4 sm:px-6 lg:px-8 2xl:px-10">
           <button
             onClick={() => window.history.back()}
@@ -397,7 +425,7 @@ export default function ProductDetailPage() {
       {/* MAIN */}
       <div className="mx-auto w-full max-w-[1800px] px-4 py-6 sm:px-6 lg:px-8 lg:py-10 2xl:px-10">
         {/* TITLE */}
-        <div className="mb-7 rounded-2xl border border-[#2a2a30]/80 bg-[#141418]/70 px-4 py-5 shadow-2xl shadow-black/20 sm:px-6 lg:px-7">
+        <div className="premium-title-panel mb-8 rounded-2xl border border-white/10 bg-[#141418]/80 px-4 py-5 shadow-2xl shadow-black/25 sm:px-6 lg:px-7">
           <h1 className="max-w-6xl text-2xl font-bold leading-tight tracking-tight text-white sm:text-3xl lg:text-5xl">
             {product.name}
           </h1>
@@ -899,9 +927,9 @@ export default function ProductDetailPage() {
             </div>
 
             {/* PREVIEW SECTION (keep in sidebar) */}
-            {previewUrl && (
+            {previewLink && (
               <a
-                href={previewUrl}
+                href={previewLink}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center justify-center w-full h-14 rounded-2xl border-2 border-purple-500 text-purple-400 font-bold hover:bg-purple-500/10 hover:shadow-lg hover:shadow-purple-500/20 transition-all duration-300 gap-2"
@@ -915,8 +943,8 @@ export default function ProductDetailPage() {
 
         {/* FULL WIDTH DESCRIPTION */}
         {productDescriptionContent && (
-          <section className="mt-12 overflow-hidden rounded-2xl border border-[#2a2a30] bg-[#141418] shadow-2xl shadow-black/25">
-            <div className="border-b border-[#2a2a30] bg-linear-to-r from-[#16161a] via-[#171720] to-[#111115] px-4 py-4 sm:px-6 lg:px-8">
+          <section className="premium-section-panel mt-12 overflow-hidden rounded-2xl border border-white/10 bg-[#141418] shadow-2xl shadow-black/25">
+            <div className="border-b border-white/10 bg-linear-to-r from-[#16161a] via-[#171720] to-[#111115] px-4 py-4 sm:px-6 lg:px-8">
               <div className="flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
                 <div className="max-w-5xl">
                   <div className="mb-2 inline-flex items-center gap-2 rounded-lg border border-[#00d4aa]/25 bg-[#00d4aa]/10 px-3 py-1.5 text-[11px] font-bold uppercase tracking-wide text-[#00d4aa]">
@@ -944,10 +972,10 @@ export default function ProductDetailPage() {
 
             <article>
               <div className="min-w-0 px-4 pb-6 pt-0 sm:px-6 sm:pb-8 lg:px-8 xl:px-10">
-<div
-  className="ck-content product-description ndh-product-content"
-  dangerouslySetInnerHTML={{ __html: renderCkEditorContent(productDescriptionContent) }}
-/>
+                <div
+                  className="ck-content product-description ndh-product-content"
+                  dangerouslySetInnerHTML={{ __html: renderCkEditorContent(productDescriptionContent) }}
+                />
               </div>
             </article>
           </section>
@@ -955,14 +983,14 @@ export default function ProductDetailPage() {
 
         {/* CUSTOMER REVIEWS SECTION */}
         <div className="mt-14">
-          <div className="mb-5">
+          <div className="premium-section-heading mb-5">
             <h2 className="mb-1.5 text-2xl font-bold tracking-tight text-white">Customer Reviews</h2>
             <p className="text-gray-400 text-sm">See what our customers think about this product</p>
           </div>
 
           <div className="grid grid-cols-1 gap-5 lg:grid-cols-3">
             {/* REVIEW SUMMARY */}
-            <div className="flex flex-col items-center justify-center rounded-2xl border border-[#2a2a30] bg-[#16161a] p-6">
+            <div className="premium-stat-card flex flex-col items-center justify-center rounded-2xl border border-white/10 bg-[#16161a] p-6">
               <div className="mb-2 text-5xl font-bold text-[#00d4aa]">4.8</div>
               <div className="flex items-center gap-1 mb-4">
                 {[...Array(5)].map((_, i) => (
@@ -980,7 +1008,7 @@ export default function ProductDetailPage() {
             {/* REVIEWS LIST */}
             <div className="space-y-3.5 lg:col-span-2">
               {/* REVIEW ITEM 1 */}
-              <div className="rounded-xl border border-[#2a2a30] bg-[#16161a] p-4 transition-colors hover:border-[#00d4aa]/30">
+              <div className="premium-list-card rounded-xl border border-white/10 bg-[#16161a] p-4 transition-colors hover:border-[#00d4aa]/30">
                 <div className="flex items-start justify-between mb-3">
                   <div>
                     <div className="font-semibold text-white mb-1">Excellent Quality!</div>
@@ -1002,7 +1030,7 @@ export default function ProductDetailPage() {
               </div>
 
               {/* REVIEW ITEM 2 */}
-              <div className="rounded-xl border border-[#2a2a30] bg-[#16161a] p-4 transition-colors hover:border-[#00d4aa]/30">
+              <div className="premium-list-card rounded-xl border border-white/10 bg-[#16161a] p-4 transition-colors hover:border-[#00d4aa]/30">
                 <div className="flex items-start justify-between mb-3">
                   <div>
                     <div className="font-semibold text-white mb-1">Worth Every Taka</div>
@@ -1029,9 +1057,9 @@ export default function ProductDetailPage() {
           </div>
         </div>
         
-        <div className="mt-14 grid grid-cols-1 gap-4 md:grid-cols-3">
+        <div className="mt-14 grid grid-cols-1 gap-5 md:grid-cols-3">
           {/* FREE SHIPPING */}
-          <div className="group rounded-xl border border-[#2a2a30] bg-[#16161a] p-5 transition-colors hover:border-green-500/30">
+          <div className="premium-feature-card group rounded-xl border border-white/10 bg-[#16161a] p-5 transition-colors hover:border-green-500/30">
             <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-xl border border-green-500/30 bg-green-500/15">
               <svg className="w-6 h-6 text-green-400" fill="currentColor" viewBox="0 0 24 24">
                 <path d="M13 6V3L8 8l5 5v-3c3.31 0 6 2.69 6 6 0 1.01-.25 1.97-.7 2.8l1.46 1.46C19.54 15.03 20 13.57 20 12c0-3.9-3.1-7-7-7zm0 5v2.07C9.67 13.23 7.42 11.17 7.42 8.5c0-1.47.78-2.74 1.93-3.45L13 8z" />
@@ -1042,7 +1070,7 @@ export default function ProductDetailPage() {
           </div>
 
           {/* EASY RETURNS */}
-          <div className="group rounded-xl border border-[#2a2a30] bg-[#16161a] p-5 transition-colors hover:border-blue-500/30">
+          <div className="premium-feature-card group rounded-xl border border-white/10 bg-[#16161a] p-5 transition-colors hover:border-blue-500/30">
             <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-xl border border-blue-500/30 bg-blue-500/15">
               <svg className="w-6 h-6 text-blue-400" fill="currentColor" viewBox="0 0 24 24">
                 <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z" />
@@ -1053,7 +1081,7 @@ export default function ProductDetailPage() {
           </div>
 
           {/* SECURE PAYMENT */}
-          <div className="group rounded-xl border border-[#2a2a30] bg-[#16161a] p-5 transition-colors hover:border-purple-500/30">
+          <div className="premium-feature-card group rounded-xl border border-white/10 bg-[#16161a] p-5 transition-colors hover:border-purple-500/30">
             <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-xl border border-purple-500/30 bg-purple-500/15">
               <svg className="w-6 h-6 text-purple-400" fill="currentColor" viewBox="0 0 24 24">
                 <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z" />
@@ -1066,14 +1094,14 @@ export default function ProductDetailPage() {
 
         {/* FAQ SECTION */}
         <div className="mt-14">
-          <div className="mb-5">
+          <div className="premium-section-heading mb-5">
             <h2 className="mb-1.5 text-2xl font-bold tracking-tight text-white">Frequently Asked Questions</h2>
             <p className="text-gray-400 text-sm">Common questions about this product</p>
           </div>
 
-          <div className="space-y-3 rounded-2xl border border-[#2a2a30] bg-[#16161a] p-5 sm:p-6">
+          <div className="premium-faq-shell space-y-3 rounded-2xl border border-white/10 bg-[#16161a] p-5 sm:p-6">
             {/* FAQ ITEM 1 */}
-            <details className="group border-b border-[#2a2a30] last:border-0 pb-4 last:pb-0 cursor-pointer">
+            <details className="premium-faq-item group border-b border-white/10 last:border-0 pb-4 last:pb-0 cursor-pointer">
               <summary className="flex items-center justify-between font-semibold text-white hover:text-[#00d4aa] transition-colors py-2">
                 <span className="flex items-center gap-3">
                   <span className="w-6 h-6 rounded-full bg-[#00d4aa]/20 border border-[#00d4aa]/40 text-[#00d4aa] text-xs font-bold flex items-center justify-center group-open:bg-[#00d4aa] group-open:text-black transition-all">
@@ -1085,11 +1113,11 @@ export default function ProductDetailPage() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
                 </svg>
               </summary>
-              <p className="text-gray-400 text-sm ml-9 mt-3">We offer a 30-day return window. If you are not satisfied with your purchase, you can return it for a full refund or exchange.</p>
+              <p className="text-gray-400 text-sm ml-9 mt-1 leading-6">We offer a 30-day return window. If you are not satisfied with your purchase, you can return it for a full refund or exchange.</p>
             </details>
 
             {/* FAQ ITEM 2 */}
-            <details className="group border-b border-[#2a2a30] last:border-0 pb-4 last:pb-0 cursor-pointer">
+            <details className="premium-faq-item group border-b border-white/10 last:border-0 pb-4 last:pb-0 cursor-pointer">
               <summary className="flex items-center justify-between font-semibold text-white hover:text-[#00d4aa] transition-colors py-2">
                 <span className="flex items-center gap-3">
                   <span className="w-6 h-6 rounded-full bg-[#00d4aa]/20 border border-[#00d4aa]/40 text-[#00d4aa] text-xs font-bold flex items-center justify-center group-open:bg-[#00d4aa] group-open:text-black transition-all">
@@ -1101,11 +1129,11 @@ export default function ProductDetailPage() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
                 </svg>
               </summary>
-              <p className="text-gray-400 text-sm ml-9 mt-3">Standard shipping typically takes 3-5 business days. Express shipping options are available at checkout for faster delivery.</p>
+              <p className="text-gray-400 text-sm ml-9 mt-1 leading-6">Standard shipping typically takes 3-5 business days. Express shipping options are available at checkout for faster delivery.</p>
             </details>
 
             {/* FAQ ITEM 3 */}
-            <details className="group border-b border-[#2a2a30] last:border-0 pb-4 last:pb-0 cursor-pointer">
+            <details className="premium-faq-item group border-b border-white/10 last:border-0 pb-4 last:pb-0 cursor-pointer">
               <summary className="flex items-center justify-between font-semibold text-white hover:text-[#00d4aa] transition-colors py-2">
                 <span className="flex items-center gap-3">
                   <span className="w-6 h-6 rounded-full bg-[#00d4aa]/20 border border-[#00d4aa]/40 text-[#00d4aa] text-xs font-bold flex items-center justify-center group-open:bg-[#00d4aa] group-open:text-black transition-all">
@@ -1117,11 +1145,11 @@ export default function ProductDetailPage() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
                 </svg>
               </summary>
-              <p className="text-gray-400 text-sm ml-9 mt-3">Yes! All products are 100% authentic and sourced directly from authorized distributors. We guarantee authenticity or your money back.</p>
+              <p className="text-gray-400 text-sm ml-9 mt-1 leading-6">Yes! All products are 100% authentic and sourced directly from authorized distributors. We guarantee authenticity or your money back.</p>
             </details>
 
             {/* FAQ ITEM 4 */}
-            <details className="group border-b border-[#2a2a30] last:border-0 pb-4 last:pb-0 cursor-pointer">
+            <details className="premium-faq-item group border-b border-white/10 last:border-0 pb-4 last:pb-0 cursor-pointer">
               <summary className="flex items-center justify-between font-semibold text-white hover:text-[#00d4aa] transition-colors py-2">
                 <span className="flex items-center gap-3">
                   <span className="w-6 h-6 rounded-full bg-[#00d4aa]/20 border border-[#00d4aa]/40 text-[#00d4aa] text-xs font-bold flex items-center justify-center group-open:bg-[#00d4aa] group-open:text-black transition-all">
@@ -1133,13 +1161,13 @@ export default function ProductDetailPage() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
                 </svg>
               </summary>
-              <p className="text-gray-400 text-sm ml-9 mt-3">Yes! All products come with manufacturer warranty. Details vary by product type. Check the product documentation for specific warranty information.</p>
+              <p className="text-gray-400 text-sm ml-9 mt-1 leading-6">Yes! All products come with manufacturer warranty. Details vary by product type. Check the product documentation for specific warranty information.</p>
             </details>
           </div>
         </div>
         
         <div className="mt-14">
-          <div className="mb-5 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <div className="premium-section-heading mb-5 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div>
               <h2 className="mb-1.5 text-2xl font-bold tracking-tight text-white">You Might Also Like</h2>
               <p className="text-gray-400 text-sm">Discover similar products from our collection</p>
@@ -1160,7 +1188,7 @@ export default function ProductDetailPage() {
                   <Link
                     key={related.id}
                     href={`/products/${related.slug || related.id}`}
-                    className="group flex-shrink-0 w-80 sm:w-96 bg-linear-to-br from-[#16161a] to-[#1a1a1f] border border-[#2a2a30] rounded-2xl overflow-hidden hover:border-[#00d4aa]/60 transition-all duration-300 snap-start shadow-lg hover:shadow-2xl hover:shadow-[#00d4aa]/10"
+                    className="premium-related-card group flex-shrink-0 w-80 sm:w-96 bg-linear-to-br from-[#16161a] to-[#1a1a1f] border border-white/10 rounded-2xl overflow-hidden hover:border-[#00d4aa]/60 transition-all duration-300 snap-start shadow-lg hover:shadow-2xl hover:shadow-[#00d4aa]/10"
                   >
                     {/* IMAGE SECTION */}
                     <div className="relative aspect-video bg-[#0f0f12] overflow-hidden">
@@ -1236,6 +1264,83 @@ export default function ProductDetailPage() {
       </div>
 
       <style jsx global>{`
+        .product-detail-page {
+          background:
+            linear-gradient(180deg, rgba(0, 212, 170, 0.045), transparent 320px),
+            #0f0f12;
+        }
+
+        .premium-title-panel,
+        .premium-section-panel,
+        .premium-stat-card,
+        .premium-list-card,
+        .premium-feature-card,
+        .premium-faq-shell,
+        .premium-related-card {
+          position: relative;
+          background:
+            linear-gradient(145deg, rgba(255, 255, 255, 0.045), rgba(255, 255, 255, 0.01)),
+            #16161a;
+          box-shadow:
+            0 22px 70px rgba(0, 0, 0, 0.28),
+            inset 0 1px 0 rgba(255, 255, 255, 0.05);
+        }
+
+        .premium-title-panel::before,
+        .premium-section-panel::before,
+        .premium-faq-shell::before {
+          content: "";
+          position: absolute;
+          inset: 0 0 auto;
+          height: 1px;
+          background: linear-gradient(90deg, transparent, rgba(0, 212, 170, 0.7), rgba(139, 92, 246, 0.55), transparent);
+          pointer-events: none;
+        }
+
+        .premium-section-heading {
+          padding-left: 1rem;
+          border-left: 3px solid #00d4aa;
+        }
+
+        .premium-list-card,
+        .premium-feature-card,
+        .premium-related-card {
+          transition:
+            border-color 0.25s ease,
+            box-shadow 0.25s ease,
+            transform 0.25s ease;
+        }
+
+        .premium-list-card:hover,
+        .premium-feature-card:hover,
+        .premium-related-card:hover {
+          transform: translateY(-2px);
+          box-shadow:
+            0 24px 80px rgba(0, 0, 0, 0.32),
+            0 0 0 1px rgba(0, 212, 170, 0.1);
+        }
+
+        .premium-stat-card {
+          background:
+            linear-gradient(160deg, rgba(0, 212, 170, 0.12), rgba(139, 92, 246, 0.07) 45%, rgba(22, 22, 26, 0.95)),
+            #16161a;
+        }
+
+        .premium-faq-item summary {
+          list-style: none;
+          border-radius: 0.75rem;
+        }
+
+        .premium-faq-item summary::-webkit-details-marker {
+          display: none;
+        }
+
+        .premium-faq-item[open] summary {
+          background: rgba(0, 212, 170, 0.05);
+          padding-left: 0.5rem;
+          padding-right: 0.5rem;
+        }
+
         .product-spec-card > div:first-child {
           background: linear-gradient(90deg, rgba(0, 212, 170, 0.08), rgba(139, 92, 246, 0.05));
         }

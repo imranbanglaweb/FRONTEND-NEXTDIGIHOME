@@ -82,7 +82,9 @@ export const fetchProducts = (page: number = 1, perPage: number = 12) =>
 export const getStorageUrl = (path: string | null | undefined): string | null => {
   if (!path) return null;
   if (path.startsWith('http')) return path;
-  const cleanPath = path.replace(/^\/+/, '');
+  const cleanPath = path
+    .replace(/^\/+/, '')
+    .replace(/^(public\/)?storage\/+/i, '');
   // Use proxy endpoint for images to avoid CORS issues
   return `/api/storage/${cleanPath}`;
 };
