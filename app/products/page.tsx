@@ -452,7 +452,6 @@ function ProductsPageContent() {
   }, [products, selectedCategory, debouncedSearchQuery, priceRange, sortBy, sortOrder, productMatchesCategory, getProductCategoryLabel]);
 
   const featuredProducts = filteredProducts.filter(p => p.featured);
-  const regularProducts = filteredProducts.filter(p => !p.featured);
 
   if (loading && products.length === 0) {
     return (
@@ -763,13 +762,13 @@ function ProductsPageContent() {
         )}
 
         {/* All Products */}
-        {regularProducts.length > 0 && (
+        {filteredProducts.length > 0 && (
           <section>
             <h3 className="text-lg font-semibold text-[#fafafa] mb-6">
               All Products
             </h3>
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-4">
-{regularProducts.map((product) => (
+{filteredProducts.map((product) => (
                  <Link
                    key={product.id}
                    href={`/products/${product.id}`}
