@@ -69,6 +69,36 @@ const unwrapArray = <T,>(data: unknown): T[] => {
   return [];
 };
 
+const PRODUCTS_PER_PAGE = 100;
+
+const readNumber = (value: unknown, fallback: number): number => {
+  const numberValue = Number(value);
+  return Number.isFinite(numberValue) ? numberValue : fallback;
+};
+
+const getPaginationMeta = (data: unknown, fallbackPage: number) => {
+  const root = data && typeof data === 'object' ? data as Record<string, unknown> : {};
+  const nested = root.data && typeof root.data === 'object' && !Array.isArray(root.data)
+    ? root.data as Record<string, unknown>
+    : {};
+  const meta = root.meta && typeof root.meta === 'object'
+    ? root.meta as Record<string, unknown>
+    : nested.meta && typeof nested.meta === 'object'
+      ? nested.meta as Record<string, unknown>
+      : {};
+
+  const currentPage = readNumber(
+    root.current_page ?? nested.current_page ?? meta.current_page,
+    fallbackPage
+  );
+  const lastPage = readNumber(
+    root.last_page ?? nested.last_page ?? meta.last_page,
+    currentPage
+  );
+
+  return { currentPage, lastPage };
+};
+
 function ProductsLoading() {
   return (
     <div className="min-h-screen bg-[#0f0f12] py-12">
@@ -95,8 +125,6 @@ function ProductsPageContent() {
   const [apiCategories, setApiCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-  const [page, setPage] = useState<number>(1);
-  const [hasMore, setHasMore] = useState<boolean>(true);
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [debouncedSearchQuery, setDebouncedSearchQuery] = useState<string>('');
   const [sortBy, setSortBy] = useState<string>('featured');
@@ -114,16 +142,29 @@ function ProductsPageContent() {
 
     const loadProducts = async () => {
       try {
-        const data = await apiFetch(`products?page=${page}&per_page=100`);
-        if (cancelled) return;
+        setLoading(true);
+        setError(null);
 
-        if (page === 1) {
-          setProducts(data.data);
-        } else {
-          setProducts(prev => [...prev, ...data.data]);
+        let nextPage = 1;
+        const allProducts: Product[] = [];
+
+        while (!cancelled) {
+          const data = await apiFetch(`products?page=${nextPage}&per_page=${PRODUCTS_PER_PAGE}`);
+          const pageProducts = unwrapArray<Product>(data);
+          const { currentPage, lastPage } = getPaginationMeta(data, nextPage);
+
+          allProducts.push(...pageProducts);
+          setProducts([...allProducts]);
+
+          if (pageProducts.length === 0 || currentPage >= lastPage) {
+            break;
+          }
+
+          nextPage = currentPage + 1;
         }
 
-        setHasMore(data.current_page < data.last_page);
+        if (cancelled) return;
+
         setLoading(false);
       } catch (err) {
         if (cancelled) return;
@@ -137,7 +178,7 @@ function ProductsPageContent() {
     return () => {
       cancelled = true;
     };
-  }, [page]);
+  }, []);
 
   useEffect(() => {
     const loadCategories = async () => {
@@ -174,10 +215,6 @@ function ProductsPageContent() {
 
     return () => clearTimeout(timer);
   }, [searchQuery]);
-
-  const loadMore = () => {
-    setPage(prev => prev + 1);
-  };
 
   const toggleWishlist = (productId: number) => {
     setWishlist(prev => {
@@ -619,7 +656,7 @@ function ProductsPageContent() {
               Featured Products
             </h3>
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-4">
-{featuredProducts.slice(0, 6).map((product) => (
+{featuredProducts.map((product) => (
                  <Link
                    key={product.id}
                    href={`/products/${product.id}`}
@@ -847,20 +884,12 @@ function ProductsPageContent() {
           </div>
         )}
 
-        {/* Load More */}
-        {hasMore && (
+        {loading && products.length > 0 && (
           <div className="text-center py-12">
-            <button
-              onClick={loadMore}
-              disabled={loading}
-              className="group relative px-8 py-4 bg-linear-to-r from-[#00d4aa] to-[#8b5cf6] text-[#0f0f12] font-bold rounded-xl overflow-hidden transition-all duration-300 hover:scale-105"
-            >
-              <span className="absolute inset-0 bg-white/20 opacity-0 group-hover:opacity-100 transition-opacity"></span>
-              <span className="relative flex items-center gap-2">
-                {loading ? 'Loading...' : 'Load More Products'}
-                <ArrowDownTrayIcon className="w-4 h-4 transition-transform group-hover:translate-y-1" />
-              </span>
-            </button>
+            <div className="inline-flex items-center gap-2 px-5 py-3 rounded-xl border border-[#2a2a30] bg-[#1a1a1f] text-[#737373]">
+              <ArrowPathIcon className="w-4 h-4 animate-spin text-[#00d4aa]" />
+              Loading more products...
+            </div>
           </div>
         )}
       </div>
