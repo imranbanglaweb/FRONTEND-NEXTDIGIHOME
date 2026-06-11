@@ -68,9 +68,18 @@ interface Product {
   price: number;
   compare_price?: number;
   category?: string;
+  category_id?: number | string | null;
+  category_name?: string | null;
+  category_slug?: string | null;
   thumbnail?: string;
   featured?: boolean;
   active?: boolean;
+}
+
+interface Category {
+  id: number | string;
+  category_name: string;
+  slug: string;
 }
 
 interface HomeContent {
@@ -79,13 +88,22 @@ interface HomeContent {
   features: Feature[];
 }
 
+const normalizeCategory = (value: unknown): string => {
+  return String(value ?? '')
+    .trim()
+    .toLowerCase()
+    .replace(/&/g, 'and')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+};
+
 export default function Home() {
   const pathname = usePathname();
   const [currentSlide, setCurrentSlide] = useState(0);
   const [homeContent, setHomeContent] = useState<HomeContent | null>(null);
   const [loading, setLoading] = useState(true);
   const [allProducts, setAllProducts] = useState<Product[]>([]);
-  const [allCategories, setAllCategories] = useState<any[]>([]);
+  const [allCategories, setAllCategories] = useState<Category[]>([]);
   const [loadingProducts, setLoadingProducts] = useState(true);
   const [loadingCategories, setLoadingCategories] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
@@ -249,11 +267,43 @@ export default function Home() {
   const stats = homeContent?.stats || fallbackStats;
   const features = homeContent?.features || fallbackFeatures;
 
-  const availableCategories = allCategories.map(c => c.slug) as string[];
-  const categories = ['all', ...availableCategories];
+  const getProductCategoryLabel = (product: Product) => {
+    return product.category_name || product.category || '';
+  };
+
+  const productMatchesCategory = (product: Product, selected: string) => {
+    if (selected === 'all') return true;
+
+    const productCategory = getProductCategoryLabel(product);
+    const productCategoryId = product.category_id == null ? '' : String(product.category_id);
+    const productCategorySlug = product.category_slug || normalizeCategory(productCategory);
+    const selectedNormalized = normalizeCategory(selected);
+    const matchedApiCategory = allCategories.find((category) => {
+      const categoryId = String(category.id);
+      const categorySlug = category.slug || normalizeCategory(category.category_name);
+      const categoryName = normalizeCategory(category.category_name);
+
+      return (
+        categoryId === productCategoryId ||
+        categorySlug === productCategorySlug ||
+        categoryName === normalizeCategory(productCategory)
+      );
+    });
+
+    const acceptedValues = [
+      productCategoryId,
+      productCategorySlug,
+      normalizeCategory(productCategory),
+      matchedApiCategory ? String(matchedApiCategory.id) : '',
+      matchedApiCategory?.slug || '',
+      matchedApiCategory ? normalizeCategory(matchedApiCategory.category_name) : '',
+    ].filter(Boolean);
+
+    return acceptedValues.includes(selected) || acceptedValues.includes(selectedNormalized);
+  };
 
   const filteredProducts = allProducts.filter(product => {
-    const matchesCategory = selectedCategory === 'all' || (product.category?.toLowerCase() === selectedCategory.toLowerCase());
+    const matchesCategory = productMatchesCategory(product, selectedCategory);
     const matchesSearch = product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
                           (product.description?.toLowerCase().includes(searchQuery.toLowerCase()) ?? false);
     return matchesCategory && matchesSearch;

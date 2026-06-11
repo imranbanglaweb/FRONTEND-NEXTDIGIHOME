@@ -579,7 +579,7 @@ const [settings, setSettings] = useState<{
                 {categories.slice(0, 8).map((category) => (
                   <li key={category.id}>
                     <Link
-                      href={`/products?category=${category.id}`}
+                      href={`/products?category=${category.slug || category.id}`}
                       className="flex items-center gap-2 text-[#737373] hover:text-[#00d4aa] transition-all duration-200 hover:translate-x-0.5"
                     >
                       <span className="text-base">{categoryIconMap[category.slug] || '📌'}</span>

@@ -1,7 +1,8 @@
 'use client';
 
-import { useState, useEffect, useMemo } from 'react';
+import { Suspense, useCallback, useState, useEffect, useMemo } from 'react';
 import Link from 'next/link';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { MagnifyingGlassIcon, ArrowDownTrayIcon, StarIcon, ArrowPathIcon, AdjustmentsHorizontalIcon, HeartIcon, EyeIcon, XMarkIcon, BarsArrowDownIcon, BarsArrowUpIcon } from "@heroicons/react/24/outline";
 import { HeartIcon as HeartIconSolid } from "@heroicons/react/24/solid";
 import Swal from 'sweetalert2';
@@ -16,7 +17,16 @@ interface Product {
   compare_price: number | null;
   thumbnail: string | null;
   featured: boolean;
-  category: string;
+  category: string | null;
+  category_id?: number | string | null;
+  category_name?: string | null;
+  category_slug?: string | null;
+}
+
+interface Category {
+  id: number | string;
+  category_name: string;
+  slug: string;
 }
 
 // Category Icons Mapping
@@ -37,15 +47,58 @@ const categoryIconMap: Record<string, string> = {
   'all': '⭐'
 };
 
+const normalizeCategory = (value: unknown): string => {
+  return String(value ?? '')
+    .trim()
+    .toLowerCase()
+    .replace(/&/g, 'and')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+};
+
+const unwrapArray = <T,>(data: unknown): T[] => {
+  if (Array.isArray(data)) return data as T[];
+  if (data && typeof data === 'object') {
+    const first = (data as { data?: unknown }).data;
+    if (Array.isArray(first)) return first as T[];
+    if (first && typeof first === 'object') {
+      const second = (first as { data?: unknown }).data;
+      if (Array.isArray(second)) return second as T[];
+    }
+  }
+  return [];
+};
+
+function ProductsLoading() {
+  return (
+    <div className="min-h-screen bg-[#0f0f12] py-12">
+      <div className="flex flex-col items-center justify-center py-20">
+        <div className="w-16 h-16 border-4 border-[#00d4aa] border-t-transparent rounded-full animate-spin"></div>
+        <p className="mt-4 text-[#737373]">Loading premium products...</p>
+      </div>
+    </div>
+  );
+}
+
 export default function ProductsPage() {
+  return (
+    <Suspense fallback={<ProductsLoading />}>
+      <ProductsPageContent />
+    </Suspense>
+  );
+}
+
+function ProductsPageContent() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
   const [products, setProducts] = useState<Product[]>([]);
+  const [apiCategories, setApiCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [page, setPage] = useState<number>(1);
   const [hasMore, setHasMore] = useState<boolean>(true);
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [debouncedSearchQuery, setDebouncedSearchQuery] = useState<string>('');
-  const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [sortBy, setSortBy] = useState<string>('featured');
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
   const [priceRange, setPriceRange] = useState<{min: number, max: number}>({min: 0, max: 1000});
@@ -85,6 +138,33 @@ export default function ProductsPage() {
       cancelled = true;
     };
   }, [page]);
+
+  useEffect(() => {
+    const loadCategories = async () => {
+      try {
+        const data = await apiFetch('categories', { silent: true });
+        setApiCategories(unwrapArray<Category>(data));
+      } catch (err) {
+        console.error('Failed to fetch categories:', err);
+      }
+    };
+
+    loadCategories();
+  }, []);
+
+  const selectedCategory = searchParams.get('category') || 'all';
+
+  const setSelectedCategory = useCallback((category: string) => {
+    const params = new URLSearchParams(searchParams.toString());
+    if (category === 'all') {
+      params.delete('category');
+    } else {
+      params.set('category', category);
+    }
+
+    const queryString = params.toString();
+    router.replace(queryString ? `/products?${queryString}` : '/products', { scroll: false });
+  }, [router, searchParams]);
 
   // Debounced search
   useEffect(() => {
@@ -232,12 +312,80 @@ export default function ProductsPage() {
     }
   };
 
-  const availableCategories = [...new Set(products.map(p => p.category).filter(Boolean))];
-  const categories = ['all', ...availableCategories];
+  const categoryOptions = useMemo(() => {
+    const optionMap = new Map<string, { key: string; label: string; slug: string }>();
+
+    apiCategories.forEach((category) => {
+      const slug = category.slug || normalizeCategory(category.category_name);
+      if (!slug) return;
+      optionMap.set(slug, {
+        key: slug,
+        label: category.category_name,
+        slug,
+      });
+    });
+
+    products.forEach((product) => {
+      const label = product.category_name || product.category;
+      const slug = product.category_slug || normalizeCategory(label);
+      if (!label || !slug || optionMap.has(slug)) return;
+      optionMap.set(slug, {
+        key: slug,
+        label,
+        slug,
+      });
+    });
+
+    return [
+      { key: 'all', label: 'All', slug: 'all' },
+      ...Array.from(optionMap.values()),
+    ];
+  }, [apiCategories, products]);
+
+  const getProductCategoryLabel = useCallback((product: Product) => {
+    return product.category_name || product.category || '';
+  }, []);
+
+  const productMatchesCategory = useCallback((product: Product, selected: string) => {
+    if (selected === 'all') return true;
+
+    const productCategory = getProductCategoryLabel(product);
+    const productCategoryId = product.category_id == null ? '' : String(product.category_id);
+    const productCategorySlug = product.category_slug || normalizeCategory(productCategory);
+    const selectedNormalized = normalizeCategory(selected);
+
+    const matchedApiCategory = apiCategories.find((category) => {
+      const categoryId = String(category.id);
+      const categorySlug = category.slug || normalizeCategory(category.category_name);
+      const categoryName = normalizeCategory(category.category_name);
+
+      return (
+        categoryId === productCategoryId ||
+        categorySlug === productCategorySlug ||
+        categoryName === normalizeCategory(productCategory)
+      );
+    });
+
+    const acceptedValues = [
+      productCategoryId,
+      productCategorySlug,
+      normalizeCategory(productCategory),
+      matchedApiCategory ? String(matchedApiCategory.id) : '',
+      matchedApiCategory?.slug || '',
+      matchedApiCategory ? normalizeCategory(matchedApiCategory.category_name) : '',
+    ].filter(Boolean);
+
+    return acceptedValues.includes(selected) || acceptedValues.includes(selectedNormalized);
+  }, [apiCategories, getProductCategoryLabel]);
+
+  const selectedCategoryLabel =
+    selectedCategory === 'all'
+      ? 'Products'
+      : categoryOptions.find((category) => category.key === selectedCategory)?.label || selectedCategory;
 
   const filteredProducts = useMemo(() => {
     return products.filter(product => {
-      const matchesCategory = selectedCategory === 'all' || product.category.toLowerCase() === selectedCategory.toLowerCase();
+      const matchesCategory = productMatchesCategory(product, selectedCategory);
       const matchesSearch = product.name.toLowerCase().includes(debouncedSearchQuery.toLowerCase()) ||
                             product.description?.toLowerCase().includes(debouncedSearchQuery.toLowerCase());
       const matchesPrice = product.price >= priceRange.min && product.price <= priceRange.max;
@@ -253,7 +401,7 @@ export default function ProductsPage() {
           comparison = a.price - b.price;
           break;
         case 'category':
-          comparison = a.category.localeCompare(b.category);
+          comparison = getProductCategoryLabel(a).localeCompare(getProductCategoryLabel(b));
           break;
         case 'featured':
           comparison = (b.featured ? 1 : 0) - (a.featured ? 1 : 0);
@@ -264,7 +412,7 @@ export default function ProductsPage() {
 
       return sortOrder === 'asc' ? comparison : -comparison;
     });
-  }, [products, selectedCategory, debouncedSearchQuery, priceRange, sortBy, sortOrder]);
+  }, [products, selectedCategory, debouncedSearchQuery, priceRange, sortBy, sortOrder, productMatchesCategory, getProductCategoryLabel]);
 
   const featuredProducts = filteredProducts.filter(p => p.featured);
   const regularProducts = filteredProducts.filter(p => !p.featured);
@@ -417,9 +565,9 @@ export default function ProductsPage() {
                     onChange={(e) => setSelectedCategory(e.target.value)}
                     className="w-full bg-[#0f0f12] border border-[#2a2a30] rounded px-3 py-2 text-[#fafafa] text-sm focus:outline-none focus:border-[#00d4aa] appearance-none"
                   >
-                    {categories.map((cat) => (
-                      <option key={cat} value={cat}>
-                        {categoryIconMap[cat.toLowerCase()] || '📌'} {cat.charAt(0).toUpperCase() + cat.slice(1)}
+                    {categoryOptions.map((cat) => (
+                      <option key={cat.key} value={cat.key}>
+                        {categoryIconMap[cat.slug.toLowerCase()] || '📌'} {cat.label}
                       </option>
                     ))}
                   </select>
@@ -452,10 +600,10 @@ export default function ProductsPage() {
         <div className="flex items-center justify-between mb-8">
           <div>
             <h2 className="text-2xl font-bold text-[#fafafa]">
-              {filteredProducts.length} {selectedCategory === 'all' ? 'Products' : `${selectedCategory.charAt(0).toUpperCase() + selectedCategory.slice(1)}`}
+              {filteredProducts.length} {selectedCategoryLabel}
             </h2>
             <p className="text-[#737373]">
-              {featuredProducts.length} featured {selectedCategory === 'all' ? '' : selectedCategory}
+              {featuredProducts.length} featured {selectedCategory === 'all' ? '' : selectedCategoryLabel}
             </p>
           </div>
           <div className="flex items-center gap-2 text-sm text-[#737373]">
