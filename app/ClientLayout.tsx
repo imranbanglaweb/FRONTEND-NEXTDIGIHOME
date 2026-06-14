@@ -210,9 +210,9 @@ const [settings, setSettings] = useState<{
       {/* Animated Background */}
       <div className="fixed inset-0 -z-10 overflow-hidden">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_50%_50%,rgba(0,212,170,0.08)_0%,rgba(8,8,8,0)_50%)]" />
-        <div className="absolute -top-40 -right-40 w-96 h-96 bg-[#8b5cf6] rounded-full mix-blend-screen filter blur-[120px] opacity-20 animate-float" style={{ animationDelay: '0s' }} />
-        <div className="absolute top-1/2 left-1/3 w-96 h-96 bg-[#00d4aa] rounded-full mix-blend-screen filter blur-[120px] opacity-15 animate-float" style={{ animationDelay: '2s' }} />
-        <div className="absolute -bottom-40 -left-40 w-96 h-96 bg-[#8b5cf6] rounded-full mix-blend-screen filter blur-[120px] opacity-20 animate-float" style={{ animationDelay: '4s' }} />
+        <div className="absolute -top-24 -right-24 h-56 w-56 rounded-full bg-[#8b5cf6] opacity-15 mix-blend-screen blur-[90px] filter sm:-top-40 sm:-right-40 sm:h-96 sm:w-96 sm:opacity-20 sm:blur-[120px] animate-float" style={{ animationDelay: '0s' }} />
+        <div className="absolute top-1/2 left-1/4 h-56 w-56 rounded-full bg-[#00d4aa] opacity-10 mix-blend-screen blur-[90px] filter sm:left-1/3 sm:h-96 sm:w-96 sm:opacity-15 sm:blur-[120px] animate-float" style={{ animationDelay: '2s' }} />
+        <div className="absolute -bottom-24 -left-24 h-56 w-56 rounded-full bg-[#8b5cf6] opacity-15 mix-blend-screen blur-[90px] filter sm:-bottom-40 sm:-left-40 sm:h-96 sm:w-96 sm:opacity-20 sm:blur-[120px] animate-float" style={{ animationDelay: '4s' }} />
         <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(42,42,48,0.3)_1px,transparent_1px),linear-gradient(to_bottom,rgba(42,42,48,0.3)_1px,transparent_1px)] bg-[size:60px_60px]" />
       </div>
 
@@ -221,10 +221,10 @@ const [settings, setSettings] = useState<{
             ? 'bg-[#0f0f12]/95 backdrop-blur-xl shadow-lg border-[#2a2a30]'
             : 'bg-transparent border-transparent'
         }`}>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center py-2 md:py-1 gap-4">
-            <Link href="/" className="flex items-center group flex-shrink-0 gap-3">
-              <div className="w-14 h-14 md:w-20 md:h-20 rounded-2xl flex items-center justify-center group-hover:scale-105 transition-transform duration-300 overflow-hidden border border-[#2a2a30]">
+        <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center py-2 md:py-1 gap-2 lg:gap-4">
+            <Link href="/" className="flex min-w-0 items-center group flex-shrink-0 gap-2 sm:gap-3">
+              <div className="h-12 w-12 flex-shrink-0 rounded-xl sm:h-14 sm:w-14 md:h-16 md:w-16 lg:h-20 lg:w-20 lg:rounded-2xl flex items-center justify-center group-hover:scale-105 transition-transform duration-300 overflow-hidden border border-[#2a2a30]">
                 {isHydrated && (() => {
                   // Use site_logo, or fall back to admin_logo if site_logo is not set
                   const logoToUse = settings?.admin_logo || settings?.admin_logo;
@@ -247,7 +247,7 @@ const [settings, setSettings] = useState<{
                 })()}
 
                 <svg 
-                  className="w-9 h-9 text-[#00d4aa]" 
+                  className="h-7 w-7 text-[#00d4aa] sm:h-9 sm:w-9" 
                   fill="none" 
                   stroke="currentColor" 
                   viewBox="0 0 24 24"
@@ -257,37 +257,37 @@ const [settings, setSettings] = useState<{
               </div>
 
               {/* Site Title - Now shows from API */}
-              <div className="hidden sm:block">
-                <span className="text-xl font-bold gradient-text tracking-tight">
+              <div className="hidden min-w-0 sm:block">
+                <span className="block max-w-[11rem] truncate text-lg font-bold gradient-text tracking-tight lg:max-w-none lg:text-xl">
                   {settings?.admin_title || 'Next Digi Home'}
                 </span>
               </div>
             </Link>
 
             {/* Desktop Navigation */}
-            <nav className="hidden md:flex items-center space-x-1">
-              <Link href="/" className={`px-4 py-2 rounded-lg transition-all duration-200 text-sm font-medium ${pathname === '/' ? 'text-[#00d4aa] bg-[#2a2a30]/50' : 'text-[#fafafa] hover:text-[#00d4aa] hover:bg-[#2a2a30]/50'}`}>
+            <nav className="hidden md:flex min-w-0 items-center gap-0.5 lg:gap-1">
+              <Link href="/" className={`px-2.5 py-2 lg:px-4 rounded-lg transition-all duration-200 text-sm font-medium ${pathname === '/' ? 'text-[#00d4aa] bg-[#2a2a30]/50' : 'text-[#fafafa] hover:text-[#00d4aa] hover:bg-[#2a2a30]/50'}`}>
                 Home
               </Link>
-              <Link href="/products" className={`px-4 py-2 rounded-lg transition-all duration-200 text-sm font-medium ${pathname.startsWith('/products') ? 'text-[#00d4aa] bg-[#2a2a30]/50' : 'text-[#fafafa] hover:text-[#00d4aa] hover:bg-[#2a2a30]/50'}`}>
+              <Link href="/products" className={`px-2.5 py-2 lg:px-4 rounded-lg transition-all duration-200 text-sm font-medium ${pathname.startsWith('/products') ? 'text-[#00d4aa] bg-[#2a2a30]/50' : 'text-[#fafafa] hover:text-[#00d4aa] hover:bg-[#2a2a30]/50'}`}>
                 Products
               </Link>
-              <Link href="/about" className={`px-4 py-2 rounded-lg transition-all duration-200 text-sm font-medium ${pathname === '/about' ? 'text-[#00d4aa] bg-[#2a2a30]/50' : 'text-[#fafafa] hover:text-[#00d4aa] hover:bg-[#2a2a30]/50'}`}>
+              <Link href="/about" className={`px-2.5 py-2 lg:px-4 rounded-lg transition-all duration-200 text-sm font-medium ${pathname === '/about' ? 'text-[#00d4aa] bg-[#2a2a30]/50' : 'text-[#fafafa] hover:text-[#00d4aa] hover:bg-[#2a2a30]/50'}`}>
                 About
               </Link>
-              <Link href="/blog" className={`px-4 py-2 rounded-lg transition-all duration-200 text-sm font-medium ${pathname.startsWith('/blog') ? 'text-[#00d4aa] bg-[#2a2a30]/50' : 'text-[#fafafa] hover:text-[#00d4aa] hover:bg-[#2a2a30]/50'}`}>
+              <Link href="/blog" className={`px-2.5 py-2 lg:px-4 rounded-lg transition-all duration-200 text-sm font-medium ${pathname.startsWith('/blog') ? 'text-[#00d4aa] bg-[#2a2a30]/50' : 'text-[#fafafa] hover:text-[#00d4aa] hover:bg-[#2a2a30]/50'}`}>
                 Blog
               </Link>
-              <Link href="/services" className={`px-4 py-2 rounded-lg transition-all duration-200 text-sm font-medium ${pathname === '/services' ? 'text-[#00d4aa] bg-[#2a2a30]/50' : 'text-[#fafafa] hover:text-[#00d4aa] hover:bg-[#2a2a30]/50'}`}>
+              <Link href="/services" className={`px-2.5 py-2 lg:px-4 rounded-lg transition-all duration-200 text-sm font-medium ${pathname === '/services' ? 'text-[#00d4aa] bg-[#2a2a30]/50' : 'text-[#fafafa] hover:text-[#00d4aa] hover:bg-[#2a2a30]/50'}`}>
                 Services
               </Link>
-              <Link href="/contact" className={`px-4 py-2 rounded-lg transition-all duration-200 text-sm font-medium ${pathname === '/contact' ? 'text-[#00d4aa] bg-[#2a2a30]/50' : 'text-[#fafafa] hover:text-[#00d4aa] hover:bg-[#2a2a30]/50'}`}>
+              <Link href="/contact" className={`px-2.5 py-2 lg:px-4 rounded-lg transition-all duration-200 text-sm font-medium ${pathname === '/contact' ? 'text-[#00d4aa] bg-[#2a2a30]/50' : 'text-[#fafafa] hover:text-[#00d4aa] hover:bg-[#2a2a30]/50'}`}>
                 Contact
               </Link>
             </nav>
 
             {/* Desktop Actions */}
-            <div className="hidden md:flex items-center space-x-3">
+            <div className="hidden md:flex items-center gap-1 lg:gap-3">
               <Link href="/cart" className="relative p-2 text-[#fafafa] hover:text-[#00d4aa] transition-colors" title="Shopping Cart">
                 <ShoppingCartIcon className="w-6 h-6" />
                 {cartCount > 0 && (
@@ -353,8 +353,8 @@ const [settings, setSettings] = useState<{
 
         {/* Mobile Menu */}
         {mobileMenuOpen && (
-          <div className="fixed inset-0 z-40 bg-[#0f0f12]/95 backdrop-blur-xl md:hidden">
-            <div className="pt-24 pb-6 px-4 space-y-2">
+          <div className="fixed inset-0 z-40 overflow-y-auto bg-[#0f0f12]/95 backdrop-blur-xl md:hidden">
+            <div className="pt-20 pb-8 px-4 space-y-2">
               <Link
                 href="/"
                 onClick={() => setMobileMenuOpen(false)}
@@ -446,7 +446,7 @@ const [settings, setSettings] = useState<{
           </div>
         )}
 
-        <main className="relative z-10 flex-1 pt-28">
+        <main className="relative z-10 flex-1 pt-20 sm:pt-24 lg:pt-28">
         {children}
       </main>
 
@@ -455,10 +455,10 @@ const [settings, setSettings] = useState<{
         href="https://wa.me/1234567890?text=Hello%20Next%20Digi%20Home%20Support"
         target="_blank"
         rel="noopener noreferrer"
-        className="fixed bottom-8 left-8 z-40 w-16 h-16 rounded-full bg-linear-to-br from-[#25d366] to-[#128c7e] shadow-lg hover:shadow-2xl transition-all duration-300 hover:scale-110 flex items-center justify-center text-white text-2xl group animate-float border-3 border-white"
+        className="fixed bottom-5 left-4 z-40 flex h-12 w-12 items-center justify-center rounded-full border-2 border-white bg-linear-to-br from-[#25d366] to-[#128c7e] text-xl text-white shadow-lg transition-all duration-300 hover:scale-110 hover:shadow-2xl sm:bottom-8 sm:left-8 sm:h-16 sm:w-16 sm:text-2xl sm:border-3 group animate-float"
         title="Contact us on WhatsApp"
       >
-        <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 24 24">
+        <svg className="h-6 w-6 sm:h-8 sm:w-8" fill="currentColor" viewBox="0 0 24 24">
           <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.272-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.67-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.076 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421-7.403h-.004a9.87 9.87 0 00-4.782 1.176l-.002 1.146c0 4.995 4.027 9.06 9.03 9.06h.013c1.104 0 2.183-.153 3.22-.45l1.146.002h-.004c.573 0 1.088-.227 1.513-.652.425-.425.652-.94.652-1.513v-.146a9.87 9.87 0 00-9.077-8.723z"/>
         </svg>
         <div className="absolute -top-12 left-0 bg-linear-to-br from-[#25d366] to-[#128c7e] text-white px-3 py-2 rounded-lg text-xs font-semibold whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
@@ -641,18 +641,18 @@ const [settings, setSettings] = useState<{
 
               <div className="pt-4 border-t border-[#2a2a30]">
                 <p className="text-xs text-[#737373] mb-3 tracking-wider">SUBSCRIBE FOR UPDATES</p>
-                <div className="flex">
+                <div className="flex min-w-0 flex-col gap-2 sm:flex-row sm:gap-0">
                   <input 
                     type="email" 
                     placeholder="Your email address" 
-                    className="flex-1 bg-[#0f0f12] border border-[#2a2a30] text-sm px-4 py-2.5 rounded-l-2xl focus:outline-none focus:border-[#00d4aa] transition-colors placeholder:text-[#555]" 
+                    className="min-w-0 flex-1 rounded-xl border border-[#2a2a30] bg-[#0f0f12] px-4 py-2.5 text-sm text-[#fafafa] placeholder:text-[#555] transition-colors focus:outline-none focus:border-[#00d4aa] sm:rounded-l-2xl sm:rounded-r-none" 
                   />
                   <button 
                     onClick={() => {
                       setSubscribed(true);
                       setTimeout(() => setSubscribed(false), 2400);
                     }}
-                    className="bg-gradient-to-r from-[#00d4aa] to-[#8b5cf6] text-[#0f0f12] text-sm font-semibold px-5 py-2.5 rounded-r-2xl hover:brightness-110 active:scale-[0.985] transition-all min-w-[78px]"
+                    className="min-w-[78px] rounded-xl bg-gradient-to-r from-[#00d4aa] to-[#8b5cf6] px-5 py-2.5 text-sm font-semibold text-[#0f0f12] transition-all hover:brightness-110 active:scale-[0.985] sm:rounded-l-none sm:rounded-r-2xl"
                   >
                     {subscribed ? "Thank you!" : "Join"}
                   </button>
@@ -666,7 +666,7 @@ const [settings, setSettings] = useState<{
           <div className="mt-12 pt-8 border-t border-[#2a2a30]">
             <div className="flex flex-col items-center">
               <div className="text-center mb-5">
-                <span className="text-xs tracking-[3px] text-[#737373] font-medium">SECURE CHECKOUT • INSTANT DELIVERY</span>
+                <span className="text-xs tracking-[1.5px] sm:tracking-[3px] text-[#737373] font-medium">SECURE CHECKOUT • INSTANT DELIVERY</span>
               </div>
               <div className="flex flex-wrap items-center justify-center gap-3">
                 {[
@@ -675,7 +675,7 @@ const [settings, setSettings] = useState<{
                   { src: 'images/payment/nogod.png', label: 'Nagad', color: '#00A651' },
                   { src: 'images/payment/prime-nabk.png', label: 'Prime Bank', color: '#003087' },
                 ].map((pm, i) => (
-                  <div key={i} className="group relative px-4 py-2 bg-[#1a1a1f] border border-[#2a2a30] rounded-2xl flex items-center gap-2 hover:border-[#00d4aa]/40 hover:bg-[#00d4aa]/5 transition-all">
+                  <div key={i} className="group relative flex min-w-[7rem] items-center justify-center gap-2 rounded-xl border border-[#2a2a30] bg-[#1a1a1f] px-3 py-2 transition-all hover:border-[#00d4aa]/40 hover:bg-[#00d4aa]/5 sm:rounded-2xl sm:px-4">
                     <img 
                       src={getPublicUrl(pm.src)} 
                       alt={pm.label} 
@@ -692,7 +692,7 @@ const [settings, setSettings] = useState<{
                   </div>
                 ))}
               </div>
-              <p className="text-[10px] text-[#555] mt-4 tracking-wider">256-BIT SSL • ALL TRANSACTIONS SECURE &amp; ENCRYPTED</p>
+              <p className="max-w-full text-center text-[10px] text-[#555] mt-4 tracking-wide sm:tracking-wider">256-BIT SSL • ALL TRANSACTIONS SECURE &amp; ENCRYPTED</p>
             </div>
           </div>
 

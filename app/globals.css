@@ -68,6 +68,51 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: 'Inter', sans-serif;
+  min-width: 320px;
+  overflow-x: clip;
+}
+
+html {
+  overflow-x: clip;
+  scroll-padding-top: 96px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+img,
+svg,
+video,
+canvas,
+iframe {
+  max-width: 100%;
+}
+
+a,
+button,
+input,
+select,
+textarea {
+  min-width: 0;
+}
+
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+li,
+span {
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 640px) {
+  .glass-card {
+    backdrop-filter: blur(14px);
+  }
 }
 
 .gradient-text {

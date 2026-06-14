@@ -51,10 +51,10 @@ export default function BlogPage() {
     <>
       <StructuredData data={breadcrumbSchema} />
       <div className="min-h-screen bg-[#0f0f12]">
-        <div className="relative py-24">
+        <div className="relative py-14 sm:py-20 lg:py-24">
           <div className="absolute inset-0 bg-gradient-to-r from-[#00d4aa]/10 via-transparent to-[#8b5cf6]/10" />
           <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h1 className="text-5xl md:text-6xl font-bold mb-6 gradient-text text-center">
+            <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-6 gradient-text text-center">
               Blog
             </h1>
             <p className="text-xl text-[#737373] max-w-3xl mx-auto text-center mb-16">

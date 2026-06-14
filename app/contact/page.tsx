@@ -117,11 +117,11 @@ export default function ContactPage() {
   return (
     <div className="min-h-screen bg-[#0f0f12]">
       {/* Hero Section */}
-      <section className="relative py-24 overflow-hidden">
+      <section className="relative py-14 sm:py-20 lg:py-24 overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-r from-[#00d4aa]/10 via-transparent to-[#8b5cf6]/10" />
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
-            <h1 className="text-5xl md:text-6xl font-bold mb-6 gradient-text">
+            <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-6 gradient-text">
               Contact Us
             </h1>
             <p className="text-xl text-[#737373] max-w-3xl mx-auto mb-8">
@@ -132,10 +132,10 @@ export default function ContactPage() {
       </section>
 
       {/* Contact Info & Form Section */}
-      <section className="relative py-24 overflow-hidden">
+      <section className="relative py-14 sm:py-20 lg:py-24 overflow-hidden">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_50%_50%,rgba(0,212,170,0.05)_0%,rgba(8,8,8,0)_60%)]" />
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid lg:grid-cols-2 gap-16">
+          <div className="grid lg:grid-cols-2 gap-8 lg:gap-16">
             {/* Contact Information */}
             <div>
               <h2 className="text-4xl font-bold mb-8 gradient-text">Get In Touch</h2>
@@ -276,7 +276,7 @@ export default function ContactPage() {
       </section>
 
       {/* FAQ Section */}
-      <section className="relative py-24 overflow-hidden">
+      <section className="relative py-14 sm:py-20 lg:py-24 overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-r from-[#1a1a1f] via-[#0f0f12] to-[#1a1a1f]" />
         <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">

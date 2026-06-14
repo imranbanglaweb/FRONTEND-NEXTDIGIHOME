@@ -80,7 +80,7 @@ export default function ServicesPage() {
       </div>
 
       {/* Hero Section */}
-      <section className="relative py-32 overflow-hidden">
+      <section className="relative py-16 sm:py-24 lg:py-32 overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-b from-[#00d4aa]/5 via-transparent to-[#8b5cf6]/5" />
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <Link href="/" className="inline-flex items-center gap-2 text-[#00d4aa] hover:text-[#00d4aa]/80 mb-8 transition">
@@ -92,7 +92,7 @@ export default function ServicesPage() {
               <SparklesIcon className="w-5 h-5 text-[#00d4aa]" />
               <span className="text-sm text-[#737373]">Premium Digital Solutions</span>
             </div>
-            <h1 className="text-6xl md:text-7xl lg:text-8xl font-bold mb-8 leading-tight">
+            <h1 className="text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-bold mb-8 leading-tight">
               <span className="block text-[#fafafa]">Elevate Your</span>
               <span className="block gradient-text bg-gradient-to-r from-[#00d4aa] via-[#8b5cf6] to-[#ff6b6b] bg-clip-text">Business to New Heights</span>
             </h1>
@@ -106,7 +106,7 @@ export default function ServicesPage() {
       {/* Stats Section */}
       <section className="py-20 bg-gradient-to-b from-[#1a1a1f] to-[#0f0f12]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid md:grid-cols-4 gap-8">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-8">
             {stats.map((stat, idx) => (
               <div key={idx} className="text-center p-6 bg-[#0f0f12]/50 border border-[#2a2a30] rounded-lg backdrop-blur-sm">
                 <div className="text-4xl md:text-5xl font-bold gradient-text bg-gradient-to-r from-[#00d4aa] to-[#8b5cf6] bg-clip-text mb-2">
@@ -120,7 +120,7 @@ export default function ServicesPage() {
       </section>
 
       {/* Services Grid */}
-      <section className="py-32 bg-[#0f0f12]">
+      <section className="py-16 sm:py-24 lg:py-32 bg-[#0f0f12]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-bold text-[#fafafa] mb-4">
@@ -134,7 +134,7 @@ export default function ServicesPage() {
             {services.map((service) => (
               <div
                 key={service.id}
-                className="group relative p-8 bg-[#1a1a1f] border border-[#2a2a30] rounded-2xl hover:border-[#00d4aa]/50 transition-all duration-500 hover:shadow-2xl hover:shadow-[#00d4aa]/10 overflow-hidden"
+                className="group relative p-5 sm:p-8 bg-[#1a1a1f] border border-[#2a2a30] rounded-2xl hover:border-[#00d4aa]/50 transition-all duration-500 hover:shadow-2xl hover:shadow-[#00d4aa]/10 overflow-hidden"
               >
                 {/* Gradient Background */}
                 <div className={`absolute inset-0 bg-linear-to-br ${service.gradient} opacity-0 group-hover:opacity-10 transition-opacity duration-500`} />
@@ -173,7 +173,7 @@ export default function ServicesPage() {
       </section>
 
       {/* Benefits Section */}
-      <section className="py-32 bg-gradient-to-r from-[#00d4aa]/10 via-transparent to-[#8b5cf6]/10 border-y border-[#2a2a30]">
+      <section className="py-16 sm:py-24 lg:py-32 bg-gradient-to-r from-[#00d4aa]/10 via-transparent to-[#8b5cf6]/10 border-y border-[#2a2a30]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-4xl md:text-5xl font-bold text-center text-[#fafafa] mb-16">
             Why Partner With Us?
@@ -205,7 +205,7 @@ export default function ServicesPage() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-32 bg-gradient-to-b from-[#0f0f12] to-[#1a1a1f] overflow-hidden relative">
+      <section className="py-16 sm:py-24 lg:py-32 bg-gradient-to-b from-[#0f0f12] to-[#1a1a1f] overflow-hidden relative">
         <div className="absolute inset-0 overflow-hidden">
           <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-gradient-to-r from-[#00d4aa] to-[#8b5cf6] rounded-full mix-blend-screen filter blur-[120px] opacity-20 animate-pulse" />
         </div>
@@ -215,7 +215,7 @@ export default function ServicesPage() {
             <SparklesIcon className="w-5 h-5 text-[#00d4aa]" />
             <span className="text-sm text-[#737373]">Limited Time Offer</span>
           </div>
-          <h2 className="text-5xl md:text-6xl font-bold text-[#fafafa] mb-8 leading-tight">
+          <h2 className="text-3xl sm:text-5xl md:text-6xl font-bold text-[#fafafa] mb-8 leading-tight">
             Ready to Transform Your Business?
           </h2>
           <p className="text-xl md:text-2xl text-[#737373] mb-12 leading-relaxed max-w-3xl mx-auto">

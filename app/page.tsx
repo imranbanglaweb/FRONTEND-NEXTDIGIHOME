@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { ArrowRightIcon, CogIcon, ShoppingCartIcon, ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/outline";
 import Swal from 'sweetalert2';
 import { getStorageUrl, apiFetch } from './utils/api';
@@ -98,7 +98,7 @@ const normalizeCategory = (value: unknown): string => {
 };
 
 export default function Home() {
-  const pathname = usePathname();
+  const router = useRouter();
   const [currentSlide, setCurrentSlide] = useState(0);
   const [homeContent, setHomeContent] = useState<HomeContent | null>(null);
   const [loading, setLoading] = useState(true);
@@ -110,16 +110,14 @@ export default function Home() {
   const [selectedCategory, setSelectedCategory] = useState('all');
 
   const nextSlide = useCallback(() => {
-    if (homeContent?.hero_sliders) {
-      setCurrentSlide((prev) => (prev + 1) % homeContent.hero_sliders.length);
-    }
-  }, [homeContent]);
+    const sliderCount = Math.max(allProducts.length, homeContent?.hero_sliders?.length || 0, 6);
+    setCurrentSlide((prev) => (prev + 1) % sliderCount);
+  }, [allProducts.length, homeContent]);
 
   const prevSlide = useCallback(() => {
-    if (homeContent?.hero_sliders) {
-      setCurrentSlide((prev) => (prev - 1 + homeContent.hero_sliders.length) % homeContent.hero_sliders.length);
-    }
-  }, [homeContent]);
+    const sliderCount = Math.max(allProducts.length, homeContent?.hero_sliders?.length || 0, 6);
+    setCurrentSlide((prev) => (prev - 1 + sliderCount) % sliderCount);
+  }, [allProducts.length, homeContent]);
 
    useEffect(() => {
      const fetchHomeContent = async () => {
@@ -266,6 +264,8 @@ export default function Home() {
   const heroSlides = homeContent?.hero_sliders || fallbackSlides;
   const stats = homeContent?.stats || fallbackStats;
   const features = homeContent?.features || fallbackFeatures;
+  const sliderProducts = allProducts.length > 0 ? allProducts : fallbackProducts;
+  const sliderCount = Math.max(sliderProducts.length, heroSlides.length, 1);
 
   const getProductCategoryLabel = (product: Product) => {
     return product.category_name || product.category || '';
@@ -308,11 +308,22 @@ export default function Home() {
                           (product.description?.toLowerCase().includes(searchQuery.toLowerCase()) ?? false);
     return matchesCategory && matchesSearch;
   });
+  const productCatalogHref = `/products${(() => {
+    const params = new URLSearchParams();
+    if (selectedCategory !== 'all') params.set('category', selectedCategory);
+    if (searchQuery.trim()) params.set('search', searchQuery.trim());
+    const query = params.toString();
+    return query ? `?${query}` : '';
+  })()}`;
+
+  const submitProductSearch = () => {
+    router.push(productCatalogHref);
+  };
 
   return (
     <div>
       {/* Hero Slider Section - Premium Edition */}
-      <section className="relative min-h-screen overflow-hidden">
+      <section className="relative h-[calc(100svh-5rem)] min-h-[640px] overflow-hidden sm:h-[calc(100svh-6rem)] sm:min-h-[700px] lg:h-[calc(100vh-7rem)] lg:min-h-[760px]">
         {/* Enhanced Background with multiple layers */}
         <div className="absolute inset-0 bg-gradient-to-b from-[#0f0f12] via-[#1a1a2e]/50 to-[#0f0f12]" />
         
@@ -328,22 +339,21 @@ export default function Home() {
         <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(42,42,48,0.1)_1px,transparent_1px),linear-gradient(to_bottom,rgba(42,42,48,0.1)_1px,transparent_1px)] bg-[size:80px_80px] opacity-40" />
 
         {/* Slider Content */}
-        <div className="slider-content relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6">
-          {!loading && heroSlides.map((slide, index) => (
+        <div className="slider-content absolute inset-0 z-10 mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
+          {!loading && Array.from({ length: sliderCount }).map((_, index) => (
             <div
-              key={slide.id}
+              key={index}
               className={`transition-all duration-1000 ease-in-out absolute inset-0 ${
                 index === currentSlide
                   ? 'opacity-100 translate-y-0 z-10'
                   : 'opacity-0 translate-y-8 z-0'
               }`}
             >
-              <div className="min-h-[100dvh] sm:min-h-screen flex items-center justify-center px-4 sm:px-6 lg:px-8 pb-16 sm:pb-0">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-16 items-center w-full max-w-7xl pt-8 sm:pt-4">
+              <div className="flex h-full items-center justify-center px-4 pb-16 sm:px-6 sm:pb-12 lg:px-8">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-16 items-center w-full max-w-7xl pt-4">
                   {/* Premium Content Left - Dynamic from Products */}
                   {(() => {
-                    const top5Products = (allProducts.length > 0 ? allProducts : fallbackProducts).slice(0, 6);
-                    const activeProduct = top5Products[currentSlide % Math.max(top5Products.length, 1)] || top5Products[0];
+                    const activeProduct = sliderProducts[currentSlide % Math.max(sliderProducts.length, 1)] || sliderProducts[0];
                     if (!activeProduct) return null;
 
                     return (
@@ -413,8 +423,7 @@ export default function Home() {
                             <div className="absolute inset-0 bg-linear-to-br from-[#00d4aa]/5 via-transparent to-[#8b5cf6]/5 pointer-events-none" />
                             
                            {(() => {
-                              const top5 = (allProducts.length > 0 ? allProducts : fallbackProducts).slice(0, 6);
-                             const currentProduct = top5[currentSlide % Math.max(top5.length, 1)] || top5[0];
+                             const currentProduct = sliderProducts[currentSlide % Math.max(sliderProducts.length, 1)] || sliderProducts[0];
                              if (!currentProduct) return null;
 
                              return (
@@ -484,7 +493,7 @@ export default function Home() {
 
           {/* Enhanced Loading state */}
           {loading && (
-            <div className="min-h-screen flex items-center justify-center">
+            <div className="flex h-full items-center justify-center">
               <div className="text-center space-y-6">
             <div className="relative">
               <div className="w-20 h-20 border-4 border-[#00d4aa]/30 border-t-[#00d4aa] rounded-full animate-spin mx-auto"></div>
@@ -526,16 +535,16 @@ export default function Home() {
           </div>
         </div>
 
-            {/* Top 6 Products Navigation - Bullets Only (Main Slider Navigation List) - Larger touch targets on mobile */}
-            <div className="absolute bottom-4 sm:bottom-6 left-1/2 transform -translate-x-1/2 flex gap-3 z-30">
-              {Array.from({ length: 6 }).map((_, i) => (
+            {/* Product slider navigation */}
+            <div className="absolute bottom-4 sm:bottom-6 left-1/2 z-30 flex max-w-[calc(100%-2rem)] -translate-x-1/2 gap-2 overflow-x-auto rounded-full border border-white/10 bg-[#0f0f12]/70 px-3 py-2 backdrop-blur">
+              {Array.from({ length: sliderCount }).map((_, i) => (
                 <button
                   key={i}
-                  onClick={() => setCurrentSlide(i % Math.max(heroSlides.length, 1))}
-                  className={`w-3 h-3 sm:w-2.5 sm:h-2.5 rounded-full transition-all touch-manipulation ${
-                    i === currentSlide % 6
+                  onClick={() => setCurrentSlide(i)}
+                  className={`h-2.5 flex-shrink-0 rounded-full transition-all touch-manipulation ${
+                    i === currentSlide
                       ? 'bg-gradient-to-r from-[#00d4aa] to-[#8b5cf6] w-8 sm:w-4'
-                      : 'bg-white/30 hover:bg-white/60 active:bg-white/80'
+                      : 'w-2.5 bg-white/30 hover:bg-white/60 active:bg-white/80'
                   }`}
                   aria-label={`Go to slide ${i + 1}`}
                 />
@@ -820,13 +829,23 @@ export default function Home() {
                       placeholder="Search products..."
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                          submitProductSearch();
+                        }
+                      }}
                       className="w-full bg-[#0f0f12] border border-[#2a2a30] rounded-2xl pl-5 pr-11 py-3 text-sm text-[#fafafa] placeholder-[#555] focus:outline-none focus:border-[#00d4aa] transition-all"
                     />
-                    <div className="absolute right-4 top-1/2 -translate-y-1/2 text-[#737373]">
+                    <button
+                      type="button"
+                      onClick={submitProductSearch}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 rounded-lg p-1.5 text-[#737373] transition-colors hover:bg-[#1a1a1f] hover:text-[#00d4aa]"
+                      aria-label="Search full catalog"
+                    >
                       <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                       </svg>
-                    </div>
+                    </button>
                   </div>
                 </div>
               </div>
@@ -842,7 +861,7 @@ export default function Home() {
                     {searchQuery && <span className="text-[#737373] text-lg font-normal"> matching “{searchQuery}”</span>}
                   </h3>
                 </div>
-                <Link href="/products" className="hidden md:block text-sm text-[#00d4aa] hover:underline">View all products →</Link>
+                <Link href={productCatalogHref} className="hidden md:block text-sm text-[#00d4aa] hover:underline">View all products →</Link>
               </div>
 
               {loadingProducts ? (
@@ -859,7 +878,7 @@ export default function Home() {
                 </div>
               ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-                  {filteredProducts.slice(0, 9).map((product) => (
+                  {filteredProducts.map((product) => (
                     <Link
                       key={product.id}
                       href={`/products/${product.slug}`}
@@ -919,23 +938,6 @@ export default function Home() {
                       </div>
                     </Link>
                   ))}
-
-                   {filteredProducts.length > 9 && (
-                     <div className="glass-card rounded-3xl border border-[#2a2a30] flex items-center justify-center p-8 hover:border-[#00d4aa]/30 transition-all">
-                       <div className="text-center">
-                         <div className="w-16 h-16 mx-auto mb-5 rounded-2xl bg-linear-to-br from-[#00d4aa] to-[#8b5cf6] flex items-center justify-center">
-                           <ArrowRightIcon className="w-8 h-8 text-[#0f0f12]" />
-                         </div>
-                         <h4 className="text-xl font-semibold text-[#fafafa] mb-1">
-                           {filteredProducts.length - 9} More Products
-                         </h4>
-                         <p className="text-sm text-[#737373] mb-6">Explore the complete collection</p>
-                         <Link href="/products" className="inline-flex items-center px-8 py-3 bg-[#1a1a1f] border border-[#2a2a30] hover:border-[#00d4aa] text-[#fafafa] text-sm font-medium rounded-2xl transition-all">
-                           Browse Full Catalog <ArrowRightIcon className="w-4 h-4 ml-2" />
-                         </Link>
-                       </div>
-                     </div>
-                   )}
 
                    {filteredProducts.length === 0 && (
                      <div className="col-span-full text-center py-16">

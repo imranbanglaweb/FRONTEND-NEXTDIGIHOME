@@ -109,7 +109,7 @@ export function generateWebsiteSchema(): Record<string, any> {
     url: BASE_URL,
     potentialAction: {
       "@type": "SearchAction",
-      target: `${BASE_URL}/search?q={search_term_string}`,
+      target: `${BASE_URL}/products?search={search_term_string}`,
       "query-input": "required name=search_term_string",
     },
   };

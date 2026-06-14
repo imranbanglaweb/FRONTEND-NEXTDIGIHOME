@@ -121,12 +121,13 @@ export default function ProductsPage() {
 function ProductsPageContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const initialSearchQuery = searchParams.get('search') || '';
   const [products, setProducts] = useState<Product[]>([]);
   const [apiCategories, setApiCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-  const [searchQuery, setSearchQuery] = useState<string>('');
-  const [debouncedSearchQuery, setDebouncedSearchQuery] = useState<string>('');
+  const [searchQuery, setSearchQuery] = useState<string>(initialSearchQuery);
+  const [debouncedSearchQuery, setDebouncedSearchQuery] = useState<string>(initialSearchQuery);
   const [sortBy, setSortBy] = useState<string>('featured');
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
   const [priceRange, setPriceRange] = useState<{min: number, max: number}>({min: 0, max: 1000});
@@ -194,6 +195,17 @@ function ProductsPageContent() {
   }, []);
 
   const selectedCategory = searchParams.get('category') || 'all';
+  const urlSearchQuery = searchParams.get('search') || '';
+
+  useEffect(() => {
+    if (urlSearchQuery === searchQuery) return;
+    const syncTimer = window.setTimeout(() => {
+      setSearchQuery(urlSearchQuery);
+      setDebouncedSearchQuery(urlSearchQuery);
+    }, 0);
+
+    return () => window.clearTimeout(syncTimer);
+  }, [searchQuery, urlSearchQuery]);
 
   const setSelectedCategory = useCallback((category: string) => {
     const params = new URLSearchParams(searchParams.toString());
@@ -210,11 +222,23 @@ function ProductsPageContent() {
   // Debounced search
   useEffect(() => {
     const timer = setTimeout(() => {
-      setDebouncedSearchQuery(searchQuery);
+      const nextSearch = searchQuery.trim();
+      setDebouncedSearchQuery(nextSearch);
+
+      const params = new URLSearchParams(searchParams.toString());
+      if (nextSearch) {
+        params.set('search', nextSearch);
+      } else {
+        params.delete('search');
+      }
+
+      const queryString = params.toString();
+      const nextUrl = queryString ? `/products?${queryString}` : '/products';
+      router.replace(nextUrl, { scroll: false });
     }, 300);
 
     return () => clearTimeout(timer);
-  }, [searchQuery]);
+  }, [router, searchParams, searchQuery]);
 
   const toggleWishlist = (productId: number) => {
     setWishlist(prev => {
@@ -419,12 +443,20 @@ function ProductsPageContent() {
     selectedCategory === 'all'
       ? 'Products'
       : categoryOptions.find((category) => category.key === selectedCategory)?.label || selectedCategory;
+  const activeFilterCount = Number(Boolean(debouncedSearchQuery)) + Number(selectedCategory !== 'all') + Number(priceRange.min > 0 || priceRange.max < 1000);
 
   const filteredProducts = useMemo(() => {
     return products.filter(product => {
       const matchesCategory = productMatchesCategory(product, selectedCategory);
-      const matchesSearch = product.name.toLowerCase().includes(debouncedSearchQuery.toLowerCase()) ||
-                            product.description?.toLowerCase().includes(debouncedSearchQuery.toLowerCase());
+      const normalizedSearch = debouncedSearchQuery.toLowerCase();
+      const searchableText = [
+        product.name,
+        product.description,
+        product.category,
+        product.category_name,
+        product.category_slug,
+      ].filter(Boolean).join(' ').toLowerCase();
+      const matchesSearch = !normalizedSearch || searchableText.includes(normalizedSearch);
       const matchesPrice = product.price >= priceRange.min && product.price <= priceRange.max;
       return matchesCategory && matchesSearch && matchesPrice;
     }).sort((a, b) => {
@@ -481,27 +513,40 @@ function ProductsPageContent() {
   return (
     <div className="min-h-screen bg-[#0f0f12]">
       {/* Hero Banner */}
-      <div className="relative overflow-hidden">
-        <div className="absolute inset-0 bg-linear-to-br from-[#00d4aa]/10 via-transparent to-[#8b5cf6]/10" />
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_50%_0%,rgba(0,212,170,0.15)_0%,rgba(8,8,8,0)_60%)]" />
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+      <div className="relative overflow-hidden border-b border-white/10">
+        <div className="absolute inset-0 bg-linear-to-br from-[#00d4aa]/12 via-[#101014] to-[#8b5cf6]/14" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_50%_0%,rgba(0,212,170,0.20)_0%,rgba(8,8,8,0)_58%)]" />
+        <div className="absolute inset-x-0 bottom-0 h-px bg-linear-to-r from-transparent via-[#00d4aa]/50 to-transparent" />
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14 sm:py-20">
           <div className="text-center">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-[#2a2a30] bg-[#1a1a1f]/50 mb-6">
+            <div className="inline-flex max-w-full items-center gap-2 rounded-full border border-[#00d4aa]/25 bg-[#00d4aa]/10 px-4 py-2 mb-6 shadow-lg shadow-[#00d4aa]/5">
               <StarIcon className="w-4 h-4 text-[#00d4aa]" />
-              <span className="text-sm text-[#737373]">Premium Collection</span>
+              <span className="text-sm text-[#b9fff1]">Premium searchable catalog</span>
             </div>
-            <h1 className="text-5xl md:text-6xl font-bold mb-6 gradient-text">
+            <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-6 gradient-text">
               Digital Products
             </h1>
-            <p className="text-xl text-[#737373] max-w-2xl mx-auto">
+            <p className="text-base sm:text-xl text-[#737373] max-w-2xl mx-auto">
               Curated selection of premium digital assets for local and international markets
             </p>
+            <div className="mt-8 grid grid-cols-1 gap-3 sm:grid-cols-3">
+              {[
+                ['Instant access', 'Download-ready assets'],
+                ['Smart filters', 'Find matching tools fast'],
+                ['Commercial value', 'Built for business use'],
+              ].map(([title, text]) => (
+                <div key={title} className="rounded-2xl border border-white/10 bg-[#0f0f12]/60 p-4 text-left backdrop-blur">
+                  <div className="text-sm font-semibold text-[#fafafa]">{title}</div>
+                  <div className="mt-1 text-xs text-[#737373]">{text}</div>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </div>
 
       {/* Enhanced Filter Bar */}
-      <div className="sticky top-0 z-40 bg-[#0f0f12]/95 backdrop-blur-xl border-b border-[#2a2a30]">
+      <div className="sticky top-20 sm:top-24 lg:top-28 z-30 bg-[#0f0f12]/95 backdrop-blur-xl border-b border-[#2a2a30]">
         <div className="px-4 sm:px-6 lg:px-8 py-4">
           {/* Main Filter Row */}
           <div className="flex flex-col xl:flex-row gap-4 items-start xl:items-center">
@@ -510,7 +555,7 @@ function ProductsPageContent() {
               <MagnifyingGlassIcon className="w-5 h-5 absolute left-4 top-1/2 transform -translate-y-1/2 text-[#737373]" />
               <input
                 type="text"
-                placeholder="Search products..."
+                placeholder="Search products by name, category, or description..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="w-full bg-[#1a1a1f] border border-[#2a2a30] rounded-xl pl-12 pr-4 py-3 text-[#fafafa] placeholder-[#737373] focus:outline-none focus:border-[#00d4aa] focus:ring-2 focus:ring-[#00d4aa]/20 transition-all"
@@ -526,13 +571,16 @@ function ProductsPageContent() {
             </div>
 
             {/* Sort and Advanced Filters */}
-            <div className="flex items-center gap-3 flex-wrap">
+            <div className="flex w-full flex-wrap items-center gap-3 xl:w-auto">
+              <div className="rounded-lg border border-[#2a2a30] bg-[#1a1a1f] px-3 py-2 text-xs font-semibold text-[#737373]">
+                {activeFilterCount} active
+              </div>
               {/* Sort Dropdown */}
-              <div className="relative">
+              <div className="relative flex-1 sm:flex-none">
                 <select
                   value={sortBy}
                   onChange={(e) => setSortBy(e.target.value)}
-                  className="bg-[#1a1a1f] border border-[#2a2a30] rounded-lg px-3 py-2 text-[#fafafa] text-sm focus:outline-none focus:border-[#00d4aa] appearance-none pr-8"
+                  className="w-full bg-[#1a1a1f] border border-[#2a2a30] rounded-lg px-3 py-2 text-[#fafafa] text-sm focus:outline-none focus:border-[#00d4aa] appearance-none pr-8"
                 >
                   <option value="featured">Featured</option>
                   <option value="name">Name</option>
@@ -619,7 +667,7 @@ function ProductsPageContent() {
                       setSortBy('featured');
                       setSortOrder('desc');
                     }}
-                    className="px-4 py-2 bg-[#2a2a30] text-[#737373] rounded-lg hover:bg-[#3a3a40] hover:text-[#fafafa] transition-all text-sm"
+                    className="w-full px-4 py-2 bg-[#2a2a30] text-[#737373] rounded-lg hover:bg-[#3a3a40] hover:text-[#fafafa] transition-all text-sm sm:w-auto"
                   >
                     Clear Filters
                   </button>
@@ -631,18 +679,18 @@ function ProductsPageContent() {
       </div>
 
        {/* Products Grid */}
-       <div className="relative z-10 px-4 sm:px-6 lg:px-8 py-12">
+       <div className="relative z-10 px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
         {/* Stats */}
-        <div className="flex items-center justify-between mb-8">
-          <div>
-            <h2 className="text-2xl font-bold text-[#fafafa]">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between mb-8">
+          <div className="min-w-0">
+            <h2 className="text-xl sm:text-2xl font-bold text-[#fafafa]">
               {filteredProducts.length} {selectedCategoryLabel}
             </h2>
             <p className="text-[#737373]">
               {featuredProducts.length} featured {selectedCategory === 'all' ? '' : selectedCategoryLabel}
             </p>
           </div>
-          <div className="flex items-center gap-2 text-sm text-[#737373]">
+          <div className="flex flex-shrink-0 items-center gap-2 text-sm text-[#737373]">
             <ArrowDownTrayIcon className="w-4 h-4" />
             <span>{products.length} total items</span>
           </div>
@@ -654,7 +702,7 @@ function ProductsPageContent() {
               <StarIcon className="w-5 h-5" />
               Featured Products
             </h3>
-            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-4">
+            <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
 {featuredProducts.map((product) => (
                  <Link
                    key={product.id}
@@ -714,7 +762,7 @@ function ProductsPageContent() {
                      )}
                      <div className="absolute inset-0 bg-linear-to-t from-[#0f0f12] via-transparent to-transparent opacity-60" />
                    </div>
-                  <div className="p-6">
+                  <div className="p-4 sm:p-6">
                     <span className="text-xs text-[#00d4aa] font-medium uppercase tracking-wide">
                       {product.category}
                     </span>
@@ -724,8 +772,8 @@ function ProductsPageContent() {
                     <p className="text-sm text-[#737373] line-clamp-2 mb-4">
                       {product.description}
                     </p>
-                     <div className="flex items-center justify-between">
-                       <div className="flex items-baseline gap-2">
+                     <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                       <div className="flex min-w-0 flex-wrap items-baseline gap-2">
                          <span className="text-xl font-bold text-[#00d4aa]">
                              ৳{product.price}
                          </span>
@@ -739,7 +787,7 @@ function ProductsPageContent() {
                           <button
                             onClick={(e) => addToCart(product, e)}
                             disabled={loadingButtons.has(product.id)}
-                            className={`px-3 py-1 bg-linear-to-r from-[#00d4aa] to-[#8b5cf6] text-[#0f0f12] text-xs font-bold rounded hover:shadow-lg hover:scale-105 transition-all disabled:opacity-70 disabled:cursor-not-allowed ${
+                            className={`w-full rounded bg-linear-to-r from-[#00d4aa] to-[#8b5cf6] px-3 py-2 text-xs font-bold text-[#0f0f12] transition-all hover:scale-105 hover:shadow-lg disabled:cursor-not-allowed disabled:opacity-70 sm:w-auto sm:py-1 ${
                               animatingButtons.has(product.id) ? 'animate-bounce' : ''
                             }`}
                           >
@@ -767,7 +815,7 @@ function ProductsPageContent() {
             <h3 className="text-lg font-semibold text-[#fafafa] mb-6">
               All Products
             </h3>
-            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-4">
+            <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
 {filteredProducts.map((product) => (
                  <Link
                    key={product.id}
@@ -820,7 +868,7 @@ function ProductsPageContent() {
 
                      <div className="absolute inset-0 bg-linear-to-t from-[#0f0f12] via-transparent to-transparent opacity-60" />
                    </div>
-                  <div className="p-6">
+                  <div className="p-4 sm:p-6">
                     <span className="text-xs text-[#737373] font-medium uppercase tracking-wide">
                       {product.category}
                     </span>
@@ -830,8 +878,8 @@ function ProductsPageContent() {
                     <p className="text-sm text-[#737373] line-clamp-2 mb-4">
                       {product.description}
                     </p>
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-baseline gap-2">
+                    <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                      <div className="flex min-w-0 flex-wrap items-baseline gap-2">
                         <span className="text-xl font-bold text-[#00d4aa]">
                             ৳{product.price}
                         </span>
@@ -845,7 +893,7 @@ function ProductsPageContent() {
                         <button
                           onClick={(e) => addToCart(product, e)}
                           disabled={loadingButtons.has(product.id)}
-                          className={`px-3 py-1 bg-linear-to-r from-[#00d4aa] to-[#8b5cf6] text-[#0f0f12] text-xs font-bold rounded hover:shadow-lg hover:scale-105 transition-all disabled:opacity-70 disabled:cursor-not-allowed ${
+                          className={`w-full rounded bg-linear-to-r from-[#00d4aa] to-[#8b5cf6] px-3 py-2 text-xs font-bold text-[#0f0f12] transition-all hover:scale-105 hover:shadow-lg disabled:cursor-not-allowed disabled:opacity-70 sm:w-auto sm:py-1 ${
                             animatingButtons.has(product.id) ? 'animate-bounce' : ''
                           }`}
                         >
@@ -895,8 +943,8 @@ function ProductsPageContent() {
 
       {/* Quick View Modal */}
       {showQuickView && quickViewProduct && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
-          <div className="relative max-w-4xl w-full max-h-[90vh] overflow-hidden glass-card rounded-3xl border border-[#2a2a30] animate-fade-in">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/50 backdrop-blur-sm">
+          <div className="relative max-w-4xl w-full max-h-[90vh] overflow-y-auto glass-card rounded-2xl sm:rounded-3xl border border-[#2a2a30] animate-fade-in">
             <div className="flex flex-col lg:flex-row">
               {/* Product Image */}
               <div className="lg:w-1/2 relative">
@@ -917,13 +965,13 @@ function ProductsPageContent() {
               </div>
 
               {/* Product Details */}
-              <div className="lg:w-1/2 p-8">
-                <div className="flex justify-between items-start mb-4">
+              <div className="lg:w-1/2 p-5 sm:p-8">
+                <div className="flex justify-between items-start gap-3 mb-4">
                   <div>
                     <span className="text-xs text-[#00d4aa] font-medium uppercase tracking-wide">
                       {quickViewProduct.category}
                     </span>
-                    <h2 className="text-2xl font-bold text-[#fafafa] mt-2">
+                    <h2 className="text-xl sm:text-2xl font-bold text-[#fafafa] mt-2">
                       {quickViewProduct.name}
                     </h2>
                   </div>
@@ -939,7 +987,7 @@ function ProductsPageContent() {
                   {quickViewProduct.description || 'No description available.'}
                 </p>
 
-                <div className="flex items-center gap-4 mb-6">
+                <div className="flex flex-wrap items-center gap-4 mb-6">
                   <span className="text-3xl font-bold text-[#00d4aa]">
                       ৳{quickViewProduct.price}
                   </span>
@@ -950,7 +998,7 @@ function ProductsPageContent() {
                   )}
                 </div>
 
-                <div className="flex gap-3">
+                <div className="flex flex-col gap-3 sm:flex-row">
                   <button
                     onClick={(e) => {
                       addToCart(quickViewProduct, e);
