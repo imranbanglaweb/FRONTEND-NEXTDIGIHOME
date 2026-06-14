@@ -18,12 +18,6 @@
       "purpose": "any"
     },
     {
-      "src": "/favicon.svg",
-      "sizes": "any",
-      "type": "image/svg+xml",
-      "purpose": "any"
-    },
-    {
       "src": "/apple-touch-icon.png",
       "sizes": "180x180",
       "type": "image/png",
@@ -34,14 +28,6 @@
     "business",
     "productivity",
     "shopping"
-  ],
-  "screenshots": [
-    {
-      "src": "/og-image.svg",
-      "sizes": "1200x630",
-      "type": "image/svg+xml",
-      "form_factor": "wide"
-    }
   ],
   "shortcuts": [
     {

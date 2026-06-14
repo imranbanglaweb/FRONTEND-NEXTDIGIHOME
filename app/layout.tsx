@@ -45,7 +45,6 @@ export const metadata: Metadata = {
   icons: {
     icon: [
       { rel: "icon", url: "/favicon.ico", type: "image/x-icon", sizes: "32x32" },
-      { rel: "icon", url: "/favicon.svg", type: "image/svg+xml" },
     ],
     shortcut: "/favicon.ico",
     apple: "/apple-touch-icon.png",
@@ -115,8 +114,6 @@ export default function RootLayout({
         
         {/* DNS Prefetch for Performance */}
         <link rel="dns-prefetch" href="//nextdigihome.com" />
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       </head>
       <body suppressHydrationWarning={true} className="min-h-full flex flex-col bg-[#0f0f12] text-[#fafafa] selection:bg-[#00d4aa] selection:text-[#0f0f12]">
         <ClientLayout>{children}</ClientLayout>
