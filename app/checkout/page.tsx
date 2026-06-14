@@ -105,14 +105,28 @@ const checkAuthentication = async () => {
 
 const fetchCart = async () => {
     try {
-      const data = await apiFetch('/cart');
+      const token = localStorage.getItem('auth_token');
+      const headers: Record<string, string> = {};
+      if (token) {
+        headers['Authorization'] = `Bearer ${token}`;
+      }
+
+      const data = await apiFetch('/cart', {
+        credentials: 'include',
+        headers,
+      });
       if (data?.items?.length === 0) {
         window.location.href = '/cart';
         return;
       }
-      setItems(data?.items || []);
+      setItems((data?.items || []).map((item: CartItem) => ({
+        ...item,
+        price: Number(item.price),
+        total: Number(item.total),
+      })));
     } catch (error) {
       console.error('Failed to fetch cart:', error);
+      setItems([]);
     } finally {
       setLoading(false);
     }
