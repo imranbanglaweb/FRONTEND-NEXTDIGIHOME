@@ -1,7 +1,9 @@
-import { Metadata } from "next";
+import type { Metadata } from "next";
 import React from "react";
 
 const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://nextdigihome.com";
+const DEFAULT_IMAGE = "/og-image.svg";
+const SITE_NAME = "Next Digi Home";
 
 /**
  * Generate page metadata with all SEO best practices
@@ -11,73 +13,86 @@ export function generatePageMetadata(options: {
   description: string;
   keywords?: string[];
   image?: string;
+  imageAlt?: string;
   path: string;
   type?: "website" | "article" | "product";
   author?: string;
   publishedTime?: string;
   modifiedTime?: string;
+  index?: boolean;
 }): Metadata {
   const url = `${BASE_URL}${options.path}`;
-  const image = options.image || "/og-image.svg";
+  const image = options.image || DEFAULT_IMAGE;
+  const imageAlt = options.imageAlt || options.title;
+  const shouldIndex = options.index !== false;
 
   return {
     title: options.title,
     description: options.description,
     keywords: options.keywords,
-     // Open Graph
-     openGraph: {
-       title: options.title,
-       description: options.description,
-       url,
-       images: [
-         {
-           url: image,
-           width: 1200,
-           height: 630,
-           alt: options.title,
-         },
-       ],
-       locale: "en_US",
-       siteName: "NextDigiHome",
-     },
-     // Twitter Card
-     twitter: {
-       card: "summary_large_image",
-       title: options.title,
-       description: options.description,
-       images: [
-         {
-           url: options.image || "/og-image.svg",
-           alt: options.title,
-         },
-       ],
-     },
-    // JSON-LD Structured Data
-    // Note: This is added via the StructuredData component in the layout
-    // We return the data here so it can be used in the layout
-    // Actually, we don't return the JSON-LD here because it's added via the component
-    // Instead, we return the metadata for <head> and the JSON-LD is added via the StructuredData component
-    // But note: the generatePageMetadata function is used to generate the Metadata object for the <head>
-    // and the StructuredData is a separate component that returns a script tag.
-    // So we don't include the JSON-LD in the Metadata object.
-    // We'll just return the metadata for <head> and the Open Graph and Twitter Card.
-    // The JSON-LD is handled by the StructuredData component.
-    // However, note that the Metadata type from next does not have a field for JSON-LD.
-    // So we are safe.
-    // But wait: the Metadata type does have a field for `other` which can be used for custom tags?
-    // Actually, the Metadata type from next is defined in next/dist/lib/metadata/metadata-types.d.ts
-    // and it does not have a field for JSON-LD. We rely on the StructuredData component.
-    // So we just return the standard metadata.
+    applicationName: SITE_NAME,
+    creator: SITE_NAME,
+    publisher: SITE_NAME,
+    category: "Digital Marketplace",
+    alternates: {
+      canonical: options.path,
+    },
+    robots: {
+      index: shouldIndex,
+      follow: shouldIndex,
+      googleBot: {
+        index: shouldIndex,
+        follow: shouldIndex,
+        "max-video-preview": -1,
+        "max-image-preview": "large",
+        "max-snippet": -1,
+      },
+    },
+    openGraph: {
+      title: options.title,
+      description: options.description,
+      url,
+      type: options.type === "article" ? "article" : "website",
+      images: [
+        {
+          url: image,
+          width: 1200,
+          height: 630,
+          alt: imageAlt,
+        },
+      ],
+      locale: "en_US",
+      siteName: SITE_NAME,
+      ...(options.type === "article" && options.publishedTime ? { publishedTime: options.publishedTime } : {}),
+      ...(options.type === "article" && options.modifiedTime ? { modifiedTime: options.modifiedTime } : {}),
+      ...(options.type === "article" && options.author ? { authors: [options.author] } : {}),
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: options.title,
+      description: options.description,
+      images: [
+        {
+          url: image,
+          alt: imageAlt,
+        },
+      ],
+      creator: "@nextdigihome",
+      site: "@nextdigihome",
+    },
     ...(options.author && {
       authors: [{ name: options.author }],
     }),
-    ...(options.publishedTime && {
-      publishedTime: options.publishedTime,
-    }),
-    ...(options.modifiedTime && {
-      modifiedTime: options.modifiedTime,
-    }),
   };
+}
+
+export function generateNoIndexMetadata(title: string, description: string, path: string): Metadata {
+  return generatePageMetadata({
+    title,
+    description,
+    path,
+    index: false,
+  });
 }
 
 /**
@@ -87,15 +102,22 @@ export function generateOrganizationSchema(): Record<string, any> {
   return {
     "@context": "https://schema.org",
     "@type": "Organization",
-    name: "NextDigiHome",
+    name: SITE_NAME,
+    alternateName: "NextDigiHome",
     url: BASE_URL,
     logo: `${BASE_URL}/logo.png`,
     sameAs: [
-      `${BASE_URL}/facebook`,
-      `${BASE_URL}/twitter`,
-      `${BASE_URL}/instagram`,
-      `${BASE_URL}/linkedin`,
+      "https://www.facebook.com/NextdigiHome/",
+      "https://www.youtube.com/@FullStackSAPGuy",
     ],
+    contactPoint: {
+      "@type": "ContactPoint",
+      contactType: "customer support",
+      email: "info@nextdigihome.com",
+      telephone: "+8801918329829",
+      areaServed: "Worldwide",
+      availableLanguage: ["English", "Bengali"],
+    },
   };
 }
 
@@ -106,6 +128,7 @@ export function generateWebsiteSchema(): Record<string, any> {
   return {
     "@context": "https://schema.org",
     "@type": "WebSite",
+    name: SITE_NAME,
     url: BASE_URL,
     potentialAction: {
       "@type": "SearchAction",
