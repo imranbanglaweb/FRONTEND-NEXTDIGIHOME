@@ -15,6 +15,26 @@ interface CartItem {
   thumbnail: string | null;
 }
 
+interface CheckoutResponse {
+  success?: boolean;
+  message?: string;
+  purchases?: Array<{
+    transaction_id?: string;
+  }>;
+}
+
+interface VerificationResponse {
+  success?: boolean;
+  message?: string;
+}
+
+type ApiError = Error & {
+  status?: number;
+  data?: {
+    message?: string;
+  };
+};
+
 export default function CheckoutPage() {
   const [items, setItems] = useState<CartItem[]>([]);
   const [loading, setLoading] = useState(true);
@@ -195,7 +215,7 @@ const fetchCart = async () => {
         formDataToSend.append('payment_proof', paymentProof);
       }
 
-       const response = await apiFetch('/checkout', {
+       const data = await apiFetch<CheckoutResponse>('/checkout', {
          method: 'POST',
          headers: {
            'Authorization': `Bearer ${token}`,
@@ -205,44 +225,33 @@ const fetchCart = async () => {
          body: formDataToSend,
        });
 
-      if (response.status === 401) {
-        localStorage.removeItem('auth_token');
-        window.location.href = '/cart';
-        return;
-      }
-
-      const contentType = response.headers.get('content-type');
-      if (contentType && contentType.includes('application/json')) {
-        const data = await response.json();
-
-        if (data.success) {
-          // Get first transaction ID for reference
-          const firstPurchase = data.purchases?.[0];
-          const transactionId = firstPurchase?.transaction_id;
-          setTransactionId(transactionId);
-          // Save email for dashboard lookup
-          localStorage.setItem('customer_email', formData.customer_email);
-          setStep('payment');
-            await apiFetch('/cart', { 
-                 method: 'DELETE',
-                 headers: {
-                   'Authorization': `Bearer ${token}`,
-                 },
-                 credentials: 'include' 
-               });
-          window.dispatchEvent(new Event('cartUpdated'));
-        } else {
-          alert(data.message || 'Checkout failed');
-          setSubmitting(false);
-        }
+      if (data.success) {
+        const firstPurchase = data.purchases?.[0];
+        const newTransactionId = firstPurchase?.transaction_id || formData.transaction_id || null;
+        setTransactionId(newTransactionId);
+        localStorage.setItem('customer_email', formData.customer_email);
+        setStep('payment');
+        await apiFetch('/cart', { 
+          method: 'DELETE',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+          },
+          credentials: 'include' 
+        });
+        window.dispatchEvent(new Event('cartUpdated'));
       } else {
-        console.warn('Checkout API returned non-JSON response');
-        alert('Server error occurred. Please try again later.');
+        alert(data.message || 'Checkout failed');
         setSubmitting(false);
       }
     } catch (error) {
       console.error('Checkout error:', error);
-      alert('Failed to complete order. Please try again.');
+      const apiError = error as ApiError;
+      if (apiError.status === 401) {
+        localStorage.removeItem('auth_token');
+        window.location.href = '/cart';
+        return;
+      }
+      alert(apiError.data?.message || 'Failed to complete order. Please try again.');
       setSubmitting(false);
     } finally {
       setSubmitting(false);
@@ -272,7 +281,7 @@ const fetchCart = async () => {
         formDataVerification.append('notes', formData.notes);
       }
 
-       const response = await apiFetch(`/checkout/verify`, {
+       const data = await apiFetch<VerificationResponse>(`/checkout/verify`, {
          method: 'POST',
          headers: {
            'Authorization': `Bearer ${token}`,
@@ -281,30 +290,21 @@ const fetchCart = async () => {
          body: formDataVerification,
        });
 
-      if (response.status === 401) {
-        localStorage.removeItem('auth_token');
-        window.location.href = '/cart';
-        return;
-      }
-
-      const contentType = response.headers.get('content-type');
-      if (contentType && contentType.includes('application/json')) {
-        const data = await response.json();
-
-        if (data.success) {
-          setStep('success');
-        } else {
-          alert(data.message || 'Verification failed');
-          setSubmitting(false);
-        }
+      if (data.success) {
+        setStep('success');
       } else {
-        console.warn('Payment verification API returned non-JSON response', response.status);
-        alert('Server error occurred during verification. Please try again later.');
+        alert(data.message || 'Verification failed');
         setSubmitting(false);
       }
     } catch (error) {
       console.error('Verification error:', error);
-      alert('Failed to submit verification. Please try again.');
+      const apiError = error as ApiError;
+      if (apiError.status === 401) {
+        localStorage.removeItem('auth_token');
+        window.location.href = '/cart';
+        return;
+      }
+      alert(apiError.data?.message || 'Failed to submit verification. Please try again.');
       setSubmitting(false);
     }
   };
