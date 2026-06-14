@@ -323,7 +323,7 @@ export default function Home() {
   return (
     <div>
       {/* Hero Slider Section - Premium Edition */}
-      <section className="relative h-[calc(100svh-5rem)] min-h-[640px] overflow-hidden sm:h-[calc(100svh-6rem)] sm:min-h-[700px] lg:h-[calc(100vh-7rem)] lg:min-h-[760px]">
+      <section className="relative h-[590px] overflow-hidden sm:h-[630px] lg:h-[660px]">
         {/* Enhanced Background with multiple layers */}
         <div className="absolute inset-0 bg-gradient-to-b from-[#0f0f12] via-[#1a1a2e]/50 to-[#0f0f12]" />
         
@@ -339,7 +339,7 @@ export default function Home() {
         <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(42,42,48,0.1)_1px,transparent_1px),linear-gradient(to_bottom,rgba(42,42,48,0.1)_1px,transparent_1px)] bg-[size:80px_80px] opacity-40" />
 
         {/* Slider Content */}
-        <div className="slider-content absolute inset-0 z-10 mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="slider-content absolute inset-0 z-10 mx-auto w-full max-w-[88rem] px-4 sm:px-6 lg:px-8">
           {!loading && Array.from({ length: sliderCount }).map((_, index) => index === currentSlide ? (
             <div
               key={index}
@@ -349,24 +349,24 @@ export default function Home() {
                   : 'opacity-0 translate-y-8 z-0'
               }`}
             >
-              <div className="flex h-full items-center justify-center px-4 pb-16 sm:px-6 sm:pb-12 lg:px-8">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-16 items-center w-full max-w-7xl pt-4">
+              <div className="flex h-full items-center justify-center px-3 pb-10 pt-6 sm:px-5 sm:pb-8 sm:pt-8 lg:px-6">
+                <div className="grid grid-cols-1 md:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:grid-cols-[minmax(0,0.82fr)_minmax(0,1.18fr)] gap-5 lg:gap-10 items-center w-full max-w-[88rem]">
                   {/* Premium Content Left - Dynamic from Products */}
                   {(() => {
                     const activeProduct = sliderProducts[currentSlide % Math.max(sliderProducts.length, 1)] || sliderProducts[0];
                     if (!activeProduct) return null;
 
                     return (
-                      <div className="text-center lg:text-left space-y-8">
+                      <div className="text-center lg:text-left space-y-5 lg:space-y-6">
                         {/* Brand Badge */}
-                        <div className="inline-flex items-center gap-3 px-4 py-3 rounded-full border border-[#00d4aa]/30 bg-[#00d4aa]/5 backdrop-blur-md mb-6 animate-fade-in-up hover:border-[#00d4aa]/60 transition-all group cursor-pointer">
+                        <div className="inline-flex items-center gap-3 px-4 py-3 rounded-full border border-[#00d4aa]/30 bg-[#00d4aa]/5 backdrop-blur-md mb-2 animate-fade-in-up hover:border-[#00d4aa]/60 transition-all group cursor-pointer">
                           <span className="w-3 h-3 rounded-full bg-gradient-to-r from-[#00d4aa] to-[#8b5cf6] animate-pulse"></span>
                           <span className="text-sm font-semibold bg-gradient-to-r from-[#00d4aa] to-[#8b5cf6] bg-clip-text text-transparent">Next Digi Home Premium Marketplace</span>
                           <span className="text-xs text-[#00d4aa] ml-1">★ Trusted by 50K+ Users</span>
                         </div>
 
                          {/* Main Heading - Dynamic from Product - Better mobile scaling */}
-                         <div className="space-y-3 sm:space-y-4">
+                         <div className="space-y-2 sm:space-y-3">
                            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black leading-[1.05] sm:leading-tight animate-fade-in-up tracking-[-1.5px] sm:tracking-tight">
                              <span className="block text-[#fafafa] mb-1.5 sm:mb-2">{activeProduct.name}</span>
                              <span className="block bg-gradient-to-r from-[#00d4aa] via-[#8b5cf6] to-[#ff6b9d] bg-clip-text text-transparent animate-pulse text-2xl sm:text-3xl md:text-4xl lg:text-5xl">
@@ -381,7 +381,7 @@ export default function Home() {
                          </p>
 
                          {/* Premium CTA Buttons */}
-                         <div className="flex flex-col sm:flex-row gap-4 pt-4 animate-fade-in-up">
+                         <div className="flex flex-col sm:flex-row gap-4 pt-1 animate-fade-in-up">
                            <Link
                              href={`/products/${activeProduct.slug || activeProduct.id}`}
                              className="group relative px-8 py-4 border-2 border-[#00d4aa]/50 text-[#fafafa] font-bold text-lg rounded-2xl overflow-hidden transition-all duration-300 hover:border-[#00d4aa] hover:text-[#00d4aa] bg-[#1a1a1f]/20 backdrop-blur-sm"
@@ -395,14 +395,14 @@ export default function Home() {
                          </div>
 
                          {/* Mobile-only compact product preview for better slider UX on phones */}
-                         <div className="md:hidden mt-6 bg-[#0a0a0d]/80 backdrop-blur border border-white/10 rounded-2xl p-4 flex gap-4 items-center">
+                         <div className="md:hidden mt-4 bg-[#0a0a0d]/80 backdrop-blur border border-white/10 rounded-2xl p-4 flex gap-4 items-center">
                            {activeProduct.thumbnail && (
                              <img 
                                src={getStorageUrl(activeProduct.thumbnail)!} 
                                alt={activeProduct.name}
                                loading="lazy"
                                decoding="async"
-                               className="w-20 h-20 rounded-xl object-cover border border-white/10 flex-shrink-0" 
+                               className="w-24 h-24 rounded-xl object-cover border border-white/10 flex-shrink-0" 
                              />
                            )}
                            <div className="min-w-0 flex-1">
@@ -418,9 +418,9 @@ export default function Home() {
                      <div className="relative hidden md:block">
                        <div className="relative">
                          {/* Deep luxurious glow */}
-                         <div className="absolute -inset-5 bg-gradient-to-r from-[#00d4aa] via-[#8b5cf6] to-[#ff6b9d] rounded-[3.5rem] blur-[95px] opacity-[0.17]"></div>
+                         <div className="absolute -inset-6 bg-gradient-to-r from-[#00d4aa] via-[#8b5cf6] to-[#ff6b9d] rounded-[3.5rem] blur-[95px] opacity-[0.17]"></div>
 
-                          <div className="relative bg-[#0a0a0d]/95 backdrop-blur-3xl border border-white/10 rounded-3xl p-5 md:p-6 shadow-[0_32px_100px_rgb(0,0,0,0.75)] ring-1 ring-white/5 overflow-hidden">
+                          <div className="relative bg-[#0a0a0d]/95 backdrop-blur-3xl border border-white/10 rounded-3xl p-4 md:p-5 shadow-[0_32px_100px_rgb(0,0,0,0.75)] ring-1 ring-white/5 overflow-hidden">
                             {/* Inner subtle glow */}
                             <div className="absolute inset-0 bg-linear-to-br from-[#00d4aa]/5 via-transparent to-[#8b5cf6]/5 pointer-events-none" />
                             
@@ -431,7 +431,7 @@ export default function Home() {
                              return (
                                <>
                                  {/* Single Premium Product - Enhanced */}
-                                 <div className="relative aspect-[16/10] rounded-2xl overflow-hidden mb-5 border border-white/10 shadow-2xl">
+                                 <div className="relative aspect-[16/11] rounded-2xl overflow-hidden mb-4 border border-white/10 shadow-2xl">
                                    {currentProduct.thumbnail ? (
                                      <img
                                        src={getStorageUrl(currentProduct.thumbnail)!}

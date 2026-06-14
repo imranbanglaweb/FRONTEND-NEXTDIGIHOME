@@ -8,16 +8,36 @@ import { apiFetch, BACKEND_BASE_URL, getStorageUrl, getLogoUrl } from './utils/a
 
 const getFaviconUrl = (path: string | null | undefined): string | null => {
   if (!path) return null;
+  const cleanPath = path.trim();
+  if (!cleanPath) return null;
 
-  if (path.startsWith('http')) {
-    const match = path.match(/\/public\/(.+)$/);
+  if (/^https?:\/\//i.test(cleanPath)) {
+    const match = cleanPath.match(/\/public\/(.+)$/);
     if (match) {
       return `/api/logo?file=${encodeURIComponent(match[1])}`;
     }
-    return null;
+    return cleanPath;
   }
 
-  return `/api/logo?file=${encodeURIComponent(path.replace(/^\/+/, ''))}`;
+  const relativePath = cleanPath.replace(/^\/+/, '').replace(/^public\//i, '');
+  const backendPath = relativePath.includes('/')
+    ? relativePath
+    : `admin_resource/assets/images/${relativePath}`;
+
+  return `/api/logo?file=${encodeURIComponent(backendPath)}`;
+};
+
+const getFaviconType = (path: string | null | undefined): string => {
+  const ext = (path || '').split('?')[0].toLowerCase().split('.').pop();
+  const typeMap: Record<string, string> = {
+    ico: 'image/x-icon',
+    png: 'image/png',
+    svg: 'image/svg+xml',
+    jpg: 'image/jpeg',
+    jpeg: 'image/jpeg',
+    webp: 'image/webp',
+  };
+  return typeMap[ext || ''] || 'image/x-icon';
 };
 
 export default function ClientLayout({
@@ -138,28 +158,29 @@ const [settings, setSettings] = useState<{
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-// Update favicon dynamically when settings change
-    useEffect(() => {
-      if (!isHydrated || !settings?.favicon) return;
-      const faviconUrl = getFaviconUrl(settings.favicon);
-      if (faviconUrl) {
-        let link = document.querySelector('link[rel="icon"]');
-        if (!link) {
-          link = document.createElement('link');
-          link.setAttribute('rel', 'icon');
-          document.head.appendChild(link);
-        }
-        link.setAttribute('href', faviconUrl);
-        // Set correct MIME type based on file extension
-        const ext = settings.favicon.toLowerCase().split('.').pop();
-        const typeMap: Record<string, string> = {
-          'ico': 'image/x-icon',
-          'png': 'image/png',
-          'svg': 'image/svg+xml',
-        };
-        link.setAttribute('type', typeMap[ext || ''] || 'image/x-icon');
-      }
-    }, [isHydrated, settings?.favicon]);
+  useEffect(() => {
+    if (!isHydrated || !settings?.favicon) return;
+
+    const faviconUrl = getFaviconUrl(settings.favicon);
+    if (!faviconUrl) return;
+
+    document
+      .querySelectorAll('link[rel="icon"], link[rel="shortcut icon"]')
+      .forEach((node) => node.parentNode?.removeChild(node));
+
+    const type = getFaviconType(settings.favicon);
+    const iconLink = document.createElement('link');
+    iconLink.setAttribute('rel', 'icon');
+    iconLink.setAttribute('href', faviconUrl);
+    iconLink.setAttribute('type', type);
+    document.head.appendChild(iconLink);
+
+    const shortcutLink = document.createElement('link');
+    shortcutLink.setAttribute('rel', 'shortcut icon');
+    shortcutLink.setAttribute('href', faviconUrl);
+    shortcutLink.setAttribute('type', type);
+    document.head.appendChild(shortcutLink);
+  }, [isHydrated, settings?.favicon]);
 
   useEffect(() => {
     // Check authentication

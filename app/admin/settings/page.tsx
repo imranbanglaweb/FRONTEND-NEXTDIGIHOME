@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { PhotoIcon, CogIcon, EnvelopeIcon, CheckIcon, ArrowPathIcon } from '@heroicons/react/24/outline';
-import { apiFetch } from '../../utils/api';
+import { apiFetch, getLogoUrl } from '../../utils/api';
 
 interface Settings {
   site_title: string;
@@ -252,7 +252,7 @@ const handleSubmit = async (e: React.FormEvent) => {
                 <div className="space-y-2">
                   {faviconPreview || settings?.favicon ? (
                     <img
-                      src={faviconPreview || (settings?.favicon ? `/logo/${settings.favicon}` : '')}
+                      src={faviconPreview || (settings?.favicon ? getLogoUrl(settings.favicon) || '' : '')}
                       alt="Favicon"
                       className="w-16 h-16 object-contain bg-[#1a1a1f] rounded-lg border border-[#2a2a30]"
                     />
