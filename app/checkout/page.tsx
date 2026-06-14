@@ -100,27 +100,8 @@ const checkAuthentication = async () => {
       return;
     }
 
-    try {
-      const data = await apiFetch('/checkout/purchases', {
-        method: 'GET',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Accept': 'application/json',
-        },
-      });
-
-      if (data) {
-        setIsAuthenticated(true);
-        fetchUser(token);
-      } else {
-        throw new Error('Auth check failed');
-      }
-    } catch (error) {
-      console.error('Authentication check failed:', error);
-      localStorage.removeItem('auth_token');
-      setIsAuthenticated(false);
-      window.location.href = '/signup';
-    }
+    setIsAuthenticated(true);
+    fetchUser(token);
   };
 
 const fetchCart = async () => {
@@ -231,12 +212,15 @@ const fetchCart = async () => {
         setTransactionId(newTransactionId);
         localStorage.setItem('customer_email', formData.customer_email);
         setStep('payment');
-        await apiFetch('/cart', { 
+        setSubmitting(false);
+        apiFetch('/cart', { 
           method: 'DELETE',
           headers: {
             'Authorization': `Bearer ${token}`,
           },
           credentials: 'include' 
+        }).catch((cartError) => {
+          console.error('Failed to clear cart after checkout:', cartError);
         });
         window.dispatchEvent(new Event('cartUpdated'));
       } else {
@@ -386,18 +370,6 @@ const fetchCart = async () => {
         <div className="flex flex-col items-center justify-center py-20">
           <div className="w-8 h-8 border-4 border-red-500 border-t-transparent rounded-full animate-spin"></div>
           <p className="mt-4 text-[#737373]">Redirecting to sign up...</p>
-        </div>
-      </div>
-    );
-  }
-
-  // If authenticated and still in details step (during auto-submit)
-  if (isAuthenticated === true && step === 'details' && submitting) {
-    return (
-      <div className="min-h-screen bg-[#0f0f12] py-12">
-        <div className="flex flex-col items-center justify-center py-20">
-          <div className="w-16 h-16 border-4 border-[#00d4aa] border-t-transparent rounded-full animate-spin"></div>
-          <p className="mt-4 text-[#737373]">Processing your order...</p>
         </div>
       </div>
     );

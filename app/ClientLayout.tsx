@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
 import { ShoppingCartIcon, Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
-import { apiFetch, BACKEND_BASE_URL, getStorageUrl, getPublicUrl, getLogoUrl } from './utils/api';
+import { apiFetch, BACKEND_BASE_URL, getStorageUrl, getLogoUrl } from './utils/api';
 
 // Helper to get favicon URL - always use proxy to avoid CORS issues
 const getFaviconUrl = (path: string | null | undefined): string | null => {
@@ -670,23 +670,13 @@ const [settings, setSettings] = useState<{
               </div>
               <div className="flex flex-wrap items-center justify-center gap-3">
                 {[
-                  { src: 'images/payment/bkash.jpg', label: 'bKash', color: '#E2136E' },
-                  { src: 'images/payment/rocket.png', label: 'Rocket', color: '#F7941D' },
-                  { src: 'images/payment/nogod.png', label: 'Nagad', color: '#00A651' },
-                  { src: 'images/payment/prime-nabk.png', label: 'Prime Bank', color: '#003087' },
+                  { label: 'bKash', color: '#E2136E' },
+                  { label: 'Rocket', color: '#F7941D' },
+                  { label: 'Nagad', color: '#00A651' },
+                  { label: 'Prime Bank', color: '#3B82F6' },
                 ].map((pm, i) => (
-                  <div key={i} className="group relative flex min-w-[7rem] items-center justify-center gap-2 rounded-xl border border-[#2a2a30] bg-[#1a1a1f] px-3 py-2 transition-all hover:border-[#00d4aa]/40 hover:bg-[#00d4aa]/5 sm:rounded-2xl sm:px-4">
-                    <img 
-                      src={getPublicUrl(pm.src)} 
-                      alt={pm.label} 
-                      className="h-6 md:h-7 object-contain transition-transform group-hover:scale-105"
-                      onError={(e) => {
-                        e.currentTarget.style.display = 'none';
-                        const fb = e.currentTarget.nextElementSibling as HTMLElement;
-                        if (fb) fb.style.display = 'inline';
-                      }}
-                    />
-                    <span className="text-xs font-semibold text-[#fafafa] hidden group-hover:inline transition-all" style={{color: pm.color}}>
+                  <div key={i} className="group relative flex min-w-[7rem] items-center justify-center rounded-xl border border-[#2a2a30] bg-[#1a1a1f] px-3 py-2 transition-all hover:border-[#00d4aa]/40 hover:bg-[#00d4aa]/5 sm:rounded-2xl sm:px-4">
+                    <span className="text-xs font-bold text-[#fafafa] transition-all" style={{ color: pm.color }}>
                       {pm.label}
                     </span>
                   </div>
