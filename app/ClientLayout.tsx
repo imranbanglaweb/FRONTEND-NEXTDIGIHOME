@@ -6,21 +6,18 @@ import { useState, useEffect } from "react";
 import { ShoppingCartIcon, Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import { apiFetch, BACKEND_BASE_URL, getStorageUrl, getLogoUrl } from './utils/api';
 
-// Helper to get favicon URL - always use proxy to avoid CORS issues
 const getFaviconUrl = (path: string | null | undefined): string | null => {
   if (!path) return null;
-  
-  // If it's already a full URL, extract the path after /public/
+
   if (path.startsWith('http')) {
     const match = path.match(/\/public\/(.+)$/);
     if (match) {
-      return `/logo/${match[1]}`;
+      return `/api/logo?file=${encodeURIComponent(match[1])}`;
     }
     return null;
   }
-  
-  // Otherwise use the proxy with the path (handles both filename and relative path)
-  return `/logo/${path}`;
+
+  return `/api/logo?file=${encodeURIComponent(path.replace(/^\/+/, ''))}`;
 };
 
 export default function ClientLayout({
