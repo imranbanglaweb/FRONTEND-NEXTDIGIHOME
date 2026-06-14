@@ -235,6 +235,7 @@ const [settings, setSettings] = useState<{
                       key={logoToUse}
                       src={logoUrl}
                       alt="Site Logo"
+                      decoding="async"
                       className="w-full h-full object-contain p-1"
                       onError={(e) => {
                         console.warn(`Logo failed to load from: ${logoUrl}`);
@@ -509,6 +510,8 @@ const [settings, setSettings] = useState<{
                         key={logoToUse}
                         src={logoUrl}
                         alt="Site Logo"
+                        loading="lazy"
+                        decoding="async"
                         className="w-full h-full object-cover"
                         onError={(e) => {
                           console.warn(`Footer logo failed to load from: ${logoUrl}`);
@@ -694,7 +697,7 @@ const [settings, setSettings] = useState<{
               <div className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded bg-gradient-to-r from-[#00d4aa] to-[#8b5cf6] text-[#0f0f12] font-medium">
                 <div className="w-3.5 h-3.5 rounded bg-[#0f0f12]/80 flex items-center justify-center overflow-hidden">
                   {settings?.admin_logo ? (
-                    <img src={getLogoUrl(settings.admin_logo)!} alt="" className="w-full h-full object-cover" />
+                    <img src={getLogoUrl(settings.admin_logo)!} alt="" loading="lazy" decoding="async" className="w-full h-full object-cover" />
                   ) : (
                     <svg className="w-2 h-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
                   )}

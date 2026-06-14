@@ -340,7 +340,7 @@ export default function Home() {
 
         {/* Slider Content */}
         <div className="slider-content absolute inset-0 z-10 mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
-          {!loading && Array.from({ length: sliderCount }).map((_, index) => (
+          {!loading && Array.from({ length: sliderCount }).map((_, index) => index === currentSlide ? (
             <div
               key={index}
               className={`transition-all duration-1000 ease-in-out absolute inset-0 ${
@@ -400,6 +400,8 @@ export default function Home() {
                              <img 
                                src={getStorageUrl(activeProduct.thumbnail)!} 
                                alt={activeProduct.name}
+                               loading="lazy"
+                               decoding="async"
                                className="w-20 h-20 rounded-xl object-cover border border-white/10 flex-shrink-0" 
                              />
                            )}
@@ -434,6 +436,8 @@ export default function Home() {
                                      <img
                                        src={getStorageUrl(currentProduct.thumbnail)!}
                                        alt={currentProduct.name}
+                                       loading="eager"
+                                       decoding="async"
                                        className="w-full h-full object-cover transition-all duration-700 group-hover:scale-[1.03]"
                                      />
                                    ) : (
@@ -489,7 +493,7 @@ export default function Home() {
                 
               </div>
             </div>
-          ))}
+          ) : null)}
 
           {/* Enhanced Loading state */}
           {loading && (
@@ -633,6 +637,8 @@ export default function Home() {
                     <img
                       src={getStorageUrl(product.thumbnail)!}
                       alt={product.name}
+                      loading="lazy"
+                      decoding="async"
                       className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                     />
                   ) : (
@@ -889,6 +895,8 @@ export default function Home() {
                            <img
                              src={getStorageUrl(product.thumbnail)!}
                              alt={product.name}
+                             loading="lazy"
+                             decoding="async"
                              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                            />
                          ) : (

@@ -714,6 +714,8 @@ function ProductsPageContent() {
                          <img
                              src={getStorageUrl(product.thumbnail) || '/placeholder.png'}
                            alt={product.name}
+                           loading="lazy"
+                           decoding="async"
                            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                            onError={(e) => {
                              (e.target as HTMLImageElement).style.display = 'none';
@@ -827,6 +829,8 @@ function ProductsPageContent() {
                          <img
                              src={getStorageUrl(product.thumbnail) || '/placeholder.png'}
                            alt={product.name}
+                           loading="lazy"
+                           decoding="async"
                            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                            onError={(e) => {
                              (e.target as HTMLImageElement).style.display = 'none';
@@ -952,6 +956,8 @@ function ProductsPageContent() {
                     <img
                       src={getStorageUrl(quickViewProduct.thumbnail) || '/placeholder.png'}
                       alt={quickViewProduct.name}
+                      loading="lazy"
+                      decoding="async"
                      className="w-full h-64 lg:h-full object-cover"
                      onError={(e) => {
                        (e.target as HTMLImageElement).style.display = 'none';
