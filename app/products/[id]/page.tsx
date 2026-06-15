@@ -557,10 +557,10 @@ export default function ProductDetailPage() {
         {/* GRID */}
         <div className="grid grid-cols-1 items-start gap-6 xl:grid-cols-12 xl:gap-8 2xl:gap-10">
           {/* IMAGE SECTION */}
-          <div className="w-full xl:col-span-7">
+          <div className="w-full xl:col-span-6">
             <div className="sticky top-20 space-y-4">
               {/* MAIN IMAGE */}
-              <div className="relative w-full overflow-hidden rounded-2xl border border-[#2a2a30] bg-[#16161a] shadow-2xl shadow-black/30">
+              <div className="relative mx-auto w-full max-w-[820px] overflow-hidden rounded-xl border border-[#2a2a30] bg-[#16161a] shadow-2xl shadow-black/30 sm:rounded-2xl">
                 {images.length > 0 ? (
                   <>
                     <div
@@ -574,17 +574,17 @@ export default function ProductDetailPage() {
                           key={index}
                           className="min-w-full flex-shrink-0"
                         >
-                           <div className="relative w-full aspect-[4/3] overflow-hidden bg-[#0f0f12] sm:aspect-[16/10] xl:aspect-[16/9]">
+                           <div className="relative aspect-[16/11] w-full overflow-hidden bg-[#0f0f12] sm:aspect-[16/10] lg:aspect-[16/9]">
                               <Image
                                 src={image}
-                               alt={`${product.name}-${index}`}
-                               className="absolute inset-0 h-full w-full object-contain p-2 transition-transform duration-500 hover:scale-[1.02] sm:p-3"
+                               alt={`${product.name} image ${index + 1}`}
+                               className="absolute inset-0 h-full w-full object-contain p-2 transition-transform duration-500 hover:scale-[1.02] sm:p-4 lg:p-5"
                                fill
                                priority={index === 0}
-                               sizes="(min-width: 1536px) 1050px, (min-width: 1280px) 58vw, (min-width: 1024px) 55vw, calc(100vw - 2rem)"
+                               sizes="(min-width: 1536px) 820px, (min-width: 1280px) 48vw, (min-width: 1024px) 50vw, (min-width: 640px) calc(100vw - 3rem), calc(100vw - 2rem)"
                              />
                              {/* Image overlay indicator */}
-                             <div className="absolute top-3 left-3 bg-black/65 backdrop-blur-xl px-3 py-1.5 rounded-lg text-xs text-white font-semibold border border-white/10 shadow-lg">
+                             <div className="absolute left-2 top-2 rounded-lg border border-white/10 bg-black/65 px-2.5 py-1 text-xs font-semibold text-white shadow-lg backdrop-blur-xl sm:left-3 sm:top-3 sm:px-3 sm:py-1.5">
                                <span className="text-[#00d4aa] font-bold">{index + 1}</span>
                                <span className="mx-1 text-white/70">/</span>
                                <span className="text-white/90">{totalImages}</span>
@@ -597,7 +597,7 @@ export default function ProductDetailPage() {
                      {/* PREV */}
                      <button
                        onClick={prevImage}
-                       className="absolute left-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/65 backdrop-blur-md border border-white/15 flex items-center justify-center text-white hover:bg-black/90 transition-all duration-200 z-20 shadow-lg"
+                       className="absolute left-2 top-1/2 z-20 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full border border-white/15 bg-black/65 text-white shadow-lg backdrop-blur-md transition-all duration-200 hover:bg-black/90 sm:left-3 sm:h-10 sm:w-10"
                      >
                        <svg className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M15 19l-7-7 7-7" />
@@ -607,7 +607,7 @@ export default function ProductDetailPage() {
                      {/* NEXT */}
                      <button
                        onClick={nextImage}
-                       className="absolute right-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/65 backdrop-blur-md border border-white/15 flex items-center justify-center text-white hover:bg-black/90 transition-all duration-200 z-20 shadow-lg"
+                       className="absolute right-2 top-1/2 z-20 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full border border-white/15 bg-black/65 text-white shadow-lg backdrop-blur-md transition-all duration-200 hover:bg-black/90 sm:right-3 sm:h-10 sm:w-10"
                      >
                        <svg className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M9 5l7 7-7 7" />
@@ -615,7 +615,7 @@ export default function ProductDetailPage() {
                      </button>
 
                      {/* DOTS */}
-                     <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex items-center gap-2 px-3 py-2 rounded-full bg-black/55 backdrop-blur-md z-20 border border-white/10">
+                     <div className="absolute bottom-2 left-1/2 z-20 flex -translate-x-1/2 items-center gap-1.5 rounded-full border border-white/10 bg-black/55 px-2.5 py-1.5 backdrop-blur-md sm:bottom-3 sm:gap-2 sm:px-3 sm:py-2">
                        {images.map((_, index) => (
                          <button
                            key={index}
@@ -630,7 +630,7 @@ export default function ProductDetailPage() {
                      </div>
                   </>
                 ) : (
-                  <div className="aspect-square flex items-center justify-center text-gray-500">
+                  <div className="flex aspect-[16/11] items-center justify-center text-gray-500 sm:aspect-[16/10] lg:aspect-[16/9]">
                     No Image
                   </div>
                 )}
@@ -640,7 +640,7 @@ export default function ProductDetailPage() {
               {images.length > 1 && (
                 <div className="w-full">
                   <div className="flex justify-center">
-                    <div className="grid w-full max-w-2xl grid-cols-4 gap-2 sm:grid-cols-5 sm:gap-3 md:grid-cols-6 lg:grid-cols-5 xl:grid-cols-6">
+                    <div className="grid w-full max-w-[820px] grid-cols-4 gap-2 sm:grid-cols-5 sm:gap-3 md:grid-cols-6 lg:grid-cols-5 xl:grid-cols-6">
                       {images.map((image, index) => (
                         <button
                           key={index}
@@ -656,7 +656,7 @@ export default function ProductDetailPage() {
                             alt={`thumb-${index}`}
                             className="h-full w-full object-contain p-1 transition-all duration-300 group-hover:scale-105 group-hover:brightness-110"
                             fill
-                            sizes="(min-width: 1280px) 8vw, (min-width: 640px) 16vw, 25vw"
+                            sizes="(min-width: 1536px) 160px, (min-width: 1280px) 9vw, (min-width: 640px) 16vw, 25vw"
                           />
                           {currentIndex === index && (
                             <div className="absolute inset-0 bg-[#00d4aa]/25 backdrop-blur-[1px] flex items-center justify-center">
@@ -720,7 +720,7 @@ export default function ProductDetailPage() {
           </div>
 
           {/* CONTENT SECTION */}
-          <div className="space-y-4 xl:col-span-5">
+          <div className="space-y-4 xl:col-span-6">
             {/* PREMIUM PRICE CARD */}
             <div className="relative overflow-hidden rounded-2xl border border-[#2a2a30] bg-[#16161a] p-5 shadow-2xl shadow-black/25 sm:p-6">
               {/* GRADIENT BACKGROUND ACCENT */}

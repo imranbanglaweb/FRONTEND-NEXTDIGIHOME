@@ -339,7 +339,7 @@ export default function Home() {
         <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(42,42,48,0.1)_1px,transparent_1px),linear-gradient(to_bottom,rgba(42,42,48,0.1)_1px,transparent_1px)] bg-[size:80px_80px] opacity-40" />
 
         {/* Slider Content */}
-        <div className="slider-content absolute inset-0 z-10 mx-auto w-full max-w-[88rem] px-4 sm:px-6 lg:px-8">
+        <div className="slider-content absolute inset-0 z-10 mx-auto w-full max-w-[78rem] px-4 sm:px-6 lg:px-8">
           {!loading && Array.from({ length: sliderCount }).map((_, index) => index === currentSlide ? (
             <div
               key={index}
@@ -350,7 +350,7 @@ export default function Home() {
               }`}
             >
               <div className="flex h-full items-center justify-center px-3 pb-10 pt-6 sm:px-5 sm:pb-8 sm:pt-8 lg:px-6">
-                <div className="grid grid-cols-1 md:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:grid-cols-[minmax(0,0.82fr)_minmax(0,1.18fr)] gap-5 lg:gap-10 items-center w-full max-w-[88rem]">
+                <div className="grid grid-cols-1 items-center gap-5 md:grid-cols-[minmax(0,1fr)_minmax(0,0.86fr)] lg:grid-cols-[minmax(0,1fr)_minmax(0,0.9fr)] lg:gap-8 w-full max-w-[78rem]">
                   {/* Premium Content Left - Dynamic from Products */}
                   {(() => {
                     const activeProduct = sliderProducts[currentSlide % Math.max(sliderProducts.length, 1)] || sliderProducts[0];
@@ -402,7 +402,7 @@ export default function Home() {
                                alt={activeProduct.name}
                                loading="lazy"
                                decoding="async"
-                               className="w-24 h-24 rounded-xl object-cover border border-white/10 flex-shrink-0" 
+                             className="h-20 w-20 flex-shrink-0 rounded-xl border border-white/10 object-contain bg-[#0f0f12] sm:h-24 sm:w-24" 
                              />
                            )}
                            <div className="min-w-0 flex-1">
@@ -416,11 +416,11 @@ export default function Home() {
 
                        {/* Premium Right Side - Single Product (synced via currentSlide % 6) - Responsive from md up */}
                      <div className="relative hidden md:block">
-                       <div className="relative">
+                       <div className="relative mx-auto w-full max-w-[560px] lg:ml-auto xl:max-w-[600px]">
                          {/* Deep luxurious glow */}
-                         <div className="absolute -inset-6 bg-gradient-to-r from-[#00d4aa] via-[#8b5cf6] to-[#ff6b9d] rounded-[3.5rem] blur-[95px] opacity-[0.17]"></div>
+                         <div className="absolute -inset-4 bg-gradient-to-r from-[#00d4aa] via-[#8b5cf6] to-[#ff6b9d] rounded-[2.5rem] blur-[70px] opacity-[0.14]"></div>
 
-                          <div className="relative bg-[#0a0a0d]/95 backdrop-blur-3xl border border-white/10 rounded-3xl p-4 md:p-5 shadow-[0_32px_100px_rgb(0,0,0,0.75)] ring-1 ring-white/5 overflow-hidden">
+                          <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-[#0a0a0d]/95 p-4 shadow-[0_24px_70px_rgb(0,0,0,0.65)] ring-1 ring-white/5 backdrop-blur-3xl lg:p-5">
                             {/* Inner subtle glow */}
                             <div className="absolute inset-0 bg-linear-to-br from-[#00d4aa]/5 via-transparent to-[#8b5cf6]/5 pointer-events-none" />
                             
@@ -431,14 +431,14 @@ export default function Home() {
                              return (
                                <>
                                  {/* Single Premium Product - Enhanced */}
-                                 <div className="relative aspect-[16/11] rounded-2xl overflow-hidden mb-4 border border-white/10 shadow-2xl">
+                                 <div className="relative mb-4 aspect-[16/10] overflow-hidden rounded-xl border border-white/10 bg-[#0f0f12] shadow-2xl lg:rounded-2xl">
                                    {currentProduct.thumbnail ? (
                                      <img
                                        src={getStorageUrl(currentProduct.thumbnail)!}
                                        alt={currentProduct.name}
                                        loading="eager"
                                        decoding="async"
-                                       className="w-full h-full object-cover transition-all duration-700 group-hover:scale-[1.03]"
+                                       className="h-full w-full object-contain p-2 transition-all duration-700 group-hover:scale-[1.03] lg:p-3"
                                      />
                                    ) : (
                                      <div className="w-full h-full bg-linear-to-br from-[#1a1a1f] to-[#2a2a30] flex items-center justify-center text-7xl">
