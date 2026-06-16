@@ -1,9 +1,51 @@
 import { MetadataRoute } from 'next';
 
-export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = 'https://nextdigihome.com';
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost/NEXTDIGIHOMEBACKEND';
+type SitemapRecord = {
+  id?: string | number;
+  slug?: string | null;
+  updated_at?: string | Date | null;
+  created_at?: string | Date | null;
+};
 
+const baseUrl = (process.env.NEXT_PUBLIC_SITE_URL || 'https://nextdigihome.com').replace(/\/$/, '');
+const apiUrl = (process.env.NEXT_PUBLIC_API_URL || 'https://backend.nextdigihome.com').replace(/\/$/, '');
+
+const unwrapArray = <T,>(data: unknown): T[] => {
+  if (Array.isArray(data)) return data as T[];
+  if (!data || typeof data !== 'object') return [];
+
+  const root = data as { data?: unknown };
+  if (Array.isArray(root.data)) return root.data as T[];
+  if (root.data && typeof root.data === 'object') {
+    const nested = root.data as { data?: unknown };
+    if (Array.isArray(nested.data)) return nested.data as T[];
+  }
+
+  return [];
+};
+
+const toLastModified = (value: string | Date | null | undefined) => {
+  if (!value) return new Date();
+  const date = new Date(value);
+  return Number.isNaN(date.getTime()) ? new Date() : date;
+};
+
+async function fetchRecords(endpoint: string): Promise<SitemapRecord[]> {
+  try {
+    const response = await fetch(`${apiUrl}/api/${endpoint}`, {
+      headers: { Accept: 'application/json' },
+      next: { revalidate: 3600 },
+    });
+
+    if (!response.ok) return [];
+    return unwrapArray<SitemapRecord>(await response.json());
+  } catch (error) {
+    console.warn(`Failed to fetch ${endpoint} for sitemap:`, error);
+    return [];
+  }
+}
+
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // Static routes with priority
   const staticRoutes = [
     { path: '', priority: 1.0, changeFrequency: 'daily' as const },
@@ -17,53 +59,34 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   ];
 
   const staticUrls = staticRoutes.map((route) => ({
-    url: `${baseUrl}/${route.path}`,
+    url: route.path ? `${baseUrl}/${route.path}` : baseUrl,
     lastModified: new Date(),
     changeFrequency: route.changeFrequency,
     priority: route.priority,
   }));
 
-  // Fetch dynamic products from API (if available)
-  let productUrls: MetadataRoute.Sitemap = [];
-  try {
-    const response = await fetch(`${apiUrl}/api/products?limit=10000`, {
-      next: { revalidate: 3600 },
-    });
-    if (response.ok) {
-      const products = await response.json();
-      productUrls = products.data?.map((product: { id: string; updated_at?: string | Date }) => ({
-        url: `${baseUrl}/products/${product.id}`,
-        lastModified: product.updated_at 
-          ? new Date(product.updated_at).toISOString().split('T')[0]
-          : new Date().toISOString().split('T')[0],
-        changeFrequency: 'weekly' as const,
-        priority: 0.80,
-      })) || [];
-    }
-  } catch (error) {
-    console.warn('Failed to fetch products for sitemap:', error);
-  }
+  const [products, posts] = await Promise.all([
+    fetchRecords('products?per_page=10000'),
+    fetchRecords('blog?per_page=1000'),
+  ]);
 
-  // Fetch dynamic blog posts from API (if available)
-  let blogUrls: MetadataRoute.Sitemap = [];
-  try {
-    const response = await fetch(`${apiUrl}/api/blog?limit=1000`, {
-      next: { revalidate: 3600 },
-    });
-    if (response.ok) {
-      const posts = await response.json();
-      blogUrls = posts.data?.map((post: { slug: string; updated_at?: string | Date }) => ({
-        url: `https://nextdigihome.com/blog/${post.slug}`,
-        lastModified: post.updated_at 
-          ? new Date(post.updated_at).toISOString().split('T')[0]
-          : new Date().toISOString().split('T')[0],
-        changeFrequency: 'weekly' as const,
-        priority: 0.75,
-      })) || [];
-    }
-  } catch (error) {
-    console.warn('Failed to fetch blog posts for sitemap:', error);
-  }
+  const productUrls: MetadataRoute.Sitemap = products
+    .filter((product) => product.id != null)
+    .map((product) => ({
+      url: `${baseUrl}/products/${product.id}`,
+      lastModified: toLastModified(product.updated_at || product.created_at),
+      changeFrequency: 'weekly' as const,
+      priority: 0.80,
+    }));
+
+  const blogUrls: MetadataRoute.Sitemap = posts
+    .filter((post) => post.slug)
+    .map((post) => ({
+      url: `${baseUrl}/blog/${post.slug}`,
+      lastModified: toLastModified(post.updated_at || post.created_at),
+      changeFrequency: 'weekly' as const,
+      priority: 0.75,
+    }));
 
   return [
     ...staticUrls,

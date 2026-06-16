@@ -1333,7 +1333,7 @@ export default function ProductDetailPage() {
                 {relatedProducts.map((related) => (
                   <Link
                     key={related.id}
-                    href={`/products/${related.slug || related.id}`}
+                    href={`/products/${related.id}`}
                     className="premium-related-card group flex-shrink-0 w-[min(20rem,calc(100vw-2rem))] sm:w-96 bg-linear-to-br from-[#16161a] to-[#1a1a1f] border border-white/10 rounded-2xl overflow-hidden hover:border-[#00d4aa]/60 transition-all duration-300 snap-start shadow-lg hover:shadow-2xl hover:shadow-[#00d4aa]/10"
                   >
                     {/* IMAGE SECTION */}

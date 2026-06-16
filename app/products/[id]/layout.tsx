@@ -190,7 +190,7 @@ export async function generateMetadata({ params }: ProductSegmentProps): Promise
     };
   }
 
-  const path = `/products/${product.slug || id}`;
+  const path = `/products/${id}`;
   const description = getDescription(product);
   const images = getProductImages(product);
   const image = images[0] || DEFAULT_IMAGE;
@@ -249,7 +249,7 @@ export default async function ProductDetailLayout({ children, params }: ProductR
     return children;
   }
 
-  const path = `/products/${product.slug || id}`;
+  const path = `/products/${id}`;
   const productUrl = `${SITE_URL}${path}`;
   const description = getDescription(product);
   const images = getProductImages(product);

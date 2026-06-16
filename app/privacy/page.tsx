@@ -2,12 +2,13 @@ import Link from "next/link";
 import { ShieldCheckIcon, LockClosedIcon } from "@heroicons/react/24/outline";
 import { fetchPrivacyContent } from "@/app/utils/api";
 import type { Metadata } from 'next';
+import { generatePageMetadata } from "@/app/utils/seo";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = generatePageMetadata({
   title: "Privacy Policy",
   description: "Read Next Digi Home's privacy policy. We protect your data with industry-leading security while providing premium digital products and services.",
-  robots: { index: true, follow: true },
-};
+  path: "/privacy",
+});
 
 export const dynamic = 'force-dynamic';
 

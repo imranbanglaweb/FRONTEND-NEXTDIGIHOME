@@ -1,19 +1,13 @@
 import { MetadataRoute } from 'next';
 
 export default function robots(): MetadataRoute.Robots {
-  const baseUrl = 'https://nextdigihome.com';
+  const baseUrl = (process.env.NEXT_PUBLIC_SITE_URL || 'https://nextdigihome.com').replace(/\/$/, '');
 
   return {
     rules: [
       {
         userAgent: '*',
-        allow: [
-          '/',
-          '/products',
-          '/services',
-          '/about',
-          '/contact',
-        ],
+        allow: '/',
         disallow: [
           '/admin/',
           '/dashboard/',
@@ -22,21 +16,14 @@ export default function robots(): MetadataRoute.Robots {
           '/cart/',
           '/signin/',
           '/signup/',
+          '/wp-admin/',
+          '/wp-content/',
+          '/wp-includes/',
+          '/xmlrpc.php',
           '/*.json$',
-          '/private',
-          '/temp',
+          '/private/',
+          '/temp/',
         ],
-        crawlDelay: 1,
-      },
-      {
-        userAgent: 'Googlebot',
-        allow: '/',
-        crawlDelay: 0,
-      },
-      {
-        userAgent: 'Bingbot',
-        allow: '/',
-        crawlDelay: 1,
       },
       // Block AI crawlers
       {
