@@ -33,7 +33,7 @@ import {
 } from "@heroicons/react/24/outline";
 
 interface ProductSummary extends CommercialInfo {
-  id: number;
+  id: number | string;
   digital: boolean;
   file_url: string | null;
   name: string;
@@ -49,6 +49,7 @@ interface Purchase extends CommercialInfo {
   customer_email: string;
   payment_method: string;
   quantity: number;
+  product_id?: number | string | null;
   created_at: string;
   download_token: string;
   download_expires_at: string | null;
@@ -69,10 +70,46 @@ interface DashboardStats {
   completedDownloads: number;
 }
 
+const hasCommercialInfo = (item: CommercialInfo | null | undefined): boolean => {
+  return Boolean(
+    item?.purchase_type ||
+    item?.purchase_type_label ||
+    item?.validity_days ||
+    item?.validity_label ||
+    item?.access_label ||
+    item?.commercial
+  );
+};
+
 const getPurchaseCommercialInfo = (purchase: Purchase): CommercialInfo => {
-  return purchase.product?.purchase_type || purchase.product?.commercial
-    ? purchase.product
-    : purchase;
+  if (purchase.product && hasCommercialInfo(purchase.product)) {
+    return purchase.product;
+  }
+
+  return purchase;
+};
+
+const unwrapProduct = (data: unknown): ProductSummary | null => {
+  if (!data || typeof data !== 'object') return null;
+  const root = data as { data?: unknown };
+  const candidate = root.data && typeof root.data === 'object' ? root.data : data;
+  if (!candidate || typeof candidate !== 'object') return null;
+  return candidate as ProductSummary;
+};
+
+const mergeProductCommercialInfo = (purchaseProduct: ProductSummary | undefined, fetchedProduct: ProductSummary): ProductSummary => {
+  return {
+    ...fetchedProduct,
+    ...purchaseProduct,
+    product_kind: purchaseProduct?.product_kind ?? fetchedProduct.product_kind,
+    product_kind_label: purchaseProduct?.product_kind_label ?? fetchedProduct.product_kind_label,
+    purchase_type: purchaseProduct?.purchase_type ?? fetchedProduct.purchase_type,
+    purchase_type_label: purchaseProduct?.purchase_type_label ?? fetchedProduct.purchase_type_label,
+    validity_days: purchaseProduct?.validity_days ?? fetchedProduct.validity_days,
+    validity_label: purchaseProduct?.validity_label ?? fetchedProduct.validity_label,
+    access_label: purchaseProduct?.access_label ?? fetchedProduct.access_label,
+    commercial: purchaseProduct?.commercial ?? fetchedProduct.commercial,
+  };
 };
 
 const formatShortDate = (date: Date): string => {
@@ -159,6 +196,44 @@ export default function DashboardPage() {
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
   const [authenticated, setAuthenticated] = useState<boolean | null>(null);
 
+  const enrichPurchasesWithProductCommercialInfo = async (purchaseList: Purchase[]): Promise<Purchase[]> => {
+    const productIds = Array.from(new Set(
+      purchaseList
+        .filter((purchase) => !hasCommercialInfo(purchase) && !hasCommercialInfo(purchase.product))
+        .map((purchase) => purchase.product?.id ?? purchase.product_id)
+        .filter((id): id is number | string => id != null && String(id).trim().length > 0)
+        .map((id) => String(id))
+    ));
+
+    if (productIds.length === 0) return purchaseList;
+
+    const productEntries = await Promise.all(
+      productIds.map(async (productId) => {
+        try {
+          const data = await apiFetch(`products/${encodeURIComponent(productId)}`, { silent: true });
+          return [productId, unwrapProduct(data)] as const;
+        } catch (error) {
+          console.warn(`Failed to fetch product commercial info for ${productId}:`, error instanceof Error ? error.message : error);
+          return [productId, null] as const;
+        }
+      })
+    );
+    const productMap = new Map(productEntries.filter((entry): entry is readonly [string, ProductSummary] => Boolean(entry[1])));
+
+    return purchaseList.map((purchase) => {
+      const productId = purchase.product?.id ?? purchase.product_id;
+      if (productId == null) return purchase;
+
+      const fetchedProduct = productMap.get(String(productId));
+      if (!fetchedProduct) return purchase;
+
+      return {
+        ...purchase,
+        product: mergeProductCommercialInfo(purchase.product, fetchedProduct),
+      };
+    });
+  };
+
   const searchPurchases = async (email: string) => {
     if (!email) return;
     setLoading(true);
@@ -169,9 +244,10 @@ export default function DashboardPage() {
         credentials: 'include',
       });
       const purchasesData = Array.isArray(data) ? data : (data.purchases || []);
-      setPurchases(purchasesData);
-      setFilteredPurchases(purchasesData);
-      calculateStats(purchasesData);
+      const enrichedPurchases = await enrichPurchasesWithProductCommercialInfo(purchasesData);
+      setPurchases(enrichedPurchases);
+      setFilteredPurchases(enrichedPurchases);
+      calculateStats(enrichedPurchases);
     } catch (error) {
       console.error('Failed to fetch purchases:', error);
       setPurchases([]);
@@ -200,9 +276,10 @@ export default function DashboardPage() {
         },
       });
       const purchasesData = Array.isArray(data) ? data : (data.purchases || []);
-      setPurchases(purchasesData);
-      setFilteredPurchases(purchasesData);
-      calculateStats(purchasesData);
+      const enrichedPurchases = await enrichPurchasesWithProductCommercialInfo(purchasesData);
+      setPurchases(enrichedPurchases);
+      setFilteredPurchases(enrichedPurchases);
+      calculateStats(enrichedPurchases);
     } catch (error) {
       console.error('Failed to fetch purchases:', error);
       setPurchases([]);
