@@ -25,8 +25,39 @@ interface CartItem extends CommercialInfo {
 interface CheckoutResponse {
   success?: boolean;
   message?: string;
+  transaction_id?: string;
+  order_transaction_id?: string;
+  order_reference?: string;
+  reference?: string;
+  purchase?: {
+    transaction_id?: string;
+    order_transaction_id?: string;
+    order_reference?: string;
+    reference?: string;
+  };
+  data?: {
+    transaction_id?: string;
+    order_transaction_id?: string;
+    order_reference?: string;
+    reference?: string;
+    purchase?: {
+      transaction_id?: string;
+      order_transaction_id?: string;
+      order_reference?: string;
+      reference?: string;
+    };
+    purchases?: Array<{
+      transaction_id?: string;
+      order_transaction_id?: string;
+      order_reference?: string;
+      reference?: string;
+    }>;
+  };
   purchases?: Array<{
     transaction_id?: string;
+    order_transaction_id?: string;
+    order_reference?: string;
+    reference?: string;
   }>;
 }
 
@@ -40,6 +71,37 @@ type ApiError = Error & {
   data?: {
     message?: string;
   };
+};
+
+const getCheckoutTransactionId = (data: CheckoutResponse, fallback?: string): string | null => {
+  return (
+    data.transaction_id ||
+    data.order_transaction_id ||
+    data.order_reference ||
+    data.reference ||
+    data.purchase?.transaction_id ||
+    data.purchase?.order_transaction_id ||
+    data.purchase?.order_reference ||
+    data.purchase?.reference ||
+    data.purchases?.[0]?.transaction_id ||
+    data.purchases?.[0]?.order_transaction_id ||
+    data.purchases?.[0]?.order_reference ||
+    data.purchases?.[0]?.reference ||
+    data.data?.transaction_id ||
+    data.data?.order_transaction_id ||
+    data.data?.order_reference ||
+    data.data?.reference ||
+    data.data?.purchase?.transaction_id ||
+    data.data?.purchase?.order_transaction_id ||
+    data.data?.purchase?.order_reference ||
+    data.data?.purchase?.reference ||
+    data.data?.purchases?.[0]?.transaction_id ||
+    data.data?.purchases?.[0]?.order_transaction_id ||
+    data.data?.purchases?.[0]?.order_reference ||
+    data.data?.purchases?.[0]?.reference ||
+    fallback ||
+    null
+  );
 };
 
 export default function CheckoutPage() {
@@ -226,8 +288,7 @@ const fetchCart = async () => {
        });
 
       if (data.success) {
-        const firstPurchase = data.purchases?.[0];
-        const newTransactionId = firstPurchase?.transaction_id || formData.transaction_id || null;
+        const newTransactionId = getCheckoutTransactionId(data);
         setTransactionId(newTransactionId);
         localStorage.setItem('customer_email', formData.customer_email);
         setStep('payment');
@@ -270,10 +331,17 @@ const fetchCart = async () => {
       }
 
       const formDataVerification = new FormData();
-      if (transactionId) {
-        formDataVerification.append('order_transaction_id', transactionId);
+      const orderTransactionId = transactionId?.trim();
+      if (orderTransactionId) {
+        formDataVerification.append('transaction_id', orderTransactionId);
+        formDataVerification.append('order_transaction_id', orderTransactionId);
+        formDataVerification.append('order_reference', orderTransactionId);
+      } else {
+        formDataVerification.append('transaction_id', paymentTransactionId);
       }
-      formDataVerification.append('transaction_id', paymentTransactionId);
+      formDataVerification.append('payment_transaction_id', paymentTransactionId);
+      formDataVerification.append('payment_trx_id', paymentTransactionId);
+      formDataVerification.append('gateway_transaction_id', paymentTransactionId);
       formDataVerification.append('sender_number', senderNumber);
       if (paymentProof) {
         formDataVerification.append('payment_proof', paymentProof);
