@@ -1,4 +1,5 @@
 import { Metadata } from "next";
+import { notFound } from "next/navigation";
 import { generateBreadcrumbSchema, StructuredData } from '../../utils/seo';
 import Link from "next/link";
 
@@ -17,37 +18,45 @@ const blogPosts: Record<string, { title: string; content: string; date: string; 
   },
 };
 
-export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
-  const post = blogPosts[params.slug];
+type BlogPostPageProps = {
+  params: Promise<{ slug: string }>;
+};
+
+export async function generateMetadata({ params }: BlogPostPageProps): Promise<Metadata> {
+  const { slug } = await params;
+  const post = blogPosts[slug];
+
+  if (!post) {
+    return {
+      title: "Blog Post Not Found | Next Digi Home",
+      robots: {
+        index: false,
+        follow: true,
+      },
+    };
+  }
+
   return {
-    title: post ? `${post.title} | Next Digi Home Blog` : "Blog Post | Next Digi Home",
-    description: post?.content.substring(0, 160) || "Read insights on digital products and business growth.",
+    title: `${post.title} | Next Digi Home Blog`,
+    description: post.content.substring(0, 160),
     alternates: {
-      canonical: `https://nextdigihome.com/blog/${params.slug}`,
+      canonical: `https://nextdigihome.com/blog/${slug}`,
     },
   };
 }
 
-export default function BlogPostPage({ params }: { params: { slug: string } }) {
-  const post = blogPosts[params.slug];
+export default async function BlogPostPage({ params }: BlogPostPageProps) {
+  const { slug } = await params;
+  const post = blogPosts[slug];
 
   if (!post) {
-    return (
-      <div className="min-h-screen bg-[#0f0f12] flex items-center justify-center">
-        <div className="text-center">
-          <h1 className="text-4xl font-bold text-white mb-4">Post Not Found</h1>
-          <Link href="/blog" className="text-[#00d4aa] hover:underline">
-            Back to Blog
-          </Link>
-        </div>
-      </div>
-    );
+    notFound();
   }
 
   const breadcrumbSchema = generateBreadcrumbSchema([
     { label: "Home", path: "/" },
     { label: "Blog", path: "/blog" },
-    { label: post.title, path: `/blog/${params.slug}` },
+    { label: post.title, path: `/blog/${slug}` },
   ]);
 
   return (

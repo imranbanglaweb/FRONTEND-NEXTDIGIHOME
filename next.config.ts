@@ -4,6 +4,36 @@ const nextConfig: NextConfig = {
   compress: true,
   poweredByHeader: false,
 
+  async redirects() {
+    return [
+      {
+        source: '/contact-us',
+        destination: '/contact',
+        permanent: true,
+      },
+      {
+        source: '/downloads',
+        destination: '/products',
+        permanent: true,
+      },
+      {
+        source: '/by-failing-to-prepare-you-are-preparing-to-fail',
+        destination: '/blog',
+        permanent: true,
+      },
+      {
+        source: '/my-best-advice-to-entrepreneurs-is-this-forget-about-making-mistakes-just-do-it',
+        destination: '/blog',
+        permanent: true,
+      },
+      {
+        source: '/simplicity-is-the-ultimate-sophistication',
+        destination: '/blog',
+        permanent: true,
+      },
+    ];
+  },
+
   // Proxy API requests to Laravel backend
   async rewrites() {
     const apiBase = (process.env.NEXT_PUBLIC_API_URL || 'https://backend.nextdigihome.com').replace(/\/$/, '');
