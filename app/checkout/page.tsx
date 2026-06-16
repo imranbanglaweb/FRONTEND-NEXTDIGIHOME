@@ -241,8 +241,15 @@ const fetchCart = async () => {
 
   const handlePaymentVerification = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!transactionId) {
+    const paymentTransactionId = formData.transaction_id.trim();
+    const senderNumber = formData.sender_number.trim();
+
+    if (!paymentTransactionId) {
       alert('Please enter transaction ID');
+      return;
+    }
+    if (!senderNumber) {
+      alert('Please enter sender number');
       return;
     }
 
@@ -254,7 +261,11 @@ const fetchCart = async () => {
       }
 
       const formDataVerification = new FormData();
-      formDataVerification.append('transaction_id', transactionId);
+      if (transactionId) {
+        formDataVerification.append('order_transaction_id', transactionId);
+      }
+      formDataVerification.append('transaction_id', paymentTransactionId);
+      formDataVerification.append('sender_number', senderNumber);
       if (paymentProof) {
         formDataVerification.append('payment_proof', paymentProof);
       }
@@ -273,6 +284,7 @@ const fetchCart = async () => {
 
       if (data.success) {
         await clearCheckoutCart(token);
+        setTransactionId(paymentTransactionId);
         setStep('success');
       } else {
         alert(data.message || 'Verification failed');
