@@ -166,6 +166,23 @@ const fetchCart = async () => {
     }, 3000);
   };
 
+  const clearCheckoutCart = async (token: string) => {
+    try {
+      await apiFetch('/cart', {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+        credentials: 'include',
+      });
+    } catch (cartError) {
+      console.error('Failed to clear cart after checkout:', cartError);
+    } finally {
+      setItems([]);
+      window.dispatchEvent(new Event('cartUpdated'));
+    }
+  };
+
 
 
   const handleSubmitOrder = async (e: React.FormEvent) => {
@@ -205,16 +222,6 @@ const fetchCart = async () => {
         setTransactionId(newTransactionId);
         localStorage.setItem('customer_email', formData.customer_email);
         setStep('payment');
-        apiFetch('/cart', { 
-          method: 'DELETE',
-          headers: {
-            'Authorization': `Bearer ${token}`,
-          },
-          credentials: 'include' 
-        }).catch((cartError) => {
-          console.error('Failed to clear cart after checkout:', cartError);
-        });
-        window.dispatchEvent(new Event('cartUpdated'));
       } else {
         alert(data.message || 'Checkout failed');
       }
@@ -265,6 +272,7 @@ const fetchCart = async () => {
        });
 
       if (data.success) {
+        await clearCheckoutCart(token);
         setStep('success');
       } else {
         alert(data.message || 'Verification failed');
