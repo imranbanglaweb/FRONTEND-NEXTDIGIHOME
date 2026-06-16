@@ -55,7 +55,7 @@ export default function CartPage() {
             headers['Authorization'] = `Bearer ${token}`;
           }
 
-          const data = await apiFetch(`/cart?id=${itemId}`, {
+          await apiFetch(`/cart/${encodeURIComponent(itemId)}`, {
             method: 'PUT',
             headers,
             credentials: 'include',
@@ -81,7 +81,7 @@ export default function CartPage() {
             headers['Authorization'] = `Bearer ${token}`;
           }
 
-          const data = await apiFetch(`/api/cart?id=${itemId}`, {
+          await apiFetch(`/cart/${encodeURIComponent(itemId)}`, {
             method: 'DELETE',
             headers,
             credentials: 'include',
@@ -104,7 +104,7 @@ export default function CartPage() {
             headers['Authorization'] = `Bearer ${token}`;
           }
 
-          const data = await apiFetch('/api/cart', {
+          await apiFetch('/cart', {
             method: 'DELETE',
             headers,
             credentials: 'include',
