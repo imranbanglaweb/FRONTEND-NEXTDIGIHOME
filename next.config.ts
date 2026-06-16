@@ -31,6 +31,31 @@ const nextConfig: NextConfig = {
         destination: '/blog',
         permanent: true,
       },
+      {
+        source: '/home',
+        destination: '/',
+        permanent: true,
+      },
+      {
+        source: '/events/feed',
+        destination: '/blog',
+        permanent: true,
+      },
+      {
+        source: '/wp-content/plugins/:path*',
+        destination: '/',
+        permanent: true,
+      },
+      {
+        source: '/wp-admin/:path*',
+        destination: '/',
+        permanent: true,
+      },
+      {
+        source: '/\\*',
+        destination: '/',
+        permanent: true,
+      },
     ];
   },
 
