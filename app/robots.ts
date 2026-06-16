@@ -12,14 +12,6 @@ export default function robots(): MetadataRoute.Robots {
           '/admin/',
           '/dashboard/',
           '/api/',
-          '/checkout/',
-          '/cart/',
-          '/signin/',
-          '/signup/',
-          '/wp-admin/',
-          '/wp-content/',
-          '/wp-includes/',
-          '/xmlrpc.php',
           '/*.json$',
           '/private/',
           '/temp/',
@@ -40,6 +32,5 @@ export default function robots(): MetadataRoute.Robots {
       },
     ],
     sitemap: `${baseUrl}/sitemap.xml`,
-    host: baseUrl,
   };
 }
