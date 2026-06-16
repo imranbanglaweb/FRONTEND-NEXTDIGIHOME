@@ -469,21 +469,56 @@ const [settings, setSettings] = useState<{
         {children}
       </main>
 
-      {/* WhatsApp Floating Button */}
-      <a
-        href="https://wa.me/1234567890?text=Hello%20Next%20Digi%20Home%20Support"
-        target="_blank"
-        rel="noopener noreferrer"
-        className="fixed bottom-5 left-4 z-40 flex h-12 w-12 items-center justify-center rounded-full border-2 border-white bg-linear-to-br from-[#25d366] to-[#128c7e] text-xl text-white shadow-lg transition-all duration-300 hover:scale-110 hover:shadow-2xl sm:bottom-8 sm:left-8 sm:h-16 sm:w-16 sm:text-2xl sm:border-3 group animate-float"
-        title="Contact us on WhatsApp"
-      >
-        <svg className="h-6 w-6 sm:h-8 sm:w-8" fill="currentColor" viewBox="0 0 24 24">
-          <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.272-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.67-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.076 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421-7.403h-.004a9.87 9.87 0 00-4.782 1.176l-.002 1.146c0 4.995 4.027 9.06 9.03 9.06h.013c1.104 0 2.183-.153 3.22-.45l1.146.002h-.004c.573 0 1.088-.227 1.513-.652.425-.425.652-.94.652-1.513v-.146a9.87 9.87 0 00-9.077-8.723z"/>
-        </svg>
-        <div className="absolute -top-12 left-0 bg-linear-to-br from-[#25d366] to-[#128c7e] text-white px-3 py-2 rounded-lg text-xs font-semibold whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
-          Chat with us
-        </div>
-      </a>
+      {/* Floating Social Buttons */}
+      <div className="fixed bottom-5 left-4 z-40 flex max-w-[calc(100vw-2rem)] flex-col items-start gap-3 sm:bottom-8 sm:left-8">
+        <a
+          href="https://www.facebook.com/NextdigiHome/"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="group relative flex w-[16.5rem] max-w-full items-center gap-3 overflow-hidden rounded-2xl border border-[#1877f2]/35 bg-[#10131b]/95 p-3 shadow-2xl shadow-[#1877f2]/20 backdrop-blur-xl transition-all duration-300 hover:-translate-y-1 hover:border-[#6aa9ff]/70 hover:shadow-[#1877f2]/35 animate-facebook-pulse"
+          title="Follow NextdigiHome on Facebook"
+          aria-label="Follow NextdigiHome on Facebook"
+        >
+          <span className="absolute inset-0 bg-[radial-gradient(circle_at_18%_18%,rgba(24,119,242,0.42),transparent_38%)]" />
+          <span className="absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent via-white/45 to-transparent" />
+          <span className="absolute -inset-y-8 left-0 w-7 bg-white/20 blur-md animate-whatsapp-shine" />
+          <span className="relative flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl bg-linear-to-br from-[#4da3ff] via-[#1877f2] to-[#0b4fba] text-white shadow-lg shadow-[#1877f2]/35 transition-transform duration-300 group-hover:scale-110">
+            <svg className="h-7 w-7" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M22 12.06C22 6.5 17.52 2 12 2S2 6.5 2 12.06c0 5.02 3.66 9.18 8.44 9.94v-7.03H7.9v-2.91h2.54V9.84c0-2.52 1.49-3.91 3.77-3.91 1.09 0 2.23.2 2.23.2v2.46h-1.26c-1.24 0-1.63.78-1.63 1.57v1.9h2.78l-.44 2.91h-2.34V22C18.34 21.24 22 17.08 22 12.06Z" />
+            </svg>
+          </span>
+          <span className="relative min-w-0 flex-1">
+            <span className="block truncate text-sm font-extrabold text-white">NextdigiHome</span>
+            <span className="mt-1 flex flex-wrap gap-1.5 text-[11px] font-bold">
+              <span className="rounded-full bg-white px-2 py-1 text-[#1877f2]">Like Page</span>
+              <span className="rounded-full border border-white/15 bg-white/10 px-2 py-1 text-white">Follow</span>
+            </span>
+          </span>
+        </a>
+
+        <a
+          href="https://wa.me/1234567890?text=Hello%20Next%20Digi%20Home%20Support"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="group relative flex h-14 w-14 items-center justify-center rounded-full sm:h-16 sm:w-auto sm:min-w-16 sm:justify-start"
+          title="Contact us on WhatsApp"
+          aria-label="Contact us on WhatsApp"
+        >
+          <span className="absolute inset-0 rounded-full bg-[#25d366]/30 blur-xl transition-all duration-500 group-hover:bg-[#25d366]/45 group-hover:blur-2xl sm:inset-y-1 sm:left-1 sm:w-16" />
+          <span className="absolute inset-0 rounded-full border border-[#25d366]/35 animate-whatsapp-pulse sm:inset-y-0 sm:left-0 sm:w-16" />
+          <span className="relative flex h-14 w-14 items-center justify-center overflow-hidden rounded-full border border-white/35 bg-linear-to-br from-[#2df070] via-[#25d366] to-[#0f8b64] text-white shadow-2xl shadow-[#25d366]/30 transition-all duration-300 group-hover:scale-110 group-hover:border-white/60 sm:h-16 sm:w-16">
+            <span className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(255,255,255,0.6),transparent_32%)] opacity-80" />
+            <span className="absolute -inset-y-6 left-0 w-5 bg-white/35 blur-sm animate-whatsapp-shine" />
+            <svg className="relative z-10 h-7 w-7 drop-shadow-lg sm:h-8 sm:w-8" fill="currentColor" viewBox="0 0 32 32" aria-hidden="true">
+              <path d="M16.01 3.2c-7.02 0-12.73 5.69-12.73 12.69 0 2.24.59 4.43 1.72 6.36L3.17 28.8l6.72-1.76a12.8 12.8 0 0 0 6.12 1.56c7.02 0 12.73-5.69 12.73-12.7S23.03 3.2 16.01 3.2Zm0 23.24c-1.9 0-3.77-.51-5.4-1.48l-.39-.23-3.99 1.04 1.06-3.87-.25-.4a10.45 10.45 0 0 1-1.6-5.61c0-5.81 4.74-10.53 10.57-10.53s10.57 4.72 10.57 10.53-4.74 10.55-10.57 10.55Zm5.8-7.89c-.32-.16-1.88-.92-2.17-1.03-.29-.11-.5-.16-.71.16-.21.31-.82 1.03-1.01 1.24-.18.21-.37.24-.69.08-.32-.16-1.34-.49-2.55-1.57-.94-.84-1.58-1.88-1.77-2.2-.18-.32-.02-.49.14-.65.14-.14.32-.37.48-.55.16-.19.21-.32.32-.53.11-.21.05-.4-.03-.56-.08-.16-.71-1.71-.98-2.34-.26-.61-.52-.53-.71-.54h-.61c-.21 0-.56.08-.85.4-.29.32-1.11 1.08-1.11 2.64s1.14 3.06 1.29 3.27c.16.21 2.24 3.41 5.42 4.78.76.33 1.35.52 1.81.67.76.24 1.45.21 2 .13.61-.09 1.88-.77 2.15-1.51.27-.74.27-1.37.19-1.51-.08-.13-.29-.21-.61-.37Z" />
+            </svg>
+            <span className="absolute right-1.5 top-1.5 h-3.5 w-3.5 rounded-full border-2 border-white bg-[#facc15] shadow-lg shadow-[#facc15]/40" />
+          </span>
+          <span className="relative ml-3 hidden max-w-0 items-center overflow-hidden rounded-full border border-[#25d366]/30 bg-[#101512]/90 px-0 py-2 text-sm font-bold text-white shadow-xl shadow-black/30 backdrop-blur-xl transition-all duration-300 group-hover:max-w-44 group-hover:px-4 sm:flex">
+            <span className="whitespace-nowrap">Live Chat</span>
+          </span>
+        </a>
+      </div>
 
       {/* Premium Back to Top Button */}
       <button
