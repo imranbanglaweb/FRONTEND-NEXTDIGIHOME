@@ -6,7 +6,10 @@ import { getStorageUrl, apiFetch, getApiUrl } from '../utils/api';
 import {
   getAccessLabel,
   getProductKindLabel,
+  getPurchaseType,
   getPurchaseTypeLabel,
+  getValidityDays,
+  isSubscriptionPurchase,
   type CommercialInfo,
 } from '../utils/commercial';
 import {
@@ -52,6 +55,10 @@ interface Purchase extends CommercialInfo {
   download_count: number;
   last_download_at: string | null;
   delivered_at: string | null;
+  access_expires_at?: string | null;
+  subscription_expires_at?: string | null;
+  expires_at?: string | null;
+  valid_until?: string | null;
   product?: ProductSummary;
 }
 
@@ -68,11 +75,51 @@ const getPurchaseCommercialInfo = (purchase: Purchase): CommercialInfo => {
     : purchase;
 };
 
+const formatShortDate = (date: Date): string => {
+  return date.toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+  });
+};
+
+const getSubscriptionExpiryDate = (purchase: Purchase): Date | null => {
+  const commercialInfo = getPurchaseCommercialInfo(purchase);
+  if (!isSubscriptionPurchase(commercialInfo)) return null;
+
+  const explicitExpiry =
+    purchase.access_expires_at ||
+    purchase.subscription_expires_at ||
+    purchase.valid_until ||
+    purchase.expires_at ||
+    null;
+
+  if (explicitExpiry) {
+    const parsed = new Date(explicitExpiry);
+    if (!Number.isNaN(parsed.getTime())) return parsed;
+  }
+
+  const purchaseType = getPurchaseType(commercialInfo);
+  const validityDays =
+    getValidityDays(commercialInfo) ??
+    (purchaseType.includes('month') ? 30 : purchaseType.includes('year') || purchaseType.includes('annual') ? 365 : null);
+
+  if (!validityDays) return null;
+
+  const purchasedAt = new Date(purchase.created_at);
+  if (Number.isNaN(purchasedAt.getTime())) return null;
+
+  const expiryDate = new Date(purchasedAt);
+  expiryDate.setDate(expiryDate.getDate() + validityDays);
+  return expiryDate;
+};
+
 const CommercialBadges = ({ purchase, showKind = false }: { purchase: Purchase; showKind?: boolean }) => {
   const commercialInfo = getPurchaseCommercialInfo(purchase);
   const purchaseTypeLabel = getPurchaseTypeLabel(commercialInfo);
   const accessLabel = getAccessLabel(commercialInfo);
   const productKindLabel = getProductKindLabel(commercialInfo, purchase.product?.digital ? 'Digital product' : 'Product');
+  const expiryDate = getSubscriptionExpiryDate(purchase);
 
   return (
     <div className="mt-2 flex flex-wrap gap-1.5">
@@ -87,6 +134,11 @@ const CommercialBadges = ({ purchase, showKind = false }: { purchase: Purchase; 
       {accessLabel !== purchaseTypeLabel && (
         <span className="rounded-md border border-[#8b5cf6]/25 bg-[#8b5cf6]/10 px-2 py-1 text-[11px] font-semibold text-[#d8c8ff]">
           {accessLabel}
+        </span>
+      )}
+      {expiryDate && (
+        <span className="rounded-md border border-[#f59e0b]/30 bg-[#f59e0b]/10 px-2 py-1 text-[11px] font-semibold text-[#fbd38d]">
+          Expires {formatShortDate(expiryDate)}
         </span>
       )}
     </div>
