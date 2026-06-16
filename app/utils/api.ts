@@ -27,16 +27,16 @@ export const apiFetch = async <T = any>(
   options: FetchOptions = {},
 ): Promise<T> => {
   const url = getApiUrl(endpoint);
-  
   const isFormData = options.body instanceof FormData;
+  const { headers, ...restOptions } = options;
   
   const fetchOptions: RequestInit = {
     cache: 'no-store',
-    headers: isFormData ? {} : {
+    ...restOptions,
+    headers: isFormData ? headers : {
       'Content-Type': 'application/json',
-      ...options.headers,
+      ...headers,
     },
-    ...options,
   };
 
   try {

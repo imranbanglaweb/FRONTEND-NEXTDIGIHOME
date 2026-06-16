@@ -184,17 +184,10 @@ const fetchCart = async () => {
         quantity: item.quantity,
       }));
 
-      // Create FormData for file upload support
-      const formDataToSend = new FormData();
-      Object.entries(formData).forEach(([key, value]) => {
-        formDataToSend.append(key, value);
-      });
-      formDataToSend.append('items', JSON.stringify(orderItems));
-
-      // Add payment proof file if exists
-      if (paymentProof) {
-        formDataToSend.append('payment_proof', paymentProof);
-      }
+      const checkoutPayload = {
+        ...formData,
+        items: JSON.stringify(orderItems),
+      };
 
        const data = await apiFetch<CheckoutResponse>('/checkout', {
          method: 'POST',
@@ -203,7 +196,7 @@ const fetchCart = async () => {
            'Accept': 'application/json',
          },
          credentials: 'include',
-         body: formDataToSend,
+         body: JSON.stringify(checkoutPayload),
        });
 
       if (data.success) {
@@ -212,7 +205,6 @@ const fetchCart = async () => {
         setTransactionId(newTransactionId);
         localStorage.setItem('customer_email', formData.customer_email);
         setStep('payment');
-        setSubmitting(false);
         apiFetch('/cart', { 
           method: 'DELETE',
           headers: {
@@ -225,7 +217,6 @@ const fetchCart = async () => {
         window.dispatchEvent(new Event('cartUpdated'));
       } else {
         alert(data.message || 'Checkout failed');
-        setSubmitting(false);
       }
     } catch (error) {
       console.error('Checkout error:', error);
@@ -236,7 +227,6 @@ const fetchCart = async () => {
         return;
       }
       alert(apiError.data?.message || 'Failed to complete order. Please try again.');
-      setSubmitting(false);
     } finally {
       setSubmitting(false);
     }
