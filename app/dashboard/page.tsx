@@ -4,6 +4,12 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { getStorageUrl, apiFetch, getApiUrl } from '../utils/api';
 import {
+  getAccessLabel,
+  getProductKindLabel,
+  getPurchaseTypeLabel,
+  type CommercialInfo,
+} from '../utils/commercial';
+import {
   ArrowDownTrayIcon,
   CheckCircleIcon,
   ClockIcon,
@@ -23,10 +29,18 @@ import {
   BarsArrowUpIcon
 } from "@heroicons/react/24/outline";
 
-interface Purchase {
+interface ProductSummary extends CommercialInfo {
+  id: number;
+  digital: boolean;
+  file_url: string | null;
+  name: string;
+  price: number | string;
+}
+
+interface Purchase extends CommercialInfo {
   id: number;
   transaction_id: string;
-  total: number;
+  total: number | string;
   status: string;
   customer_name: string;
   customer_email: string;
@@ -38,13 +52,7 @@ interface Purchase {
   download_count: number;
   last_download_at: string | null;
   delivered_at: string | null;
-  product?: {
-    id: number;
-    digital: boolean;
-    file_url: string | null;
-    name: string;
-    price: number;
-  };
+  product?: ProductSummary;
 }
 
 interface DashboardStats {
@@ -53,6 +61,37 @@ interface DashboardStats {
   pendingDownloads: number;
   completedDownloads: number;
 }
+
+const getPurchaseCommercialInfo = (purchase: Purchase): CommercialInfo => {
+  return purchase.product?.purchase_type || purchase.product?.commercial
+    ? purchase.product
+    : purchase;
+};
+
+const CommercialBadges = ({ purchase, showKind = false }: { purchase: Purchase; showKind?: boolean }) => {
+  const commercialInfo = getPurchaseCommercialInfo(purchase);
+  const purchaseTypeLabel = getPurchaseTypeLabel(commercialInfo);
+  const accessLabel = getAccessLabel(commercialInfo);
+  const productKindLabel = getProductKindLabel(commercialInfo, purchase.product?.digital ? 'Digital product' : 'Product');
+
+  return (
+    <div className="mt-2 flex flex-wrap gap-1.5">
+      {showKind && (
+        <span className="rounded-md border border-[#2a2a30] bg-[#0f0f12]/70 px-2 py-1 text-[11px] font-semibold text-[#cfcfcf]">
+          {productKindLabel}
+        </span>
+      )}
+      <span className="rounded-md border border-[#00d4aa]/25 bg-[#00d4aa]/10 px-2 py-1 text-[11px] font-semibold text-[#b9fff1]">
+        {purchaseTypeLabel}
+      </span>
+      {accessLabel !== purchaseTypeLabel && (
+        <span className="rounded-md border border-[#8b5cf6]/25 bg-[#8b5cf6]/10 px-2 py-1 text-[11px] font-semibold text-[#d8c8ff]">
+          {accessLabel}
+        </span>
+      )}
+    </div>
+  );
+};
 
 export default function DashboardPage() {
   const [purchases, setPurchases] = useState<Purchase[]>([]);
@@ -553,6 +592,7 @@ export default function DashboardPage() {
                         <div>
                           <p className="font-semibold text-[#fafafa]">{purchase.product?.name || 'Product'}</p>
                           <p className="text-sm text-[#737373]">{formatDate(purchase.created_at)}</p>
+                          <CommercialBadges purchase={purchase} />
                         </div>
                       </div>
                       <div className="flex items-center gap-4">
@@ -737,6 +777,7 @@ export default function DashboardPage() {
                             <h3 className="text-lg font-semibold text-[#fafafa]">
                               {purchase.product?.name || 'Digital Product'}
                             </h3>
+                            <CommercialBadges purchase={purchase} showKind />
                             <div className="flex items-center gap-4 mt-2 text-sm text-[#737373]">
                               <span>Qty: {purchase.quantity}</span>
                               <span>•</span>
@@ -847,6 +888,7 @@ export default function DashboardPage() {
                           </div>
                           <div>
                             <p className="font-semibold text-[#fafafa]">{purchase.product?.name}</p>
+                            <CommercialBadges purchase={purchase} showKind />
                             <p className="text-sm text-[#737373]">
                               {downloadStatus ? downloadStatus.text : 'Not available'}
                             </p>
@@ -1056,6 +1098,7 @@ export default function DashboardPage() {
                           <h3 className="text-lg font-semibold text-[#fafafa]">
                             {purchase.product?.name || 'Digital Product'}
                           </h3>
+                          <CommercialBadges purchase={purchase} showKind />
                           <p className="text-sm text-[#737373]">Qty: {purchase.quantity}</p>
                           <p className="text-xs text-[#737373] mt-1">
                             Purchased: {new Date(purchase.created_at).toLocaleDateString()}
