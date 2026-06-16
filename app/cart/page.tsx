@@ -4,8 +4,9 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { TrashIcon, PlusIcon, MinusIcon, ShoppingBagIcon, ArrowRightIcon } from "@heroicons/react/24/outline";
 import { getStorageUrl, apiFetch } from '../utils/api';
+import { getAccessLabel, getPurchaseTypeLabel, type CommercialInfo } from '../utils/commercial';
 
-interface CartItem {
+interface CartItem extends CommercialInfo {
   id: string;
   product_id: number;
   name: string;
@@ -198,6 +199,14 @@ export default function CartPage() {
                           {item.name}
                         </Link>
                         <p className="text-[#00d4aa] font-bold mt-1">৳${item.price.toFixed(2)}</p>
+                        <div className="mt-2 flex flex-wrap gap-1.5">
+                          <span className="rounded-md border border-[#00d4aa]/25 bg-[#00d4aa]/10 px-2 py-1 text-[11px] font-semibold text-[#b9fff1]">
+                            {getPurchaseTypeLabel(item)}
+                          </span>
+                          <span className="rounded-md border border-[#8b5cf6]/25 bg-[#8b5cf6]/10 px-2 py-1 text-[11px] font-semibold text-[#d8c8ff]">
+                            {getAccessLabel(item)}
+                          </span>
+                        </div>
                       </div>
                       <button
                         onClick={() => removeItem(item.id)}

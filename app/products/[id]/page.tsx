@@ -20,6 +20,14 @@ import {
 } from '@heroicons/react/24/outline';
 import Swal from 'sweetalert2';
 import { getStorageUrl, apiFetch } from '../../utils/api';
+import {
+  getAccessLabel,
+  getProductKindLabel,
+  getPurchaseType,
+  getPurchaseTypeLabel,
+  getValidityDays,
+  type CommercialInfo,
+} from '../../utils/commercial';
 
 const VIDEO_EXTENSIONS = ['.mp4', '.webm', '.ogg', '.mov', '.m4v'];
 
@@ -152,7 +160,7 @@ const parseStringArray = (value: string[] | string | null | undefined): string[]
   }
 };
 
-const formatPrice = (price: number): string => `৳${Number(price || 0).toLocaleString('en-BD')}`;
+const formatPrice = (price: number | string): string => `৳${Number(price || 0).toLocaleString('en-BD')}`;
 
 interface ProductReview {
   title: string;
@@ -163,14 +171,14 @@ interface ProductReview {
   helpful: number;
 }
 
-interface Product {
+interface Product extends CommercialInfo {
   id: number;
   name: string;
   slug: string;
   description: string | null;
   detailed_description: string | null;
-  price: number;
-  compare_price: number | null;
+  price: number | string;
+  compare_price: number | string | null;
   stock: number;
   digital: boolean;
   file_url: string | null;
@@ -396,11 +404,13 @@ export default function ProductDetailPage() {
   // =========================
   // DISCOUNT
   // =========================
+  const productPrice = Number(product?.price || 0);
+  const productComparePrice = product?.compare_price == null ? null : Number(product.compare_price);
   const discount =
-    product?.compare_price && product.compare_price > product.price
+    productComparePrice && productComparePrice > productPrice
       ? Math.round(
-          ((product.compare_price - product.price) /
-            product.compare_price) *
+          ((productComparePrice - productPrice) /
+            productComparePrice) *
             100
         )
       : 0;
@@ -423,6 +433,8 @@ export default function ProductDetailPage() {
          body: JSON.stringify({
            product_id: product.id,
            quantity: quantity,
+           purchase_type: getPurchaseType(product),
+           validity_days: getValidityDays(product),
          }),
       });
 
@@ -738,7 +750,8 @@ export default function ProductDetailPage() {
                     </div>
 
                     {product.compare_price &&
-                      product.compare_price > product.price && (
+                      productComparePrice != null &&
+                      productComparePrice > productPrice && (
                         <div className="flex flex-col items-start gap-1.5 sm:items-end">
                           <span className="text-base text-gray-500 line-through">
                             {formatPrice(product.compare_price)}
@@ -748,6 +761,14 @@ export default function ProductDetailPage() {
                           </span>
                         </div>
                       )}
+                  </div>
+                  <div className="mt-4 flex flex-wrap gap-2">
+                    <span className="rounded-lg border border-[#00d4aa]/30 bg-[#00d4aa]/10 px-3 py-1.5 text-xs font-bold text-[#b9fff1]">
+                      {getPurchaseTypeLabel(product)}
+                    </span>
+                    <span className="rounded-lg border border-[#8b5cf6]/30 bg-[#8b5cf6]/10 px-3 py-1.5 text-xs font-bold text-[#d8c8ff]">
+                      {getAccessLabel(product)}
+                    </span>
                   </div>
                 </div>
 
@@ -932,7 +953,33 @@ export default function ProductDetailPage() {
                   <div className="flex-1 min-w-0">
                     <div className="text-[11px] font-semibold uppercase tracking-wide text-gray-500">Product Type</div>
                     <div className="mt-1 text-sm font-semibold text-[#fafafa]">
-                      {product.digital ? 'Digital Product' : 'Physical Product'}
+                      {getProductKindLabel(product, product.digital ? 'Digital Product' : 'Physical Product')}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Purchase Type */}
+                <div className="flex items-start gap-3 border-b border-[#2a2a30] pb-4">
+                  <div className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-xl border border-[#8b5cf6]/30 bg-[#8b5cf6]/10">
+                    <ClockIcon className="w-5 h-5 text-[#c4a8ff]" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="text-[11px] font-semibold uppercase tracking-wide text-gray-500">Purchase Type</div>
+                    <div className="mt-1 text-sm font-semibold text-[#fafafa]">
+                      {getPurchaseTypeLabel(product)}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Access */}
+                <div className="flex items-start gap-3 border-b border-[#2a2a30] pb-4">
+                  <div className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-xl border border-[#00d4aa]/30 bg-[#00d4aa]/10">
+                    <BoltIcon className="w-5 h-5 text-[#00d4aa]" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="text-[11px] font-semibold uppercase tracking-wide text-gray-500">Access</div>
+                    <div className="mt-1 text-sm font-semibold text-[#fafafa]">
+                      {getAccessLabel(product)}
                     </div>
                   </div>
                 </div>

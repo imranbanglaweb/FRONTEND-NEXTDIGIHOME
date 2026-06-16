@@ -4,8 +4,15 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { CheckCircleIcon, ArrowLeftIcon, BanknotesIcon, PhotoIcon, CreditCardIcon, BuildingStorefrontIcon, DevicePhoneMobileIcon, BuildingLibraryIcon, ClockIcon, CloudArrowUpIcon, EyeIcon, ArrowDownTrayIcon } from "@heroicons/react/24/outline";
 import { getStorageUrl, apiFetch } from '../utils/api';
+import {
+  getAccessLabel,
+  getPurchaseType,
+  getPurchaseTypeLabel,
+  getValidityDays,
+  type CommercialInfo,
+} from '../utils/commercial';
 
-interface CartItem {
+interface CartItem extends CommercialInfo {
   id: string;
   product_id: number;
   name: string;
@@ -199,6 +206,8 @@ const fetchCart = async () => {
       const orderItems = items.map(item => ({
         product_id: item.product_id,
         quantity: item.quantity,
+        purchase_type: getPurchaseType(item),
+        validity_days: getValidityDays(item),
       }));
 
       const checkoutPayload = {
@@ -785,6 +794,14 @@ const fetchCart = async () => {
                           <div className="flex-1">
                             <p className="text-[#fafafa] font-medium text-sm">{item.name}</p>
                             <p className="text-xs text-[#737373]">Qty: {item.quantity}</p>
+                            <div className="mt-2 flex flex-wrap gap-1.5">
+                              <span className="rounded-md border border-[#00d4aa]/25 bg-[#00d4aa]/10 px-2 py-1 text-[11px] font-semibold text-[#b9fff1]">
+                                {getPurchaseTypeLabel(item)}
+                              </span>
+                              <span className="rounded-md border border-[#8b5cf6]/25 bg-[#8b5cf6]/10 px-2 py-1 text-[11px] font-semibold text-[#d8c8ff]">
+                                {getAccessLabel(item)}
+                              </span>
+                            </div>
                           </div>
                           <p className="text-[#00d4aa] font-bold text-sm">৳${item.total.toFixed(2)}</p>
                         </div>
@@ -882,6 +899,14 @@ const fetchCart = async () => {
                 <div>
                   <p className="text-[#fafafa] font-medium">{item.name}</p>
                   <p className="text-sm text-[#737373]">Qty: {item.quantity}</p>
+                  <div className="mt-2 flex flex-wrap gap-1.5">
+                    <span className="rounded-md border border-[#00d4aa]/25 bg-[#00d4aa]/10 px-2 py-1 text-[11px] font-semibold text-[#b9fff1]">
+                      {getPurchaseTypeLabel(item)}
+                    </span>
+                    <span className="rounded-md border border-[#8b5cf6]/25 bg-[#8b5cf6]/10 px-2 py-1 text-[11px] font-semibold text-[#d8c8ff]">
+                      {getAccessLabel(item)}
+                    </span>
+                  </div>
                 </div>
                 <p className="text-[#00d4aa] font-bold">৳${item.total.toFixed(2)}</p>
               </div>

@@ -7,14 +7,23 @@ import { MagnifyingGlassIcon, ArrowDownTrayIcon, StarIcon, ArrowPathIcon, Adjust
 import { HeartIcon as HeartIconSolid } from "@heroicons/react/24/solid";
 import Swal from 'sweetalert2';
 import { getStorageUrl, apiFetch } from '../utils/api';
+import {
+  getAccessLabel,
+  getProductKindLabel,
+  getPurchaseType,
+  getPurchaseTypeLabel,
+  getValidityDays,
+  isSubscriptionPurchase,
+  type CommercialInfo,
+} from '../utils/commercial';
 
-interface Product {
+interface Product extends CommercialInfo {
   id: number;
   name: string;
   slug: string;
   description: string | null;
-  price: number;
-  compare_price: number | null;
+  price: number | string;
+  compare_price: number | string | null;
   thumbnail: string | null;
   featured: boolean;
   category: string | null;
@@ -74,6 +83,39 @@ const PRODUCTS_PER_PAGE = 100;
 const readNumber = (value: unknown, fallback: number): number => {
   const numberValue = Number(value);
   return Number.isFinite(numberValue) ? numberValue : fallback;
+};
+
+const toProductPrice = (product: Product): number => readNumber(product.price, 0);
+
+const PriceAndAccess = ({ product }: { product: Product }) => {
+  const price = toProductPrice(product);
+  const comparePrice = product.compare_price == null ? null : readNumber(product.compare_price, 0);
+  const accessLabel = getAccessLabel(product);
+
+  return (
+    <div className="min-w-0">
+      <div className="flex min-w-0 flex-wrap items-baseline gap-2">
+        <span className="text-xl font-bold text-[#00d4aa]">
+            ৳{price.toLocaleString('en-BD')}
+        </span>
+        {comparePrice != null && comparePrice > price && (
+          <span className="text-sm text-[#737373] line-through">
+              ৳{comparePrice.toLocaleString('en-BD')}
+          </span>
+        )}
+      </div>
+      <div className="mt-1 flex flex-wrap gap-1.5">
+        <span className="rounded-md border border-[#00d4aa]/25 bg-[#00d4aa]/10 px-2 py-1 text-[11px] font-semibold text-[#b9fff1]">
+          {getPurchaseTypeLabel(product)}
+        </span>
+        {isSubscriptionPurchase(product) && (
+          <span className="rounded-md border border-[#8b5cf6]/25 bg-[#8b5cf6]/10 px-2 py-1 text-[11px] font-semibold text-[#d8c8ff]">
+            {accessLabel}
+          </span>
+        )}
+      </div>
+    </div>
+  );
 };
 
 const getPaginationMeta = (data: unknown, fallbackPage: number) => {
@@ -292,6 +334,8 @@ function ProductsPageContent() {
         body: JSON.stringify({
           product_id: product.id,
           quantity: 1,
+          purchase_type: getPurchaseType(product),
+          validity_days: getValidityDays(product),
         }),
       });
 
@@ -457,7 +501,8 @@ function ProductsPageContent() {
         product.category_slug,
       ].filter(Boolean).join(' ').toLowerCase();
       const matchesSearch = !normalizedSearch || searchableText.includes(normalizedSearch);
-      const matchesPrice = product.price >= priceRange.min && product.price <= priceRange.max;
+      const productPrice = toProductPrice(product);
+      const matchesPrice = productPrice >= priceRange.min && productPrice <= priceRange.max;
       return matchesCategory && matchesSearch && matchesPrice;
     }).sort((a, b) => {
       let comparison = 0;
@@ -467,7 +512,7 @@ function ProductsPageContent() {
           comparison = a.name.localeCompare(b.name);
           break;
         case 'price':
-          comparison = a.price - b.price;
+          comparison = toProductPrice(a) - toProductPrice(b);
           break;
         case 'category':
           comparison = getProductCategoryLabel(a).localeCompare(getProductCategoryLabel(b));
@@ -775,16 +820,7 @@ function ProductsPageContent() {
                       {product.description}
                     </p>
                      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                       <div className="flex min-w-0 flex-wrap items-baseline gap-2">
-                         <span className="text-xl font-bold text-[#00d4aa]">
-                             ৳{product.price}
-                         </span>
-                         {product.compare_price && product.compare_price > product.price && (
-                           <span className="text-sm text-[#737373] line-through">
-                               ৳{product.compare_price}
-                           </span>
-                         )}
-                       </div>
+                       <PriceAndAccess product={product} />
                         <div className="flex gap-2">
                           <button
                             onClick={(e) => addToCart(product, e)}
@@ -883,16 +919,7 @@ function ProductsPageContent() {
                       {product.description}
                     </p>
                     <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                      <div className="flex min-w-0 flex-wrap items-baseline gap-2">
-                        <span className="text-xl font-bold text-[#00d4aa]">
-                            ৳{product.price}
-                        </span>
-                        {product.compare_price && product.compare_price > product.price && (
-                          <span className="text-sm text-[#737373] line-through">
-                              ৳{product.compare_price}
-                          </span>
-                        )}
-                      </div>
+                      <PriceAndAccess product={product} />
                       <div className="flex gap-2">
                         <button
                           onClick={(e) => addToCart(product, e)}
@@ -993,15 +1020,11 @@ function ProductsPageContent() {
                   {quickViewProduct.description || 'No description available.'}
                 </p>
 
-                <div className="flex flex-wrap items-center gap-4 mb-6">
-                  <span className="text-3xl font-bold text-[#00d4aa]">
-                      ৳{quickViewProduct.price}
-                  </span>
-                  {quickViewProduct.compare_price && quickViewProduct.compare_price > quickViewProduct.price && (
-                    <span className="text-lg text-[#737373] line-through">
-                        ৳{quickViewProduct.compare_price}
-                    </span>
-                  )}
+                <div className="mb-6">
+                  <PriceAndAccess product={quickViewProduct} />
+                  <div className="mt-3 text-sm text-[#737373]">
+                    {getProductKindLabel(quickViewProduct)}
+                  </div>
                 </div>
 
                 <div className="flex flex-col gap-3 sm:flex-row">
