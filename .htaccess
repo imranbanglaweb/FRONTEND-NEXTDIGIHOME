@@ -7,6 +7,9 @@
 
   RewriteRule ^downloads/?$ https://nextdigihome.com/products [R=301,L,NE]
   RewriteRule ^downloads/([^/]+)/?$ https://nextdigihome.com/products/$1 [R=301,L,NE]
+
+  RewriteRule ^wp-content/? - [G,L]
+  RewriteRule ^wp-admin/? - [G,L]
 </IfModule>
 
 <IfModule mod_brotli.c>
