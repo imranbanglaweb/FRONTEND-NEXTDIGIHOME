@@ -470,32 +470,7 @@ const [settings, setSettings] = useState<{
       </main>
 
       {/* Floating Social Buttons */}
-      <div className="fixed bottom-5 left-4 z-40 flex max-w-[calc(100vw-2rem)] flex-col items-start gap-3 sm:bottom-8 sm:left-8">
-        <a
-          href="https://www.facebook.com/NextdigiHome/"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="group relative flex w-[16.5rem] max-w-full items-center gap-3 overflow-hidden rounded-2xl border border-[#1877f2]/35 bg-[#10131b]/95 p-3 shadow-2xl shadow-[#1877f2]/20 backdrop-blur-xl transition-all duration-300 hover:-translate-y-1 hover:border-[#6aa9ff]/70 hover:shadow-[#1877f2]/35 animate-facebook-pulse"
-          title="Follow NextdigiHome on Facebook"
-          aria-label="Follow NextdigiHome on Facebook"
-        >
-          <span className="absolute inset-0 bg-[radial-gradient(circle_at_18%_18%,rgba(24,119,242,0.42),transparent_38%)]" />
-          <span className="absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent via-white/45 to-transparent" />
-          <span className="absolute -inset-y-8 left-0 w-7 bg-white/20 blur-md animate-whatsapp-shine" />
-          <span className="relative flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl bg-linear-to-br from-[#4da3ff] via-[#1877f2] to-[#0b4fba] text-white shadow-lg shadow-[#1877f2]/35 transition-transform duration-300 group-hover:scale-110">
-            <svg className="h-7 w-7" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-              <path d="M22 12.06C22 6.5 17.52 2 12 2S2 6.5 2 12.06c0 5.02 3.66 9.18 8.44 9.94v-7.03H7.9v-2.91h2.54V9.84c0-2.52 1.49-3.91 3.77-3.91 1.09 0 2.23.2 2.23.2v2.46h-1.26c-1.24 0-1.63.78-1.63 1.57v1.9h2.78l-.44 2.91h-2.34V22C18.34 21.24 22 17.08 22 12.06Z" />
-            </svg>
-          </span>
-          <span className="relative min-w-0 flex-1">
-            <span className="block truncate text-sm font-extrabold text-white">NextdigiHome</span>
-            <span className="mt-1 flex flex-wrap gap-1.5 text-[11px] font-bold">
-              <span className="rounded-full bg-white px-2 py-1 text-[#1877f2]">Like Page</span>
-              <span className="rounded-full border border-white/15 bg-white/10 px-2 py-1 text-white">Follow</span>
-            </span>
-          </span>
-        </a>
-
+      <div className="fixed bottom-5 left-4 z-40 flex max-w-[calc(100vw-2rem)] items-center gap-3 sm:bottom-8 sm:left-8">
         <a
           href="https://wa.me/1234567890?text=Hello%20Next%20Digi%20Home%20Support"
           target="_blank"
@@ -516,6 +491,28 @@ const [settings, setSettings] = useState<{
           </span>
           <span className="relative ml-3 hidden max-w-0 items-center overflow-hidden rounded-full border border-[#25d366]/30 bg-[#101512]/90 px-0 py-2 text-sm font-bold text-white shadow-xl shadow-black/30 backdrop-blur-xl transition-all duration-300 group-hover:max-w-44 group-hover:px-4 sm:flex">
             <span className="whitespace-nowrap">Live Chat</span>
+          </span>
+        </a>
+
+        <a
+          href="https://www.facebook.com/NextdigiHome/"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="group relative flex h-14 w-14 items-center justify-center rounded-full sm:h-16 sm:w-auto sm:min-w-16 sm:justify-start"
+          title="Follow NextdigiHome on Facebook"
+          aria-label="Follow NextdigiHome on Facebook"
+        >
+          <span className="absolute inset-0 rounded-full bg-[#1877f2]/30 blur-xl transition-all duration-500 group-hover:bg-[#1877f2]/45 group-hover:blur-2xl sm:inset-y-1 sm:left-1 sm:w-16" />
+          <span className="absolute inset-0 rounded-full border border-[#1877f2]/35 animate-facebook-pulse sm:inset-y-0 sm:left-0 sm:w-16" />
+          <span className="relative flex h-14 w-14 items-center justify-center overflow-hidden rounded-full border border-white/35 bg-linear-to-br from-[#4da3ff] via-[#1877f2] to-[#0b4fba] text-white shadow-2xl shadow-[#1877f2]/30 transition-all duration-300 group-hover:scale-110 group-hover:border-white/60 sm:h-16 sm:w-16">
+            <span className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(255,255,255,0.55),transparent_32%)] opacity-80" />
+            <span className="absolute -inset-y-6 left-0 w-5 bg-white/30 blur-sm animate-whatsapp-shine" />
+            <svg className="relative z-10 h-7 w-7 drop-shadow-lg sm:h-8 sm:w-8" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M22 12.06C22 6.5 17.52 2 12 2S2 6.5 2 12.06c0 5.02 3.66 9.18 8.44 9.94v-7.03H7.9v-2.91h2.54V9.84c0-2.52 1.49-3.91 3.77-3.91 1.09 0 2.23.2 2.23.2v2.46h-1.26c-1.24 0-1.63.78-1.63 1.57v1.9h2.78l-.44 2.91h-2.34V22C18.34 21.24 22 17.08 22 12.06Z" />
+            </svg>
+          </span>
+          <span className="relative ml-3 hidden max-w-0 items-center overflow-hidden rounded-full border border-[#1877f2]/30 bg-[#10131b]/90 px-0 py-2 text-sm font-bold text-white shadow-xl shadow-black/30 backdrop-blur-xl transition-all duration-300 group-hover:max-w-52 group-hover:px-4 sm:flex">
+            <span className="whitespace-nowrap">NextdigiHome</span>
           </span>
         </a>
       </div>
