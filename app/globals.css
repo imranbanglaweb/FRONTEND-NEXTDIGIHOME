@@ -80,6 +80,45 @@
   }
 }
 
+@keyframes headerLogoGlow {
+  0%, 100% {
+    box-shadow: 0 10px 30px rgba(0, 212, 170, 0.16), 0 0 0 0 rgba(0, 212, 170, 0.18);
+  }
+  50% {
+    box-shadow: 0 18px 48px rgba(139, 92, 246, 0.26), 0 0 0 8px rgba(0, 212, 170, 0);
+  }
+}
+
+@keyframes headerTitleGlow {
+  0%, 100% {
+    filter: drop-shadow(0 0 8px rgba(0, 212, 170, 0.16));
+  }
+  50% {
+    filter: drop-shadow(0 0 14px rgba(139, 92, 246, 0.28));
+  }
+}
+
+@keyframes headerTypewriter {
+  0%, 8% {
+    max-width: 0;
+  }
+  42%, 72% {
+    max-width: 15rem;
+  }
+  100% {
+    max-width: 0;
+  }
+}
+
+@keyframes headerCaret {
+  0%, 48% {
+    border-color: rgba(0, 212, 170, 0.9);
+  }
+  49%, 100% {
+    border-color: transparent;
+  }
+}
+
 .animate-fade-in-up {
   animation: fadeInUp 0.6s ease-out forwards;
 }
@@ -103,6 +142,31 @@
 
 .animate-facebook-pulse {
   animation: facebookPulse 2.9s ease-in-out infinite;
+}
+
+.animate-header-logo-glow {
+  animation: headerLogoGlow 3.4s ease-in-out infinite;
+}
+
+.animate-header-title-glow {
+  animation: headerTitleGlow 3.6s ease-in-out infinite;
+}
+
+.header-typewriter {
+  display: inline-block;
+  max-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  border-right: 2px solid rgba(0, 212, 170, 0.9);
+  animation:
+    headerTypewriter 5.8s steps(24, end) 0.35s infinite,
+    headerCaret 0.8s step-end infinite;
+}
+
+.group:hover .header-typewriter {
+  animation:
+    headerTypewriter 4.6s steps(24, end) infinite,
+    headerCaret 0.65s step-end infinite;
 }
 
 body {

@@ -242,7 +242,13 @@ const [settings, setSettings] = useState<{
         <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-2 md:py-1 gap-2 lg:gap-4">
             <Link href="/" className="flex min-w-0 items-center group flex-shrink-0 gap-2 sm:gap-3">
-              <div className="h-12 w-12 flex-shrink-0 rounded-xl sm:h-14 sm:w-14 md:h-16 md:w-16 lg:h-20 lg:w-20 lg:rounded-2xl flex items-center justify-center group-hover:scale-105 transition-transform duration-300 overflow-hidden border border-[#2a2a30]">
+              <div className="relative h-12 w-12 flex-shrink-0 rounded-xl sm:h-14 sm:w-14 md:h-16 md:w-16 lg:h-20 lg:w-20 lg:rounded-2xl">
+                <div className="absolute -inset-1 rounded-[inherit] bg-gradient-to-br from-[#00d4aa]/35 via-[#8b5cf6]/25 to-[#ff6b9d]/20 opacity-70 blur-md transition-all duration-500 animate-header-logo-glow group-hover:opacity-100 group-hover:blur-lg" />
+                <div className="absolute inset-0 rounded-[inherit] border border-[#00d4aa]/25 bg-[#0f0f12]/70 backdrop-blur-xl transition-all duration-500 group-hover:border-[#00d4aa]/55" />
+                <div className="relative flex h-full w-full items-center justify-center overflow-hidden rounded-[inherit] border border-white/10 bg-gradient-to-br from-[#15151a] via-[#0f0f12] to-[#181329] transition-transform duration-500 group-hover:scale-105 group-hover:-rotate-2">
+                  <span className="absolute inset-0 bg-[radial-gradient(circle_at_28%_18%,rgba(255,255,255,0.35),transparent_34%)] opacity-70" />
+                  <span className="absolute -inset-y-8 left-0 w-6 bg-white/25 blur-sm animate-whatsapp-shine" />
+                  <span className="absolute right-1.5 top-1.5 h-2.5 w-2.5 rounded-full bg-[#00d4aa] shadow-[0_0_18px_rgba(0,212,170,0.9)] transition-all duration-500 group-hover:right-2 group-hover:top-2 group-hover:bg-[#ff6b9d]" />
                 {isHydrated && (() => {
                   // Use site_logo, or fall back to admin_logo if site_logo is not set
                   const logoToUse = settings?.admin_logo || settings?.admin_logo;
@@ -254,7 +260,7 @@ const [settings, setSettings] = useState<{
                       src={logoUrl}
                       alt="Site Logo"
                       decoding="async"
-                      className="w-full h-full object-contain p-1"
+                      className="relative z-10 h-full w-full object-contain p-1.5 drop-shadow-[0_0_12px_rgba(0,212,170,0.22)] transition-transform duration-500 group-hover:scale-110"
                       onError={(e) => {
                         console.warn(`Logo failed to load from: ${logoUrl}`);
                         e.currentTarget.style.display = 'none';
@@ -266,20 +272,24 @@ const [settings, setSettings] = useState<{
                 })()}
 
                 <svg 
-                  className="h-7 w-7 text-[#00d4aa] sm:h-9 sm:w-9" 
+                  className="relative z-10 h-7 w-7 text-[#00d4aa] drop-shadow-[0_0_14px_rgba(0,212,170,0.45)] transition-transform duration-500 group-hover:scale-110 sm:h-9 sm:w-9" 
                   fill="none" 
                   stroke="currentColor" 
                   viewBox="0 0 24 24"
                 >
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
                 </svg>
+                </div>
               </div>
 
               {/* Site Title - Now shows from API */}
               <div className="hidden min-w-0 sm:block">
-                <span className="block max-w-[11rem] truncate text-lg font-bold gradient-text tracking-tight lg:max-w-none lg:text-xl">
-                  {settings?.admin_title || 'Next Digi Home'}
+                <span className="block w-[11rem] overflow-hidden lg:w-[13rem]">
+                  <span className="header-typewriter bg-gradient-to-r from-[#00d4aa] via-white to-[#8b5cf6] bg-[length:220%_220%] bg-clip-text pr-1 text-lg font-black text-transparent tracking-tight animate-gradient animate-header-title-glow transition-all duration-300 group-hover:brightness-125 lg:text-xl">
+                    {settings?.admin_title || 'Next Digi Home'}
+                  </span>
                 </span>
+                <span className="mt-0.5 block h-px w-[8rem] origin-left scale-x-60 bg-gradient-to-r from-[#00d4aa] via-[#8b5cf6] to-transparent opacity-70 transition-transform duration-500 group-hover:scale-x-100 lg:w-[10rem]" />
               </div>
             </Link>
 
