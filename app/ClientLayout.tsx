@@ -731,17 +731,97 @@ const [settings, setSettings] = useState<{
               <div className="text-center mb-5">
                 <span className="text-xs tracking-[1.5px] sm:tracking-[3px] text-[#737373] font-medium">SECURE CHECKOUT • INSTANT DELIVERY</span>
               </div>
-              <div className="flex flex-wrap items-center justify-center gap-3">
+              <div className="grid w-full max-w-4xl grid-cols-2 gap-3 sm:grid-cols-4">
                 {[
-                  { label: 'bKash', color: '#E2136E' },
-                  { label: 'Rocket', color: '#F7941D' },
-                  { label: 'Nagad', color: '#00A651' },
-                  { label: 'Prime Bank', color: '#3B82F6' },
+                  {
+                    label: 'bKash',
+                    tagline: 'Mobile Banking',
+                    color: '#E2136E',
+                    bg: 'from-[#2a0617] via-[#1a1a1f] to-[#12060b]',
+                    logo: (
+                      <span className="flex items-center gap-2">
+                        <span className="relative flex h-9 w-9 items-center justify-center rounded-xl bg-[#E2136E] text-white shadow-lg shadow-[#E2136E]/30">
+                          <span className="absolute h-5 w-5 rotate-45 rounded-sm bg-white/92" />
+                          <span className="absolute right-1.5 top-1.5 h-3 w-3 rounded-full bg-[#E2136E]" />
+                        </span>
+                        <span className="text-xl font-black tracking-tight text-[#E2136E]">bKash</span>
+                      </span>
+                    ),
+                  },
+                  {
+                    label: 'Rocket',
+                    tagline: 'DBBL Wallet',
+                    color: '#8D2B8C',
+                    bg: 'from-[#210624] via-[#1a1a1f] to-[#120d18]',
+                    logo: (
+                      <span className="flex items-center gap-2">
+                        <span className="relative flex h-9 w-9 items-center justify-center rounded-full bg-[#8D2B8C] text-white shadow-lg shadow-[#8D2B8C]/30">
+                          <span className="absolute h-6 w-3 rounded-full border-2 border-white/95" />
+                          <span className="absolute bottom-1 right-1 h-2.5 w-2.5 rounded-full bg-[#F7941D]" />
+                        </span>
+                        <span className="text-xl font-black italic tracking-tight text-[#F7941D]">Rocket</span>
+                      </span>
+                    ),
+                  },
+                  {
+                    label: 'Nagad',
+                    tagline: 'Digital Payment',
+                    color: '#F15A24',
+                    bg: 'from-[#2a1008] via-[#1a1a1f] to-[#171009]',
+                    logo: (
+                      <span className="flex items-center gap-2">
+                        <span className="relative flex h-9 w-9 items-center justify-center rounded-xl bg-[#F15A24] text-white shadow-lg shadow-[#F15A24]/30">
+                          <span className="h-5 w-5 rounded-full border-[5px] border-white" />
+                          <span className="absolute right-1 top-1 h-2.5 w-2.5 rounded-full bg-[#F9B233]" />
+                        </span>
+                        <span className="text-xl font-black tracking-tight text-[#F15A24]">Nagad</span>
+                      </span>
+                    ),
+                  },
+                  {
+                    label: 'Prime Bank',
+                    tagline: 'Card & Bank Pay',
+                    color: '#2E63B8',
+                    bg: 'from-[#07142a] via-[#1a1a1f] to-[#071b16]',
+                    logo: (
+                      <span className="flex items-center gap-2">
+                        <span className="relative flex h-9 w-9 items-center justify-center rounded-xl bg-[#2E63B8] text-white shadow-lg shadow-[#2E63B8]/30">
+                          <span className="absolute h-6 w-6 rounded-md border-2 border-white/90" />
+                          <span className="absolute h-3 w-3 rounded-sm bg-[#00A651]" />
+                        </span>
+                        <span className="leading-none">
+                          <span className="block text-sm font-black tracking-tight text-[#2E63B8]">Prime</span>
+                          <span className="block text-sm font-black tracking-tight text-[#00A651]">Bank</span>
+                        </span>
+                      </span>
+                    ),
+                  },
                 ].map((pm, i) => (
-                  <div key={i} className="group relative flex min-w-[7rem] items-center justify-center rounded-xl border border-[#2a2a30] bg-[#1a1a1f] px-3 py-2 transition-all hover:border-[#00d4aa]/40 hover:bg-[#00d4aa]/5 sm:rounded-2xl sm:px-4">
-                    <span className="text-xs font-bold text-[#fafafa] transition-all" style={{ color: pm.color }}>
-                      {pm.label}
+                  <div
+                    key={pm.label}
+                    className={`payment-badge group relative flex min-h-[5.5rem] overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br ${pm.bg} p-3 shadow-2xl transition-all duration-300 hover:-translate-y-1 hover:border-white/25`}
+                    style={{ animationDelay: `${i * 0.35}s` }}
+                  >
+                    <span className="absolute inset-0 bg-[radial-gradient(circle_at_22%_12%,rgba(255,255,255,0.16),transparent_34%)] opacity-80" />
+                    <span className="payment-badge-shine absolute -inset-y-8 left-0 w-8 bg-white/15 blur-md" style={{ animationDelay: `${i * 0.45}s` }} />
+                    <span className="absolute inset-x-3 top-0 h-px bg-gradient-to-r from-transparent via-white/45 to-transparent" />
+                    <span className="relative flex min-w-0 flex-1 flex-col justify-center gap-2">
+                      {pm.logo}
+                      <span className="text-[10px] font-bold uppercase tracking-[1.2px] text-[#b0b0b0]">
+                        {pm.tagline}
+                      </span>
                     </span>
+                    <span
+                      className="absolute bottom-3 right-3 h-2 w-2 rounded-full shadow-[0_0_16px_currentColor] transition-transform duration-300 group-hover:scale-150"
+                      style={{ backgroundColor: pm.color, color: pm.color }}
+                    />
+                  </div>
+                ))}
+              </div>
+              <div className="mt-5 flex flex-wrap items-center justify-center gap-2">
+                {['SSL Secured', 'Instant Access', 'Verified Checkout'].map((item) => (
+                  <div key={item} className="rounded-full border border-[#00d4aa]/20 bg-[#00d4aa]/5 px-3 py-1.5 text-[10px] font-bold uppercase tracking-[1.5px] text-[#9ff5e4]">
+                    {item}
                   </div>
                 ))}
               </div>

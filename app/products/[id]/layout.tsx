@@ -30,10 +30,16 @@ interface Product {
   images?: string[] | string | null;
   digital?: boolean | null;
   featured?: boolean | null;
+  active?: boolean | null;
   published_at?: string | null;
   created_at?: string | null;
   updated_at?: string | null;
 }
+
+const getProductPath = (product: Product | null, fallbackId: string): string => {
+  const segment = product?.slug || product?.id || fallbackId;
+  return `/products/${encodeURIComponent(String(segment))}`;
+};
 
 const stripHtml = (content: string): string =>
   content
@@ -156,7 +162,8 @@ function getDescription(product: Product | null): string {
   }
 
   const category = product.category ? `${product.category} ` : "";
-  return truncate(`Buy ${product.name}, a premium ${category}product from Next Digi Home with secure checkout and fast access.`, 160);
+  const price = product.price ? ` Price: BDT ${Number(product.price).toLocaleString("en-BD")}.` : "";
+  return truncate(`Buy ${product.name}, a premium ${category}product from Next Digi Home with secure checkout, instant access, and trusted support.${price}`, 160);
 }
 
 function getKeywords(product: Product): string[] {
@@ -177,11 +184,12 @@ export async function generateMetadata({ params }: ProductSegmentProps): Promise
   const product = await getProduct(id);
 
   if (!product) {
+    const path = `/products/${encodeURIComponent(id)}`;
     return {
       title: "Product Not Found",
       description: getDescription(null),
       alternates: {
-        canonical: `/products/${id}`,
+        canonical: path,
       },
       robots: {
         index: false,
@@ -190,11 +198,12 @@ export async function generateMetadata({ params }: ProductSegmentProps): Promise
     };
   }
 
-  const path = `/products/${id}`;
+  const path = getProductPath(product, id);
   const description = getDescription(product);
   const images = getProductImages(product);
   const image = images[0] || DEFAULT_IMAGE;
-  const title = `${product.name} - ${product.category || "Premium Product"}`;
+  const title = `${product.name} | ${product.category || "Premium Digital Product"} | ${SITE_NAME}`;
+  const isIndexable = product.active !== false && Boolean(product.name);
 
   return {
     title,
@@ -228,10 +237,10 @@ export async function generateMetadata({ params }: ProductSegmentProps): Promise
       creator: "@nextdigihome",
     },
     robots: {
-      index: Boolean(product.featured || product.name),
+      index: isIndexable,
       follow: true,
       googleBot: {
-        index: Boolean(product.featured || product.name),
+        index: isIndexable,
         follow: true,
         "max-video-preview": -1,
         "max-image-preview": "large",
@@ -249,7 +258,7 @@ export default async function ProductDetailLayout({ children, params }: ProductR
     return children;
   }
 
-  const path = `/products/${id}`;
+  const path = getProductPath(product, id);
   const productUrl = `${SITE_URL}${path}`;
   const description = getDescription(product);
   const images = getProductImages(product);
@@ -284,18 +293,32 @@ export default async function ProductDetailLayout({ children, params }: ProductR
       priceCurrency: "BDT",
       availability: stock > 0 ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",
       itemCondition: "https://schema.org/NewCondition",
+      priceValidUntil: new Date(Date.now() + 1000 * 60 * 60 * 24 * 180).toISOString().slice(0, 10),
       seller: {
         "@type": "Organization",
         name: SITE_NAME,
       },
+      hasMerchantReturnPolicy: {
+        "@type": "MerchantReturnPolicy",
+        applicableCountry: "BD",
+        returnPolicyCategory: "https://schema.org/MerchantReturnFiniteReturnWindow",
+        merchantReturnDays: 30,
+        returnMethod: "https://schema.org/ReturnByMail",
+        returnFees: "https://schema.org/FreeReturn",
+      },
     },
-    aggregateRating: {
-      "@type": "AggregateRating",
-      ratingValue: "4.8",
-      reviewCount: "152",
-      bestRating: "5",
-      worstRating: "1",
-    },
+    additionalProperty: [
+      {
+        "@type": "PropertyValue",
+        name: "Product Type",
+        value: product.digital ? "Digital product" : "Product",
+      },
+      {
+        "@type": "PropertyValue",
+        name: "Category",
+        value: category,
+      },
+    ],
   };
 
   const faqSchema = {

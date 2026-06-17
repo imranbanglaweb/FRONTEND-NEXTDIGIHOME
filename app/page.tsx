@@ -911,10 +911,10 @@ export default function Home() {
           </div>
 
           {/* Premium Categories + Products Layout */}
-          <div className="grid lg:grid-cols-4 gap-8">
+          <div className="grid gap-6 lg:grid-cols-[minmax(0,17rem)_minmax(0,1fr)] xl:gap-8">
             {/* Premium Left Sidebar - Categories */}
-            <div className="lg:col-span-1">
-              <div className="bg-[#121214] border border-[#2a2a30] rounded-3xl p-6 sticky top-28">
+            <div className="min-w-0">
+              <div className="bg-[#121214] border border-[#2a2a30] rounded-2xl p-4 sm:rounded-3xl sm:p-6 lg:sticky lg:top-28">
                 <h3 className="text-sm font-semibold text-[#fafafa] mb-5 tracking-wider flex items-center gap-2">
                   BROWSE CATEGORIES
                   <span className="flex-1 h-px bg-gradient-to-r from-[#2a2a30] to-transparent"></span>
@@ -988,16 +988,16 @@ export default function Home() {
             </div>
 
             {/* Right Side - Products with Search and Filter */}
-            <div className="lg:col-span-3">
-              <div className="flex items-end justify-between mb-8">
-                <div>
+            <div className="min-w-0">
+              <div className="mb-6 flex flex-col gap-3 sm:mb-8 sm:flex-row sm:items-end sm:justify-between">
+                <div className="min-w-0">
                   <div className="text-xs uppercase tracking-[3px] text-[#00d4aa] font-medium mb-1">RESULTS</div>
-                  <h3 className="text-2xl font-semibold text-[#fafafa]">
+                  <h3 className="text-xl font-semibold text-[#fafafa] sm:text-2xl">
                     {filteredProducts.length} {selectedCategory === 'all' ? 'Products' : allCategories.find(c => c.slug === selectedCategory)?.category_name || selectedCategory}
-                    {searchQuery && <span className="text-[#737373] text-lg font-normal"> matching “{searchQuery}”</span>}
+                    {searchQuery && <span className="block text-sm font-normal text-[#737373] sm:inline sm:text-lg"> matching “{searchQuery}”</span>}
                   </h3>
                 </div>
-                <Link href={productCatalogHref} className="hidden md:block text-sm text-[#00d4aa] hover:underline">View all products →</Link>
+                <Link href={productCatalogHref} className="inline-flex self-start text-sm font-semibold text-[#00d4aa] hover:underline sm:self-auto">View all products →</Link>
               </div>
 
               {loadingProducts ? (
@@ -1013,21 +1013,21 @@ export default function Home() {
                   </div>
                 </div>
               ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-5 xl:grid-cols-3 xl:gap-6">
                   {filteredProducts.map((product) => (
                     <Link
                       key={product.id}
-                      href={`/products/${product.slug}`}
-                      className="group glass-card rounded-3xl overflow-hidden border border-[#2a2a30] hover:border-[#00d4aa]/40 transition-all duration-500 hover:-translate-y-1 hover:shadow-2xl hover:shadow-[#00d4aa]/10 flex flex-col"
+                      href={`/products/${product.slug || product.id}`}
+                      className="group glass-card flex min-w-0 flex-col overflow-hidden rounded-2xl border border-[#2a2a30] transition-all duration-500 hover:-translate-y-1 hover:border-[#00d4aa]/40 hover:shadow-2xl hover:shadow-[#00d4aa]/10 sm:rounded-3xl"
                     >
-                      <div className="relative aspect-video overflow-hidden">
+                      <div className="relative aspect-[4/3] overflow-hidden sm:aspect-video">
                          {product.thumbnail ? (
                            <img
                              src={getStorageUrl(product.thumbnail)!}
                              alt={product.name}
                              loading="lazy"
                              decoding="async"
-                             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                             className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
                            />
                          ) : (
                           <div className="w-full h-full bg-linear-to-br from-[#1a1a1f] to-[#2a2a30] flex items-center justify-center">
@@ -1037,41 +1037,41 @@ export default function Home() {
                         <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
                         
                         {product.featured && (
-                          <div className="absolute top-4 right-4">
-                            <span className="px-3 py-1 rounded-full text-[10px] font-bold tracking-wider bg-white/90 text-[#0f0f12] shadow-lg">
+                          <div className="absolute right-3 top-3 sm:right-4 sm:top-4">
+                            <span className="rounded-full bg-white/90 px-2.5 py-1 text-[9px] font-bold tracking-wider text-[#0f0f12] shadow-lg sm:px-3 sm:text-[10px]">
                               FEATURED
                             </span>
                           </div>
                         )}
                         
-                        <div className="absolute bottom-4 left-4">
-                          <span className="px-3 py-1 text-xs font-medium bg-black/60 backdrop-blur text-white rounded-full">
+                        <div className="absolute bottom-3 left-3 right-3 sm:bottom-4 sm:left-4 sm:right-4">
+                          <span className="inline-flex max-w-full rounded-full bg-black/65 px-3 py-1 text-xs font-medium text-white backdrop-blur">
                             {product.category}
                           </span>
                         </div>
                       </div>
 
-                      <div className="p-6 flex flex-col flex-1">
-                        <h4 className="text-lg font-semibold text-[#fafafa] tracking-[-0.3px] mb-2 line-clamp-2 group-hover:text-[#00d4aa] transition-colors">
+                      <div className="flex flex-1 flex-col p-4 sm:p-5 xl:p-6">
+                        <h4 className="mb-2 line-clamp-2 text-base font-semibold text-[#fafafa] transition-colors group-hover:text-[#00d4aa] sm:text-lg">
                           {product.name}
                         </h4>
                         
-                        <p className="text-sm text-[#737373] line-clamp-2 flex-1 mb-5">
+                        <p className="mb-4 line-clamp-2 flex-1 text-sm leading-6 text-[#737373] sm:mb-5">
                           {product.description}
                         </p>
 
-                        <div className="flex items-center justify-between mt-auto">
-                          <div>
-                            <span className="text-2xl font-bold text-[#00d4aa]">
+                        <div className="mt-auto flex min-w-0 flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                          <div className="min-w-0">
+                            <span className="text-xl font-bold text-[#00d4aa] sm:text-2xl">
                               ৳{product.price}
                             </span>
                             {product.compare_price && product.compare_price > product.price && (
-                              <span className="ml-2 text-sm text-[#737373] line-through">
+                              <span className="ml-2 text-xs text-[#737373] line-through sm:text-sm">
                                 ৳{product.compare_price}
                               </span>
                             )}
                           </div>
-                          <span className="text-xs font-medium text-[#00d4aa] group-hover:underline transition-all">View →</span>
+                          <span className="inline-flex flex-shrink-0 items-center justify-center rounded-full border border-[#00d4aa]/25 bg-[#00d4aa]/5 px-3 py-1.5 text-xs font-semibold text-[#00d4aa] transition-all group-hover:border-[#00d4aa]/50 group-hover:bg-[#00d4aa]/10">View →</span>
                         </div>
                       </div>
                     </Link>
@@ -1115,7 +1115,7 @@ export default function Home() {
               What Our Customers Say
             </h2>
             <p className="text-xl text-[#737373] max-w-2xl mx-auto">
-              Join thousands of satisfied customers who have transformed their business with our premium digital products
+              Practical feedback from local business owners, agencies, and creators using our digital products every week
             </p>
           </div>
 
@@ -1125,8 +1125,8 @@ export default function Home() {
             <div className="glass-card rounded-2xl p-8 border border-[#2a2a30] hover:border-[#00d4aa]/30 transition-all duration-300 hover-lift">
               <div className="flex items-center justify-between mb-4">
                 <div>
-                  <h3 className="text-lg font-bold text-[#fafafa]">Sarah Johnson</h3>
-                  <p className="text-sm text-[#737373]">E-commerce Owner</p>
+                  <h3 className="text-lg font-bold text-[#fafafa]">Tanvir Ahmed</h3>
+                  <p className="text-sm text-[#737373]">Online Shop Owner, Dhaka</p>
                 </div>
                 <div className="flex gap-1">
                   {[...Array(5)].map((_, i) => (
@@ -1135,10 +1135,10 @@ export default function Home() {
                 </div>
               </div>
               <p className="text-[#737373] leading-relaxed">
-                "NextDigi Home transformed our business completely. The templates saved us months of development time, and the support team is incredibly responsive. Highly recommended!"
+                The landing page template was clean and easy to adjust for my store. I launched a campaign the same day, and support helped me with the download issue quickly.
               </p>
               <div className="mt-6 pt-6 border-t border-[#2a2a30]">
-                <p className="text-sm text-[#00d4aa] font-semibold">+250% ROI in 3 months</p>
+                <p className="text-sm text-[#00d4aa] font-semibold">Purchased website template and promo assets</p>
               </div>
             </div>
 
@@ -1146,8 +1146,8 @@ export default function Home() {
             <div className="glass-card rounded-2xl p-8 border border-[#2a2a30] hover:border-[#00d4aa]/30 transition-all duration-300 hover-lift">
               <div className="flex items-center justify-between mb-4">
                 <div>
-                  <h3 className="text-lg font-bold text-[#fafafa]">Michael Chen</h3>
-                  <p className="text-sm text-[#737373]">Agency Founder</p>
+                  <h3 className="text-lg font-bold text-[#fafafa]">Nusrat Jahan</h3>
+                  <p className="text-sm text-[#737373]">Freelance Designer, Chattogram</p>
                 </div>
                 <div className="flex gap-1">
                   {[...Array(5)].map((_, i) => (
@@ -1156,10 +1156,10 @@ export default function Home() {
                 </div>
               </div>
               <p className="text-[#737373] leading-relaxed">
-                "The quality of the digital assets is unmatched. We've been using NextDigi Home for 2 years now and it's become essential to our development process. Best investment we've made."
+                I used the social media graphics pack for two client pages. Files were organized, editable, and saved me a lot of routine design time.
               </p>
               <div className="mt-6 pt-6 border-t border-[#2a2a30]">
-                <p className="text-sm text-[#00d4aa] font-semibold">Used by 500+ clients</p>
+                <p className="text-sm text-[#00d4aa] font-semibold">Used for client Facebook and Instagram posts</p>
               </div>
             </div>
 
@@ -1167,8 +1167,8 @@ export default function Home() {
             <div className="glass-card rounded-2xl p-8 border border-[#2a2a30] hover:border-[#00d4aa]/30 transition-all duration-300 hover-lift">
               <div className="flex items-center justify-between mb-4">
                 <div>
-                  <h3 className="text-lg font-bold text-[#fafafa]">Emily Rodriguez</h3>
-                  <p className="text-sm text-[#737373]">Startup Founder</p>
+                  <h3 className="text-lg font-bold text-[#fafafa]">Mahmudul Hasan</h3>
+                  <p className="text-sm text-[#737373]">Training Center Manager, Sylhet</p>
                 </div>
                 <div className="flex gap-1">
                   {[...Array(5)].map((_, i) => (
@@ -1177,17 +1177,17 @@ export default function Home() {
                 </div>
               </div>
               <p className="text-[#737373] leading-relaxed">
-                "Outstanding platform! The variety of products and the quality of customer support is exceptional. They helped us scale from startup to 7-figures in revenue."
+                We bought presentation and certificate templates for our course batches. The designs looked professional, and editing them for Bangla-English content was simple.
               </p>
               <div className="mt-6 pt-6 border-t border-[#2a2a30]">
-                <p className="text-sm text-[#00d4aa] font-semibold">Scaled to 7-figures</p>
+                <p className="text-sm text-[#00d4aa] font-semibold">Used for course slides and certificates</p>
               </div>
             </div>
           </div>
 
           {/* Call to Action */}
           <div className="mt-16 text-center">
-            <p className="text-[#737373] text-lg mb-6">Ready to join thousands of successful customers?</p>
+            <p className="text-[#737373] text-lg mb-6">Explore tools and templates made for everyday business work.</p>
             <Link
               href="/products"
               className="group relative inline-flex items-center px-8 py-4 bg-gradient-to-r from-[#00d4aa] to-[#8b5cf6] text-[#0f0f12] font-bold text-lg rounded-xl overflow-hidden transition-all duration-300 hover:scale-105 hover:shadow-lg"

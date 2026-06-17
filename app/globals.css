@@ -119,6 +119,26 @@
   }
 }
 
+@keyframes paymentBadgeFloat {
+  0%, 100% {
+    transform: translateY(0);
+    box-shadow: 0 16px 38px rgba(0, 0, 0, 0.22);
+  }
+  50% {
+    transform: translateY(-3px);
+    box-shadow: 0 22px 52px rgba(0, 212, 170, 0.12);
+  }
+}
+
+@keyframes paymentBadgeShine {
+  0% {
+    transform: translateX(-145%) rotate(18deg);
+  }
+  100% {
+    transform: translateX(185%) rotate(18deg);
+  }
+}
+
 .animate-fade-in-up {
   animation: fadeInUp 0.6s ease-out forwards;
 }
@@ -167,6 +187,14 @@
   animation:
     headerTypewriter 4.6s steps(24, end) infinite,
     headerCaret 0.65s step-end infinite;
+}
+
+.payment-badge {
+  animation: paymentBadgeFloat 4.8s ease-in-out infinite;
+}
+
+.payment-badge-shine {
+  animation: paymentBadgeShine 3.8s ease-in-out infinite;
 }
 
 body {

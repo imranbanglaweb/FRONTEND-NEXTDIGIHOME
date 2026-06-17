@@ -79,6 +79,7 @@ const unwrapArray = <T,>(data: unknown): T[] => {
 };
 
 const PRODUCTS_PER_PAGE = 100;
+const DEFAULT_PRICE_RANGE: { min: number; max: number | null } = { min: 0, max: null };
 
 const readNumber = (value: unknown, fallback: number): number => {
   const numberValue = Number(value);
@@ -172,7 +173,7 @@ function ProductsPageContent() {
   const [debouncedSearchQuery, setDebouncedSearchQuery] = useState<string>(initialSearchQuery);
   const [sortBy, setSortBy] = useState<string>('featured');
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
-  const [priceRange, setPriceRange] = useState<{min: number, max: number}>({min: 0, max: 1000});
+  const [priceRange, setPriceRange] = useState<{min: number, max: number | null}>(DEFAULT_PRICE_RANGE);
   const [showAdvancedFilters, setShowAdvancedFilters] = useState<boolean>(false);
   const [animatingButtons, setAnimatingButtons] = useState<Set<number>>(new Set());
   const [loadingButtons, setLoadingButtons] = useState<Set<number>>(new Set());
@@ -487,7 +488,7 @@ function ProductsPageContent() {
     selectedCategory === 'all'
       ? 'Products'
       : categoryOptions.find((category) => category.key === selectedCategory)?.label || selectedCategory;
-  const activeFilterCount = Number(Boolean(debouncedSearchQuery)) + Number(selectedCategory !== 'all') + Number(priceRange.min > 0 || priceRange.max < 1000);
+  const activeFilterCount = Number(Boolean(debouncedSearchQuery)) + Number(selectedCategory !== 'all') + Number(priceRange.min > 0 || priceRange.max != null);
 
   const filteredProducts = useMemo(() => {
     return products.filter(product => {
@@ -502,7 +503,7 @@ function ProductsPageContent() {
       ].filter(Boolean).join(' ').toLowerCase();
       const matchesSearch = !normalizedSearch || searchableText.includes(normalizedSearch);
       const productPrice = toProductPrice(product);
-      const matchesPrice = productPrice >= priceRange.min && productPrice <= priceRange.max;
+      const matchesPrice = productPrice >= priceRange.min && (priceRange.max == null || productPrice <= priceRange.max);
       return matchesCategory && matchesSearch && matchesPrice;
     }).sort((a, b) => {
       let comparison = 0;
@@ -679,8 +680,11 @@ function ProductsPageContent() {
                     <input
                       type="number"
                       placeholder="Max"
-                      value={priceRange.max}
-                      onChange={(e) => setPriceRange(prev => ({...prev, max: Number(e.target.value) || 1000}))}
+                      value={priceRange.max ?? ''}
+                      onChange={(e) => {
+                        const value = e.target.value.trim();
+                        setPriceRange(prev => ({...prev, max: value ? Number(value) : null}));
+                      }}
                       className="w-full bg-[#0f0f12] border border-[#2a2a30] rounded px-3 py-2 text-[#fafafa] text-sm focus:outline-none focus:border-[#00d4aa]"
                     />
                   </div>
@@ -708,7 +712,7 @@ function ProductsPageContent() {
                     onClick={() => {
                       setSearchQuery('');
                       setSelectedCategory('all');
-                      setPriceRange({min: 0, max: 1000});
+                      setPriceRange(DEFAULT_PRICE_RANGE);
                       setSortBy('featured');
                       setSortOrder('desc');
                     }}
@@ -954,6 +958,7 @@ function ProductsPageContent() {
               onClick={() => {
                 setSearchQuery('');
                 setSelectedCategory('all');
+                setPriceRange(DEFAULT_PRICE_RANGE);
               }}
               className="px-6 py-3 bg-[#1a1a1f] border border-[#2a2a30] rounded-lg text-[#fafafa] hover:border-[#00d4aa]/50 transition-colors"
             >

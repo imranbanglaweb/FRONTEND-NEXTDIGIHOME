@@ -5,6 +5,7 @@ type SitemapRecord = {
   slug?: string | null;
   updated_at?: string | Date | null;
   created_at?: string | Date | null;
+  active?: boolean | null;
 };
 
 const baseUrl = (process.env.NEXT_PUBLIC_SITE_URL || 'https://nextdigihome.com').replace(/\/$/, '');
@@ -65,18 +66,19 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: route.priority,
   }));
 
-  const [products, posts] = await Promise.all([
+  const [products, posts, categories] = await Promise.all([
     fetchRecords('products?per_page=10000'),
     fetchRecords('blog?per_page=1000'),
+    fetchRecords('categories?per_page=1000'),
   ]);
 
   const productUrls: MetadataRoute.Sitemap = products
-    .filter((product) => product.id != null)
+    .filter((product) => product.id != null && product.active !== false)
     .map((product) => ({
-      url: `${baseUrl}/products/${product.id}`,
+      url: `${baseUrl}/products/${encodeURIComponent(String(product.slug || product.id))}`,
       lastModified: toLastModified(product.updated_at || product.created_at),
       changeFrequency: 'weekly' as const,
-      priority: 0.80,
+      priority: product.slug ? 0.86 : 0.80,
     }));
 
   const blogUrls: MetadataRoute.Sitemap = posts
@@ -88,8 +90,18 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.75,
     }));
 
+  const categoryUrls: MetadataRoute.Sitemap = categories
+    .filter((category) => category.slug || category.id != null)
+    .map((category) => ({
+      url: `${baseUrl}/products?category=${encodeURIComponent(String(category.slug || category.id))}`,
+      lastModified: toLastModified(category.updated_at || category.created_at),
+      changeFrequency: 'weekly' as const,
+      priority: 0.78,
+    }));
+
   return [
     ...staticUrls,
+    ...categoryUrls,
     ...productUrls,
     ...blogUrls,
   ];

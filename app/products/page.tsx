@@ -180,7 +180,7 @@ export default async function ProductsPage({ searchParams }: { searchParams: Pro
     itemListElement: products.map((product, index) => ({
       "@type": "ListItem",
       position: (meta.currentPage - 1) * PRODUCTS_PER_PAGE + index + 1,
-      url: `${SITE_URL}/products/${product.id}`,
+      url: `${SITE_URL}/products/${encodeURIComponent(String(product.slug || product.id))}`,
       name: product.name || `Product ${product.id}`,
     })),
   };
@@ -204,7 +204,7 @@ export default async function ProductsPage({ searchParams }: { searchParams: Pro
           );
         })}
         {products.map((product) => (
-          <Link key={String(product.id)} href={`/products/${product.id}`}>
+          <Link key={String(product.id)} href={`/products/${encodeURIComponent(String(product.slug || product.id))}`}>
             {product.name || `Product ${product.id}`}
           </Link>
         ))}
