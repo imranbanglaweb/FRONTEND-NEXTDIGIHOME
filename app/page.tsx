@@ -3,9 +3,8 @@
 import { useState, useEffect, useCallback } from 'react';
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { ArrowRightIcon, CogIcon, ShoppingCartIcon, ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/outline";
-import Swal from 'sweetalert2';
-import { getStorageUrl, apiFetch } from './utils/api';
+import { ArrowRightIcon, ChevronLeftIcon, ChevronRightIcon, XMarkIcon } from "@heroicons/react/24/outline";
+import { getStorageUrl, apiFetch, getLogoUrl } from './utils/api';
 
 // Category Icons Mapping
 const categoryIconMap: Record<string, string> = {
@@ -88,6 +87,15 @@ interface HomeContent {
   features: Feature[];
 }
 
+interface WelcomeSettings {
+  site_logo?: string | null;
+  admin_logo?: string | null;
+  site_title?: string;
+  admin_title?: string;
+  site_description?: string;
+  admin_description?: string;
+}
+
 const normalizeCategory = (value: unknown): string => {
   return String(value ?? '')
     .trim()
@@ -108,6 +116,8 @@ export default function Home() {
   const [loadingCategories, setLoadingCategories] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
+  const [showWelcomePopup, setShowWelcomePopup] = useState(false);
+  const [welcomeSettings, setWelcomeSettings] = useState<WelcomeSettings | null>(null);
 
   const nextSlide = useCallback(() => {
     const sliderCount = Math.max(allProducts.length, homeContent?.hero_sliders?.length || 0, 6);
@@ -167,6 +177,37 @@ export default function Home() {
 
      fetchCategories();
    }, []);
+
+  useEffect(() => {
+    try {
+      const savedSettings = localStorage.getItem('nextdigihome_settings');
+      if (savedSettings) {
+        window.setTimeout(() => setWelcomeSettings(JSON.parse(savedSettings)), 0);
+      }
+
+      if (sessionStorage.getItem('nextdigihome_welcome_popup_seen') !== 'true') {
+        const timer = window.setTimeout(() => setShowWelcomePopup(true), 450);
+        return () => window.clearTimeout(timer);
+      }
+    } catch (error) {
+      console.warn('Failed to initialize welcome popup:', error);
+      window.setTimeout(() => setShowWelcomePopup(true), 0);
+    }
+  }, []);
+
+  useEffect(() => {
+    const fetchWelcomeSettings = async () => {
+      try {
+        const data = await apiFetch('settings', { silent: true });
+        const settingsData = data?.data?.data || data?.data || data || {};
+        setWelcomeSettings(settingsData);
+      } catch (error) {
+        console.warn('Failed to fetch welcome popup settings:', error);
+      }
+    };
+
+    fetchWelcomeSettings();
+  }, []);
 
   useEffect(() => {
     if (homeContent?.hero_sliders?.length) {
@@ -320,8 +361,97 @@ export default function Home() {
     router.push(productCatalogHref);
   };
 
+  const closeWelcomePopup = () => {
+    try {
+      sessionStorage.setItem('nextdigihome_welcome_popup_seen', 'true');
+    } catch (error) {
+      console.warn('Failed to save welcome popup state:', error);
+    }
+    setShowWelcomePopup(false);
+  };
+
+  const popupBrandName = welcomeSettings?.site_title || welcomeSettings?.admin_title || 'Next Digi Home';
+  const popupTagline =
+    welcomeSettings?.site_description ||
+    welcomeSettings?.admin_description ||
+    'Premium digital products engineered for modern businesses.';
+  const popupLogo = getLogoUrl(welcomeSettings?.site_logo || welcomeSettings?.admin_logo) || '/logo.png';
+
   return (
     <div>
+      {showWelcomePopup && (
+        <div
+          className="fixed inset-0 z-[90] flex items-center justify-center bg-[#050507]/80 px-4 py-6 backdrop-blur-xl animate-fade-in-up"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="welcome-popup-title"
+        >
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_20%,rgba(0,212,170,0.18),transparent_34%),radial-gradient(circle_at_18%_80%,rgba(139,92,246,0.16),transparent_28%)]" />
+          <div className="relative w-full max-w-[520px] overflow-hidden rounded-3xl border border-white/10 bg-[#101014]/95 shadow-[0_30px_90px_rgba(0,0,0,0.72)] ring-1 ring-[#00d4aa]/20">
+            <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#00d4aa] to-transparent" />
+            <div className="absolute -right-20 -top-20 h-48 w-48 rounded-full bg-[#8b5cf6]/20 blur-3xl" />
+            <div className="absolute -bottom-24 -left-16 h-56 w-56 rounded-full bg-[#00d4aa]/15 blur-3xl" />
+
+            <button
+              type="button"
+              onClick={closeWelcomePopup}
+              className="absolute right-4 top-4 z-10 flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-white/5 text-[#b0b0b0] transition hover:border-[#00d4aa]/50 hover:text-white"
+              aria-label="Close welcome popup"
+            >
+              <XMarkIcon className="h-5 w-5" />
+            </button>
+
+            <div className="relative px-6 pb-7 pt-8 text-center sm:px-9 sm:pb-9 sm:pt-10">
+              <div className="mx-auto mb-5 flex h-24 w-24 items-center justify-center overflow-hidden rounded-3xl border border-[#00d4aa]/25 bg-gradient-to-br from-[#1a1a1f] to-[#0a0a0d] p-2 shadow-2xl shadow-[#00d4aa]/10 sm:h-28 sm:w-28">
+                <img
+                  src={popupLogo}
+                  alt={`${popupBrandName} logo`}
+                  className="h-full w-full object-contain"
+                  decoding="async"
+                  onError={(e) => {
+                    e.currentTarget.style.display = 'none';
+                    e.currentTarget.nextElementSibling?.classList.remove('hidden');
+                  }}
+                />
+                <svg className="hidden h-12 w-12 text-[#00d4aa]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                </svg>
+              </div>
+
+              <div className="mb-4 inline-flex items-center rounded-full border border-[#00d4aa]/25 bg-[#00d4aa]/8 px-4 py-2 text-xs font-bold uppercase tracking-[2px] text-[#00d4aa]">
+                Premium Digital Marketplace
+              </div>
+
+              <h2 id="welcome-popup-title" className="mb-3 text-3xl font-black tracking-tight text-white sm:text-4xl">
+                {popupBrandName}
+              </h2>
+
+              <p className="mx-auto max-w-md text-sm leading-6 text-[#b0b0b0] sm:text-base">
+                {popupTagline}
+              </p>
+
+              <div className="mt-7 flex flex-col gap-3 sm:flex-row sm:justify-center">
+                <Link
+                  href="/products"
+                  onClick={closeWelcomePopup}
+                  className="group inline-flex items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-[#00d4aa] to-[#8b5cf6] px-6 py-3.5 text-sm font-extrabold text-[#0f0f12] transition hover:brightness-110"
+                >
+                  Explore Products
+                  <ArrowRightIcon className="h-4 w-4 transition group-hover:translate-x-0.5" />
+                </Link>
+                <button
+                  type="button"
+                  onClick={closeWelcomePopup}
+                  className="inline-flex items-center justify-center rounded-2xl border border-white/10 bg-white/5 px-6 py-3.5 text-sm font-bold text-white transition hover:border-[#00d4aa]/50 hover:bg-[#00d4aa]/10"
+                >
+                  Continue Browsing
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Hero Slider Section - Premium Edition */}
       <section className="relative h-[590px] overflow-hidden sm:h-[630px] lg:h-[660px]">
         {/* Enhanced Background with multiple layers */}
