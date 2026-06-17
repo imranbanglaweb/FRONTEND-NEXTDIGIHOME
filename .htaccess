@@ -5,8 +5,15 @@
   RewriteCond %{HTTP_HOST} ^www\.nextdigihome\.com$ [NC]
   RewriteRule ^ https://nextdigihome.com%{REQUEST_URI} [R=301,L,NE]
 
+  RewriteRule ^contact-us/?$ https://nextdigihome.com/contact [R=301,L,NE]
+  RewriteRule ^home/?$ https://nextdigihome.com/ [R=301,L,NE]
+  RewriteRule ^events/feed/?$ https://nextdigihome.com/blog [R=301,L,NE]
+  RewriteRule ^by-failing-to-prepare-you-are-preparing-to-fail/?$ https://nextdigihome.com/blog [R=301,L,NE]
+  RewriteRule ^my-best-advice-to-entrepreneurs-is-this-forget-about-making-mistakes-just-do-it/?$ https://nextdigihome.com/blog [R=301,L,NE]
+  RewriteRule ^simplicity-is-the-ultimate-sophistication/?$ https://nextdigihome.com/blog [R=301,L,NE]
   RewriteRule ^downloads/?$ https://nextdigihome.com/products [R=301,L,NE]
   RewriteRule ^downloads/([^/]+)/?$ https://nextdigihome.com/products/$1 [R=301,L,NE]
+  RewriteRule ^\*$ https://nextdigihome.com/ [R=301,L,NE]
 
   RewriteRule ^wp-content/? - [G,L]
   RewriteRule ^wp-admin/? - [G,L]
