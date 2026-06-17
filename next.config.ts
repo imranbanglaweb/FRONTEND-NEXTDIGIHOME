@@ -17,6 +17,16 @@ const nextConfig: NextConfig = {
         permanent: true,
       },
       {
+        source: '/downloads/:slug',
+        destination: '/products/:slug',
+        permanent: true,
+      },
+      {
+        source: '/downloads/:slug/',
+        destination: '/products/:slug',
+        permanent: true,
+      },
+      {
         source: '/by-failing-to-prepare-you-are-preparing-to-fail',
         destination: '/blog',
         permanent: true,
