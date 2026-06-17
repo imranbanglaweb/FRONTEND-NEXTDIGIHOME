@@ -203,7 +203,7 @@ export async function generateMetadata({ params }: ProductSegmentProps): Promise
   const images = getProductImages(product);
   const image = images[0] || DEFAULT_IMAGE;
   const title = `${product.name} | ${product.category || "Premium Digital Product"} | ${SITE_NAME}`;
-  const isIndexable = product.active !== false && Boolean(product.name);
+  const isIndexable = Boolean(product.name);
 
   return {
     title,
