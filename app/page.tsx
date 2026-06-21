@@ -691,15 +691,50 @@ export default function Home() {
         <div className="absolute inset-0 bg-gradient-to-r from-[#00d4aa]/5 via-transparent to-[#8b5cf6]/5" />
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-      {stats.map((stat, index) => (
+      {stats.map((stat) => (
         <div key={stat.key} className="text-center animate-fade-in-up">
           <div className="text-4xl md:text-5xl font-bold gradient-text mb-2">{stat.value}</div>
           <div className="text-[#737373] text-sm font-medium">{stat.label}</div>
         </div>
       ))}
            </div>
-         </div>
-        </section>
+        </div>
+       </section>
+
+      {/* Video Preview Section */}
+      <section className="relative overflow-hidden border-y border-[#2a2a30] bg-[#0a0a0d] py-20">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_20%,rgba(0,212,170,0.16),transparent_34%),radial-gradient(circle_at_80%_70%,rgba(139,92,246,0.14),transparent_32%)]" />
+        <div className="relative z-10 mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+          <div className="mb-10 text-center">
+            <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-[#00d4aa]/25 bg-[#00d4aa]/5 px-4 py-1.5 text-xs font-semibold tracking-[2px] text-[#00d4aa]">
+              VIDEO PREVIEW
+            </div>
+            <h2 className="mb-4 text-4xl font-bold tracking-tight md:text-5xl">
+              Watch <span className="gradient-text">Next Digi Home</span> in Action
+            </h2>
+            <p className="mx-auto max-w-2xl text-lg leading-relaxed text-[#737373]">
+              See how our digital products, templates, and business resources help you launch faster.
+            </p>
+          </div>
+
+          <div className="relative mx-auto max-w-5xl">
+            <div className="absolute -inset-4 rounded-[2rem] bg-gradient-to-r from-[#00d4aa] via-[#8b5cf6] to-[#ff6b9d] opacity-20 blur-3xl" />
+            <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-[#101014] p-2 shadow-[0_28px_80px_rgba(0,0,0,0.55)] ring-1 ring-[#00d4aa]/15">
+              <div className="aspect-video overflow-hidden rounded-2xl bg-black">
+                <iframe
+                  className="h-full w-full"
+                  src="https://www.youtube-nocookie.com/embed/b5otVQURO6I"
+                  title="Next Digi Home video preview"
+                  loading="lazy"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                  allowFullScreen
+                  referrerPolicy="strict-origin-when-cross-origin"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
 
        {/* Premium Features Section - Dynamic from API */}
        <section className="relative py-20 overflow-hidden border-y border-[#2a2a30]">
@@ -719,7 +754,7 @@ export default function Home() {
            </div>
 
            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-             {features.map((feature: any, index: number) => (
+             {features.map((feature: Feature, index: number) => (
                <div 
                  key={feature.id || index}
                  className="group relative glass-card rounded-3xl p-8 border border-[#2a2a30] hover:border-[#00d4aa]/40 transition-all duration-500 hover:-translate-y-1 flex flex-col"
