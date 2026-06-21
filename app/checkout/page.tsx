@@ -104,12 +104,15 @@ const getCheckoutTransactionId = (data: CheckoutResponse, fallback?: string): st
   );
 };
 
+const formatTaka = (amount: number) => `৳${amount.toFixed(2)}`;
+
 export default function CheckoutPage() {
   const [items, setItems] = useState<CartItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [step, setStep] = useState<'details' | 'payment' | 'success'>('details');
   const [transactionId, setTransactionId] = useState<string | null>(null);
+  const [confirmedTotal, setConfirmedTotal] = useState<number | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
   const [user, setUser] = useState<{name: string, email: string, phone?: string} | null>(null);
 
@@ -290,6 +293,7 @@ const fetchCart = async () => {
       if (data.success) {
         const newTransactionId = getCheckoutTransactionId(data);
         setTransactionId(newTransactionId);
+        setConfirmedTotal(subtotal);
         localStorage.setItem('customer_email', formData.customer_email);
         setStep('payment');
       } else {
@@ -360,6 +364,7 @@ const fetchCart = async () => {
        });
 
       if (data.success) {
+        setConfirmedTotal(subtotal);
         await clearCheckoutCart(token);
         setTransactionId(paymentTransactionId);
         setStep('success');
@@ -381,6 +386,7 @@ const fetchCart = async () => {
   };
 
   const subtotal = items.reduce((sum, item) => sum + item.total, 0);
+  const successTotal = confirmedTotal ?? subtotal;
 
   const getPaymentDetails = (method: string) => {
     switch (method) {
@@ -494,7 +500,7 @@ const fetchCart = async () => {
                 </div>
                 <div className="flex justify-between">
                   <span className="text-[#737373]">Total:</span>
-                  <span className="text-[#fafafa] font-bold">৳${subtotal.toFixed(2)}</span>
+                  <span className="text-[#fafafa] font-bold">{formatTaka(successTotal)}</span>
                 </div>
               </div>
             </div>
@@ -841,7 +847,7 @@ const fetchCart = async () => {
                           <div className="bg-gradient-to-r from-[#00d4aa]/10 to-[#8b5cf6]/10 rounded-lg p-4 border border-[#00d4aa]/20">
                             <div className="flex justify-between items-center">
                               <span className="text-[#fafafa] font-semibold">Amount to Pay:</span>
-                              <span className="text-[#00d4aa] font-bold text-xl">৳${subtotal.toFixed(2)}</span>
+                              <span className="text-[#00d4aa] font-bold text-xl">{formatTaka(subtotal)}</span>
                             </div>
                           </div>
                         </div>
@@ -857,7 +863,7 @@ const fetchCart = async () => {
                       Order Summary
                     </h4>
                     <div className="space-y-4">
-                      {items.map((item, index) => (
+                      {items.map((item) => (
                         <div key={item.id} className="flex justify-between items-center p-3 bg-[#0f0f12] rounded-lg border border-[#2a2a30]/30">
                           <div className="flex-1">
                             <p className="text-[#fafafa] font-medium text-sm">{item.name}</p>
@@ -871,13 +877,13 @@ const fetchCart = async () => {
                               </span>
                             </div>
                           </div>
-                          <p className="text-[#00d4aa] font-bold text-sm">৳${item.total.toFixed(2)}</p>
+                          <p className="text-[#00d4aa] font-bold text-sm">{formatTaka(item.total)}</p>
                         </div>
                       ))}
                       <hr className="border-[#2a2a30] my-4" />
                       <div className="flex justify-between items-center p-4 bg-gradient-to-r from-[#00d4aa]/10 to-[#8b5cf6]/10 rounded-lg border border-[#00d4aa]/20">
                         <span className="text-[#fafafa] font-bold text-lg">Total</span>
-                        <span className="text-[#00d4aa] font-bold text-xl">৳${subtotal.toFixed(2)}</span>
+                        <span className="text-[#00d4aa] font-bold text-xl">{formatTaka(subtotal)}</span>
                       </div>
                     </div>
                   </div>
@@ -976,13 +982,13 @@ const fetchCart = async () => {
                     </span>
                   </div>
                 </div>
-                <p className="text-[#00d4aa] font-bold">৳${item.total.toFixed(2)}</p>
+                <p className="text-[#00d4aa] font-bold">{formatTaka(item.total)}</p>
               </div>
             ))}
             <hr className="border-[#2a2a30] my-3" />
             <div className="flex justify-between text-lg">
               <span className="text-[#fafafa] font-bold">Total</span>
-              <span className="text-[#00d4aa] font-bold">৳${subtotal.toFixed(2)}</span>
+              <span className="text-[#00d4aa] font-bold">{formatTaka(subtotal)}</span>
             </div>
           </div>
         </div>
@@ -1203,7 +1209,7 @@ const fetchCart = async () => {
             disabled={submitting}
             className="w-full group relative overflow-hidden px-8 py-4 rounded-xl font-bold text-lg transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed bg-gradient-to-r from-[#00d4aa] to-[#8b5cf6] text-[#0f0f12] hover:scale-[1.02] hover:shadow-[0_0_50px_rgba(0,212,170,0.5)]"
           >
-            {submitting ? 'Processing...' : `Place Order - ৳${subtotal.toFixed(2)}`}
+            {submitting ? 'Processing...' : `Place Order - ${formatTaka(subtotal)}`}
           </button>
 
             <p className="text-center text-xs text-[#737373]">
