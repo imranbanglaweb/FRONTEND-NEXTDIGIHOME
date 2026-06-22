@@ -66,10 +66,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: route.priority,
   }));
 
-  const [products, posts, categories] = await Promise.all([
+  const [products, posts] = await Promise.all([
     fetchRecords('products?per_page=10000'),
     fetchRecords('blog?per_page=1000'),
-    fetchRecords('categories?per_page=1000'),
   ]);
 
   const productUrls: MetadataRoute.Sitemap = products
@@ -90,18 +89,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.75,
     }));
 
-  const categoryUrls: MetadataRoute.Sitemap = categories
-    .filter((category) => category.slug || category.id != null)
-    .map((category) => ({
-      url: `${baseUrl}/products?category=${encodeURIComponent(String(category.slug || category.id))}`,
-      lastModified: toLastModified(category.updated_at || category.created_at),
-      changeFrequency: 'weekly' as const,
-      priority: 0.78,
-    }));
-
   return [
     ...staticUrls,
-    ...categoryUrls,
     ...productUrls,
     ...blogUrls,
   ];

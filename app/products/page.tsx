@@ -124,6 +124,7 @@ export async function generateMetadata({ searchParams }: { searchParams: Product
   const category = params.category?.trim() || "";
   const search = params.search?.trim() || "";
   const path = buildProductsPath({ page, category, search });
+  const isVariantPage = Boolean(category || search || page > 1);
   const titleParts = [
     category ? `${category} Products` : "Premium Digital Products",
     search ? `Search: ${search}` : "",
@@ -134,12 +135,23 @@ export async function generateMetadata({ searchParams }: { searchParams: Product
     title: `${titleParts.join(" - ")} | Next Digi Home`,
     description: "Browse premium digital products, templates, UI kits, design assets, and business tools with secure checkout and fast access.",
     alternates: {
-      canonical: path,
+      canonical: isVariantPage ? "/products" : path,
+    },
+    robots: {
+      index: !isVariantPage,
+      follow: true,
+      googleBot: {
+        index: !isVariantPage,
+        follow: true,
+        "max-video-preview": -1,
+        "max-image-preview": "large",
+        "max-snippet": -1,
+      },
     },
     openGraph: {
       title: titleParts.join(" - ") || "Premium Digital Products",
       description: "Browse premium digital products, templates, UI kits, design assets, and business tools.",
-      url: `${SITE_URL}${path}`,
+      url: `${SITE_URL}${isVariantPage ? "/products" : path}`,
       type: "website",
       siteName: "Next Digi Home",
       images: [{ url: `${SITE_URL}/og-image.svg`, width: 1200, height: 630, alt: "Next Digi Home products" }],

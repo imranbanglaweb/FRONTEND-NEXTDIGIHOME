@@ -6,6 +6,8 @@ import { useState, useEffect } from "react";
 import { ShoppingCartIcon, Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import { apiFetch, BACKEND_BASE_URL, getStorageUrl, getLogoUrl } from './utils/api';
 
+const ANDROID_APP_DOWNLOAD_URL = '/nextdigihome.apk';
+
 const getFaviconUrl = (path: string | null | undefined): string | null => {
   if (!path) return null;
   const cleanPath = path.trim();
@@ -700,6 +702,68 @@ const [settings, setSettings] = useState<{
                   </svg>
                   +880 1918-329829
                 </p>
+              </div>
+
+              <div className="mb-6 overflow-hidden rounded-3xl border border-[#00d4aa]/25 bg-[#0f0f12] shadow-[0_24px_70px_rgba(0,0,0,0.32)]">
+                <div className="relative p-4">
+                  <span className="absolute inset-0 bg-[radial-gradient(circle_at_18%_8%,rgba(0,212,170,0.22),transparent_36%),radial-gradient(circle_at_92%_22%,rgba(139,92,246,0.2),transparent_34%)]" />
+                  <span className="absolute left-5 right-5 top-0 h-px bg-gradient-to-r from-transparent via-white/45 to-transparent" />
+
+                  <div className="relative flex items-center gap-3">
+                    <div className="relative h-24 w-16 shrink-0 rotate-[-4deg] rounded-[1.35rem] border border-white/15 bg-[#08080a] p-1.5 shadow-2xl shadow-[#00d4aa]/10">
+                      <div className="absolute left-1/2 top-1 h-1 w-5 -translate-x-1/2 rounded-full bg-white/20" />
+                      <div className="flex h-full flex-col justify-between overflow-hidden rounded-[1rem] bg-gradient-to-br from-[#15151a] via-[#0f2c27] to-[#171024] p-2">
+                        <div className="flex items-center justify-between">
+                          <span className="h-2 w-2 rounded-full bg-[#00d4aa] shadow-[0_0_12px_rgba(0,212,170,0.9)]" />
+                          <span className="h-1.5 w-6 rounded-full bg-white/25" />
+                        </div>
+                        <div className="mx-auto flex h-11 w-11 items-center justify-center rounded-2xl bg-[#00d4aa] text-[#0f0f12] shadow-lg shadow-[#00d4aa]/30">
+                          <svg className="h-7 w-7" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                            <path d="M7.2 9.1h9.6a1 1 0 0 1 1 1v7.1a1 1 0 0 1-1 1h-.7v2.1a1.2 1.2 0 0 1-2.4 0v-2.1H10.3v2.1a1.2 1.2 0 0 1-2.4 0v-2.1h-.7a1 1 0 0 1-1-1v-7.1a1 1 0 0 1 1-1Zm-3.1 1.2c.7 0 1.2.5 1.2 1.2v4.2a1.2 1.2 0 0 1-2.4 0v-4.2c0-.7.5-1.2 1.2-1.2Zm15.8 0c.7 0 1.2.5 1.2 1.2v4.2a1.2 1.2 0 0 1-2.4 0v-4.2c0-.7.5-1.2 1.2-1.2ZM8.4 3.4 7.3 1.5a.5.5 0 1 1 .9-.5l1.1 1.9A6.9 6.9 0 0 1 12 2.4c1 0 1.9.2 2.7.5L15.8 1a.5.5 0 1 1 .9.5l-1.1 1.9A6.2 6.2 0 0 1 18 8H6a6.2 6.2 0 0 1 2.4-4.6ZM9.4 5.9a.7.7 0 1 0 0-1.4.7.7 0 0 0 0 1.4Zm5.2 0a.7.7 0 1 0 0-1.4.7.7 0 0 0 0 1.4Z" />
+                          </svg>
+                        </div>
+                        <div className="space-y-1">
+                          <span className="block h-1.5 rounded-full bg-white/35" />
+                          <span className="block h-1.5 w-2/3 rounded-full bg-[#00d4aa]/60" />
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="min-w-0 flex-1">
+                      <div className="mb-2 inline-flex items-center gap-1.5 rounded-full border border-[#00d4aa]/25 bg-[#00d4aa]/10 px-2.5 py-1 text-[10px] font-bold uppercase tracking-[1.4px] text-[#9ff5e4]">
+                        <span className="h-1.5 w-1.5 rounded-full bg-[#00d4aa] shadow-[0_0_10px_rgba(0,212,170,0.9)]" />
+                        Android App
+                      </div>
+                      <p className="text-base font-black leading-tight text-[#fafafa]">Shop faster from your phone</p>
+                      <p className="mt-1 text-xs leading-relaxed text-[#9a9a9a]">Browse products, checkout, and access your digital downloads anytime.</p>
+                    </div>
+                  </div>
+
+                  <div className="relative mt-4 flex flex-wrap gap-2">
+                    {['Fast checkout', 'Secure access', 'Instant files'].map((item) => (
+                      <span key={item} className="rounded-full border border-white/10 bg-white/[0.04] px-2.5 py-1 text-[10px] font-semibold text-[#cfcfcf]">
+                        {item}
+                      </span>
+                    ))}
+                  </div>
+
+                  <a
+                    href={ANDROID_APP_DOWNLOAD_URL}
+                    download
+                    className="group relative mt-4 flex items-center justify-between rounded-2xl bg-gradient-to-r from-[#00d4aa] to-[#8b5cf6] px-4 py-3 text-[#0f0f12] shadow-lg shadow-[#00d4aa]/20 transition-all duration-300 hover:-translate-y-0.5 hover:brightness-110 active:scale-[0.985]"
+                    aria-label="Download Next Digi Home Android app"
+                  >
+                    <span>
+                      <span className="block text-[10px] font-black uppercase tracking-[1.5px] opacity-70">Download for</span>
+                      <span className="block text-sm font-black">Android APK</span>
+                    </span>
+                    <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#0f0f12]/90 text-[#00d4aa] transition-transform duration-300 group-hover:translate-x-0.5">
+                      <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.4" d="M12 3v12m0 0 4-4m-4 4-4-4M5 21h14" />
+                      </svg>
+                    </span>
+                  </a>
+                </div>
               </div>
 
               <div className="pt-4 border-t border-[#2a2a30]">

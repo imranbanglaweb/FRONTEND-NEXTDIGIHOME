@@ -56,6 +56,7 @@ class _NextDigiHomeAppState extends State<NextDigiHomeApp> {
             backgroundColor: _background,
             foregroundColor: Colors.white,
             centerTitle: false,
+            toolbarHeight: 76,
           ),
           cardTheme: CardThemeData(
             color: _card,
@@ -1524,26 +1525,33 @@ class Pill extends StatelessWidget {
 }
 
 class BrandLogo extends StatelessWidget {
-  const BrandLogo({this.size = 42, super.key});
+  const BrandLogo({this.size = 64, this.width, this.height, super.key});
 
   final double size;
+  final double? width;
+  final double? height;
 
   @override
   Widget build(BuildContext context) {
     final logo = AppScope.of(context).settings.logo;
+    final logoWidth = width ?? size;
+    final logoHeight = height ?? size;
+    final radius = (logoWidth < logoHeight ? logoWidth : logoHeight) * .24;
     return Container(
-      width: size,
-      height: size,
-      padding: EdgeInsets.all(size * .12),
+      width: logoWidth,
+      height: logoHeight,
+      padding: EdgeInsets.all(
+        (logoWidth < logoHeight ? logoWidth : logoHeight) * .08,
+      ),
       decoration: BoxDecoration(
         color: _card,
-        borderRadius: BorderRadius.circular(size * .24),
+        borderRadius: BorderRadius.circular(radius),
         border: Border.all(color: _accent.withValues(alpha: .22)),
         boxShadow: [
           BoxShadow(
             color: _accent.withValues(alpha: .16),
-            blurRadius: size * .55,
-            offset: Offset(0, size * .2),
+            blurRadius: logoHeight * .45,
+            offset: Offset(0, logoHeight * .14),
           ),
         ],
       ),
@@ -1582,8 +1590,8 @@ class BrandTitle extends StatelessWidget {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        const BrandLogo(size: 40),
-        const SizedBox(width: 10),
+        const BrandLogo(size: 58),
+        const SizedBox(width: 12),
         Flexible(
           child: Text(
             title,
@@ -1613,7 +1621,7 @@ class AppFooter extends StatelessWidget {
       ),
       child: Column(
         children: [
-          const BrandLogo(size: 58),
+          const BrandLogo(size: 88),
           const SizedBox(height: 12),
           Text(
             settings.title,
@@ -2585,7 +2593,7 @@ class AuthPromoCard extends StatelessWidget {
         children: [
           Pill(label: 'CUSTOMER ACCOUNT'),
           SizedBox(height: 18),
-          BrandLogo(size: 82),
+          BrandLogo(size: 112),
           SizedBox(height: 18),
           Text(
             'Sign in to manage your digital products.',
