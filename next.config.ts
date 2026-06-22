@@ -17,6 +17,16 @@ const nextConfig: NextConfig = {
         permanent: true,
       },
       {
+        source: '/downloads/category/:path*',
+        destination: '/products',
+        permanent: true,
+      },
+      {
+        source: '/downloads/tag/:path*',
+        destination: '/products',
+        permanent: true,
+      },
+      {
         source: '/downloads/:slug',
         destination: '/products/:slug',
         permanent: true,
@@ -29,6 +39,26 @@ const nextConfig: NextConfig = {
       {
         source: '/by-failing-to-prepare-you-are-preparing-to-fail',
         destination: '/blog',
+        permanent: true,
+      },
+      {
+        source: '/by-failing-to-prepare-you-are-preparing-to-fail/feed',
+        destination: '/blog',
+        permanent: true,
+      },
+      {
+        source: '/dont-find-fault-find-a-remedy',
+        destination: '/blog',
+        permanent: true,
+      },
+      {
+        source: '/program',
+        destination: '/services',
+        permanent: true,
+      },
+      {
+        source: '/payment-confirmed',
+        destination: '/checkout/success',
         permanent: true,
       },
       {
