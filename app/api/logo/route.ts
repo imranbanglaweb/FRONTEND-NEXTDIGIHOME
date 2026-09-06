@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import sharp from 'sharp';
 
 function getBackendBaseUrl(request: NextRequest): string {
   const envUrl = process.env.NEXT_PUBLIC_API_URL?.replace(/\/api$/, '');
@@ -49,26 +50,44 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    const buffer = await response.arrayBuffer();
+    const rawBuffer = await response.arrayBuffer();
     const headers = new Headers();
     
-    const ext = finalFilename.toLowerCase().split('.').pop();
-    const contentTypeMap: Record<string, string> = {
-      'ico': 'image/x-icon',
-      'png': 'image/png',
-      'jpg': 'image/jpeg',
-      'jpeg': 'image/jpeg',
-      'gif': 'image/gif',
-      'svg': 'image/svg+xml',
-      'webp': 'image/webp',
-    };
-    const contentType = contentTypeMap[ext || ''] || response.headers.get('content-type') || 'application/octet-stream';
-    headers.set('Content-Type', contentType);
+    const ext = finalFilename.toLowerCase().split('.').pop() || '';
+    let processedBuffer: Buffer = Buffer.from(rawBuffer);
+    let outputContentType = 'image/png';
 
+    // Auto-trim large empty transparent margins around logo artwork so it renders large and prominent
+    if (['png', 'jpg', 'jpeg', 'webp'].includes(ext)) {
+      try {
+        const trimmed = await sharp(processedBuffer)
+          .trim()
+          .png()
+          .toBuffer();
+        processedBuffer = Buffer.from(trimmed);
+        outputContentType = 'image/png';
+      } catch (trimErr) {
+        console.warn('Sharp trimming bypassed:', trimErr);
+        const contentTypeMap: Record<string, string> = {
+          'ico': 'image/x-icon',
+          'png': 'image/png',
+          'jpg': 'image/jpeg',
+          'jpeg': 'image/jpeg',
+          'gif': 'image/gif',
+          'svg': 'image/svg+xml',
+          'webp': 'image/webp',
+        };
+        outputContentType = contentTypeMap[ext] || response.headers.get('content-type') || 'application/octet-stream';
+      }
+    } else {
+      outputContentType = ext === 'svg' ? 'image/svg+xml' : 'application/octet-stream';
+    }
+
+    headers.set('Content-Type', outputContentType);
     headers.set('Access-Control-Allow-Origin', '*');
-    headers.set('Cache-Control', 'public, max-age=31536000, immutable');
+    headers.set('Cache-Control', 'public, max-age=86400, stale-while-revalidate=604800');
 
-    return new NextResponse(buffer, {
+    return new NextResponse(new Uint8Array(processedBuffer), {
       status: 200,
       headers
     });

@@ -89,12 +89,12 @@ export const getStorageUrl = (path: string | null | undefined): string | null =>
   return `/api/storage/${cleanPath}`;
 };
 
-// Logo URLs - use proxy endpoint
+// Logo URLs - use proxy endpoint with cache buster for auto-trimmed output
 export const getLogoUrl = (filename: string | null | undefined): string | null => {
   if (!filename) return null;
   if (filename.startsWith('http')) return filename;
   const cleanFilename = filename.replace(/^\/+/, '');
-  return `/api/logo?file=admin_resource/assets/images/${encodeURIComponent(cleanFilename)}`;
+  return `/api/logo?file=admin_resource/assets/images/${encodeURIComponent(cleanFilename)}&v=2`;
 };
 
 // Public folder assets

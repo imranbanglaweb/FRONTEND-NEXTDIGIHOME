@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { ArrowRightIcon, ChevronLeftIcon, ChevronRightIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import { getStorageUrl, apiFetch, getLogoUrl } from './utils/api';
+import NextDigiEcosystem from './components/NextDigiEcosystem';
 
 // Category Icons Mapping
 const categoryIconMap: Record<string, string> = {
@@ -402,20 +403,19 @@ export default function Home() {
             </button>
 
             <div className="relative px-6 pb-7 pt-8 text-center sm:px-9 sm:pb-9 sm:pt-10">
-              <div className="mx-auto mb-5 flex h-24 w-24 items-center justify-center overflow-hidden rounded-3xl border border-[#00d4aa]/25 bg-gradient-to-br from-[#1a1a1f] to-[#0a0a0d] p-2 shadow-2xl shadow-[#00d4aa]/10 sm:h-28 sm:w-28">
+              {/* Flat, Prominent Brand Logo */}
+              <div className="mx-auto mb-6 flex h-20 sm:h-24 w-full max-w-[340px] items-center justify-center select-none">
                 <img
-                  src={popupLogo}
+                  src={popupLogo || '/logo.png'}
                   alt={`${popupBrandName} logo`}
-                  className="h-full w-full object-contain"
+                  className="h-full w-auto max-w-full object-contain filter drop-shadow-[0_4px_24px_rgba(0,212,170,0.4)] transition-transform duration-300 hover:scale-105"
                   decoding="async"
                   onError={(e) => {
-                    e.currentTarget.style.display = 'none';
-                    e.currentTarget.nextElementSibling?.classList.remove('hidden');
+                    if (!e.currentTarget.src.endsWith('/logo.png')) {
+                      e.currentTarget.src = '/logo.png';
+                    }
                   }}
                 />
-                <svg className="hidden h-12 w-12 text-[#00d4aa]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
-                </svg>
               </div>
 
               <div className="mb-4 inline-flex items-center rounded-full border border-[#00d4aa]/25 bg-[#00d4aa]/8 px-4 py-2 text-xs font-bold uppercase tracking-[2px] text-[#00d4aa]">
@@ -870,57 +870,77 @@ export default function Home() {
         </div>
       </section>
 
-      {/* How It Works Section */}
+      {/* How It Works: Build • Launch • Automate • Grow */}
       <section className="relative py-24 overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-r from-[#1a1a1f] via-[#0f0f12] to-[#1a1a1f]" />
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold mb-6 gradient-text">
-              How It Works
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-[#00d4aa]/30 bg-[#00d4aa]/10 mb-4">
+              <span className="w-2 h-2 rounded-full bg-[#00d4aa] animate-pulse"></span>
+              <span className="text-xs font-bold uppercase tracking-[2px] text-[#00d4aa]">THE NEXTDIGI METHODOLOGY</span>
+            </div>
+            <h2 className="text-4xl md:text-5xl font-extrabold mb-4 gradient-text">
+              Build • Launch • Automate • Grow
             </h2>
-            <p className="text-xl text-[#737373] max-w-2xl mx-auto">
-              Simple steps to transform your business with premium digital products
+            <p className="text-base sm:text-lg text-[#8c8c9a] max-w-2xl mx-auto">
+              Our 4-stage venture execution framework engineered to transform ideas into scalable market leaders.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="text-center animate-fade-in-up">
-              <div className="relative mb-8">
-                <div className="w-20 h-20 mx-auto bg-linear-to-br from-[#00d4aa] to-[#8b5cf6] rounded-2xl flex items-center justify-center text-2xl font-bold text-[#0f0f12] mb-4">
-                  1
-                </div>
-                <div className="absolute top-10 left-1/2 transform -translate-x-1/2 w-full h-0.5 bg-gradient-to-r from-[#00d4aa] to-[#8b5cf6] opacity-50 hidden md:block"></div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {/* 1. Build */}
+            <div className="p-6 rounded-2xl bg-[#131318] border border-white/5 hover:border-[#00d4aa]/40 transition-all duration-300 group hover:-translate-y-1">
+              <div className="w-14 h-14 rounded-2xl bg-[#00d4aa]/10 border border-[#00d4aa]/30 flex items-center justify-center text-xl font-black text-[#00d4aa] mb-5">
+                01
               </div>
-              <h3 className="text-2xl font-bold text-[#fafafa] mb-4">Choose Your Product</h3>
-              <p className="text-[#737373] leading-relaxed">
-                Browse our curated collection of premium digital products. Filter by category, price, or rating to find exactly what you need.
+              <span className="text-[10px] font-extrabold uppercase tracking-widest text-[#00d4aa]">NEXTDIGI HOME</span>
+              <h3 className="text-xl font-bold text-[#fafafa] mt-1 mb-3 group-hover:text-[#00d4aa] transition-colors">
+                Build
+              </h3>
+              <p className="text-xs sm:text-sm text-[#8c8c9a] leading-relaxed">
+                Architect clean solutions using verified digital templates, UI systems, business tools, and developer assets.
               </p>
             </div>
 
-            <div className="text-center animate-fade-in-up">
-              <div className="relative mb-8">
-                <div className="w-20 h-20 mx-auto bg-linear-to-br from-[#8b5cf6] to-[#00d4aa] rounded-2xl flex items-center justify-center text-2xl font-bold text-[#0f0f12] mb-4">
-                  2
-                </div>
-                <div className="absolute top-10 left-0 w-1/2 h-0.5 bg-gradient-to-r from-[#8b5cf6] to-[#00d4aa] opacity-50 hidden md:block"></div>
-                <div className="absolute top-10 right-0 w-1/2 h-0.5 bg-gradient-to-l from-[#8b5cf6] to-[#00d4aa] opacity-50 hidden md:block"></div>
+            {/* 2. Launch */}
+            <div className="p-6 rounded-2xl bg-[#131318] border border-white/5 hover:border-[#8b5cf6]/40 transition-all duration-300 group hover:-translate-y-1">
+              <div className="w-14 h-14 rounded-2xl bg-[#8b5cf6]/10 border border-[#8b5cf6]/30 flex items-center justify-center text-xl font-black text-[#a78bfa] mb-5">
+                02
               </div>
-              <h3 className="text-2xl font-bold text-[#fafafa] mb-4">Instant Download</h3>
-              <p className="text-[#737373] leading-relaxed">
-                Secure payment processing with instant access to your digital products. No shipping delays or waiting periods.
+              <span className="text-[10px] font-extrabold uppercase tracking-widest text-[#a78bfa]">NEXTDIGI SOLUTIONS</span>
+              <h3 className="text-xl font-bold text-[#fafafa] mt-1 mb-3 group-hover:text-[#a78bfa] transition-colors">
+                Launch
+              </h3>
+              <p className="text-xs sm:text-sm text-[#8c8c9a] leading-relaxed">
+                Deploy production-grade e-commerce platforms, web applications, and iOS/Android mobile apps with zero friction.
               </p>
             </div>
 
-            <div className="text-center animate-fade-in-up">
-              <div className="relative mb-8">
-                <div className="w-20 h-20 mx-auto bg-linear-to-br from-[#00d4aa] to-[#ff6b6b] rounded-2xl flex items-center justify-center text-2xl font-bold text-[#0f0f12] mb-4">
-                  3
-                </div>
-                <div className="absolute top-10 right-1/2 transform translate-x-1/2 w-full h-0.5 bg-gradient-to-l from-[#00d4aa] to-[#ff6b6b] opacity-50 hidden md:block"></div>
+            {/* 3. Automate */}
+            <div className="p-6 rounded-2xl bg-[#131318] border border-white/5 hover:border-[#ec4899]/40 transition-all duration-300 group hover:-translate-y-1">
+              <div className="w-14 h-14 rounded-2xl bg-[#ec4899]/10 border border-[#ec4899]/30 flex items-center justify-center text-xl font-black text-[#f472b6] mb-5">
+                03
               </div>
-              <h3 className="text-2xl font-bold text-[#fafafa] mb-4">Scale Your Business</h3>
-              <p className="text-[#737373] leading-relaxed">
-                Implement your new digital assets and watch your business grow. Our 24/7 support team is here to help you succeed.
+              <span className="text-[10px] font-extrabold uppercase tracking-widest text-[#f472b6]">NEXTDIGI AI</span>
+              <h3 className="text-xl font-bold text-[#fafafa] mt-1 mb-3 group-hover:text-[#f472b6] transition-colors">
+                Automate
+              </h3>
+              <p className="text-xs sm:text-sm text-[#8c8c9a] leading-relaxed">
+                Eliminate manual overhead with autonomous AI support agents, synthetic video synthesis, and zero-touch RPA pipelines.
+              </p>
+            </div>
+
+            {/* 4. Grow */}
+            <div className="p-6 rounded-2xl bg-[#131318] border border-white/5 hover:border-[#f59e0b]/40 transition-all duration-300 group hover:-translate-y-1">
+              <div className="w-14 h-14 rounded-2xl bg-[#f59e0b]/10 border border-[#f59e0b]/30 flex items-center justify-center text-xl font-black text-[#fbbf24] mb-5">
+                04
+              </div>
+              <span className="text-[10px] font-extrabold uppercase tracking-widest text-[#fbbf24]">NEXTDIGI LABS</span>
+              <h3 className="text-xl font-bold text-[#fafafa] mt-1 mb-3 group-hover:text-[#fbbf24] transition-colors">
+                Grow
+              </h3>
+              <p className="text-xs sm:text-sm text-[#8c8c9a] leading-relaxed">
+                Scale revenue and operations with proprietary SaaS products: NextDigi Commerce, Social, and Automate engines.
               </p>
             </div>
           </div>
@@ -1281,6 +1301,9 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      {/* NEXTDIGI Brand Architecture & Ecosystem Section */}
+      <NextDigiEcosystem />
 
       {/* Real World Professional Use Cases Section */}
       <section className="relative py-24 overflow-hidden">

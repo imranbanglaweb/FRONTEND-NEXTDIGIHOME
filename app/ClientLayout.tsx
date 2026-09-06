@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
 import { ShoppingCartIcon, Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import { apiFetch, BACKEND_BASE_URL, getStorageUrl, getLogoUrl } from './utils/api';
+import NextDigiLogo from './components/NextDigiLogo';
 
 const ANDROID_APP_DOWNLOAD_URL = '/nextdigihome.apk';
 
@@ -243,76 +244,32 @@ const [settings, setSettings] = useState<{
         }`}>
         <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-2 md:py-1 gap-2 lg:gap-4">
-            <Link href="/" className="flex min-w-0 items-center group flex-shrink-0 gap-2 sm:gap-3">
-              <div className="relative h-12 w-12 flex-shrink-0 rounded-xl sm:h-14 sm:w-14 md:h-16 md:w-16 lg:h-20 lg:w-20 lg:rounded-2xl">
-                <div className="absolute -inset-1 rounded-[inherit] bg-gradient-to-br from-[#00d4aa]/35 via-[#8b5cf6]/25 to-[#ff6b9d]/20 opacity-70 blur-md transition-all duration-500 animate-header-logo-glow group-hover:opacity-100 group-hover:blur-lg" />
-                <div className="absolute inset-0 rounded-[inherit] border border-[#00d4aa]/25 bg-[#0f0f12]/70 backdrop-blur-xl transition-all duration-500 group-hover:border-[#00d4aa]/55" />
-                <div className="relative flex h-full w-full items-center justify-center overflow-hidden rounded-[inherit] border border-white/10 bg-gradient-to-br from-[#15151a] via-[#0f0f12] to-[#181329] transition-transform duration-500 group-hover:scale-105 group-hover:-rotate-2">
-                  <span className="absolute inset-0 bg-[radial-gradient(circle_at_28%_18%,rgba(255,255,255,0.35),transparent_34%)] opacity-70" />
-                  <span className="absolute -inset-y-8 left-0 w-6 bg-white/25 blur-sm animate-whatsapp-shine" />
-                  <span className="absolute right-1.5 top-1.5 h-2.5 w-2.5 rounded-full bg-[#00d4aa] shadow-[0_0_18px_rgba(0,212,170,0.9)] transition-all duration-500 group-hover:right-2 group-hover:top-2 group-hover:bg-[#ff6b9d]" />
-                {isHydrated && (() => {
-                  // Use site_logo, or fall back to admin_logo if site_logo is not set
-                  const logoToUse = settings?.admin_logo || settings?.admin_logo;
-                  const logoUrl = logoToUse ? getLogoUrl(logoToUse) : null;
-
-                  return logoUrl ? (
-                    <img
-                      key={logoToUse}
-                      src={logoUrl}
-                      alt="Site Logo"
-                      decoding="async"
-                      className="relative z-10 h-full w-full object-contain p-1.5 drop-shadow-[0_0_12px_rgba(0,212,170,0.22)] transition-transform duration-500 group-hover:scale-110"
-                      onError={(e) => {
-                        console.warn(`Logo failed to load from: ${logoUrl}`);
-                        e.currentTarget.style.display = 'none';
-                        const fallback = e.currentTarget.nextElementSibling;
-                        if (fallback) fallback.classList.remove('hidden');
-                      }}
-                    />
-                  ) : null;
-                })()}
-
-                <svg 
-                  className="relative z-10 h-7 w-7 text-[#00d4aa] drop-shadow-[0_0_14px_rgba(0,212,170,0.45)] transition-transform duration-500 group-hover:scale-110 sm:h-9 sm:w-9" 
-                  fill="none" 
-                  stroke="currentColor" 
-                  viewBox="0 0 24 24"
-                >
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
-                </svg>
-                </div>
-              </div>
-
-              {/* Site Title - Now shows from API */}
-              <div className="hidden min-w-0 sm:block">
-                <span className="block w-[11rem] overflow-hidden lg:w-[13rem]">
-                  <span className="header-typewriter bg-gradient-to-r from-[#00d4aa] via-white to-[#8b5cf6] bg-[length:220%_220%] bg-clip-text pr-1 text-lg font-black text-transparent tracking-tight animate-gradient animate-header-title-glow transition-all duration-300 group-hover:brightness-125 lg:text-xl">
-                    {settings?.admin_title || 'Next Digi Home'}
-                  </span>
-                </span>
-                <span className="mt-0.5 block h-px w-[8rem] origin-left scale-x-60 bg-gradient-to-r from-[#00d4aa] via-[#8b5cf6] to-transparent opacity-70 transition-transform duration-500 group-hover:scale-x-100 lg:w-[10rem]" />
-              </div>
+            <Link href="/" className="flex items-center group flex-shrink-0 py-1">
+              <NextDigiLogo
+                size="md"
+                subtitle="VENTURE ECOSYSTEM"
+                customLogoUrl={isHydrated && (settings?.site_logo || settings?.admin_logo) ? getLogoUrl(settings.site_logo || settings.admin_logo) : null}
+              />
             </Link>
 
             {/* Desktop Navigation */}
             <nav className="hidden md:flex min-w-0 items-center gap-0.5 lg:gap-1">
-              <Link href="/" className={`px-2.5 py-2 lg:px-4 rounded-lg transition-all duration-200 text-sm font-medium ${pathname === '/' ? 'text-[#00d4aa] bg-[#2a2a30]/50' : 'text-[#fafafa] hover:text-[#00d4aa] hover:bg-[#2a2a30]/50'}`}>
+              <Link href="/" className={`px-2.5 py-2 lg:px-3.5 rounded-lg transition-all duration-200 text-sm font-medium ${pathname === '/' ? 'text-[#00d4aa] bg-[#2a2a30]/50' : 'text-[#fafafa] hover:text-[#00d4aa] hover:bg-[#2a2a30]/50'}`}>
                 Home
               </Link>
-              <Link href="/products" className={`px-2.5 py-2 lg:px-4 rounded-lg transition-all duration-200 text-sm font-medium ${pathname.startsWith('/products') ? 'text-[#00d4aa] bg-[#2a2a30]/50' : 'text-[#fafafa] hover:text-[#00d4aa] hover:bg-[#2a2a30]/50'}`}>
-                Products
+              <Link href="/products" className={`px-2.5 py-2 lg:px-3.5 rounded-lg transition-all duration-200 text-sm font-medium ${pathname.startsWith('/products') ? 'text-[#00d4aa] bg-[#2a2a30]/50' : 'text-[#fafafa] hover:text-[#00d4aa] hover:bg-[#2a2a30]/50'}`}>
+                Store
               </Link>
-              <Link href="/about" className={`px-2.5 py-2 lg:px-4 rounded-lg transition-all duration-200 text-sm font-medium ${pathname === '/about' ? 'text-[#00d4aa] bg-[#2a2a30]/50' : 'text-[#fafafa] hover:text-[#00d4aa] hover:bg-[#2a2a30]/50'}`}>
+              <Link href="/services" className={`px-2.5 py-2 lg:px-3.5 rounded-lg transition-all duration-200 text-sm font-medium ${pathname === '/services' ? 'text-[#00d4aa] bg-[#2a2a30]/50' : 'text-[#fafafa] hover:text-[#00d4aa] hover:bg-[#2a2a30]/50'}`}>
+                Solutions &amp; AI
+              </Link>
+              <Link href="/#ecosystem" className={`px-2.5 py-2 lg:px-3.5 rounded-lg transition-all duration-200 text-sm font-medium text-[#fafafa] hover:text-[#00d4aa] hover:bg-[#2a2a30]/50`}>
+                Ecosystem
+              </Link>
+              <Link href="/about" className={`px-2.5 py-2 lg:px-3.5 rounded-lg transition-all duration-200 text-sm font-medium ${pathname === '/about' ? 'text-[#00d4aa] bg-[#2a2a30]/50' : 'text-[#fafafa] hover:text-[#00d4aa] hover:bg-[#2a2a30]/50'}`}>
                 About
               </Link>
-              <Link href="/blog" className={`px-2.5 py-2 lg:px-4 rounded-lg transition-all duration-200 text-sm font-medium ${pathname.startsWith('/blog') ? 'text-[#00d4aa] bg-[#2a2a30]/50' : 'text-[#fafafa] hover:text-[#00d4aa] hover:bg-[#2a2a30]/50'}`}>
-                Blog
-              </Link>
-              <Link href="/services" className={`px-2.5 py-2 lg:px-4 rounded-lg transition-all duration-200 text-sm font-medium ${pathname === '/services' ? 'text-[#00d4aa] bg-[#2a2a30]/50' : 'text-[#fafafa] hover:text-[#00d4aa] hover:bg-[#2a2a30]/50'}`}>
-                Services
-              </Link>
-              <Link href="/contact" className={`px-2.5 py-2 lg:px-4 rounded-lg transition-all duration-200 text-sm font-medium ${pathname === '/contact' ? 'text-[#00d4aa] bg-[#2a2a30]/50' : 'text-[#fafafa] hover:text-[#00d4aa] hover:bg-[#2a2a30]/50'}`}>
+              <Link href="/contact" className={`px-2.5 py-2 lg:px-3.5 rounded-lg transition-all duration-200 text-sm font-medium ${pathname === '/contact' ? 'text-[#00d4aa] bg-[#2a2a30]/50' : 'text-[#fafafa] hover:text-[#00d4aa] hover:bg-[#2a2a30]/50'}`}>
                 Contact
               </Link>
             </nav>
@@ -398,12 +355,26 @@ const [settings, setSettings] = useState<{
                 onClick={() => setMobileMenuOpen(false)}
                 className={`block px-4 py-3 rounded-lg text-lg font-medium transition-all ${pathname.startsWith('/products') ? 'text-[#00d4aa] bg-[#2a2a30]/50' : 'text-[#fafafa] hover:text-[#00d4aa] hover:bg-[#2a2a30]/50'}`}
               >
-                Products
+                Store (NextDigi Home)
                 {cartCount > 0 && (
                   <span className="ml-2 px-2 py-0.5 bg-gradient-to-r from-[#00d4aa] to-[#8b5cf6] rounded-full text-xs text-[#0f0f12]">
                     {cartCount}
                   </span>
                 )}
+              </Link>
+              <Link
+                href="/services"
+                onClick={() => setMobileMenuOpen(false)}
+                className={`block px-4 py-3 rounded-lg text-lg font-medium transition-all ${pathname === '/services' ? 'text-[#00d4aa] bg-[#2a2a30]/50' : 'text-[#fafafa] hover:text-[#00d4aa] hover:bg-[#2a2a30]/50'}`}
+              >
+                Solutions &amp; AI
+              </Link>
+              <Link
+                href="/#ecosystem"
+                onClick={() => setMobileMenuOpen(false)}
+                className="block px-4 py-3 rounded-lg text-lg font-medium transition-all text-[#fafafa] hover:text-[#00d4aa] hover:bg-[#2a2a30]/50"
+              >
+                Venture Ecosystem
               </Link>
               <Link
                 href="/about"
@@ -418,13 +389,6 @@ const [settings, setSettings] = useState<{
                 className={`block px-4 py-3 rounded-lg text-lg font-medium transition-all ${pathname.startsWith('/blog') ? 'text-[#00d4aa] bg-[#2a2a30]/50' : 'text-[#fafafa] hover:text-[#00d4aa] hover:bg-[#2a2a30]/50'}`}
               >
                 Blog
-              </Link>
-              <Link
-                href="/services"
-                onClick={() => setMobileMenuOpen(false)}
-                className={`block px-4 py-3 rounded-lg text-lg font-medium transition-all ${pathname === '/services' ? 'text-[#00d4aa] bg-[#2a2a30]/50' : 'text-[#fafafa] hover:text-[#00d4aa] hover:bg-[#2a2a30]/50'}`}
-              >
-                Services
               </Link>
               <Link
                 href="/contact"
@@ -561,42 +525,16 @@ const [settings, setSettings] = useState<{
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 lg:gap-12">
             {/* Brand Column - Now fully dynamic */}
             <div className="space-y-5">
-              <div className="flex items-center space-x-3 group">
-                <div className="w-16 h-16 rounded-2xl flex items-center justify-center overflow-hidden border border-[#2a2a30] group-hover:border-[#00d4aa]/40 transition-all">
-                  {isHydrated && (() => {
-                    // Use site_logo, or fall back to admin_logo if site_logo is not set
-                    const logoToUse = settings?.admin_logo || settings?.admin_logo;
-                    const logoUrl = logoToUse ? getLogoUrl(logoToUse) : null;
-                    return logoUrl ? (
-                      <img
-                        key={logoToUse}
-                        src={logoUrl}
-                        alt="Site Logo"
-                        loading="lazy"
-                        decoding="async"
-                        className="w-full h-full object-cover"
-                        onError={(e) => {
-                          console.warn(`Footer logo failed to load from: ${logoUrl}`);
-                          e.currentTarget.style.display = 'none';
-                          e.currentTarget.nextElementSibling?.classList.remove('hidden');
-                        }}
-                      />
-                    ) : null;
-                  })()}
-                  <svg className={`w-7 h-7 text-[#00d4aa] ${isHydrated && (settings?.admin_logo || settings?.admin_logo) ? 'hidden' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
-                  </svg>
-                </div>
-                <div>
-                  <span className="block text-2xl font-bold gradient-text tracking-tight">
-                    {isHydrated ? (settings?.admin_title || 'Next Digi Home') : 'Next Digi Home'}
-                  </span>
-                  <span className="text-[10px] text-[#737373] tracking-[2px] uppercase">Premium Digital Marketplace</span>
-                </div>
+              <div className="flex items-center group py-1">
+                <NextDigiLogo
+                  size="lg"
+                  subtitle="VENTURE ECOSYSTEM"
+                  customLogoUrl={isHydrated && (settings?.site_logo || settings?.admin_logo) ? getLogoUrl(settings.site_logo || settings.admin_logo) : null}
+                />
               </div>
 
-               <p className="text-[#737373] text-sm leading-relaxed pr-2" suppressHydrationWarning>
-                 {isHydrated ? (settings?.admin_description || "Premium digital products engineered for modern businesses. Transform your business with our curated collection.") : "Premium digital products engineered for modern businesses. Transform your business with our curated collection."}
+               <p className="text-[#8c8c9a] text-xs sm:text-sm leading-relaxed pr-2" suppressHydrationWarning>
+                 {isHydrated ? (settings?.admin_description || "Empowering businesses worldwide. Build • Launch • Automate • Grow with curated digital assets, custom enterprise engineering, and autonomous AI systems.") : "Empowering businesses worldwide. Build • Launch • Automate • Grow with curated digital assets, custom enterprise engineering, and autonomous AI systems."}
                </p>
 
               {/* Premium Social Icons */}
@@ -634,75 +572,95 @@ const [settings, setSettings] = useState<{
               </div>
             </div>
 
-            {/* Dynamic Categories */}
+            {/* Column 2: NEXTDIGI HOME */}
             <div>
-              <h4 className="text-sm font-semibold mb-5 text-[#fafafa] tracking-wider flex items-center gap-2">
-                TOP CATEGORIES
+              <h4 className="text-sm font-bold mb-5 text-[#fafafa] tracking-wider flex items-center gap-2">
+                <span className="text-[#00d4aa]">●</span> NEXTDIGI HOME
                 <span className="h-px flex-1 bg-gradient-to-r from-[#00d4aa]/30 to-transparent"></span>
               </h4>
               <ul className="space-y-2.5 text-sm">
-                {categories.slice(0, 8).map((category) => (
-                  <li key={category.id}>
+                {[
+                  { label: "Digital Products", href: "/products?category=digital-marketing", icon: "📦" },
+                  { label: "Templates & UI Kits", href: "/products?category=templates", icon: "📄" },
+                  { label: "Business Tools", href: "/products?category=business-tools", icon: "🛠️" },
+                  { label: "AI Resources", href: "/products?category=ai-resources", icon: "🧠" },
+                  { label: "Web Development Kits", href: "/products?category=web-development", icon: "💻" },
+                  { label: "Graphic Design Assets", href: "/products?category=graphic-design", icon: "🎨" },
+                  { label: "Browse Entire Store", href: "/products", icon: "🛍️" },
+                ].map((item, idx) => (
+                  <li key={idx}>
                     <Link
-                      href={`/products?category=${category.slug || category.id}`}
-                      className="flex items-center gap-2 text-[#737373] hover:text-[#00d4aa] transition-all duration-200 hover:translate-x-0.5"
+                      href={item.href}
+                      className="flex items-center gap-2 text-[#8c8c9a] hover:text-[#00d4aa] transition-all duration-200 hover:translate-x-0.5 text-xs sm:text-sm"
                     >
-                      <span className="text-base">{categoryIconMap[category.slug] || '📌'}</span>
-                      {category.category_name}
+                      <span className="text-sm">{item.icon}</span>
+                      {item.label}
                     </Link>
                   </li>
                 ))}
               </ul>
             </div>
 
-             {/* Company */}
-             <div>
-               <h4 className="text-sm font-semibold mb-5 text-[#fafafa] tracking-wider flex items-center gap-2">
-                 COMPANY
-                 <span className="h-px flex-1 bg-gradient-to-r from-[#00d4aa]/30 to-transparent"></span>
-               </h4>
-                <ul className="space-y-2.5 text-sm">
-{[
-                     { label: "About Us", href: "/about", icon: "M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" },
-                     { label: "Blog", href: "/blog", icon: "M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v12a2 2 0 01-2 2z" },
-                     { label: "Services", href: "/services", icon: "M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 001.065 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" },
-                    { label: "Sitemap", href: "/sitemap", icon: "M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" },
-                    { label: "Contact", href: "/contact", icon: "M3 8l7.89 5.26a2.01 2.01 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2-2v10a2 2 0 002 2z" },
-                    { label: "Privacy Policy", href: "/privacy", icon: "M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2-2v6a2 2 0 002 2zm10-10V9a4 4 0 00-8 0v1" },
-                    { label: "Terms of Service", href: "/terms", icon: "M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" }
-                  ].map((item, i) => (
-                    <li key={i}>
-                      <Link href={item.href} className="flex items-center gap-2 text-[#737373] hover:text-[#00d4aa] transition-all duration-200 hover:translate-x-0.5">
-                        <svg className="w-3.5 h-3.5 text-[#00d4aa]/70" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d={item.icon} />
-                        </svg>
-                        {item.label}
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
+            {/* Column 3: NEXTDIGI SOLUTIONS & AI */}
+            <div>
+              <h4 className="text-sm font-bold mb-5 text-[#fafafa] tracking-wider flex items-center gap-2">
+                <span className="text-[#8b5cf6]">●</span> SOLUTIONS &amp; AI
+                <span className="h-px flex-1 bg-gradient-to-r from-[#8b5cf6]/30 to-transparent"></span>
+              </h4>
+              <ul className="space-y-2.5 text-sm">
+                {[
+                  { label: "Web Development", href: "/services", icon: "🌐" },
+                  { label: "E-commerce Platforms", href: "/services", icon: "🛒" },
+                  { label: "iOS & Android Apps", href: "/services", icon: "📱" },
+                  { label: "Enterprise Software", href: "/services", icon: "💻" },
+                  { label: "Social Media Systems", href: "/services", icon: "📢" },
+                  { label: "Cloud Hosting & Maintenance", href: "/services", icon: "☁️" },
+                  { label: "AI Agents & Automation", href: "/services", icon: "🤖" },
+                  { label: "AI Video Synthesis", href: "/services", icon: "🎬" },
+                ].map((item, idx) => (
+                  <li key={idx}>
+                    <Link
+                      href={item.href}
+                      className="flex items-center gap-2 text-[#8c8c9a] hover:text-[#a78bfa] transition-all duration-200 hover:translate-x-0.5 text-xs sm:text-sm"
+                    >
+                      <span className="text-sm">{item.icon}</span>
+                      {item.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
             </div>
 
-            {/* Connect + Premium Newsletter */}
+            {/* Column 4: NEXTDIGI LABS & COMPANY */}
             <div>
-              <h4 className="text-sm font-semibold mb-5 text-[#fafafa] tracking-wider flex items-center gap-2">
-                STAY CONNECTED
-                <span className="h-px flex-1 bg-gradient-to-r from-[#00d4aa]/30 to-transparent"></span>
+              <h4 className="text-sm font-bold mb-5 text-[#fafafa] tracking-wider flex items-center gap-2">
+                <span className="text-[#f59e0b]">●</span> LABS &amp; VENTURE
+                <span className="h-px flex-1 bg-gradient-to-r from-[#f59e0b]/30 to-transparent"></span>
               </h4>
-              <div className="space-y-2.5 text-sm text-[#737373] mb-6">
-                <p className="flex items-center gap-2">
-                  <svg className="w-4 h-4 text-[#00d4aa]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 8l7.89 5.26a2.01 2.01 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                  </svg>
-                  info@nextdigihome.com
-                </p>
-                <p className="flex items-center gap-2">
-                  <svg className="w-4 h-4 text-[#00d4aa]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 5a2 2 0 012-2 3 3 0 003 3v1m6 0v1a3 3 0 003 3 2 2 0 01-2 2h-1m-6 0H6a2 2 0 01-2-2v-1" />
-                  </svg>
-                  +880 1918-329829
-                </p>
-              </div>
+              <ul className="space-y-2.5 text-sm mb-6">
+                {[
+                  { label: "NextDigi Commerce (SaaS)", href: "/services", badge: "Live" },
+                  { label: "NextDigi Social (SaaS)", href: "/services", badge: "Beta" },
+                  { label: "NextDigi Automate (SaaS)", href: "/services", badge: "AI" },
+                  { label: "Venture Architecture Tree", href: "/#ecosystem", badge: "Hub" },
+                  { label: "About Parent Brand", href: "/about", badge: "" },
+                  { label: "Schedule Consultation", href: "/contact", badge: "24/7" },
+                ].map((item, idx) => (
+                  <li key={idx}>
+                    <Link
+                      href={item.href}
+                      className="flex items-center justify-between text-[#8c8c9a] hover:text-[#fbbf24] transition-all duration-200 hover:translate-x-0.5 text-xs sm:text-sm"
+                    >
+                      <span>{item.label}</span>
+                      {item.badge && (
+                        <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-white/10 text-white/80">
+                          {item.badge}
+                        </span>
+                      )}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
 
               <div className="mb-6 overflow-hidden rounded-3xl border border-[#00d4aa]/25 bg-[#0f0f12] shadow-[0_24px_70px_rgba(0,0,0,0.32)]">
                 <div className="relative p-4">

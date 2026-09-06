@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useState, useEffect } from "react";
 import { ArrowLeftIcon, CheckCircleIcon, GlobeAltIcon, UsersIcon } from "@heroicons/react/24/outline";
 import { BACKEND_BASE_URL, apiFetch } from '../utils/api';
+import NextDigiEcosystem from '../components/NextDigiEcosystem';
 
 interface Mission {
   id: number;
@@ -205,6 +206,9 @@ export default function AboutPage() {
           </div>
         </div>
       </section>
+
+      {/* NEXTDIGI Brand Architecture & Ecosystem Section */}
+      <NextDigiEcosystem />
 
       {/* Team Section */}
       <section className="relative py-14 sm:py-20 lg:py-24 overflow-hidden">

@@ -1,0 +1,141 @@
+const fs = require('fs');
+const path = require('path');
+const sharp = require('sharp');
+
+// 1. Icon Only SVG (viewBox 0 0 64 64)
+const iconSvg = `
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <defs>
+    <linearGradient id="pLeft" x1="16" y1="8" x2="16" y2="56" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#00f2fe"/>
+      <stop offset="100%" stop-color="#00d4aa"/>
+    </linearGradient>
+    <linearGradient id="pDiag" x1="16" y1="8" x2="48" y2="56" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#00f2fe"/>
+      <stop offset="25%" stop-color="#00d4aa"/>
+      <stop offset="75%" stop-color="#8b5cf6"/>
+      <stop offset="100%" stop-color="#ec4899"/>
+    </linearGradient>
+    <linearGradient id="pRight" x1="48" y1="8" x2="48" y2="56" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#a855f7"/>
+      <stop offset="100%" stop-color="#6366f1"/>
+    </linearGradient>
+    <linearGradient id="pSpec" x1="10" y1="8" x2="30" y2="28" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.85"/>
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+    </linearGradient>
+    <filter id="pGlow" x="-25%" y="-25%" width="150%" height="150%">
+      <feDropShadow dx="0" dy="2" stdDeviation="4" flood-color="#00d4aa" flood-opacity="0.45"/>
+    </filter>
+  </defs>
+
+  <!-- Right Pillar (Base behind diagonal fold) -->
+  <rect x="42" y="8" width="12" height="48" rx="6" fill="url(#pRight)"/>
+
+  <!-- Left Pillar (Base) -->
+  <rect x="10" y="8" width="12" height="48" rx="6" fill="url(#pLeft)"/>
+
+  <!-- Dynamic Folded Diagonal Ribbon -->
+  <path
+    d="M 10 14 C 10 10.7 12.7 8 16 8 C 17.8 8 19.4 8.8 20.5 10.1 L 47.5 45.9 C 48.6 47.2 49.2 48.8 49.2 50.5 C 49.2 53.5 46.8 56 43.8 56 C 42 56 40.4 55.2 39.3 53.9 L 12.5 18.1 C 10.9 16.9 10 15.6 10 14 Z"
+    fill="url(#pDiag)"
+    filter="url(#pGlow)"
+  />
+
+  <!-- Specular Light Ridge on Crest Fold -->
+  <path
+    d="M 10 14 C 10 10.7 12.7 8 16 8 C 17.8 8 19.4 8.8 20.5 10.1 L 28 20 L 22 25 L 10 14 Z"
+    fill="url(#pSpec)"
+    opacity="0.7"
+  />
+</svg>
+`.trim();
+
+// 2. Full Horizontal Lockup (viewBox 0 0 340 64)
+const fullLockupSvg = `
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 340 64" fill="none">
+  <defs>
+    <linearGradient id="flLeft" x1="16" y1="8" x2="16" y2="56" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#00f2fe"/>
+      <stop offset="100%" stop-color="#00d4aa"/>
+    </linearGradient>
+    <linearGradient id="flDiag" x1="16" y1="8" x2="48" y2="56" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#00f2fe"/>
+      <stop offset="25%" stop-color="#00d4aa"/>
+      <stop offset="75%" stop-color="#8b5cf6"/>
+      <stop offset="100%" stop-color="#ec4899"/>
+    </linearGradient>
+    <linearGradient id="flRight" x1="48" y1="8" x2="48" y2="56" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#a855f7"/>
+      <stop offset="100%" stop-color="#6366f1"/>
+    </linearGradient>
+    <linearGradient id="flSpec" x1="10" y1="8" x2="30" y2="28" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.85"/>
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="flTextGrad" x1="165" y1="20" x2="260" y2="44" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#00d4aa"/>
+      <stop offset="50%" stop-color="#8b5cf6"/>
+      <stop offset="100%" stop-color="#ec4899"/>
+    </linearGradient>
+    <filter id="flGlow" x="-25%" y="-25%" width="150%" height="150%">
+      <feDropShadow dx="0" dy="2" stdDeviation="4" flood-color="#00d4aa" flood-opacity="0.45"/>
+    </filter>
+  </defs>
+
+  <!-- Embedded Ribbon 'N' Icon -->
+  <g transform="translate(4, 0)">
+    <rect x="42" y="8" width="12" height="48" rx="6" fill="url(#flRight)"/>
+    <rect x="10" y="8" width="12" height="48" rx="6" fill="url(#flLeft)"/>
+    <path
+      d="M 10 14 C 10 10.7 12.7 8 16 8 C 17.8 8 19.4 8.8 20.5 10.1 L 47.5 45.9 C 48.6 47.2 49.2 48.8 49.2 50.5 C 49.2 53.5 46.8 56 43.8 56 C 42 56 40.4 55.2 39.3 53.9 L 12.5 18.1 C 10.9 16.9 10 15.6 10 14 Z"
+      fill="url(#flDiag)"
+      filter="url(#flGlow)"
+    />
+    <path
+      d="M 10 14 C 10 10.7 12.7 8 16 8 C 17.8 8 19.4 8.8 20.5 10.1 L 28 20 L 22 25 L 10 14 Z"
+      fill="url(#flSpec)"
+      opacity="0.7"
+    />
+  </g>
+
+  <!-- Brand Typography -->
+  <text x="76" y="38" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="32" font-weight="900" fill="#ffffff" letter-spacing="-0.8">NEXT</text>
+  <text x="163" y="38" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="32" font-weight="900" fill="url(#flTextGrad)" letter-spacing="-0.8">DIGI</text>
+
+  <!-- Venture Ecosystem Subtitle Badge -->
+  <text x="78" y="53" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="9.5" font-weight="800" fill="#00d4aa" letter-spacing="3.2">VENTURE ECOSYSTEM</text>
+</svg>
+`.trim();
+
+async function run() {
+  const publicDir = path.join(__dirname, '..', 'public');
+
+  // Save clean SVGs
+  fs.writeFileSync(path.join(publicDir, 'brand-logo.svg'), fullLockupSvg);
+  fs.writeFileSync(path.join(publicDir, 'brand-icon.svg'), iconSvg);
+
+  // Generate 512x512 transparent PNG for logo.png
+  const png512 = await sharp(Buffer.from(iconSvg))
+    .resize(512, 512, { fit: 'contain', background: { r: 0, g: 0, b: 0, alpha: 0 } })
+    .png()
+    .toBuffer();
+  fs.writeFileSync(path.join(publicDir, 'logo.png'), png512);
+
+  // Generate 192x192 transparent favicon
+  const fav192 = await sharp(Buffer.from(iconSvg))
+    .resize(192, 192, { fit: 'contain', background: { r: 0, g: 0, b: 0, alpha: 0 } })
+    .png()
+    .toBuffer();
+  fs.writeFileSync(path.join(publicDir, 'favicon.png'), fav192);
+
+  // Render preview of full lockup
+  await sharp(Buffer.from(fullLockupSvg))
+    .resize(680, 128)
+    .png()
+    .toFile('scratch/full_lockup.png');
+
+  console.log('Successfully generated public/brand-logo.svg, public/brand-icon.svg, public/logo.png, and public/favicon.png');
+}
+
+run().catch(console.error);
