@@ -30,7 +30,9 @@ import {
   CodeBracketIcon,
   UserIcon,
   RocketLaunchIcon,
-  UserGroupIcon
+  UserGroupIcon,
+  VideoCameraIcon,
+  PresentationChartLineIcon
 } from '@heroicons/react/24/outline';
 import { StarIcon as StarIconSolid } from '@heroicons/react/24/solid';
 import Swal from 'sweetalert2';
@@ -614,22 +616,677 @@ export default function Home() {
 
 
       {/* ================================================================ */}
-      {/* 2. DEDICATED DIGITAL PRODUCTS STORE SECTION                      */}
+      {/* 02. WHAT WE DO                                                   */}
       {/* ================================================================ */}
-      <section id="featured-products" className="py-24 border-t border-white/8 relative">
+      <section className="py-20 sm:py-24 border-t border-white/8 bg-[#090d16]/70 relative">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center max-w-3xl mx-auto mb-16">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#00d4aa]/10 border border-[#00d4aa]/25 text-xs font-bold tracking-wider text-[#00d4aa] uppercase mb-4">
+              <span className="w-2 h-2 rounded-full bg-[#00d4aa]" />
+              WHAT WE DO
+            </div>
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black text-white tracking-tight mb-5">
+              Everything Your Business Needs to Go Digital
+            </h2>
+            <p className="text-sm sm:text-base text-slate-400 leading-relaxed">
+              From building your digital foundation to automating operations and growing your online presence, NextDigiHome brings technology, AI and digital growth together in one ecosystem.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {/* CARD 01: BUILD */}
+            <div className="p-6 rounded-2xl bg-[#0f1523]/90 border border-white/8 hover:border-[#00d4aa]/40 transition-all flex flex-col justify-between group">
+              <div>
+                <div className="w-12 h-12 rounded-xl bg-[#00d4aa]/10 border border-[#00d4aa]/25 flex items-center justify-center text-[#00d4aa] mb-5 group-hover:scale-110 transition-transform">
+                  <CodeBracketIcon className="w-6 h-6" />
+                </div>
+                <div className="text-xs font-mono font-bold uppercase tracking-wider text-[#00d4aa] mb-1">
+                  CARD 01
+                </div>
+                <h3 className="text-xl font-bold text-white mb-2">BUILD</h3>
+                <p className="text-xs sm:text-sm text-slate-300 font-medium mb-4">
+                  Build the technology behind your business.
+                </p>
+                <ul className="space-y-2 text-xs text-slate-400 border-t border-white/5 pt-4">
+                  {['Web Development', 'E-commerce', 'Mobile Apps', 'Custom Software', 'SaaS'].map((item) => (
+                    <li key={item} className="flex items-center gap-2">
+                      <CheckCircleIcon className="w-4 h-4 text-[#00d4aa] shrink-0" />
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <div className="pt-6 mt-6 border-t border-white/5">
+                <Link
+                  href="/solutions"
+                  className="text-xs font-bold text-[#00d4aa] hover:underline flex items-center gap-1 group-hover:translate-x-1 transition-transform"
+                >
+                  <span>Explore Solutions</span>
+                  <ArrowRightIcon className="w-3.5 h-3.5" />
+                </Link>
+              </div>
+            </div>
+
+            {/* CARD 02: AUTOMATE */}
+            <div className="p-6 rounded-2xl bg-[#0f1523]/90 border border-white/8 hover:border-[#8b5cf6]/40 transition-all flex flex-col justify-between group">
+              <div>
+                <div className="w-12 h-12 rounded-xl bg-[#8b5cf6]/10 border border-[#8b5cf6]/25 flex items-center justify-center text-[#8b5cf6] mb-5 group-hover:scale-110 transition-transform">
+                  <CpuChipIcon className="w-6 h-6" />
+                </div>
+                <div className="text-xs font-mono font-bold uppercase tracking-wider text-[#8b5cf6] mb-1">
+                  CARD 02
+                </div>
+                <h3 className="text-xl font-bold text-white mb-2">AUTOMATE</h3>
+                <p className="text-xs sm:text-sm text-slate-300 font-medium mb-4">
+                  Make your business smarter with AI.
+                </p>
+                <ul className="space-y-2 text-xs text-slate-400 border-t border-white/5 pt-4">
+                  {['AI Agents', 'AI Chatbots', 'Workflow Automation', 'AI Support', 'API Integrations'].map((item) => (
+                    <li key={item} className="flex items-center gap-2">
+                      <CheckCircleIcon className="w-4 h-4 text-[#8b5cf6] shrink-0" />
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <div className="pt-6 mt-6 border-t border-white/5">
+                <Link
+                  href="/ai"
+                  className="text-xs font-bold text-[#8b5cf6] hover:underline flex items-center gap-1 group-hover:translate-x-1 transition-transform"
+                >
+                  <span>Explore AI</span>
+                  <ArrowRightIcon className="w-3.5 h-3.5" />
+                </Link>
+              </div>
+            </div>
+
+            {/* CARD 03: GROW */}
+            <div className="p-6 rounded-2xl bg-[#0f1523]/90 border border-white/8 hover:border-[#38bdf8]/40 transition-all flex flex-col justify-between group">
+              <div>
+                <div className="w-12 h-12 rounded-xl bg-[#38bdf8]/10 border border-[#38bdf8]/25 flex items-center justify-center text-[#38bdf8] mb-5 group-hover:scale-110 transition-transform">
+                  <ChartBarIcon className="w-6 h-6" />
+                </div>
+                <div className="text-xs font-mono font-bold uppercase tracking-wider text-[#38bdf8] mb-1">
+                  CARD 03
+                </div>
+                <h3 className="text-xl font-bold text-white mb-2">GROW</h3>
+                <p className="text-xs sm:text-sm text-slate-300 font-medium mb-4">
+                  Turn digital presence into measurable growth.
+                </p>
+                <ul className="space-y-2 text-xs text-slate-400 border-t border-white/5 pt-4">
+                  {['Social Media', 'Meta Ads', 'Google Ads', 'SEO', 'Analytics'].map((item) => (
+                    <li key={item} className="flex items-center gap-2">
+                      <CheckCircleIcon className="w-4 h-4 text-[#38bdf8] shrink-0" />
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <div className="pt-6 mt-6 border-t border-white/5">
+                <Link
+                  href="/growth"
+                  className="text-xs font-bold text-[#38bdf8] hover:underline flex items-center gap-1 group-hover:translate-x-1 transition-transform"
+                >
+                  <span>Explore Growth</span>
+                  <ArrowRightIcon className="w-3.5 h-3.5" />
+                </Link>
+              </div>
+            </div>
+
+            {/* CARD 04: PRODUCTS */}
+            <div className="p-6 rounded-2xl bg-[#0f1523]/90 border border-white/8 hover:border-[#f59e0b]/40 transition-all flex flex-col justify-between group">
+              <div>
+                <div className="w-12 h-12 rounded-xl bg-[#f59e0b]/10 border border-[#f59e0b]/25 flex items-center justify-center text-[#f59e0b] mb-5 group-hover:scale-110 transition-transform">
+                  <ShoppingBagIcon className="w-6 h-6" />
+                </div>
+                <div className="text-xs font-mono font-bold uppercase tracking-wider text-[#f59e0b] mb-1">
+                  CARD 04
+                </div>
+                <h3 className="text-xl font-bold text-white mb-2">PRODUCTS</h3>
+                <p className="text-xs sm:text-sm text-slate-300 font-medium mb-4">
+                  Ready-to-use technology and digital resources.
+                </p>
+                <ul className="space-y-2 text-xs text-slate-400 border-t border-white/5 pt-4">
+                  {['SaaS Products', 'Business Tools', 'Templates', 'eBooks', 'Digital Resources'].map((item) => (
+                    <li key={item} className="flex items-center gap-2">
+                      <CheckCircleIcon className="w-4 h-4 text-[#f59e0b] shrink-0" />
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <div className="pt-6 mt-6 border-t border-white/5">
+                <Link
+                  href="/store"
+                  className="text-xs font-bold text-[#f59e0b] hover:underline flex items-center gap-1 group-hover:translate-x-1 transition-transform"
+                >
+                  <span>Visit Store</span>
+                  <ArrowRightIcon className="w-3.5 h-3.5" />
+                </Link>
+              </div>
+            </div>
+          </div>
+
+          <div className="text-center mt-12">
+            <Link
+              href="/solutions"
+              className="inline-flex items-center gap-2 px-8 py-3.5 rounded-xl bg-[#00d4aa] text-[#07090e] font-bold text-sm hover:bg-[#00e2b6] shadow-lg shadow-[#00d4aa]/20 transition-all"
+            >
+              <span>Explore Our Solutions</span>
+              <ArrowRightIcon className="w-4 h-4" />
+            </Link>
+          </div>
+        </div>
+      </section>
+
+
+      {/* ================================================================ */}
+      {/* 03. NEXTDIGI SOLUTIONS                                           */}
+      {/* ================================================================ */}
+      <section className="py-20 sm:py-24 border-t border-white/8 relative">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
+            <div>
+              <div className="inline-flex items-center gap-2 text-xs font-bold tracking-widest text-[#00d4aa] uppercase mb-3">
+                <span className="w-4 h-px bg-[#00d4aa]" />
+                NextDigi Solutions
+              </div>
+              <h2 className="text-3xl sm:text-4xl font-black text-white tracking-tight">
+                Technology that moves your business forward.
+              </h2>
+              <p className="text-sm text-slate-400 mt-2 max-w-2xl leading-relaxed">
+                We design and build modern digital solutions for businesses — from high-performance websites and e-commerce platforms to mobile apps, custom software and SaaS products.
+              </p>
+            </div>
+            <Link
+              href="/solutions"
+              className="text-xs font-bold text-[#00d4aa] hover:underline flex items-center gap-1 shrink-0"
+            >
+              <span>Explore Solutions</span>
+              <ArrowRightIcon className="w-3.5 h-3.5" />
+            </Link>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+            {[
+              { title: 'Web Development', desc: 'High-performance Next.js, React, and TypeScript business websites and portals.', icon: GlobeAltIcon, href: '/solutions/web-development' },
+              { title: 'E-commerce Development', desc: 'Custom headless storefronts with bKash, Nagad, Stripe, and courier automated dispatch.', icon: ShoppingBagIcon, href: '/solutions/ecommerce' },
+              { title: 'Mobile App Development', desc: 'Cross-platform iOS and Android apps engineered with Flutter, responsive state, and push alerts.', icon: DevicePhoneMobileIcon, href: '/solutions/mobile-app' },
+              { title: 'Custom Software', desc: 'Bespoke ERPs, internal portals, database systems, and workflow engines tailored to your team.', icon: CommandLineIcon, href: '/solutions/custom-software' },
+              { title: 'SaaS Development', desc: 'Multi-tenant subscription architectures with automated recurring billing and team access ACL.', icon: ServerIcon, href: '/solutions/saas-development' },
+              { title: 'API & Integrations', desc: 'Seamless API orchestration connecting payment gateways, CRMs, logistics, and webhooks.', icon: ArrowsRightLeftIcon, href: '/solutions/api-integrations' },
+              { title: 'Cloud / Hosting', desc: 'Enterprise cloud infrastructure, containerized Docker deployments, and CI/CD pipelines.', icon: WrenchScrewdriverIcon, href: '/solutions/hosting-maintenance' },
+              { title: 'Maintenance & Support', desc: '24/7 server monitoring, security patching, Core Web Vitals optimization, and disaster recovery.', icon: ShieldCheckIcon, href: '/solutions/hosting-maintenance' },
+            ].map((card, i) => {
+              const Icon = card.icon;
+              return (
+                <div
+                  key={i}
+                  className="group p-5 rounded-2xl bg-[#0f1523]/80 border border-white/8 hover:border-[#00d4aa]/40 hover:bg-[#131b2e] transition-all flex flex-col justify-between"
+                >
+                  <div>
+                    <div className="w-10 h-10 rounded-xl bg-[#00d4aa]/10 border border-[#00d4aa]/20 flex items-center justify-center text-[#00d4aa] mb-4 group-hover:scale-110 transition-transform">
+                      <Icon className="w-5 h-5" />
+                    </div>
+                    <h3 className="text-base font-bold text-white mb-2 group-hover:text-[#00d4aa] transition-colors">
+                      {card.title}
+                    </h3>
+                    <p className="text-xs text-slate-400 leading-relaxed mb-4">
+                      {card.desc}
+                    </p>
+                  </div>
+                  <div className="pt-3 border-t border-white/5">
+                    <Link
+                      href={card.href}
+                      className="text-xs font-bold text-[#00d4aa] hover:underline flex items-center gap-1 group-hover:translate-x-1 transition-transform"
+                    >
+                      <span>Learn More</span>
+                      <ArrowRightIcon className="w-3 h-3" />
+                    </Link>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+
+          <div className="text-center mt-10">
+            <Link
+              href="/solutions"
+              className="inline-flex items-center gap-2 px-7 py-3 rounded-xl bg-[#00d4aa] text-[#07090e] font-bold text-xs hover:bg-[#00e2b6] transition-all"
+            >
+              <span>Explore Solutions</span>
+              <ArrowRightIcon className="w-4 h-4" />
+            </Link>
+          </div>
+        </div>
+      </section>
+
+
+      {/* ================================================================ */}
+      {/* 04. NEXTDIGI AI                                                  */}
+      {/* ================================================================ */}
+      <section className="py-20 sm:py-24 border-t border-white/8 bg-[#090d16]/70 relative">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
+            <div>
+              <div className="inline-flex items-center gap-2 text-xs font-bold tracking-widest text-[#8b5cf6] uppercase mb-3">
+                <CpuChipIcon className="w-4 h-4 text-[#8b5cf6]" />
+                NextDigi AI
+              </div>
+              <h2 className="text-3xl sm:text-4xl font-black text-white tracking-tight">
+                Make your business smarter with AI and automation.
+              </h2>
+              <p className="text-sm text-slate-400 mt-2 max-w-2xl leading-relaxed">
+                Use AI agents, intelligent automation and connected workflows to reduce repetitive work, improve customer experience and operate more efficiently.
+              </p>
+            </div>
+            <Link
+              href="/ai"
+              className="text-xs font-bold text-[#8b5cf6] hover:underline flex items-center gap-1 shrink-0"
+            >
+              <span>Explore AI Solutions</span>
+              <ArrowRightIcon className="w-3.5 h-3.5" />
+            </Link>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+            {[
+              { title: 'AI Agents', desc: 'Autonomous task-driven agents equipped with vector document retrieval and private tool execution.', icon: CpuChipIcon, href: '/ai/ai-agents' },
+              { title: 'AI Chatbots', desc: 'Multi-channel conversational chatbots for WhatsApp, Facebook Messenger, and Web with 24/7 coverage.', icon: ChatBubbleBottomCenterTextIcon, href: '/ai/chatbots' },
+              { title: 'AI Customer Support', desc: 'Intelligent ticket triage, contextual FAQ answering, and smooth human agent handoff.', icon: LifebuoyIcon, href: '/ai/ai-support' },
+              { title: 'Business Automation', desc: 'Eliminate repetitive manual data entry between spreadsheets, accounting tools, and billing.', icon: BoltIcon, href: '/ai/automation' },
+              { title: 'Workflow Automation', desc: 'Visual n8n and webhook pipelines connecting events across your tech stack with automatic retries.', icon: ArrowsRightLeftIcon, href: '/ai/automation' },
+              { title: 'API Integrations', desc: 'Integrate external LLM engines securely into your internal database systems and legacy software.', icon: ServerIcon, href: '/solutions/api-integrations' },
+              { title: 'AI Video', desc: 'Programmatic video generation, automated scripts, and localized multilingual video workflows.', icon: VideoCameraIcon, href: '/ai/ai-video' },
+            ].map((card, i) => {
+              const Icon = card.icon;
+              return (
+                <div
+                  key={i}
+                  className="group p-5 rounded-2xl bg-[#0f1523]/80 border border-white/8 hover:border-[#8b5cf6]/40 hover:bg-[#131b2e] transition-all flex flex-col justify-between"
+                >
+                  <div>
+                    <div className="w-10 h-10 rounded-xl bg-[#8b5cf6]/10 border border-[#8b5cf6]/20 flex items-center justify-center text-[#8b5cf6] mb-4 group-hover:scale-110 transition-transform">
+                      <Icon className="w-5 h-5" />
+                    </div>
+                    <h3 className="text-base font-bold text-white mb-2 group-hover:text-[#8b5cf6] transition-colors">
+                      {card.title}
+                    </h3>
+                    <p className="text-xs text-slate-400 leading-relaxed mb-4">
+                      {card.desc}
+                    </p>
+                  </div>
+                  <div className="pt-3 border-t border-white/5">
+                    <Link
+                      href={card.href}
+                      className="text-xs font-bold text-[#8b5cf6] hover:underline flex items-center gap-1 group-hover:translate-x-1 transition-transform"
+                    >
+                      <span>Learn More</span>
+                      <ArrowRightIcon className="w-3 h-3" />
+                    </Link>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+
+          <div className="text-center mt-10">
+            <Link
+              href="/ai"
+              className="inline-flex items-center gap-2 px-7 py-3 rounded-xl bg-[#8b5cf6] text-white font-bold text-xs hover:bg-[#7c3aed] transition-all shadow-md shadow-[#8b5cf6]/20"
+            >
+              <span>Explore AI Solutions</span>
+              <ArrowRightIcon className="w-4 h-4" />
+            </Link>
+          </div>
+        </div>
+      </section>
+
+
+      {/* ================================================================ */}
+      {/* 05. NEXTDIGI GROWTH                                              */}
+      {/* ================================================================ */}
+      <section className="py-20 sm:py-24 border-t border-white/8 relative">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
+            <div>
+              <div className="inline-flex items-center gap-2 text-xs font-bold tracking-widest text-[#38bdf8] uppercase mb-3">
+                <ChartBarIcon className="w-4 h-4 text-[#38bdf8]" />
+                NextDigi Growth
+              </div>
+              <h2 className="text-3xl sm:text-4xl font-black text-white tracking-tight">
+                Turn your digital presence into measurable business growth.
+              </h2>
+              <p className="text-sm text-slate-400 mt-2 max-w-2xl leading-relaxed">
+                Build a stronger digital presence with social media, paid advertising, SEO, analytics and conversion-focused marketing support.
+              </p>
+            </div>
+            <Link
+              href="/growth"
+              className="text-xs font-bold text-[#38bdf8] hover:underline flex items-center gap-1 shrink-0"
+            >
+              <span>Explore Growth Solutions</span>
+              <ArrowRightIcon className="w-3.5 h-3.5" />
+            </Link>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+            {[
+              { title: 'Social Media Management', desc: 'Consistent visual branding, creative copywriting, content calendar execution, and community engagement.', icon: ShareIcon, href: '/growth/social-media' },
+              { title: 'Meta Ads', desc: 'High-velocity creative testing, precision demographic retargeting, and server-side Conversions API integration.', icon: MegaphoneIcon, href: '/growth/meta-ads' },
+              { title: 'Google Ads', desc: 'Intent-driven search ads, Performance Max campaigns, and YouTube video ads tailored to high commercial value.', icon: MagnifyingGlassIcon, href: '/growth/google-ads' },
+              { title: 'SEO', desc: 'Technical audits, Core Web Vitals speed optimization, and on-page keyword structures for organic search visibility.', icon: ChartBarIcon, href: '/growth/seo' },
+              { title: 'Analytics', desc: 'Full-funnel attribution dashboards, Google Analytics 4 configuration, and custom conversion event tracking.', icon: PresentationChartLineIcon, href: '/growth/analytics' },
+              { title: 'Conversion Tracking', desc: 'Server-side CAPI telemetry setup that recovers lost iOS attribution signals and tracks true ROI.', icon: CursorArrowRaysIcon, href: '/growth/meta-ads' },
+            ].map((card, i) => {
+              const Icon = card.icon;
+              return (
+                <div
+                  key={i}
+                  className="group p-5 rounded-2xl bg-[#0f1523]/80 border border-white/8 hover:border-[#38bdf8]/40 hover:bg-[#131b2e] transition-all flex flex-col justify-between"
+                >
+                  <div>
+                    <div className="w-10 h-10 rounded-xl bg-[#38bdf8]/10 border border-[#38bdf8]/20 flex items-center justify-center text-[#38bdf8] mb-4 group-hover:scale-110 transition-transform">
+                      <Icon className="w-5 h-5" />
+                    </div>
+                    <h3 className="text-base font-bold text-white mb-2 group-hover:text-[#38bdf8] transition-colors">
+                      {card.title}
+                    </h3>
+                    <p className="text-xs text-slate-400 leading-relaxed mb-4">
+                      {card.desc}
+                    </p>
+                  </div>
+                  <div className="pt-3 border-t border-white/5">
+                    <Link
+                      href={card.href}
+                      className="text-xs font-bold text-[#38bdf8] hover:underline flex items-center gap-1 group-hover:translate-x-1 transition-transform"
+                    >
+                      <span>Learn More</span>
+                      <ArrowRightIcon className="w-3 h-3" />
+                    </Link>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+
+          <div className="text-center mt-10">
+            <Link
+              href="/growth"
+              className="inline-flex items-center gap-2 px-7 py-3 rounded-xl bg-[#38bdf8] text-black font-bold text-xs hover:bg-[#0284c7] hover:text-white transition-all shadow-md shadow-[#38bdf8]/20"
+            >
+              <span>Explore Growth Solutions</span>
+              <ArrowRightIcon className="w-4 h-4" />
+            </Link>
+          </div>
+        </div>
+      </section>
+
+
+      {/* ================================================================ */}
+      {/* 06. NEXTDIGI LABS                                                */}
+      {/* ================================================================ */}
+      <section className="py-20 sm:py-24 border-t border-white/8 bg-[#090d16]/70 relative">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
+            <div>
+              <div className="inline-flex items-center gap-2 text-xs font-bold tracking-widest text-[#f59e0b] uppercase mb-3">
+                <BeakerIcon className="w-4 h-4 text-[#f59e0b]" />
+                NextDigi Labs
+              </div>
+              <h2 className="text-3xl sm:text-4xl font-black text-white tracking-tight">
+                Building SaaS products and technology for the future of business.
+              </h2>
+            </div>
+            <Link
+              href="/labs"
+              className="text-xs font-bold text-[#f59e0b] hover:underline flex items-center gap-1 shrink-0"
+            >
+              <span>Explore NextDigi Labs</span>
+              <ArrowRightIcon className="w-3.5 h-3.5" />
+            </Link>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+            {[
+              {
+                name: 'NextDigi Commerce',
+                sub: 'AI-powered Ecommerce Automation',
+                status: 'Live',
+                statusClass: 'bg-[#00d4aa]/15 text-[#00d4aa] border border-[#00d4aa]/30',
+                desc: 'Headless multi-channel storefront with instant local payment routing (bKash, Nagad) and automatic courier API dispatch.',
+                url: 'https://commerce.nextdigihome.com/',
+                cta: 'Explore Commerce',
+                icon: ShoppingBagIcon,
+              },
+              {
+                name: 'NextDigi Social',
+                sub: 'AI Social Media Management & Automation',
+                status: 'Coming Soon',
+                statusClass: 'bg-white/5 text-slate-400 border border-white/10',
+                desc: 'Manage Facebook, Instagram, LinkedIn, and TikTok from one unified dashboard with AI copywriter and post scheduler.',
+                url: 'https://social.nextdigihome.com/',
+                cta: 'Explore Platform',
+                icon: ShareIcon,
+              },
+              {
+                name: 'NextDigi Automate',
+                sub: 'Business Workflow & AI Automation',
+                status: 'Coming Soon',
+                statusClass: 'bg-white/5 text-slate-400 border border-white/10',
+                desc: 'Visual low-code canvas to connect webhooks, databases, CRMs, and email gateways into robust automated event pipelines.',
+                url: 'https://automate.nextdigihome.com/',
+                cta: 'Explore Platform',
+                icon: BoltIcon,
+              },
+              {
+                name: 'Garibondhu360',
+                sub: 'Transport Management & Business Operations SaaS',
+                status: 'Live',
+                statusClass: 'bg-[#00d4aa]/15 text-[#00d4aa] border border-[#00d4aa]/30',
+                desc: 'Cloud garage & automotive ERP with digital job-cards, barcode spare-parts inventory, and automated customer SMS alerts.',
+                url: 'https://garibondhu360.nextdigihome.com/',
+                cta: 'Explore Garibondhu360',
+                icon: WrenchScrewdriverIcon,
+              },
+            ].map((prod) => {
+              const Icon = prod.icon;
+              return (
+                <div
+                  key={prod.name}
+                  className="p-6 rounded-2xl bg-[#0f1523]/80 border border-white/8 hover:border-white/20 transition-all flex flex-col justify-between"
+                >
+                  <div>
+                    <div className="flex items-center justify-between mb-4">
+                      <div className="w-10 h-10 rounded-xl bg-[#f59e0b]/10 border border-[#f59e0b]/20 flex items-center justify-center text-[#f59e0b]">
+                        <Icon className="w-5 h-5" />
+                      </div>
+                      <span className={`text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full ${prod.statusClass}`}>
+                        {prod.status}
+                      </span>
+                    </div>
+                    <h3 className="text-lg font-bold text-white mb-1">{prod.name}</h3>
+                    <p className="text-xs text-[#f59e0b] font-semibold mb-3">{prod.sub}</p>
+                    <p className="text-xs text-slate-300 leading-relaxed mb-6">{prod.desc}</p>
+                  </div>
+                  <div className="flex items-center justify-between pt-4 border-t border-white/5">
+                    <a
+                      href={prod.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-xs font-bold text-white hover:text-[#00d4aa] flex items-center gap-1.5 transition-colors"
+                    >
+                      <span>{prod.cta}</span>
+                      <ArrowTopRightOnSquareIcon className="w-3.5 h-3.5" />
+                    </a>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+
+          <div className="text-center mt-10">
+            <Link
+              href="/labs"
+              className="inline-flex items-center gap-2 px-7 py-3 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-white font-bold text-xs transition-all"
+            >
+              <span>Explore NextDigi Labs</span>
+              <ArrowRightIcon className="w-4 h-4" />
+            </Link>
+          </div>
+        </div>
+      </section>
+
+
+      {/* ================================================================ */}
+      {/* 07. CASE STUDIES                                                 */}
+      {/* ================================================================ */}
+      <section className="py-20 sm:py-24 border-t border-white/8 relative">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
+            <div>
+              <div className="inline-flex items-center gap-2 text-xs font-bold tracking-widest text-[#00d4aa] uppercase mb-3">
+                <span className="w-4 h-px bg-[#00d4aa]" />
+                Case Studies
+              </div>
+              <h2 className="text-3xl sm:text-4xl font-black text-white tracking-tight">
+                Real Projects. Real Technology.
+              </h2>
+              <p className="text-sm text-slate-400 mt-2 max-w-2xl leading-relaxed">
+                Explore software, SaaS, e-commerce and business solutions built by the NextDigi ecosystem.
+              </p>
+            </div>
+            <Link
+              href="/case-studies"
+              className="text-xs font-bold text-[#00d4aa] hover:underline flex items-center gap-1 shrink-0"
+            >
+              <span>View All Case Studies</span>
+              <ArrowRightIcon className="w-3.5 h-3.5" />
+            </Link>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+            {[
+              {
+                title: 'NextDigi Commerce Platform',
+                category: 'Headless E-Commerce',
+                desc: 'Engineered a high-speed headless storefront with native bKash and Nagad payment tokenization, paired with automated Pathao, Steadfast, and RedX courier webhook dispatch.',
+                tech: 'Next.js 16 • TypeScript • Node.js • Redis • bKash API',
+                href: '/labs/commerce',
+              },
+              {
+                title: 'Garibondhu360 Automotive SaaS',
+                category: 'Enterprise Workshop ERP',
+                desc: 'A complete operating platform for automotive repair centers featuring digital job-cards, camera vehicle intake logs, barcode parts inventory, and automated customer SMS status.',
+                tech: 'Next.js • Node.js API • PostgreSQL • Docker • SMS Gateway',
+                href: '/labs/garibondhu360',
+              },
+              {
+                title: 'NextDigi Headless Storefront',
+                category: 'Source Code & Digital Product',
+                desc: 'Production-ready e-commerce architecture with modular components, sub-second product page rendering, multi-currency pricing, and clean code documentation.',
+                tech: 'Next.js 15 • React 19 • Tailwind CSS • Docker',
+                href: '/products/nextdigi-headless-commerce',
+              },
+            ].map((cs, i) => (
+              <div
+                key={i}
+                className="p-6 rounded-2xl bg-[#0f1523]/80 border border-white/8 hover:border-[#00d4aa]/30 transition-all flex flex-col justify-between group"
+              >
+                <div>
+                  <div className="text-[10px] font-bold px-2.5 py-1 rounded-full bg-[#00d4aa]/10 border border-[#00d4aa]/25 text-[#00d4aa] w-fit mb-4">
+                    {cs.category}
+                  </div>
+                  <h3 className="text-lg font-bold text-white mb-2 group-hover:text-[#00d4aa] transition-colors">
+                    {cs.title}
+                  </h3>
+                  <p className="text-xs text-slate-400 leading-relaxed mb-4">
+                    {cs.desc}
+                  </p>
+                  <div className="text-[11px] font-mono text-slate-500 mb-6 pb-4 border-b border-white/5">
+                    {cs.tech}
+                  </div>
+                </div>
+                <div>
+                  <Link
+                    href={cs.href}
+                    className="text-xs font-bold text-[#00d4aa] hover:underline flex items-center gap-1 group-hover:translate-x-1 transition-transform"
+                  >
+                    <span>View Case Study</span>
+                    <ArrowRightIcon className="w-3.5 h-3.5" />
+                  </Link>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div className="text-center mt-10">
+            <Link
+              href="/case-studies"
+              className="inline-flex items-center gap-2 px-7 py-3 rounded-xl bg-[#00d4aa] text-[#07090e] font-bold text-xs hover:bg-[#00e2b6] transition-all shadow-md shadow-[#00d4aa]/20"
+            >
+              <span>View All Case Studies</span>
+              <ArrowRightIcon className="w-4 h-4" />
+            </Link>
+          </div>
+        </div>
+      </section>
+
+
+      {/* ================================================================ */}
+      {/* 08. BUILD • LAUNCH • AUTOMATE • GROW                             */}
+      {/* ================================================================ */}
+      <section className="py-20 sm:py-24 border-t border-white/8 bg-[#090d16]/70 relative">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center max-w-2xl mx-auto mb-16">
+            <div className="inline-flex items-center gap-2 text-xs font-bold tracking-widest text-[#00d4aa] uppercase mb-3">
+              <span className="w-4 h-px bg-[#00d4aa]" />
+              Core Methodology
+            </div>
+            <h2 className="text-3xl sm:text-4xl font-black text-white">
+              Build &bull; Launch &bull; Automate &bull; Grow
+            </h2>
+            <p className="text-sm text-slate-400 mt-2">
+              A transparent, sprint-based delivery cycle taking projects from architecture to scalable market operations.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            {[
+              { step: '01', title: 'BUILD', subtitle: 'Plan → Design → Develop', desc: 'Requirements scoping, database modeling, and agile software development with modern TypeScript frameworks.' },
+              { step: '02', title: 'LAUNCH', subtitle: 'Test → Deploy → Integrate', desc: 'Comprehensive testing, automated CI/CD deployment pipelines, and zero-downtime production cutover.' },
+              { step: '03', title: 'AUTOMATE', subtitle: 'AI → Workflow → Operations', desc: 'Deploying autonomous AI agents, API webhooks, and event pipelines to eliminate manual bottlenecks.' },
+              { step: '04', title: 'GROW', subtitle: 'Marketing → Analytics → Optimization', desc: 'Data-driven advertising, conversion rate optimization, technical SEO, and scaling customer acquisition.' },
+            ].map((m) => (
+              <div key={m.step} className="p-6 rounded-2xl bg-[#0f1523]/80 border border-white/8 hover:border-white/20 transition-all">
+                <div className="text-3xl font-black text-white/10 mb-3">{m.step}</div>
+                <h3 className="text-base font-bold text-white mb-1">{m.title}</h3>
+                <div className="text-xs font-semibold text-[#00d4aa] mb-2">{m.subtitle}</div>
+                <p className="text-xs text-slate-400 leading-relaxed">{m.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+
+      {/* ================================================================ */}
+      {/* 09. NEXTDIGI STORE                                               */}
+      {/* ================================================================ */}
+      <section id="featured-products" className="py-20 sm:py-24 border-t border-white/8 relative">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           
           <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-6">
             <div>
               <div className="inline-flex items-center gap-2 text-xs font-bold tracking-widest text-[#00d4aa] uppercase mb-3">
                 <ShoppingBagIcon className="w-4 h-4 text-[#00d4aa]" />
-                NEXTDIGI STORE
+                NextDigi Store
               </div>
               <h2 className="text-3xl sm:text-4xl font-black text-white tracking-tight">
-                Digital Products &amp; Resources
+                Premium digital products, templates and business resources.
               </h2>
               <p className="text-sm text-slate-400 mt-2 max-w-xl">
-                Premium digital products, templates and business resources from NextDigi Store, a division of NEXTDIGIHOME. Verified production-ready source codes, Flutter mobile apps, and business tools with instant delivery.
+                Curated selection of verified production codebases, Flutter app starters, and automation tools with instant access.
               </p>
             </div>
 
@@ -647,9 +1304,9 @@ export default function Home() {
           </div>
 
           {/* Category Filter Pills */}
-          <div className="flex flex-wrap items-center gap-2 mb-10">
+          <div className="flex flex-wrap items-center gap-2 mb-8">
             {[
-              { id: 'all', label: 'All Products (100+)' },
+              { id: 'all', label: 'Featured Products' },
               { id: 'source-code', label: 'Full-Stack Source Code' },
               { id: 'mobile-apps', label: 'Mobile App Templates' },
               { id: 'scripts', label: 'AI & Automation Scripts' },
@@ -669,7 +1326,7 @@ export default function Home() {
             ))}
           </div>
 
-          {/* Product Grid */}
+          {/* Product Grid (Curated 6-8 max) */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
             {filteredProducts.map((prod) => (
               <div
@@ -677,8 +1334,7 @@ export default function Home() {
                 className="group rounded-2xl bg-[#0f1523]/90 border border-white/8 hover:border-[#00d4aa]/40 transition-all duration-300 flex flex-col justify-between overflow-hidden hover:shadow-xl hover:shadow-[#00d4aa]/5"
               >
                 <div>
-                  {/* Top visual frame with dynamic image */}
-                  <div className="relative h-48 bg-[#0b0f19] border-b border-white/5 overflow-hidden group">
+                  <div className="relative h-44 bg-[#0b0f19] border-b border-white/5 overflow-hidden group">
                     {(prod.thumbnail || prod.thumbnail_url || prod.image_url) ? (
                       <img
                         src={getProductImage(prod)}
@@ -696,7 +1352,6 @@ export default function Home() {
                       </div>
                     )}
 
-                    {/* Gradient Overlay & Badges */}
                     <div className="absolute inset-0 bg-gradient-to-t from-[#0f1523] via-transparent to-black/40 pointer-events-none" />
 
                     <div className="absolute top-3 left-3 right-3 flex items-center justify-between z-10">
@@ -707,18 +1362,8 @@ export default function Home() {
                         Instant Access
                       </span>
                     </div>
-
-                    <div className="absolute bottom-2.5 left-3 right-3 flex items-center justify-between z-10 text-[10px]">
-                      <div className="flex items-center text-amber-400 gap-0.5">
-                        {[...Array(5)].map((_, i) => (
-                          <StarIconSolid key={i} className="w-3 h-3" />
-                        ))}
-                      </div>
-                      <span className="font-semibold text-slate-300 drop-shadow">Verified License</span>
-                    </div>
                   </div>
 
-                  {/* Product Details */}
                   <div className="p-4">
                     <Link
                       href={`/products/${prod.slug || prod.id}`}
@@ -732,7 +1377,6 @@ export default function Home() {
                   </div>
                 </div>
 
-                {/* Price and Actions */}
                 <div className="p-4 pt-3 border-t border-white/5 flex items-center justify-between">
                   <div>
                     <span className="text-[9px] uppercase font-bold text-slate-500 block">License</span>
@@ -768,611 +1412,23 @@ export default function Home() {
             ))}
           </div>
 
-          {/* Dedicated Customization Callout Banner */}
-          <div className="mt-14 rounded-2xl border border-[#00d4aa]/25 bg-gradient-to-r from-[#0f1523] via-[#0d1c23] to-[#0f1523] p-8 md:p-10 flex flex-col md:flex-row items-center justify-between gap-6">
-            <div>
-              <span className="text-xs font-bold text-[#00d4aa] uppercase tracking-wider block mb-1">
-                Looking for Bespoke Customization?
-              </span>
-              <h3 className="text-xl sm:text-2xl font-black text-white">
-                Need a Custom Software Build or Agency White-Label?
-              </h3>
-              <p className="text-xs sm:text-sm text-slate-300 mt-2 max-w-2xl">
-                Our core engineering division can customize any of these codebases, integrate local payment gateways, or build a bespoke enterprise system tailored to your exact specifications.
-              </p>
-            </div>
-            <div className="flex flex-wrap items-center gap-3 shrink-0">
-              <Link
-                href="/store"
-                className="px-6 py-3 rounded-xl bg-[#00d4aa] text-black font-bold text-xs hover:bg-[#00e2b6] transition-all shadow-md shadow-[#00d4aa]/20"
-              >
-                Visit Store (100+ Products)
-              </Link>
-              <Link
-                href="/contact"
-                className="px-6 py-3 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-white font-semibold text-xs transition-all"
-              >
-                Custom Request
-              </Link>
-            </div>
-          </div>
-
-        </div>
-      </section>
-
-
-      {/* ================================================================ */}
-      {/* 3. FOUR CORE DIVISIONS — AUTONOMOUS ECOSYSTEM HUB                */}
-      {/* ================================================================ */}
-      <section id="services" className="py-24 border-t border-white/8 bg-[#090d16]/75 relative overflow-hidden">
-        {/* Subtle Ambient Background Mesh */}
-        <div className="absolute inset-0 pointer-events-none -z-10">
-          <div className="absolute top-1/2 left-1/4 -translate-y-1/2 w-[600px] h-[600px] bg-[#00d4aa]/4 blur-[180px] rounded-full" />
-          <div className="absolute top-1/3 right-1/4 w-[500px] h-[500px] bg-[#8b5cf6]/4 blur-[180px] rounded-full" />
-        </div>
-
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
-            
-            {/* Left Column: Heading + Graphical Presentation */}
-            <div className="lg:col-span-5 flex flex-col justify-between">
-              <div>
-                <div className="inline-flex items-center gap-2 text-xs font-bold tracking-widest text-[#00d4aa] uppercase mb-4">
-                  <span className="w-4 h-px bg-[#00d4aa]" />
-                  Five Official Divisions • Master Brand Architecture
-                </div>
-                <h2 className="text-3xl sm:text-4xl lg:text-[2.6rem] font-black text-white leading-[1.15] mb-5 tracking-tight">
-                  One Ecosystem.<br />Total Business Execution.
-                </h2>
-                <p className="text-sm text-slate-400 leading-relaxed mb-6">
-                  Eliminate the friction of managing disparate freelancers and agencies. NEXTDIGIHOME unifies NextDigi Solutions, NextDigi AI, NextDigi Growth, NextDigi Labs, and NextDigi Store under one master technology ecosystem.
-                </p>
-                <div className="mb-6">
-                  <Link
-                    href="/solutions"
-                    className="inline-flex items-center gap-2 text-xs font-bold px-4 py-2.5 rounded-xl bg-[#00d4aa]/10 border border-[#00d4aa]/25 text-[#00d4aa] hover:bg-[#00d4aa] hover:text-black transition-all group"
-                  >
-                    <span>View Full Service Catalog</span>
-                    <ArrowRightIcon className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
-                  </Link>
-                </div>
-              </div>
-
-              {/* Graphical Presentation: Central Human Operator with Multiple Animated Items */}
-              <div className="relative p-5 sm:p-6 rounded-3xl bg-gradient-to-b from-[#0f1523] via-[#0d121f] to-[#090d16] border border-white/10 shadow-2xl overflow-hidden">
-                {/* Visual Header */}
-                <div className="flex items-center justify-between mb-4 border-b border-white/5 pb-3">
-                  <div className="flex items-center gap-2">
-                    <span className="w-2 h-2 rounded-full bg-[#00d4aa] animate-ping" />
-                    <span className="text-[11px] font-mono font-bold uppercase tracking-wider text-slate-300">
-                      Human-In-The-Loop Autonomous Hub
-                    </span>
-                  </div>
-                  <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-white/5 text-[#00d4aa] border border-white/5">
-                    100% Deterministic
-                  </span>
-                </div>
-
-                {/* Animated Diagram Area */}
-                <div className="relative w-full h-64 sm:h-72 flex items-center justify-center">
-                  {/* SVG Connecting Energy Beams (animated dashed lines from center to 4 nodes) */}
-                  <svg className="absolute inset-0 w-full h-full pointer-events-none" viewBox="0 0 400 300">
-                    {/* Beam to Top Left (Solutions) */}
-                    <line
-                      x1="200" y1="150" x2="70" y2="55"
-                      stroke={hoveredDivision === 'solutions' ? '#00d4aa' : 'rgba(255,255,255,0.18)'}
-                      strokeWidth={hoveredDivision === 'solutions' ? '2.5' : '1.5'}
-                      className="animate-dash-flow"
-                    />
-                    {/* Beam to Top Right (AI) */}
-                    <line
-                      x1="200" y1="150" x2="330" y2="55"
-                      stroke={hoveredDivision === 'ai' ? '#8b5cf6' : 'rgba(255,255,255,0.18)'}
-                      strokeWidth={hoveredDivision === 'ai' ? '2.5' : '1.5'}
-                      className="animate-dash-flow"
-                    />
-                    {/* Beam to Bottom Left (Growth) */}
-                    <line
-                      x1="200" y1="150" x2="70" y2="245"
-                      stroke={hoveredDivision === 'growth' ? '#38bdf8' : 'rgba(255,255,255,0.18)'}
-                      strokeWidth={hoveredDivision === 'growth' ? '2.5' : '1.5'}
-                      className="animate-dash-flow"
-                    />
-                    {/* Beam to Bottom Right (Products) */}
-                    <line
-                      x1="200" y1="150" x2="330" y2="245"
-                      stroke={hoveredDivision === 'products' ? '#f59e0b' : 'rgba(255,255,255,0.18)'}
-                      strokeWidth={hoveredDivision === 'products' ? '2.5' : '1.5'}
-                      className="animate-dash-flow"
-                    />
-                  </svg>
-
-                  {/* Central Human Operator Core */}
-                  <div className="relative z-20 flex flex-col items-center">
-                    {/* Outer pulsating aura */}
-                    <div className="absolute -inset-4 rounded-full bg-[#00d4aa]/15 animate-pulse-halo pointer-events-none" />
-                    
-                    {/* Concentric rotating orbital ring */}
-                    <div className="absolute -inset-6 rounded-full border border-dashed border-[#00d4aa]/30 animate-orbit-slow pointer-events-none" />
-                    <div className="absolute -inset-8 rounded-full border border-dotted border-white/10 animate-orbit-reverse pointer-events-none" />
-
-                    {/* Central Icon Button */}
-                    <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-gradient-to-tr from-[#00d4aa] via-[#38bdf8] to-[#8b5cf6] p-[2px] shadow-[0_0_35px_rgba(0,212,170,0.35)]">
-                      <div className="w-full h-full rounded-2xl bg-[#090d16] flex flex-col items-center justify-center p-2 text-center">
-                        <UserIcon className="w-7 h-7 sm:w-8 sm:h-8 text-[#00d4aa]" />
-                      </div>
-                    </div>
-                    
-                    <span className="mt-2 text-[10px] sm:text-xs font-black uppercase tracking-wider text-white bg-black/70 px-2.5 py-0.5 rounded-full border border-white/10 backdrop-blur">
-                      1 Human Operator
-                    </span>
-                  </div>
-
-                  {/* Satellite Node 1: Solutions (Top-Left) */}
-                  <button
-                    onClick={() => setHoveredDivision('solutions')}
-                    onMouseEnter={() => setHoveredDivision('solutions')}
-                    className={`absolute top-2 left-2 sm:left-4 z-20 p-2 sm:p-2.5 rounded-xl border backdrop-blur-md transition-all flex items-center gap-2 ${
-                      hoveredDivision === 'solutions'
-                        ? 'bg-[#00d4aa]/15 border-[#00d4aa] text-[#00d4aa] shadow-[0_0_20px_rgba(0,212,170,0.4)] scale-105'
-                        : 'bg-[#121829]/90 border-white/10 text-slate-300 hover:border-[#00d4aa]/40'
-                    }`}
-                  >
-                    <div className="w-8 h-8 rounded-lg bg-[#00d4aa]/15 flex items-center justify-center text-[#00d4aa]">
-                      <CodeBracketIcon className="w-4 h-4" />
-                    </div>
-                    <div className="text-left hidden sm:block">
-                      <div className="text-[10px] font-bold text-white">01 BUILD</div>
-                      <div className="text-[9px] text-[#00d4aa]">Web &amp; Apps</div>
-                    </div>
-                  </button>
-
-                  {/* Satellite Node 2: AI & Automation (Top-Right) */}
-                  <button
-                    onClick={() => setHoveredDivision('ai')}
-                    onMouseEnter={() => setHoveredDivision('ai')}
-                    className={`absolute top-2 right-2 sm:right-4 z-20 p-2 sm:p-2.5 rounded-xl border backdrop-blur-md transition-all flex items-center gap-2 ${
-                      hoveredDivision === 'ai'
-                        ? 'bg-[#8b5cf6]/15 border-[#8b5cf6] text-[#8b5cf6] shadow-[0_0_20px_rgba(139,92,246,0.4)] scale-105'
-                        : 'bg-[#121829]/90 border-white/10 text-slate-300 hover:border-[#8b5cf6]/40'
-                    }`}
-                  >
-                    <div className="w-8 h-8 rounded-lg bg-[#8b5cf6]/15 flex items-center justify-center text-[#8b5cf6]">
-                      <CpuChipIcon className="w-4 h-4" />
-                    </div>
-                    <div className="text-left hidden sm:block">
-                      <div className="text-[10px] font-bold text-white">02 AUTOMATE</div>
-                      <div className="text-[9px] text-[#a78bfa]">AI Agents</div>
-                    </div>
-                  </button>
-
-                  {/* Satellite Node 3: Growth (Bottom-Left) */}
-                  <button
-                    onClick={() => setHoveredDivision('growth')}
-                    onMouseEnter={() => setHoveredDivision('growth')}
-                    className={`absolute bottom-2 left-2 sm:left-4 z-20 p-2 sm:p-2.5 rounded-xl border backdrop-blur-md transition-all flex items-center gap-2 ${
-                      hoveredDivision === 'growth'
-                        ? 'bg-[#38bdf8]/15 border-[#38bdf8] text-[#38bdf8] shadow-[0_0_20px_rgba(56,189,248,0.4)] scale-105'
-                        : 'bg-[#121829]/90 border-white/10 text-slate-300 hover:border-[#38bdf8]/40'
-                    }`}
-                  >
-                    <div className="w-8 h-8 rounded-lg bg-[#38bdf8]/15 flex items-center justify-center text-[#38bdf8]">
-                      <RocketLaunchIcon className="w-4 h-4" />
-                    </div>
-                    <div className="text-left hidden sm:block">
-                      <div className="text-[10px] font-bold text-white">03 GROW</div>
-                      <div className="text-[9px] text-[#38bdf8]">Meta &amp; Ads</div>
-                    </div>
-                  </button>
-
-                  {/* Satellite Node 4: Labs & Store (Bottom-Right) */}
-                  <button
-                    onClick={() => setHoveredDivision('products')}
-                    onMouseEnter={() => setHoveredDivision('products')}
-                    className={`absolute bottom-2 right-2 sm:right-4 z-20 p-2 sm:p-2.5 rounded-xl border backdrop-blur-md transition-all flex items-center gap-2 ${
-                      hoveredDivision === 'products'
-                        ? 'bg-[#f59e0b]/15 border-[#f59e0b] text-[#f59e0b] shadow-[0_0_20px_rgba(245,158,11,0.4)] scale-105'
-                        : 'bg-[#121829]/90 border-white/10 text-slate-300 hover:border-[#f59e0b]/40'
-                    }`}
-                  >
-                    <div className="w-8 h-8 rounded-lg bg-[#f59e0b]/15 flex items-center justify-center text-[#f59e0b]">
-                      <ShoppingBagIcon className="w-4 h-4" />
-                    </div>
-                    <div className="text-left hidden sm:block">
-                      <div className="text-[10px] font-bold text-white">04 STORE</div>
-                      <div className="text-[9px] text-[#00d4aa]">NextDigi Store</div>
-                    </div>
-                  </button>
-                </div>
-
-                {/* Dynamic Status Display Bar */}
-                <div className="mt-3 pt-3 border-t border-white/5 flex items-center justify-between text-[11px]">
-                  <span className="text-slate-400 font-mono line-clamp-1">
-                    {hoveredDivision === 'solutions' && 'Active Command: Full-Stack Engineering (NextDigi Solutions)'}
-                    {hoveredDivision === 'ai' && 'Active Command: Autonomous AI & Automation (NextDigi AI)'}
-                    {hoveredDivision === 'growth' && 'Active Command: Performance Scaling & Ads (NextDigi Growth)'}
-                    {hoveredDivision === 'products' && 'Active Command: Digital Products & Assets (NextDigi Store)'}
-                  </span>
-                  <span className="text-[#00d4aa] font-bold shrink-0 ml-2">● Synced</span>
-                </div>
-              </div>
-            </div>
-
-            {/* Right Column: 5 Official Division Interactive Cards */}
-            <div className="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-4">
-              {[
-                {
-                  id: 'solutions',
-                  num: '01',
-                  title: 'BUILD',
-                  subtitle: 'NextDigi Solutions',
-                  desc: 'High-performance Next.js web applications, Flutter mobile apps, enterprise ERPs, and multi-tenant SaaS platforms.',
-                  href: '/solutions',
-                  tag: 'Custom Engineering',
-                  icon: CodeBracketIcon,
-                  accent: '#00d4aa',
-                  pills: ['Next.js 15', 'Flutter App', 'Custom ERP', 'Cloud APIs'],
-                  capability: '⚡ 100% Code Ownership Transfer',
-                  className: ''
-                },
-                {
-                  id: 'ai',
-                  num: '02',
-                  title: 'AUTOMATE',
-                  subtitle: 'NextDigi AI',
-                  desc: 'Autonomous AI agents, bilingual customer chatbots, document vector RAG pipelines, and zero-touch n8n workflows.',
-                  href: '/ai',
-                  tag: 'Intelligent Systems',
-                  icon: CpuChipIcon,
-                  accent: '#8b5cf6',
-                  pills: ['AI Agents', 'WhatsApp RAG', 'n8n Pipelines', 'Zero Touch'],
-                  capability: '🤖 0.8s RAG Latency • 24/7 Autonomous',
-                  className: ''
-                },
-                {
-                  id: 'growth',
-                  num: '03',
-                  title: 'GROW',
-                  subtitle: 'NextDigi Growth',
-                  desc: 'Meta & Google media buying with server-side CAPI tracking, technical SEO, high-converting landing pages, and analytics.',
-                  href: '/growth',
-                  tag: 'Customer Acquisition',
-                  icon: RocketLaunchIcon,
-                  accent: '#38bdf8',
-                  pills: ['Meta CAPI', 'Google Ads', 'Technical SEO', 'SMS Recovery'],
-                  capability: '📈 4.6x Audited ROAS Across 50+ Stores',
-                  className: ''
-                },
-                {
-                  id: 'labs',
-                  num: '04',
-                  title: 'LABS',
-                  subtitle: 'NextDigi Labs',
-                  desc: 'In-house proprietary SaaS platforms and automation tools including NextDigi Commerce, NextDigi Social, and Garibondhu360.',
-                  href: '/labs',
-                  tag: 'Proprietary SaaS',
-                  icon: BeakerIcon,
-                  accent: '#f59e0b',
-                  pills: ['NextDigi Commerce', 'NextDigi Social', 'Automate', 'Cloud ERP'],
-                  capability: '🚀 Live Production Cloud SaaS',
-                  className: ''
-                },
-                {
-                  id: 'products',
-                  num: '05',
-                  title: 'STORE',
-                  subtitle: 'NextDigi Store',
-                  desc: '100+ verified production-ready full-stack application codebases, Flutter mobile apps, and instant digital assets.',
-                  href: '/products',
-                  tag: 'Digital Products',
-                  icon: ShoppingBagIcon,
-                  accent: '#00d4aa',
-                  pills: ['100+ Repos', 'Full-Stack Kits', 'Mobile Apps', 'Instant Download'],
-                  capability: '📦 Instant Download & Full Documentation',
-                  className: 'sm:col-span-2'
-                },
-              ].map((p) => {
-                const IconComponent = p.icon;
-                const isHovered = hoveredDivision === p.id;
-                return (
-                  <Link
-                    key={p.num}
-                    href={p.href}
-                    onMouseEnter={() => setHoveredDivision(p.id as any)}
-                    className={`group p-6 rounded-2xl transition-all duration-300 flex flex-col justify-between relative overflow-hidden ${p.className} ${
-                      isHovered
-                        ? 'bg-[#131b2e] shadow-xl border'
-                        : 'bg-[#0f1523]/80 border border-white/8 hover:border-white/20'
-                    }`}
-                    style={{
-                      borderColor: isHovered ? p.accent : undefined,
-                      boxShadow: isHovered ? `0 10px 30px ${p.accent}20` : undefined
-                    }}
-                  >
-                    <div>
-                      {/* Top bar with icon badge & tag */}
-                      <div className="flex items-center justify-between mb-4">
-                        <div
-                          className="w-10 h-10 rounded-xl flex items-center justify-center transition-transform group-hover:scale-110"
-                          style={{
-                            backgroundColor: `${p.accent}15`,
-                            color: p.accent,
-                            border: `1px solid ${p.accent}30`
-                          }}
-                        >
-                          <IconComponent className="w-5 h-5" />
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <span className="text-2xl font-black text-white/15 group-hover:text-white/30 transition-colors">{p.num}</span>
-                          <span className="text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-white/5 text-slate-300 border border-white/5">
-                            {p.tag}
-                          </span>
-                        </div>
-                      </div>
-
-                      <div className="text-xs font-mono font-bold uppercase tracking-wider mb-1" style={{ color: p.accent }}>
-                        {p.title}
-                      </div>
-                      <h3 className="text-base font-bold text-white mb-2 group-hover:text-[#00d4aa] transition-colors">
-                        {p.subtitle}
-                      </h3>
-                      <p className="text-xs text-slate-400 leading-relaxed mb-4">
-                        {p.desc}
-                      </p>
-
-                      {/* Capabilities pills */}
-                      <div className="flex flex-wrap gap-1.5 mb-4">
-                        {p.pills.map((pill, idx) => (
-                          <span
-                            key={idx}
-                            className="text-[10px] px-2 py-0.5 rounded-md bg-white/5 text-slate-300 border border-white/5 group-hover:border-white/10 transition-colors"
-                          >
-                            {pill}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-
-                    <div className="pt-3.5 border-t border-white/5 flex items-center justify-between">
-                      <span className="text-[10px] font-medium text-slate-400">
-                        {p.capability}
-                      </span>
-                      <div className="flex items-center gap-1 text-xs font-bold transition-transform group-hover:translate-x-1" style={{ color: p.accent }}>
-                        <ArrowRightIcon className="w-3.5 h-3.5" />
-                      </div>
-                    </div>
-                  </Link>
-                );
-              })}
-            </div>
-
-          </div>
-        </div>
-      </section>
-
-
-      {/* ================================================================ */}
-      {/* 4. CUSTOM SOFTWARE & PLATFORMS (ENGINEERING DIVISION)            */}
-      {/* ================================================================ */}
-      <section className="py-24 border-t border-white/8 bg-[#090d16]/70">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          
-          <div className="flex flex-col md:flex-row md:items-end justify-between mb-12">
-            <div>
-              <div className="inline-flex items-center gap-2 text-xs font-bold tracking-widest text-[#00d4aa] uppercase mb-3">
-                <span className="w-4 h-px bg-[#00d4aa]" />
-                Engineering &amp; Development
-              </div>
-              <h2 className="text-3xl sm:text-4xl font-black text-white">
-                Custom Software &amp; Scalable Platforms
-              </h2>
-            </div>
-            <Link href="/solutions" className="mt-4 md:mt-0 text-xs font-bold text-[#00d4aa] hover:underline flex items-center gap-1">
-              <span>View All Solutions</span>
-              <ArrowRightIcon className="w-3.5 h-3.5" />
+          <div className="text-center mt-12">
+            <Link
+              href="/store"
+              className="inline-flex items-center gap-2 px-8 py-3.5 rounded-xl bg-[#00d4aa] text-[#07090e] font-bold text-sm hover:bg-[#00e2b6] shadow-lg shadow-[#00d4aa]/20 transition-all"
+            >
+              <span>Visit NextDigi Store</span>
+              <ArrowRightIcon className="w-4 h-4" />
             </Link>
           </div>
-
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {[
-              { id: 'web-development', title: 'Web Development', sub: 'Next.js 15 & React Platforms', icon: GlobeAltIcon },
-              { id: 'ecommerce', title: 'Headless E-Commerce', sub: 'bKash, Nagad, Stripe Routing', icon: ShoppingBagIcon },
-              { id: 'mobile-app', title: 'Mobile Applications', sub: 'Cross-Platform Flutter iOS & Android', icon: DevicePhoneMobileIcon },
-              { id: 'custom-software', title: 'Enterprise ERPs', sub: 'Custom ERP & Business Automations', icon: CommandLineIcon },
-              { id: 'saas-development', title: 'SaaS Platforms', sub: 'Multi-Tenant Cloud Architectures', icon: CpuChipIcon },
-              { id: 'api-integrations', title: 'API & Integrations', sub: 'Payment, CRM & Courier APIs', icon: ServerIcon },
-              { id: 'hosting-maintenance', title: 'Cloud Infrastructure', sub: 'DevOps, CI/CD & 24/7 Monitoring', icon: WrenchScrewdriverIcon },
-              { id: 'custom-software', title: 'Security Audits', sub: 'Code Hardening & Penetration Testing', icon: ShieldCheckIcon },
-            ].map((s, i) => {
-              const Icon = s.icon;
-              return (
-                <Link
-                  key={i}
-                  href={`/solutions/${s.id}`}
-                  className="group p-5 rounded-2xl bg-[#0f1523]/80 border border-white/8 hover:border-[#00d4aa]/40 hover:bg-[#131b2e] transition-all"
-                >
-                  <div className="w-10 h-10 rounded-xl bg-[#00d4aa]/10 border border-[#00d4aa]/20 flex items-center justify-center text-[#00d4aa] mb-4 group-hover:scale-110 transition-transform">
-                    <Icon className="w-5 h-5" />
-                  </div>
-                  <div className="text-sm font-bold text-white mb-1 group-hover:text-[#00d4aa] transition-colors">{s.title}</div>
-                  <div className="text-xs text-slate-400">{s.sub}</div>
-                </Link>
-              );
-            })}
-          </div>
-
         </div>
       </section>
 
 
       {/* ================================================================ */}
-      {/* 5. NEXTDIGI LABS (PROPRIETARY SAAS PLATFORMS)                    */}
+      {/* 10. TRUST / WHY BUSINESSES CHOOSE NEXTDIGI                       */}
       {/* ================================================================ */}
-      <section className="py-24 border-t border-white/8 relative">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          
-          <div className="flex flex-col md:flex-row md:items-end justify-between mb-12">
-            <div>
-              <div className="inline-flex items-center gap-2 text-xs font-bold tracking-widest text-[#00d4aa] uppercase mb-3">
-                <BeakerIcon className="w-4 h-4 text-[#00d4aa]" />
-                NextDigi Labs
-              </div>
-              <h2 className="text-3xl sm:text-4xl font-black text-white">
-                Proprietary SaaS Platforms
-              </h2>
-              <p className="text-sm text-slate-400 mt-2 max-w-xl">
-                We engineer and run our own cloud SaaS platforms to solve real enterprise bottlenecks — and battle-test our architectures with thousands of live transactions.
-              </p>
-            </div>
-            <Link href="/labs" className="mt-4 md:mt-0 text-xs font-bold text-[#00d4aa] hover:underline flex items-center gap-1">
-              <span>View All Platforms</span>
-              <ArrowRightIcon className="w-3.5 h-3.5" />
-            </Link>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-            {[
-              {
-                name: 'NextDigi Commerce',
-                tagline: 'Headless Multi-Channel E-Commerce Engine',
-                desc: 'Native bKash & Nagad checkout routing, automatic courier dispatch (Pathao, Steadfast, RedX), and real-time inventory ledger.',
-                status: 'Live',
-                features: ['Instant Checkout', 'Courier Auto-Sync', 'Inventory Ledger'],
-                href: '/labs/commerce',
-                ext: 'https://commerce.nextdigihome.com',
-                icon: ShoppingBagIcon,
-              },
-              {
-                name: 'Garibondhu360',
-                tagline: 'Automotive Workshop & Fleet ERP Platform',
-                desc: 'Cloud ERP for vehicle repair workshops — digital job cards, barcode spare-parts inventory, and automated customer SMS status updates.',
-                status: 'Live',
-                features: ['Digital Job Cards', 'Parts Barcodes', 'SMS Reminders'],
-                href: '/labs/garibondhu360',
-                ext: 'https://garibondhu360.nextdigihome.com',
-                icon: WrenchScrewdriverIcon,
-              },
-              {
-                name: 'NextDigi Social',
-                tagline: 'Omnichannel Social Media Scheduler & DM Inbox',
-                desc: 'Manage Facebook, Instagram, LinkedIn, and TikTok from one unified dashboard with AI copywriter and team approval workflows.',
-                status: 'Beta',
-                features: ['Omnichannel Scheduler', 'Unified DM Inbox', 'AI Copywriter'],
-                href: '/labs/social',
-                ext: 'https://social.nextdigihome.com',
-                icon: ShareIcon,
-              },
-              {
-                name: 'NextDigi Automate',
-                tagline: 'Visual Low-Code Workflow Automation Canvas',
-                desc: 'Connect webhooks, databases, CRMs, and email gateways into robust automated event pipelines with fault-tolerant retries.',
-                status: 'Soon',
-                features: ['Visual Flow Canvas', 'Pre-Built Nodes', 'Retry Logic'],
-                href: '/labs/automate',
-                ext: 'https://automate.nextdigihome.com',
-                icon: BoltIcon,
-              },
-            ].map((prod) => {
-              const Icon = prod.icon;
-              return (
-                <div
-                  key={prod.name}
-                  className="p-6 rounded-2xl bg-[#0f1523]/80 border border-white/8 hover:border-white/20 transition-all flex flex-col justify-between"
-                >
-                  <div>
-                    <div className="flex items-center justify-between mb-4">
-                      <div className="w-10 h-10 rounded-xl bg-[#00d4aa]/10 border border-[#00d4aa]/20 flex items-center justify-center text-[#00d4aa]">
-                        <Icon className="w-5 h-5" />
-                      </div>
-                      <span className={`text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full ${
-                        prod.status === 'Live'
-                          ? 'bg-[#00d4aa]/15 text-[#00d4aa] border border-[#00d4aa]/30'
-                          : prod.status === 'Beta'
-                          ? 'bg-amber-400/15 text-amber-300 border border-amber-400/30'
-                          : 'bg-white/5 text-slate-400 border border-white/10'
-                      }`}>
-                        {prod.status}
-                      </span>
-                    </div>
-
-                    <h3 className="text-lg font-bold text-white mb-1">{prod.name}</h3>
-                    <p className="text-xs text-[#00d4aa] font-semibold mb-3">{prod.tagline}</p>
-                    <p className="text-xs text-slate-300 leading-relaxed mb-4">{prod.desc}</p>
-
-                    <div className="flex flex-wrap gap-1.5 mb-6">
-                      {prod.features.map((f) => (
-                        <span key={f} className="inline-flex items-center gap-1 text-[11px] px-2.5 py-1 rounded-lg bg-white/5 border border-white/5 text-slate-300">
-                          <CheckCircleIcon className="w-3 h-3 text-[#00d4aa]" />
-                          <span>{f}</span>
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div className="flex items-center gap-2 pt-4 border-t border-white/5">
-                    <Link
-                      href={prod.href}
-                      className="flex-1 text-center py-2.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-bold text-white transition-all"
-                    >
-                      Platform Details
-                    </Link>
-                    <a
-                      href={prod.ext}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="p-2.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-slate-400 hover:text-white transition-all"
-                      title="Visit platform"
-                    >
-                      <ArrowTopRightOnSquareIcon className="w-4 h-4" />
-                    </a>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-
-        </div>
-      </section>
-
-
-      {/* ================================================================ */}
-      {/* 6. HOW WE WORK (4-STEP DISCIPLINED SPRINT CYCLE)                 */}
-      {/* ================================================================ */}
-      <section className="py-24 border-t border-white/8 bg-[#090d16]/70">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center max-w-2xl mx-auto mb-16">
-            <div className="inline-flex items-center gap-2 text-xs font-bold tracking-widest text-[#00d4aa] uppercase mb-3">
-              <span className="w-4 h-px bg-[#00d4aa]" />
-              Engineering Workflow
-            </div>
-            <h2 className="text-3xl sm:text-4xl font-black text-white">How We Work</h2>
-            <p className="text-sm text-slate-400 mt-2">
-              A transparent, sprint-based delivery cycle taking projects from architecture to scalable market operations.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            {[
-              { step: '01', title: 'Discover & Architect', desc: 'Requirements scoping, database modeling, cloud architecture design, and milestone scheduling.' },
-              { step: '02', title: 'Build & Engineer', desc: 'Sprint-based agile engineering in TypeScript with continuous integration and weekly demo builds.' },
-              { step: '03', title: 'Automate & Integrate', desc: 'Connect payment gateways, CRMs, courier APIs, and autonomous AI agents for zero-touch workflows.' },
-              { step: '04', title: 'Launch & Scale', desc: 'Production deployment with zero downtime, CAPI tracking, server monitoring, and ongoing growth support.' },
-            ].map((m) => (
-              <div key={m.step} className="p-6 rounded-2xl bg-[#0f1523]/80 border border-white/8 hover:border-white/20 transition-all">
-                <div className="text-3xl font-black text-white/10 mb-4">{m.step}</div>
-                <h3 className="text-sm font-bold text-white mb-2">{m.title}</h3>
-                <p className="text-xs text-slate-400 leading-relaxed">{m.desc}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-
-      {/* ================================================================ */}
-      {/* 7. WHY NEXTDIGIHOME / TRUST PILLARS                             */}
-      {/* ================================================================ */}
-      <section className="py-24 border-t border-white/8 relative">
+      <section className="py-20 sm:py-24 border-t border-white/8 bg-[#090d16]/70 relative">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           
           <div className="text-center max-w-2xl mx-auto mb-16">
@@ -1381,18 +1437,21 @@ export default function Home() {
               Enterprise Standards
             </div>
             <h2 className="text-3xl sm:text-4xl font-black text-white">
-              Why Modern Businesses Partner with {siteName}
+              Why Businesses Choose NextDigi
             </h2>
+            <p className="text-sm text-slate-400 mt-2">
+              Reliable engineering, transparent processes, and end-to-end ecosystem execution.
+            </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
             {[
-              { title: '8+ Years Combined Engineering', desc: 'Full-stack software engineers with extensive experience in high-throughput applications and cloud systems.', icon: CommandLineIcon },
-              { title: '100% Code & IP Ownership', desc: 'You own complete intellectual property, repositories, credentials, and documentation upon project completion. Zero vendor lock-in.', icon: ShieldCheckIcon },
-              { title: 'Battle-Tested in Our Own Labs', desc: 'We test architectures on our own SaaS platforms first. What we deploy for you has already processed live transactions.', icon: BeakerIcon },
-              { title: 'Unified Ecosystem Execution', desc: 'Software engineering, AI automation, growth marketing, and digital assets under one roof. No five-vendor fragmentation.', icon: SparklesIcon },
-              { title: '24/7 SLA-Backed Support', desc: 'Round-the-clock server health monitoring, automated backups, and rapid emergency incident response.', icon: ClockIcon },
-              { title: 'Milestone-Tied Billing', desc: 'Transparent scope, clearly defined deliverables, and payment tied to approved milestone releases. Zero hidden surprises.', icon: CheckCircleIcon },
+              { title: 'End-to-End Technology', desc: 'From custom web and mobile platforms to cloud APIs, we deliver complete turn-key solutions under one roof.', icon: CommandLineIcon },
+              { title: 'Custom Solutions', desc: 'Every application is tailored to your business model with complete 100% intellectual property ownership transfer.', icon: ShieldCheckIcon },
+              { title: 'AI & Automation', desc: 'Deterministic AI agents and connected webhook pipelines that streamline repetitive operations and save overhead.', icon: CpuChipIcon },
+              { title: 'Modern SaaS Architecture', desc: 'Engineered with Next.js, TypeScript, Node.js, and Docker for maximum concurrency, resilience, and speed.', icon: ServerIcon },
+              { title: 'Scalable Solutions', desc: 'High-throughput system design built to support transaction surges and expanding business operations smoothly.', icon: BoltIcon },
+              { title: 'Ongoing Support', desc: 'Milestone-based delivery, proactive server health monitoring, and reliable technical support when you need it.', icon: CheckCircleIcon },
             ].map((p, i) => {
               const Icon = p.icon;
               return (
@@ -1400,7 +1459,7 @@ export default function Home() {
                   <div className="w-10 h-10 rounded-xl bg-[#00d4aa]/10 border border-[#00d4aa]/20 flex items-center justify-center text-[#00d4aa] mb-4">
                     <Icon className="w-5 h-5" />
                   </div>
-                  <h3 className="text-sm font-bold text-white mb-2">{p.title}</h3>
+                  <h3 className="text-base font-bold text-white mb-2">{p.title}</h3>
                   <p className="text-xs text-slate-400 leading-relaxed">{p.desc}</p>
                 </div>
               );
@@ -1412,79 +1471,21 @@ export default function Home() {
 
 
       {/* ================================================================ */}
-      {/* 8. TESTIMONIALS / VERIFIED CLIENT REVIEWS                        */}
+      {/* 11. FINAL CTA                                                    */}
       {/* ================================================================ */}
-      <section className="py-24 border-t border-white/8 bg-[#090d16]/70">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          
-          <div className="text-center max-w-2xl mx-auto mb-16">
-            <div className="inline-flex items-center gap-2 text-xs font-bold tracking-widest text-[#00d4aa] uppercase mb-3">
-              <StarIconSolid className="w-4 h-4 text-amber-400" />
-              Client Success
-            </div>
-            <h2 className="text-3xl sm:text-4xl font-black text-white">What Founders Say</h2>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-            {[
-              {
-                quote: 'NextDigiHome rebuilt our entire multi-vendor marketplace in Next.js with automated courier dispatch. Our order processing time dropped by 70% in the first month.',
-                author: 'Tanvir Hossain',
-                role: 'Founder & CEO',
-                company: 'Dhaka Retail Cloud'
-              },
-              {
-                quote: 'The autonomous AI customer agent they deployed on WhatsApp handles over 85% of customer inquiries without any human intervention. Huge cost savings for our team.',
-                author: 'Nabila Rahman',
-                role: 'Head of Operations',
-                company: 'StyleHub E-Commerce'
-              },
-              {
-                quote: 'We bought their NextDigi Commerce source code template and were able to launch our custom online store in less than 3 days. Cleanest codebase we have worked with.',
-                author: 'Ariful Islam',
-                role: 'Lead Architect',
-                company: 'Apex Tech Solutions'
-              }
-            ].map((t, idx) => (
-              <div key={idx} className="p-6 rounded-2xl bg-[#0f1523]/80 border border-white/8 hover:border-white/20 transition-all flex flex-col justify-between">
-                <div>
-                  <div className="flex items-center text-amber-400 gap-1 mb-4">
-                    {[...Array(5)].map((_, i) => (
-                      <StarIconSolid key={i} className="w-4 h-4" />
-                    ))}
-                  </div>
-                  <p className="text-xs sm:text-sm text-slate-300 leading-relaxed italic mb-6">
-                    &ldquo;{t.quote}&rdquo;
-                  </p>
-                </div>
-                <div className="pt-4 border-t border-white/5">
-                  <div className="text-xs font-bold text-white">{t.author}</div>
-                  <div className="text-[11px] text-slate-400">{t.role} · {t.company}</div>
-                </div>
-              </div>
-            ))}
-          </div>
-
-        </div>
-      </section>
-
-
-      {/* ================================================================ */}
-      {/* 9. FULL-WIDTH CINEMATIC BOTTOM CTA                               */}
-      {/* ================================================================ */}
-      <section className="py-24 border-t border-white/8 bg-gradient-to-b from-[#090d16] via-[#0b1420] to-[#090d16]">
+      <section className="py-20 sm:py-24 border-t border-white/8 bg-gradient-to-b from-[#090d16] via-[#0b1420] to-[#090d16]">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#00d4aa]/10 border border-[#00d4aa]/25 text-xs font-bold text-[#00d4aa] mb-6">
             <SparklesIcon className="w-4 h-4" />
-            <span>Ready to Build, Launch, or Automate?</span>
+            <span>Ready to Build Something Better?</span>
           </div>
 
           <h2 className="text-3xl sm:text-5xl font-black text-white tracking-tight leading-tight mb-6">
-            Let&apos;s Engineer Your Company&apos;s<br />Next Digital Milestone.
+            Ready to Build Something Better?
           </h2>
 
           <p className="text-sm sm:text-base text-slate-300 leading-relaxed max-w-xl mx-auto mb-10">
-            Whether you need a custom web platform, autonomous AI workflow, or instant access to our production digital products — we are ready to execute.
+            Tell us what you&apos;re building. We&apos;ll help you turn your idea into a practical digital solution.
           </p>
 
           <div className="flex flex-wrap items-center justify-center gap-4">
@@ -1492,16 +1493,15 @@ export default function Home() {
               href="/contact"
               className="inline-flex items-center gap-2 px-8 py-4 rounded-xl bg-[#00d4aa] text-black font-extrabold text-sm hover:bg-[#00e2b6] shadow-[0_0_35px_rgba(0,212,170,0.35)] transition-all hover:scale-[1.02] active:scale-[0.98]"
             >
-              <span>Schedule a Project Consultation</span>
+              <span>Start a Project</span>
               <ArrowRightIcon className="w-4 h-4" />
             </Link>
 
             <Link
-              href="/store"
+              href="/contact"
               className="inline-flex items-center gap-2 px-7 py-4 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-white font-semibold text-sm transition-all"
             >
-              <ShoppingBagIcon className="w-4 h-4 text-[#00d4aa]" />
-              <span>Browse Digital Store</span>
+              <span>Talk to Our Team</span>
             </Link>
           </div>
         </div>
