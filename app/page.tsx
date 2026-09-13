@@ -27,7 +27,10 @@ import {
   ArrowTopRightOnSquareIcon,
   ClockIcon,
   FireIcon,
-  CodeBracketIcon
+  CodeBracketIcon,
+  UserIcon,
+  RocketLaunchIcon,
+  UserGroupIcon
 } from '@heroicons/react/24/outline';
 import { StarIcon as StarIconSolid } from '@heroicons/react/24/solid';
 import Swal from 'sweetalert2';
@@ -180,6 +183,7 @@ export default function Home() {
   const [searchQuery, setSearchQuery] = useState('');
   const [activeCategoryTab, setActiveCategoryTab] = useState<'all' | 'source-code' | 'mobile-apps' | 'scripts' | 'business-tools'>('all');
   const [heroConsoleTab, setHeroConsoleTab] = useState<'flagship' | 'ai-engine' | 'architecture' | 'growth'>('flagship');
+  const [hoveredDivision, setHoveredDivision] = useState<'solutions' | 'ai' | 'growth' | 'products'>('solutions');
 
   useEffect(() => {
     let isMounted = true;
@@ -819,87 +823,330 @@ export default function Home() {
 
 
       {/* ================================================================ */}
-      {/* 3. FOUR CORE DIVISIONS (BENTO GRID)                              */}
+      {/* 3. FOUR CORE DIVISIONS — AUTONOMOUS ECOSYSTEM HUB                */}
       {/* ================================================================ */}
-      <section id="services" className="py-24 border-t border-white/8 bg-[#090d16]/60">
+      <section id="services" className="py-24 border-t border-white/8 bg-[#090d16]/75 relative overflow-hidden">
+        {/* Subtle Ambient Background Mesh */}
+        <div className="absolute inset-0 pointer-events-none -z-10">
+          <div className="absolute top-1/2 left-1/4 -translate-y-1/2 w-[600px] h-[600px] bg-[#00d4aa]/4 blur-[180px] rounded-full" />
+          <div className="absolute top-1/3 right-1/4 w-[500px] h-[500px] bg-[#8b5cf6]/4 blur-[180px] rounded-full" />
+        </div>
+
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
             
-            <div className="lg:col-span-4">
-              <div className="inline-flex items-center gap-2 text-xs font-bold tracking-widest text-[#00d4aa] uppercase mb-4">
-                <span className="w-4 h-px bg-[#00d4aa]" />
-                Four Core Divisions
+            {/* Left Column: Heading + Graphical Presentation */}
+            <div className="lg:col-span-5 flex flex-col justify-between">
+              <div>
+                <div className="inline-flex items-center gap-2 text-xs font-bold tracking-widest text-[#00d4aa] uppercase mb-4">
+                  <span className="w-4 h-px bg-[#00d4aa]" />
+                  Four Core Divisions • Unified Execution
+                </div>
+                <h2 className="text-3xl sm:text-4xl lg:text-[2.6rem] font-black text-white leading-[1.15] mb-5 tracking-tight">
+                  One Ecosystem.<br />Total Business Execution.
+                </h2>
+                <p className="text-sm text-slate-400 leading-relaxed mb-6">
+                  Eliminate the friction of managing disparate freelancers and agencies. A single visionary human operator commands full-stack software architecture, autonomous AI agents, growth marketing engines, and verified digital products under one unified roof.
+                </p>
+                <div className="mb-6">
+                  <Link
+                    href="/solutions"
+                    className="inline-flex items-center gap-2 text-xs font-bold px-4 py-2.5 rounded-xl bg-[#00d4aa]/10 border border-[#00d4aa]/25 text-[#00d4aa] hover:bg-[#00d4aa] hover:text-black transition-all group"
+                  >
+                    <span>View Full Service Catalog</span>
+                    <ArrowRightIcon className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+                  </Link>
+                </div>
               </div>
-              <h2 className="text-3xl sm:text-4xl font-black text-white leading-tight mb-5">
-                One Ecosystem.<br />Total Business Execution.
-              </h2>
-              <p className="text-sm text-slate-400 leading-relaxed mb-8">
-                Eliminate the friction of managing disparate freelancers and agencies. We provide architecture, development, autonomous AI, growth marketing, and digital assets under one roof.
-              </p>
-              <Link
-                href="/solutions"
-                className="inline-flex items-center gap-2 text-sm font-bold text-[#00d4aa] hover:gap-3 transition-all"
-              >
-                <span>View Full Service Catalog</span>
-                <ArrowRightIcon className="w-4 h-4" />
-              </Link>
+
+              {/* Graphical Presentation: Central Human Operator with Multiple Animated Items */}
+              <div className="relative p-5 sm:p-6 rounded-3xl bg-gradient-to-b from-[#0f1523] via-[#0d121f] to-[#090d16] border border-white/10 shadow-2xl overflow-hidden">
+                {/* Visual Header */}
+                <div className="flex items-center justify-between mb-4 border-b border-white/5 pb-3">
+                  <div className="flex items-center gap-2">
+                    <span className="w-2 h-2 rounded-full bg-[#00d4aa] animate-ping" />
+                    <span className="text-[11px] font-mono font-bold uppercase tracking-wider text-slate-300">
+                      Human-In-The-Loop Autonomous Hub
+                    </span>
+                  </div>
+                  <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-white/5 text-[#00d4aa] border border-white/5">
+                    100% Deterministic
+                  </span>
+                </div>
+
+                {/* Animated Diagram Area */}
+                <div className="relative w-full h-64 sm:h-72 flex items-center justify-center">
+                  {/* SVG Connecting Energy Beams (animated dashed lines from center to 4 nodes) */}
+                  <svg className="absolute inset-0 w-full h-full pointer-events-none" viewBox="0 0 400 300">
+                    {/* Beam to Top Left (Solutions) */}
+                    <line
+                      x1="200" y1="150" x2="70" y2="55"
+                      stroke={hoveredDivision === 'solutions' ? '#00d4aa' : 'rgba(255,255,255,0.18)'}
+                      strokeWidth={hoveredDivision === 'solutions' ? '2.5' : '1.5'}
+                      className="animate-dash-flow"
+                    />
+                    {/* Beam to Top Right (AI) */}
+                    <line
+                      x1="200" y1="150" x2="330" y2="55"
+                      stroke={hoveredDivision === 'ai' ? '#8b5cf6' : 'rgba(255,255,255,0.18)'}
+                      strokeWidth={hoveredDivision === 'ai' ? '2.5' : '1.5'}
+                      className="animate-dash-flow"
+                    />
+                    {/* Beam to Bottom Left (Growth) */}
+                    <line
+                      x1="200" y1="150" x2="70" y2="245"
+                      stroke={hoveredDivision === 'growth' ? '#38bdf8' : 'rgba(255,255,255,0.18)'}
+                      strokeWidth={hoveredDivision === 'growth' ? '2.5' : '1.5'}
+                      className="animate-dash-flow"
+                    />
+                    {/* Beam to Bottom Right (Products) */}
+                    <line
+                      x1="200" y1="150" x2="330" y2="245"
+                      stroke={hoveredDivision === 'products' ? '#f59e0b' : 'rgba(255,255,255,0.18)'}
+                      strokeWidth={hoveredDivision === 'products' ? '2.5' : '1.5'}
+                      className="animate-dash-flow"
+                    />
+                  </svg>
+
+                  {/* Central Human Operator Core */}
+                  <div className="relative z-20 flex flex-col items-center">
+                    {/* Outer pulsating aura */}
+                    <div className="absolute -inset-4 rounded-full bg-[#00d4aa]/15 animate-pulse-halo pointer-events-none" />
+                    
+                    {/* Concentric rotating orbital ring */}
+                    <div className="absolute -inset-6 rounded-full border border-dashed border-[#00d4aa]/30 animate-orbit-slow pointer-events-none" />
+                    <div className="absolute -inset-8 rounded-full border border-dotted border-white/10 animate-orbit-reverse pointer-events-none" />
+
+                    {/* Central Icon Button */}
+                    <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-gradient-to-tr from-[#00d4aa] via-[#38bdf8] to-[#8b5cf6] p-[2px] shadow-[0_0_35px_rgba(0,212,170,0.35)]">
+                      <div className="w-full h-full rounded-2xl bg-[#090d16] flex flex-col items-center justify-center p-2 text-center">
+                        <UserIcon className="w-7 h-7 sm:w-8 sm:h-8 text-[#00d4aa]" />
+                      </div>
+                    </div>
+                    
+                    <span className="mt-2 text-[10px] sm:text-xs font-black uppercase tracking-wider text-white bg-black/70 px-2.5 py-0.5 rounded-full border border-white/10 backdrop-blur">
+                      1 Human Operator
+                    </span>
+                  </div>
+
+                  {/* Satellite Node 1: Solutions (Top-Left) */}
+                  <button
+                    onClick={() => setHoveredDivision('solutions')}
+                    onMouseEnter={() => setHoveredDivision('solutions')}
+                    className={`absolute top-2 left-2 sm:left-4 z-20 p-2 sm:p-2.5 rounded-xl border backdrop-blur-md transition-all flex items-center gap-2 ${
+                      hoveredDivision === 'solutions'
+                        ? 'bg-[#00d4aa]/15 border-[#00d4aa] text-[#00d4aa] shadow-[0_0_20px_rgba(0,212,170,0.4)] scale-105'
+                        : 'bg-[#121829]/90 border-white/10 text-slate-300 hover:border-[#00d4aa]/40'
+                    }`}
+                  >
+                    <div className="w-8 h-8 rounded-lg bg-[#00d4aa]/15 flex items-center justify-center text-[#00d4aa]">
+                      <CodeBracketIcon className="w-4 h-4" />
+                    </div>
+                    <div className="text-left hidden sm:block">
+                      <div className="text-[10px] font-bold text-white">01 BUILD</div>
+                      <div className="text-[9px] text-[#00d4aa]">Web &amp; Apps</div>
+                    </div>
+                  </button>
+
+                  {/* Satellite Node 2: AI & Automation (Top-Right) */}
+                  <button
+                    onClick={() => setHoveredDivision('ai')}
+                    onMouseEnter={() => setHoveredDivision('ai')}
+                    className={`absolute top-2 right-2 sm:right-4 z-20 p-2 sm:p-2.5 rounded-xl border backdrop-blur-md transition-all flex items-center gap-2 ${
+                      hoveredDivision === 'ai'
+                        ? 'bg-[#8b5cf6]/15 border-[#8b5cf6] text-[#8b5cf6] shadow-[0_0_20px_rgba(139,92,246,0.4)] scale-105'
+                        : 'bg-[#121829]/90 border-white/10 text-slate-300 hover:border-[#8b5cf6]/40'
+                    }`}
+                  >
+                    <div className="w-8 h-8 rounded-lg bg-[#8b5cf6]/15 flex items-center justify-center text-[#8b5cf6]">
+                      <CpuChipIcon className="w-4 h-4" />
+                    </div>
+                    <div className="text-left hidden sm:block">
+                      <div className="text-[10px] font-bold text-white">02 AUTOMATE</div>
+                      <div className="text-[9px] text-[#a78bfa]">AI Agents</div>
+                    </div>
+                  </button>
+
+                  {/* Satellite Node 3: Growth (Bottom-Left) */}
+                  <button
+                    onClick={() => setHoveredDivision('growth')}
+                    onMouseEnter={() => setHoveredDivision('growth')}
+                    className={`absolute bottom-2 left-2 sm:left-4 z-20 p-2 sm:p-2.5 rounded-xl border backdrop-blur-md transition-all flex items-center gap-2 ${
+                      hoveredDivision === 'growth'
+                        ? 'bg-[#38bdf8]/15 border-[#38bdf8] text-[#38bdf8] shadow-[0_0_20px_rgba(56,189,248,0.4)] scale-105'
+                        : 'bg-[#121829]/90 border-white/10 text-slate-300 hover:border-[#38bdf8]/40'
+                    }`}
+                  >
+                    <div className="w-8 h-8 rounded-lg bg-[#38bdf8]/15 flex items-center justify-center text-[#38bdf8]">
+                      <RocketLaunchIcon className="w-4 h-4" />
+                    </div>
+                    <div className="text-left hidden sm:block">
+                      <div className="text-[10px] font-bold text-white">03 GROW</div>
+                      <div className="text-[9px] text-[#38bdf8]">Meta &amp; Ads</div>
+                    </div>
+                  </button>
+
+                  {/* Satellite Node 4: Labs & Store (Bottom-Right) */}
+                  <button
+                    onClick={() => setHoveredDivision('products')}
+                    onMouseEnter={() => setHoveredDivision('products')}
+                    className={`absolute bottom-2 right-2 sm:right-4 z-20 p-2 sm:p-2.5 rounded-xl border backdrop-blur-md transition-all flex items-center gap-2 ${
+                      hoveredDivision === 'products'
+                        ? 'bg-[#f59e0b]/15 border-[#f59e0b] text-[#f59e0b] shadow-[0_0_20px_rgba(245,158,11,0.4)] scale-105'
+                        : 'bg-[#121829]/90 border-white/10 text-slate-300 hover:border-[#f59e0b]/40'
+                    }`}
+                  >
+                    <div className="w-8 h-8 rounded-lg bg-[#f59e0b]/15 flex items-center justify-center text-[#f59e0b]">
+                      <ShoppingBagIcon className="w-4 h-4" />
+                    </div>
+                    <div className="text-left hidden sm:block">
+                      <div className="text-[10px] font-bold text-white">04 STORE</div>
+                      <div className="text-[9px] text-[#fbbf24]">100+ Codes</div>
+                    </div>
+                  </button>
+                </div>
+
+                {/* Dynamic Status Display Bar */}
+                <div className="mt-3 pt-3 border-t border-white/5 flex items-center justify-between text-[11px]">
+                  <span className="text-slate-400 font-mono line-clamp-1">
+                    {hoveredDivision === 'solutions' && 'Active Command: Full-Stack Engineering (Next.js, Flutter, ERP)'}
+                    {hoveredDivision === 'ai' && 'Active Command: Autonomous AI Runtimes (RAG Agents, Chatbots)'}
+                    {hoveredDivision === 'growth' && 'Active Command: Performance Scaling (Meta CAPI, Ads, SEO)'}
+                    {hoveredDivision === 'products' && 'Active Command: Instant Digital Assets (100+ Production Codebases)'}
+                  </span>
+                  <span className="text-[#00d4aa] font-bold shrink-0 ml-2">● Synced</span>
+                </div>
+              </div>
             </div>
 
-            <div className="lg:col-span-8 grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {/* Right Column: 4 Core Division Interactive Cards */}
+            <div className="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-4">
               {[
                 {
+                  id: 'solutions',
                   num: '01',
                   title: 'BUILD',
                   subtitle: 'NextDigi Solutions',
                   desc: 'High-performance Next.js web applications, Flutter mobile apps, enterprise ERPs, and multi-tenant SaaS platforms.',
                   href: '/solutions',
-                  tag: 'Custom Engineering'
+                  tag: 'Custom Engineering',
+                  icon: CodeBracketIcon,
+                  accent: '#00d4aa',
+                  pills: ['Next.js 15', 'Flutter App', 'Custom ERP', 'Cloud APIs'],
+                  capability: '⚡ 100% Code Ownership Transfer'
                 },
                 {
+                  id: 'ai',
                   num: '02',
                   title: 'AUTOMATE',
                   subtitle: 'NextDigi AI',
                   desc: 'Autonomous AI agents, bilingual customer chatbots, document vector RAG pipelines, and zero-touch n8n workflows.',
                   href: '/ai',
-                  tag: 'Intelligent Systems'
+                  tag: 'Intelligent Systems',
+                  icon: CpuChipIcon,
+                  accent: '#8b5cf6',
+                  pills: ['AI Agents', 'WhatsApp RAG', 'n8n Pipelines', 'Zero Touch'],
+                  capability: '🤖 0.8s RAG Latency • 24/7 Autonomous'
                 },
                 {
+                  id: 'growth',
                   num: '03',
                   title: 'GROW',
                   subtitle: 'NextDigi Growth',
                   desc: 'Meta & Google media buying with server-side CAPI tracking, technical SEO, high-converting landing pages, and analytics.',
                   href: '/growth',
-                  tag: 'Customer Acquisition'
+                  tag: 'Customer Acquisition',
+                  icon: RocketLaunchIcon,
+                  accent: '#38bdf8',
+                  pills: ['Meta CAPI', 'Google Ads', 'Technical SEO', 'SMS Recovery'],
+                  capability: '📈 4.6x Audited ROAS Across 50+ Stores'
                 },
                 {
+                  id: 'products',
                   num: '04',
                   title: 'PRODUCTS',
                   subtitle: 'NextDigi Labs & Store',
                   desc: 'Proprietary SaaS products plus 100+ production-ready source codes, full-stack templates, and digital assets.',
-                  href: '/store',
-                  tag: 'Instant Access'
+                  href: '/products',
+                  tag: 'Instant Access',
+                  icon: ShoppingBagIcon,
+                  accent: '#f59e0b',
+                  pills: ['100+ Repos', 'SaaS Tools', 'Instant Source', 'Full License'],
+                  capability: '📦 Instant Download & Full Documentation'
                 },
-              ].map((p) => (
-                <Link
-                  key={p.num}
-                  href={p.href}
-                  className="group p-6 rounded-2xl bg-[#0f1523]/80 border border-white/8 hover:border-[#00d4aa]/40 hover:bg-[#131b2e] transition-all duration-300 flex flex-col justify-between"
-                >
-                  <div>
-                    <div className="flex items-center justify-between mb-4">
-                      <span className="text-3xl font-black text-white/10 group-hover:text-[#00d4aa]/25 transition-colors">{p.num}</span>
-                      <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-white/5 text-slate-300 border border-white/5">{p.tag}</span>
+              ].map((p) => {
+                const IconComponent = p.icon;
+                const isHovered = hoveredDivision === p.id;
+                return (
+                  <Link
+                    key={p.num}
+                    href={p.href}
+                    onMouseEnter={() => setHoveredDivision(p.id as any)}
+                    className={`group p-6 rounded-2xl transition-all duration-300 flex flex-col justify-between relative overflow-hidden ${
+                      isHovered
+                        ? 'bg-[#131b2e] shadow-xl border'
+                        : 'bg-[#0f1523]/80 border border-white/8 hover:border-white/20'
+                    }`}
+                    style={{
+                      borderColor: isHovered ? p.accent : undefined,
+                      boxShadow: isHovered ? `0 10px 30px ${p.accent}20` : undefined
+                    }}
+                  >
+                    <div>
+                      {/* Top bar with icon badge & tag */}
+                      <div className="flex items-center justify-between mb-4">
+                        <div
+                          className="w-10 h-10 rounded-xl flex items-center justify-center transition-transform group-hover:scale-110"
+                          style={{
+                            backgroundColor: `${p.accent}15`,
+                            color: p.accent,
+                            border: `1px solid ${p.accent}30`
+                          }}
+                        >
+                          <IconComponent className="w-5 h-5" />
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <span className="text-2xl font-black text-white/15 group-hover:text-white/30 transition-colors">{p.num}</span>
+                          <span className="text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-white/5 text-slate-300 border border-white/5">
+                            {p.tag}
+                          </span>
+                        </div>
+                      </div>
+
+                      <div className="text-xs font-mono font-bold uppercase tracking-wider mb-1" style={{ color: p.accent }}>
+                        {p.title}
+                      </div>
+                      <h3 className="text-base font-bold text-white mb-2 group-hover:text-[#00d4aa] transition-colors">
+                        {p.subtitle}
+                      </h3>
+                      <p className="text-xs text-slate-400 leading-relaxed mb-4">
+                        {p.desc}
+                      </p>
+
+                      {/* Capabilities pills */}
+                      <div className="flex flex-wrap gap-1.5 mb-4">
+                        {p.pills.map((pill, idx) => (
+                          <span
+                            key={idx}
+                            className="text-[10px] px-2 py-0.5 rounded-md bg-white/5 text-slate-300 border border-white/5 group-hover:border-white/10 transition-colors"
+                          >
+                            {pill}
+                          </span>
+                        ))}
+                      </div>
                     </div>
-                    <div className="text-xs font-mono font-bold text-[#00d4aa] uppercase tracking-wider mb-1">{p.title}</div>
-                    <h3 className="text-base font-bold text-white mb-2 group-hover:text-[#00d4aa] transition-colors">{p.subtitle}</h3>
-                    <p className="text-xs text-slate-400 leading-relaxed">{p.desc}</p>
-                  </div>
-                  <div className="mt-5 flex items-center gap-1.5 text-xs font-bold text-slate-400 group-hover:text-[#00d4aa] transition-colors">
-                    <span>Explore division</span>
-                    <ArrowRightIcon className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
-                  </div>
-                </Link>
-              ))}
+
+                    <div className="pt-3.5 border-t border-white/5 flex items-center justify-between">
+                      <span className="text-[10px] font-medium text-slate-400">
+                        {p.capability}
+                      </span>
+                      <div className="flex items-center gap-1 text-xs font-bold transition-transform group-hover:translate-x-1" style={{ color: p.accent }}>
+                        <ArrowRightIcon className="w-3.5 h-3.5" />
+                      </div>
+                    </div>
+                  </Link>
+                );
+              })}
             </div>
 
           </div>
