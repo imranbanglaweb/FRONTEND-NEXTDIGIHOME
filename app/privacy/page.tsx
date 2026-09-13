@@ -151,8 +151,8 @@ export default async function PrivacyPage() {
                 If you have questions about this Privacy Policy, please contact us:
               </p>
               <div className="bg-[#1a1a1f] rounded-xl p-6 border border-[#2a2a30] mb-8">
-                <p className="text-[#fafafa] font-medium mb-2">DigitalHub Privacy Team</p>
-                <p className="text-[#737373] mb-1">Email: info@nextdigihome.com</p>
+                <p className="text-[#fafafa] font-medium mb-2">NextDigiHome Privacy Team</p>
+                <p className="text-[#737373] text-sm">privacy@nextdigihome.com</p>
                 <p className="text-[#737373]">Address: 123 Digital Street, Tech City, TC 12345, United States</p>
               </div>
 

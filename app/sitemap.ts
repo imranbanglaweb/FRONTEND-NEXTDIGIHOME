@@ -50,13 +50,20 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // Static routes with priority
   const staticRoutes = [
     { path: '', priority: 1.0, changeFrequency: 'daily' as const },
+    { path: 'solutions', priority: 0.95, changeFrequency: 'weekly' as const },
+    { path: 'ai', priority: 0.95, changeFrequency: 'weekly' as const },
+    { path: 'growth', priority: 0.90, changeFrequency: 'weekly' as const },
+    { path: 'labs', priority: 0.90, changeFrequency: 'weekly' as const },
+    { path: 'store', priority: 0.95, changeFrequency: 'daily' as const },
+    { path: 'case-studies', priority: 0.85, changeFrequency: 'weekly' as const },
     { path: 'products', priority: 0.95, changeFrequency: 'daily' as const },
-    { path: 'services', priority: 0.90, changeFrequency: 'weekly' as const },
+    { path: 'services', priority: 0.85, changeFrequency: 'weekly' as const },
     { path: 'about', priority: 0.80, changeFrequency: 'monthly' as const },
-    { path: 'contact', priority: 0.75, changeFrequency: 'monthly' as const },
-    { path: 'privacy', priority: 0.60, changeFrequency: 'yearly' as const },
-    { path: 'terms', priority: 0.60, changeFrequency: 'yearly' as const },
-    { path: 'blog', priority: 0.85, changeFrequency: 'weekly' as const },
+    { path: 'contact', priority: 0.85, changeFrequency: 'monthly' as const },
+    { path: 'privacy', priority: 0.50, changeFrequency: 'yearly' as const },
+    { path: 'terms', priority: 0.50, changeFrequency: 'yearly' as const },
+    { path: 'refund', priority: 0.50, changeFrequency: 'yearly' as const },
+    { path: 'blog', priority: 0.80, changeFrequency: 'weekly' as const },
   ];
 
   const staticUrls = staticRoutes.map((route) => ({

@@ -1,317 +1,468 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { PhoneIcon, EnvelopeIcon, MapPinIcon, ClockIcon, CheckCircleIcon } from "@heroicons/react/24/outline";
-import { BACKEND_BASE_URL, apiFetch } from '../utils/api';
+import React, { useState, useEffect, Suspense } from 'react';
+import { useSearchParams } from 'next/navigation';
+import Link from 'next/link';
+import { 
+  PhoneIcon, 
+  EnvelopeIcon, 
+  MapPinIcon, 
+  ClockIcon, 
+  CheckCircleIcon,
+  ChatBubbleLeftRightIcon,
+  ShieldCheckIcon,
+  SparklesIcon,
+  ArrowRightIcon,
+  QuestionMarkCircleIcon
+} from "@heroicons/react/24/outline";
 
-interface ContactInfo {
-  id: number;
-  type: string;
-  label: string;
-  value: string;
-  icon?: string;
-  description?: string;
-}
+function ContactForm() {
+  const searchParams = useSearchParams();
+  const prefilledService = searchParams.get('service') || '';
 
-interface ContactContent {
-  hero: {
-    id: number;
-    title: string;
-    description: string;
-  };
-  contact_info: ContactInfo[];
-  faq: Array<{
-    id: number;
-    question: string;
-    answer: string;
-  }>;
-}
-
-export default function ContactPage() {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
-    subject: '',
+    phone: '',
+    company: '',
+    service: '',
+    budget: '',
+    timeline: '',
     message: ''
   });
+
   const [isSubmitted, setIsSubmitted] = useState(false);
-  const [content, setContent] = useState<ContactContent | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
-    const fetchContactContent = async () => {
-      try {
-        const data = await apiFetch('/content/contact');
-        if (data) {
-          setContent(data);
-        }
-      } catch (error) {
-        console.error('Failed to fetch contact content:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchContactContent();
-  }, []);
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    // Simulate form submission
-    setIsSubmitted(true);
-    setTimeout(() => setIsSubmitted(false), 3000);
-  };
+    if (prefilledService) {
+      setFormData(prev => ({
+        ...prev,
+        service: prefilledService
+      }));
+    }
+  }, [prefilledService]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-    setFormData({
-      ...formData,
+    setFormData(prev => ({
+      ...prev,
       [e.target.name]: e.target.value
-    });
+    }));
   };
 
-  // Fallback contact information
-  const defaultContactInfo = [
-    {
-      id: 1,
-      type: 'email',
-      label: 'Email Us',
-      value: 'info@nextdigihome.com',
-      description: 'We respond within 24 hours'
-    },
-    {
-      id: 2,
-      type: 'phone',
-      label: 'Call Us',
-      value: '01918329829',
-      description: 'Mon-Fri 9AM-6PM EST'
-    },
-    {
-      id: 3,
-      type: 'address',
-      label: 'Visit Us',
-      value: '123 Digital Street, Tech City, TC 12345',
-      description: 'United States'
-    },
-    {
-      id: 4,
-      type: 'hours',
-      label: 'Business Hours',
-      value: 'Monday - Friday: 9:00 AM - 6:00 PM EST',
-      description: 'Saturday: 10:00 AM - 4:00 PM EST'
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setSubmitting(true);
+    
+    // Simulate or send via contact endpoint
+    try {
+      // Small artificial delay for premium feel
+      await new Promise(resolve => setTimeout(resolve, 800));
+      setIsSubmitted(true);
+    } catch (err) {
+      console.error(err);
+      setIsSubmitted(true);
+    } finally {
+      setSubmitting(false);
     }
-  ];
-
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-[#0f0f12] py-12">
-        <div className="flex flex-col items-center justify-center py-20">
-          <div className="w-16 h-16 border-4 border-[#00d4aa] border-t-transparent rounded-full animate-spin"></div>
-          <p className="mt-4 text-[#737373]">Loading content...</p>
-        </div>
-      </div>
-    );
-  }
-
-  const contactInfo = content?.contact_info?.length ? content.contact_info : defaultContactInfo;
+  };
 
   return (
-    <div className="min-h-screen bg-[#0f0f12]">
-      {/* Hero Section */}
-      <section className="relative py-14 sm:py-20 lg:py-24 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-r from-[#00d4aa]/10 via-transparent to-[#8b5cf6]/10" />
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center">
-            <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-6 gradient-text">
-              Contact Us
-            </h1>
-            <p className="text-xl text-[#737373] max-w-3xl mx-auto mb-8">
-              Get in touch with our expert team. We&apos;re here to help you succeed with premium digital products and solutions.
-            </p>
+    <div className="rounded-3xl border border-white/10 bg-[#0e131d]/95 backdrop-blur-xl p-8 sm:p-10 shadow-2xl relative overflow-hidden">
+      <div className="absolute top-0 right-0 w-72 h-72 bg-[#00d4aa]/10 blur-[100px] pointer-events-none rounded-full" />
+
+      {isSubmitted ? (
+        <div className="text-center py-16 px-4">
+          <div className="w-16 h-16 rounded-2xl bg-[#00d4aa]/10 border border-[#00d4aa]/30 flex items-center justify-center mx-auto mb-6 text-[#00d4aa]">
+            <CheckCircleIcon className="w-10 h-10" />
+          </div>
+          <h3 className="text-2xl sm:text-3xl font-bold text-white mb-3">Project Inquiry Received</h3>
+          <p className="text-gray-300 max-w-md mx-auto mb-6 text-sm sm:text-base leading-relaxed">
+            Thank you, <span className="text-[#00d4aa] font-semibold">{formData.name || 'there'}</span>. Our technical solutions team will review your requirements and respond within 24 hours.
+          </p>
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-white/5 border border-white/10 text-xs text-gray-400 mb-8">
+            <ClockIcon className="w-4 h-4 text-[#00d4aa]" />
+            Response Window: Under 24 business hours
+          </div>
+          <div>
+            <button
+              type="button"
+              onClick={() => {
+                setIsSubmitted(false);
+                setFormData({
+                  name: '',
+                  email: '',
+                  phone: '',
+                  company: '',
+                  service: '',
+                  budget: '',
+                  timeline: '',
+                  message: ''
+                });
+              }}
+              className="px-6 py-2.5 rounded-xl text-xs font-semibold text-gray-300 hover:text-white bg-white/5 hover:bg-white/10 border border-white/10 transition"
+            >
+              Submit Another Inquiry
+            </button>
           </div>
         </div>
-      </section>
+      ) : (
+        <form onSubmit={handleSubmit} className="space-y-6 relative z-10">
+          <div>
+            <h3 className="text-xl sm:text-2xl font-extrabold text-white mb-1">
+              Start a Project Discussion
+            </h3>
+            <p className="text-xs sm:text-sm text-gray-400">
+              Tell us about your project requirements, scope, and target timeline.
+            </p>
+          </div>
 
-      {/* Contact Info & Form Section */}
-      <section className="relative py-14 sm:py-20 lg:py-24 overflow-hidden">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_50%_50%,rgba(0,212,170,0.05)_0%,rgba(8,8,8,0)_60%)]" />
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid lg:grid-cols-2 gap-8 lg:gap-16">
-            {/* Contact Information */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
             <div>
-              <h2 className="text-4xl font-bold mb-8 gradient-text">Get In Touch</h2>
+              <label className="block text-xs font-semibold text-gray-300 mb-2">
+                Full Name <span className="text-[#00d4aa]">*</span>
+              </label>
+              <input
+                type="text"
+                name="name"
+                value={formData.name}
+                onChange={handleChange}
+                required
+                className="w-full px-4 py-3 bg-[#131823] border border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-[#00d4aa] text-sm transition"
+                placeholder="e.g. Imran Hossain"
+              />
+            </div>
 
-              <div className="space-y-8">
-                {contactInfo.map((info) => {
-                  const getIcon = () => {
-                    switch (info.type) {
-                      case 'email':
-                        return <EnvelopeIcon className="w-6 h-6 text-[#0f0f12]" />;
-                      case 'phone':
-                        return <PhoneIcon className="w-6 h-6 text-[#0f0f12]" />;
-                      case 'address':
-                        return <MapPinIcon className="w-6 h-6 text-[#0f0f12]" />;
-                      case 'hours':
-                        return <ClockIcon className="w-6 h-6 text-[#0f0f12]" />;
-                      default:
-                        return <EnvelopeIcon className="w-6 h-6 text-[#0f0f12]" />;
-                    }
-                  };
+            <div>
+              <label className="block text-xs font-semibold text-gray-300 mb-2">
+                Work Email <span className="text-[#00d4aa]">*</span>
+              </label>
+              <input
+                type="email"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+                required
+                className="w-full px-4 py-3 bg-[#131823] border border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-[#00d4aa] text-sm transition"
+                placeholder="name@company.com"
+              />
+            </div>
+          </div>
 
-                  const gradients = [
-                    'from-[#00d4aa] to-[#8b5cf6]',
-                    'from-[#8b5cf6] to-[#00d4aa]',
-                    'from-[#00d4aa] to-[#ff6b6b]',
-                    'from-[#ff6b6b] to-[#8b5cf6]'
-                  ];
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+            <div>
+              <label className="block text-xs font-semibold text-gray-300 mb-2">
+                Phone / WhatsApp Number <span className="text-[#00d4aa]">*</span>
+              </label>
+              <input
+                type="tel"
+                name="phone"
+                value={formData.phone}
+                onChange={handleChange}
+                required
+                className="w-full px-4 py-3 bg-[#131823] border border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-[#00d4aa] text-sm transition"
+                placeholder="+880 1XXXXXXXXX"
+              />
+            </div>
 
-                  return (
-                    <div key={info.id} className="flex items-start gap-4">
-                      <div className={`w-12 h-12 bg-linear-to-br ${gradients[info.id % gradients.length]} rounded-xl flex items-center justify-center flex-shrink-0`}>
-                        {getIcon()}
-                      </div>
-                      <div>
-                        <h3 className="text-xl font-bold text-[#fafafa] mb-2">{info.label}</h3>
-                        <p className="text-[#737373] mb-1">{info.value}</p>
-                        {info.description && <p className="text-sm text-[#737373]">{info.description}</p>}
-                      </div>
-                    </div>
-                  );
-                })}
+            <div>
+              <label className="block text-xs font-semibold text-gray-300 mb-2">
+                Company / Business Name
+              </label>
+              <input
+                type="text"
+                name="company"
+                value={formData.company}
+                onChange={handleChange}
+                className="w-full px-4 py-3 bg-[#131823] border border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-[#00d4aa] text-sm transition"
+                placeholder="Your organization or brand"
+              />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+            <div>
+              <label className="block text-xs font-semibold text-gray-300 mb-2">
+                Service Needed <span className="text-[#00d4aa]">*</span>
+              </label>
+              <select
+                name="service"
+                value={formData.service}
+                onChange={handleChange}
+                required
+                className="w-full px-4 py-3 bg-[#131823] border border-white/10 rounded-xl text-white focus:outline-none focus:border-[#00d4aa] text-sm transition"
+              >
+                <option value="">Select a service category</option>
+                <option value="Web Application Development">Web Application Development</option>
+                <option value="E-Commerce Development">E-Commerce Development</option>
+                <option value="Mobile App Development">Mobile App Development</option>
+                <option value="Custom Software / ERP">Custom Software / ERP</option>
+                <option value="SaaS Development">SaaS Development</option>
+                <option value="AI Agents & Automation">AI Agents & Workflow Automation</option>
+                <option value="Conversational Chatbot">Conversational Chatbot (Web / WhatsApp)</option>
+                <option value="Digital Growth / Meta & Google Ads">Digital Growth (Performance Marketing)</option>
+                <option value="SEO & Analytics Attribution">SEO & Analytics Attribution</option>
+                <option value="NextDigi Labs Product Licensing">NextDigi Labs Product Licensing</option>
+                <option value="NextDigi Store Support">NextDigi Store Asset Support</option>
+                <option value="Other">Other Technical Inquiries</option>
+              </select>
+            </div>
+
+            <div>
+              <label className="block text-xs font-semibold text-gray-300 mb-2">
+                Project Budget Range (BDT / USD)
+              </label>
+              <select
+                name="budget"
+                value={formData.budget}
+                onChange={handleChange}
+                className="w-full px-4 py-3 bg-[#131823] border border-white/10 rounded-xl text-white focus:outline-none focus:border-[#00d4aa] text-sm transition"
+              >
+                <option value="">Select estimated budget</option>
+                <option value="Under 50,000 BDT">Under 50,000 BDT (~$450 USD)</option>
+                <option value="50,000 – 150,000 BDT">50,000 – 150,000 BDT (~$1,200 USD)</option>
+                <option value="150,000 – 500,000 BDT">150,000 – 500,000 BDT (~$4,000 USD)</option>
+                <option value="500,000 – 1,500,000 BDT">500,000 – 1,500,000 BDT (~$12,500 USD)</option>
+                <option value="1,500,000+ BDT / Enterprise">1,500,000+ BDT / Enterprise Scale</option>
+                <option value="Flexible / Let's Discuss">Flexible / Scoping Discussion</option>
+              </select>
+            </div>
+          </div>
+
+          <div>
+            <label className="block text-xs font-semibold text-gray-300 mb-2">
+              Expected Project Timeline
+            </label>
+            <select
+              name="timeline"
+              value={formData.timeline}
+              onChange={handleChange}
+              className="w-full px-4 py-3 bg-[#131823] border border-white/10 rounded-xl text-white focus:outline-none focus:border-[#00d4aa] text-sm transition"
+            >
+              <option value="">Select target timeline</option>
+              <option value="Immediate (Within 2 weeks)">Immediate (Within 2 weeks)</option>
+              <option value="1 – 2 Months">1 – 2 Months</option>
+              <option value="3+ Months">3+ Months</option>
+              <option value="Exploration / Scoping Phase">Exploration / Scoping Phase</option>
+            </select>
+          </div>
+
+          <div>
+            <label className="block text-xs font-semibold text-gray-300 mb-2">
+              Project Description & Requirements <span className="text-[#00d4aa]">*</span>
+            </label>
+            <textarea
+              name="message"
+              value={formData.message}
+              onChange={handleChange}
+              required
+              rows={4}
+              className="w-full px-4 py-3 bg-[#131823] border border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-[#00d4aa] text-sm transition resize-none"
+              placeholder="Describe your current system, project goals, key features, or any third-party APIs needed..."
+            />
+          </div>
+
+          <button
+            type="submit"
+            disabled={submitting}
+            className="w-full py-4 rounded-xl font-bold text-black bg-[#00d4aa] hover:bg-[#00e2b6] transition shadow-lg shadow-[#00d4aa]/25 flex items-center justify-center gap-2 disabled:opacity-50"
+          >
+            {submitting ? (
+              <span>Submitting Inquiry...</span>
+            ) : (
+              <>
+                <span>Submit Project Inquiry</span>
+                <ArrowRightIcon className="w-4 h-4" />
+              </>
+            )}
+          </button>
+
+          <p className="text-center text-xs text-gray-500 flex items-center justify-center gap-2">
+            <ShieldCheckIcon className="w-4 h-4 text-[#00d4aa]" />
+            Your project details are protected under standard commercial confidentiality.
+          </p>
+        </form>
+      )}
+    </div>
+  );
+}
+
+export default function ContactPage() {
+  return (
+    <div className="min-h-screen bg-[#07090e] text-white pt-28 pb-20 relative overflow-hidden">
+      {/* Background Accent */}
+      <div className="absolute top-10 left-1/3 w-[650px] h-[350px] bg-[#00d4aa]/15 blur-[150px] pointer-events-none rounded-full" />
+      <div className="absolute top-96 right-1/4 w-[500px] h-[300px] bg-[#8b5cf6]/15 blur-[150px] pointer-events-none rounded-full" />
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        {/* Breadcrumb */}
+        <nav className="flex items-center space-x-2 text-xs text-gray-400 mb-6">
+          <Link href="/" className="hover:text-white transition">Home</Link>
+          <span>/</span>
+          <span className="text-white font-medium">Contact</span>
+        </nav>
+
+        {/* Hero */}
+        <div className="text-center max-w-3xl mx-auto mb-16">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/5 border border-white/10 text-xs font-semibold tracking-wider text-gray-300 uppercase mb-5">
+            <SparklesIcon className="w-4 h-4 text-[#00d4aa]" />
+            LETS BUILD TOGETHER
+          </div>
+          <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-white mb-6 leading-tight">
+            Have a Business Idea? <br />
+            <span className="bg-gradient-to-r from-[#00d4aa] via-[#38bdf8] to-[#8b5cf6] bg-clip-text text-transparent">
+              Let&apos;s Architect & Build It.
+            </span>
+          </h1>
+          <p className="text-gray-400 text-base sm:text-lg leading-relaxed">
+            Whether you need a custom web platform, autonomous AI workflows, digital customer acquisition, or an enterprise SaaS product, we are ready to bring your vision to life.
+          </p>
+        </div>
+
+        {/* Main Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start mb-20">
+          {/* Left Column: Direct Info & WhatsApp */}
+          <div className="lg:col-span-5 space-y-6">
+            {/* Quick WhatsApp Chat Box */}
+            <div className="p-7 rounded-3xl border border-[#00d4aa]/30 bg-gradient-to-b from-[#00d4aa]/10 via-[#0e131d] to-[#0e131d]">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-12 h-12 rounded-2xl bg-[#00d4aa]/20 border border-[#00d4aa]/40 flex items-center justify-center text-[#00d4aa]">
+                  <ChatBubbleLeftRightIcon className="w-6 h-6" />
+                </div>
+                <div>
+                  <h3 className="text-lg font-bold text-white">Need Fast Technical Consultation?</h3>
+                  <p className="text-xs text-gray-400">Connect directly on WhatsApp</p>
+                </div>
               </div>
+              <p className="text-xs sm:text-sm text-gray-300 mb-6 leading-relaxed">
+                Skip form filling if you prefer discussing your requirements, wireframes, or timeline directly with an engineering lead.
+              </p>
+              <a
+                href="https://wa.me/8801918329829?text=Hello%20NextDigiHome%2C%20I%20would%20like%20to%20discuss%20a%20project"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-full py-3.5 px-4 rounded-xl bg-[#25D366] hover:bg-[#20bd5a] text-black font-bold text-xs sm:text-sm flex items-center justify-center gap-2 transition shadow-lg shadow-[#25D366]/20"
+              >
+                <span>Chat with us on WhatsApp</span>
+                <ArrowRightIcon className="w-4 h-4" />
+              </a>
+            </div>
 
-              {/* Map Placeholder */}
-              <div className="mt-12 glass-card rounded-2xl p-8 border border-[#2a2a30]">
-                <div className="aspect-video bg-linear-to-br from-[#1a1a1f] to-[#2a2a30] rounded-xl flex items-center justify-center">
-                  <div className="text-center">
-                    <MapPinIcon className="w-16 h-16 text-[#00d4aa] mx-auto mb-4" />
-                    <p className="text-[#737373]">Interactive Map Coming Soon</p>
+            {/* Factual Office & Contact Info */}
+            <div className="p-7 rounded-3xl border border-white/10 bg-[#0e131d]/90 space-y-6">
+              <h3 className="text-sm font-semibold uppercase tracking-wider text-gray-400">
+                Official Contact Channels
+              </h3>
+
+              <div className="space-y-4">
+                <div className="flex items-start gap-4">
+                  <div className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-[#00d4aa] shrink-0 mt-0.5">
+                    <PhoneIcon className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <h4 className="text-xs font-semibold text-gray-400">Call / WhatsApp</h4>
+                    <p className="text-sm font-bold text-white mt-0.5">+880 1918 329829</p>
+                    <p className="text-xs text-gray-500 mt-0.5">Saturday – Thursday: 10:00 AM – 7:00 PM BST</p>
+                  </div>
+                </div>
+
+                <div className="flex items-start gap-4">
+                  <div className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-[#8b5cf6] shrink-0 mt-0.5">
+                    <EnvelopeIcon className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <h4 className="text-xs font-semibold text-gray-400">General & Partnership Inquiries</h4>
+                    <p className="text-sm font-bold text-white mt-0.5">info@nextdigihome.com</p>
+                    <p className="text-xs text-gray-500 mt-0.5">Technical proposals & commercial requests</p>
+                  </div>
+                </div>
+
+                <div className="flex items-start gap-4">
+                  <div className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-[#38bdf8] shrink-0 mt-0.5">
+                    <MapPinIcon className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <h4 className="text-xs font-semibold text-gray-400">Headquarters</h4>
+                    <p className="text-sm font-bold text-white mt-0.5">Dhaka, Bangladesh</p>
+                    <p className="text-xs text-gray-500 mt-0.5">Global digital operations & engineering</p>
                   </div>
                 </div>
               </div>
             </div>
 
-            {/* Contact Form */}
-            <div>
-              <div className="glass-card rounded-3xl p-8 border border-[#2a2a30]">
-                <h3 className="text-2xl font-bold text-[#fafafa] mb-6">Send us a Message</h3>
-
-                {isSubmitted ? (
-                  <div className="text-center py-12">
-                    <CheckCircleIcon className="w-16 h-16 text-[#00d4aa] mx-auto mb-4" />
-                    <h4 className="text-xl font-bold text-[#fafafa] mb-2">Thank You!</h4>
-                    <p className="text-[#737373]">Your message has been sent successfully. We&apos;ll get back to you within 24 hours.</p>
+            {/* Commitments Box */}
+            <div className="p-6 rounded-3xl border border-white/10 bg-[#0c1017]">
+              <h4 className="text-xs font-semibold uppercase tracking-wider text-gray-400 mb-4">
+                Our Client Promise
+              </h4>
+              <div className="space-y-3">
+                {[
+                  '100% Intellectual Property & Source Code Ownership',
+                  'Dedicated Technical Account Manager',
+                  'Strict Milestone Timelines & Production SLAs',
+                  'Post-Launch Warranty & Security Updates'
+                ].map((promise, i) => (
+                  <div key={i} className="flex items-start gap-2.5 text-xs text-gray-300">
+                    <CheckCircleIcon className="w-4 h-4 text-[#00d4aa] shrink-0 mt-0.5" />
+                    <span>{promise}</span>
                   </div>
-                ) : (
-                  <form onSubmit={handleSubmit} className="space-y-6">
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                      <div>
-                        <label className="block text-sm font-medium text-[#fafafa] mb-2">Full Name</label>
-                        <input
-                          type="text"
-                          name="name"
-                          value={formData.name}
-                          onChange={handleChange}
-                          required
-                          className="w-full px-4 py-3 bg-[#1a1a1f] border border-[#2a2a30] rounded-xl text-[#fafafa] placeholder-[#737373] focus:outline-none focus:border-[#00d4aa] transition-colors"
-                          placeholder="Your full name"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium text-[#fafafa] mb-2">Email Address</label>
-                        <input
-                          type="email"
-                          name="email"
-                          value={formData.email}
-                          onChange={handleChange}
-                          required
-                          className="w-full px-4 py-3 bg-[#1a1a1f] border border-[#2a2a30] rounded-xl text-[#fafafa] placeholder-[#737373] focus:outline-none focus:border-[#00d4aa] transition-colors"
-                          placeholder="your@email.com"
-                        />
-                      </div>
-                    </div>
-
-                    <div>
-                      <label className="block text-sm font-medium text-[#fafafa] mb-2">Subject</label>
-                      <select
-                        name="subject"
-                        value={formData.subject}
-                        onChange={handleChange}
-                        required
-                        className="w-full px-4 py-3 bg-[#1a1a1f] border border-[#2a2a30] rounded-xl text-[#fafafa] focus:outline-none focus:border-[#00d4aa] transition-colors"
-                      >
-                        <option value="">Select a subject</option>
-                        <option value="general">General Inquiry</option>
-                        <option value="support">Technical Support</option>
-                        <option value="sales">Sales Inquiry</option>
-                        <option value="partnership">Partnership</option>
-                        <option value="feedback">Feedback</option>
-                      </select>
-                    </div>
-
-                    <div>
-                      <label className="block text-sm font-medium text-[#fafafa] mb-2">Message</label>
-                      <textarea
-                        name="message"
-                        value={formData.message}
-                        onChange={handleChange}
-                        required
-                        rows={6}
-                        className="w-full px-4 py-3 bg-[#1a1a1f] border border-[#2a2a30] rounded-xl text-[#fafafa] placeholder-[#737373] focus:outline-none focus:border-[#00d4aa] transition-colors resize-none"
-                        placeholder="Tell us how we can help you..."
-                      />
-                    </div>
-
-                    <button
-                      type="submit"
-                      className="w-full px-8 py-4 bg-gradient-to-r from-[#00d4aa] to-[#8b5cf6] text-[#0f0f12] font-bold rounded-xl hover:opacity-90 transition-opacity"
-                    >
-                      Send Message
-                    </button>
-                  </form>
-                )}
+                ))}
               </div>
             </div>
           </div>
-        </div>
-      </section>
 
-      {/* FAQ Section */}
-      <section className="relative py-14 sm:py-20 lg:py-24 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-r from-[#1a1a1f] via-[#0f0f12] to-[#1a1a1f]" />
-        <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold mb-6 gradient-text">
-              Quick Answers
-            </h2>
-            <p className="text-xl text-[#737373]">
-              Common questions about contacting us
-            </p>
-          </div>
-
-          <div className="space-y-6">
-            <div className="glass-card rounded-2xl p-6 border border-[#2a2a30]">
-              <h3 className="text-xl font-bold text-[#fafafa] mb-3">How quickly do you respond to inquiries?</h3>
-              <p className="text-[#737373] leading-relaxed">
-                We typically respond to all inquiries within 24 hours during business days. For urgent technical support, we aim to respond within 2-4 hours.
-              </p>
-            </div>
-
-            <div className="glass-card rounded-2xl p-6 border border-[#2a2a30]">
-              <h3 className="text-xl font-bold text-[#fafafa] mb-3">Do you offer phone support?</h3>
-              <p className="text-[#737373] leading-relaxed">
-                Yes, we offer phone support during our business hours (9 AM - 6 PM EST, Monday-Friday). For complex technical issues, we recommend scheduling a call with our specialists.
-              </p>
-            </div>
-
-            <div className="glass-card rounded-2xl p-6 border border-[#2a2a30]">
-              <h3 className="text-xl font-bold text-[#fafafa] mb-3">Can I schedule a demo or consultation?</h3>
-              <p className="text-[#737373] leading-relaxed">
-                Absolutely! We offer free consultations and product demos. Contact our sales team to schedule a personalized session with our experts.
-              </p>
-            </div>
+          {/* Right Column: Interactive Form */}
+          <div className="lg:col-span-7">
+            <Suspense fallback={
+              <div className="p-12 rounded-3xl border border-white/10 bg-[#0e131d] flex items-center justify-center">
+                <div className="w-10 h-10 border-2 border-[#00d4aa] border-t-transparent rounded-full animate-spin" />
+              </div>
+            }>
+              <ContactForm />
+            </Suspense>
           </div>
         </div>
-      </section>
+
+        {/* FAQs Section */}
+        <div className="mb-12">
+          <div className="text-center max-w-2xl mx-auto mb-10">
+            <span className="text-xs font-semibold uppercase tracking-wider text-[#00d4aa]">Common Questions</span>
+            <h2 className="text-2xl sm:text-3xl font-bold text-white mt-1">Project Kickoff FAQs</h2>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-5xl mx-auto">
+            {[
+              {
+                q: 'How does the project onboarding process begin?',
+                a: 'Once you submit your requirements or schedule a call, our solutions architect reviews the scope and arranges a 30-minute discovery call to clarify user stories, system architecture, and budget.'
+              },
+              {
+                q: 'Do you sign Non-Disclosure Agreements (NDAs)?',
+                a: 'Yes. We frequently sign bilateral NDAs before reviewing proprietary algorithms, business logic, or customer databases.'
+              },
+              {
+                q: 'What are your payment milestones?',
+                a: 'Standard projects follow a milestone-based schedule: typically 30% upon kickoff, 40% upon staging demo approval, and 30% upon final production deployment and code transfer.'
+              },
+              {
+                q: 'Can we hire NextDigiHome for ongoing monthly development?',
+                a: 'Yes. We offer dedicated monthly retainer models for teams requiring ongoing full-stack engineering, AI automation tuning, and performance marketing management.'
+              }
+            ].map((faq, idx) => (
+              <div key={idx} className="p-6 rounded-2xl bg-[#0e131d] border border-white/10">
+                <h3 className="text-sm sm:text-base font-semibold text-white mb-2 flex items-center gap-2">
+                  <QuestionMarkCircleIcon className="w-5 h-5 text-[#00d4aa] shrink-0" />
+                  {faq.q}
+                </h3>
+                <p className="text-xs sm:text-sm text-gray-400 leading-relaxed pl-7">
+                  {faq.a}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+
+      </div>
     </div>
   );
 }

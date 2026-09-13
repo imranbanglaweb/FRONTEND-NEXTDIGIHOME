@@ -1,91 +1,58 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { ArrowRightIcon, ChevronLeftIcon, ChevronRightIcon, XMarkIcon } from "@heroicons/react/24/outline";
+import { 
+  ArrowRightIcon, 
+  CheckCircleIcon, 
+  SparklesIcon, 
+  GlobeAltIcon, 
+  ShoppingBagIcon, 
+  DevicePhoneMobileIcon, 
+  CommandLineIcon, 
+  ServerIcon, 
+  WrenchScrewdriverIcon,
+  CpuChipIcon,
+  ChatBubbleBottomCenterTextIcon,
+  LifebuoyIcon,
+  ArrowsRightLeftIcon,
+  VideoCameraIcon,
+  MegaphoneIcon,
+  CursorArrowRaysIcon,
+  MagnifyingGlassIcon,
+  PresentationChartLineIcon,
+  ChartBarIcon,
+  BeakerIcon,
+  ShareIcon,
+  BoltIcon,
+  ShieldCheckIcon,
+  ArrowTopRightOnSquareIcon,
+  ArrowDownTrayIcon,
+  ClockIcon,
+  XMarkIcon,
+  MagnifyingGlassIcon as SearchIcon
+} from "@heroicons/react/24/outline";
 import { getStorageUrl, apiFetch, getLogoUrl } from './utils/api';
-import NextDigiEcosystem from './components/NextDigiEcosystem';
-
-// Category Icons Mapping
-const categoryIconMap: Record<string, string> = {
-  'digital-marketing': '📱',
-  'web-development': '💻',
-  'graphic-design': '🎨',
-  'business-tools': '🛠️',
-  'education': '📚',
-  'photography': '📷',
-  'music-audio': '🎵',
-  'video-animation': '🎬',
-  'templates': '📄',
-  'ui-kits': '🎨',
-  'graphics': '🖼️',
-  'presentations': '📊',
-  'tools': '⚙️',
-  'all': '⭐'
-};
-
-interface HeroSlide {
-  id: number;
-  title: string;
-  subtitle?: string;
-  description?: string;
-  cta_text?: string;
-  cta_link?: string;
-  image?: string;
-  background_color?: string;
-  text_color?: string;
-  sort_order: number;
-  is_active: boolean;
-}
-
-interface Stat {
-  id: number;
-  key: string;
-  value: string;
-  label: string;
-  icon?: string;
-  sort_order: number;
-  is_active: boolean;
-}
-
-
-
-interface Feature {
-  id: number;
-  title: string;
-  description: string;
-  icon: string;
-  sort_order: number;
-  is_active: boolean;
-}
 
 interface Product {
-  id: number;
+  id: number | string;
   name: string;
   slug: string;
   description?: string;
   price: number;
   compare_price?: number;
   category?: string;
-  category_id?: number | string | null;
   category_name?: string | null;
   category_slug?: string | null;
   thumbnail?: string;
   featured?: boolean;
-  active?: boolean;
 }
 
 interface Category {
   id: number | string;
   category_name: string;
   slug: string;
-}
-
-interface HomeContent {
-  hero_sliders: HeroSlide[];
-  stats: Stat[];
-  features: Feature[];
 }
 
 interface WelcomeSettings {
@@ -108,91 +75,60 @@ const normalizeCategory = (value: unknown): string => {
 
 export default function Home() {
   const router = useRouter();
-  const [currentSlide, setCurrentSlide] = useState(0);
-  const [homeContent, setHomeContent] = useState<HomeContent | null>(null);
-  const [loading, setLoading] = useState(true);
   const [allProducts, setAllProducts] = useState<Product[]>([]);
   const [allCategories, setAllCategories] = useState<Category[]>([]);
   const [loadingProducts, setLoadingProducts] = useState(true);
-  const [loadingCategories, setLoadingCategories] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [showWelcomePopup, setShowWelcomePopup] = useState(false);
   const [welcomeSettings, setWelcomeSettings] = useState<WelcomeSettings | null>(null);
 
-  const nextSlide = useCallback(() => {
-    const sliderCount = Math.max(allProducts.length, homeContent?.hero_sliders?.length || 0, 6);
-    setCurrentSlide((prev) => (prev + 1) % sliderCount);
-  }, [allProducts.length, homeContent]);
+  // Fetch products and categories
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const data = await apiFetch('products?per_page=50');
+        if (data?.data && Array.isArray(data.data)) {
+          setAllProducts(data.data);
+        } else if (Array.isArray(data)) {
+          setAllProducts(data);
+        }
+      } catch (error) {
+        console.error('Failed to fetch products:', error);
+      } finally {
+        setLoadingProducts(false);
+      }
+    };
 
-  const prevSlide = useCallback(() => {
-    const sliderCount = Math.max(allProducts.length, homeContent?.hero_sliders?.length || 0, 6);
-    setCurrentSlide((prev) => (prev - 1 + sliderCount) % sliderCount);
-  }, [allProducts.length, homeContent]);
-
-   useEffect(() => {
-     const fetchHomeContent = async () => {
-       try {
-         const data = await apiFetch('content/home');
-         if (data.success && data.data) {
-           setHomeContent(data.data);
-         } else {
-           console.warn('API returned success but no data:', data);
-         }
-       } catch (error) {
-         console.error('Failed to fetch home content:', error);
-       } finally {
-         setLoading(false);
-       }
-     };
-
-     fetchHomeContent();
-   }, []);
-
-   useEffect(() => {
-     const fetchProducts = async () => {
-       try {
-         const data = await apiFetch(`products?per_page=${50}`);
-         setAllProducts(data.data);
-       } catch (error) {
-         console.error('Failed to fetch products:', error);
-       } finally {
-         setLoadingProducts(false);
-       }
-     };
-
-     fetchProducts();
-   }, []);
-
-   useEffect(() => {
-     const fetchCategories = async () => {
-       try {
-         const data = await apiFetch('categories');
-         setAllCategories(data);
-       } catch (error) {
-         console.error('Failed to fetch categories:', error);
-       } finally {
-         setLoadingCategories(false);
-       }
-     };
-
-     fetchCategories();
-   }, []);
+    fetchProducts();
+  }, []);
 
   useEffect(() => {
-    try {
-      const savedSettings = localStorage.getItem('nextdigihome_settings');
-      if (savedSettings) {
-        window.setTimeout(() => setWelcomeSettings(JSON.parse(savedSettings)), 0);
+    const fetchCategories = async () => {
+      try {
+        const data = await apiFetch('categories');
+        if (Array.isArray(data)) {
+          setAllCategories(data);
+        } else if (data?.data && Array.isArray(data.data)) {
+          setAllCategories(data.data);
+        }
+      } catch (error) {
+        console.error('Failed to fetch categories:', error);
       }
+    };
 
+    fetchCategories();
+  }, []);
+
+  // Welcome settings
+  useEffect(() => {
+    try {
       if (sessionStorage.getItem('nextdigihome_welcome_popup_seen') !== 'true') {
-        const timer = window.setTimeout(() => setShowWelcomePopup(true), 450);
+        const timer = window.setTimeout(() => setShowWelcomePopup(true), 1200);
         return () => window.clearTimeout(timer);
       }
-    } catch (error) {
-      console.warn('Failed to initialize welcome popup:', error);
-      window.setTimeout(() => setShowWelcomePopup(true), 0);
+    } catch (e) {
+      console.warn(e);
     }
   }, []);
 
@@ -210,158 +146,6 @@ export default function Home() {
     fetchWelcomeSettings();
   }, []);
 
-  useEffect(() => {
-    if (homeContent?.hero_sliders?.length) {
-      const timer = setInterval(nextSlide, 5000);
-      return () => clearInterval(timer);
-    }
-  }, [homeContent, nextSlide]);
-
-  // Enhanced fallback content if API fails
-  const fallbackSlides = [
-    {
-      id: 1,
-      title: "Transform Your Business",
-      subtitle: "Premium Digital Solutions",
-      description: "Discover our curated marketplace of premium digital products, templates, tools, and resources designed to accelerate your business growth and success.",
-      cta_text: "Explore Marketplace",
-      cta_link: "/products",
-      image: "🚀",
-      background_color: "#0f0f12",
-      text_color: "#fafafa",
-      sort_order: 1,
-      is_active: true
-    },
-    {
-      id: 2,
-      title: "Professional Templates",
-      subtitle: "Ready-to-Use Designs",
-      description: "High-quality website templates, presentation decks, and document templates crafted by professional designers for immediate business use.",
-      cta_text: "Browse Templates",
-      cta_link: "/products?category=templates",
-      image: "📄",
-      background_color: "#1a1a2e",
-      text_color: "#fafafa",
-      sort_order: 2,
-      is_active: true
-    },
-    {
-      id: 3,
-      title: "Productivity Tools",
-      subtitle: "Boost Your Workflow",
-      description: "Powerful software tools, plugins, and automation resources that streamline your operations and increase productivity.",
-      cta_text: "View Tools",
-      cta_link: "/products?category=tools",
-      image: "⚡",
-      background_color: "#16213e",
-      text_color: "#fafafa",
-      sort_order: 3,
-      is_active: true
-    }
-  ];
-
-  const fallbackStats = [
-    { id: 1, key: 'total_products', value: '2.5K+', label: 'Digital Products', sort_order: 1, is_active: true },
-    { id: 2, key: 'happy_customers', value: '15K+', label: 'Active Customers', sort_order: 2, is_active: true },
-    { id: 3, key: 'total_sales', value: '45K+', label: 'Successful Sales', sort_order: 3, is_active: true },
-    { id: 4, key: 'average_rating', value: '4.8★', label: 'Customer Rating', sort_order: 4, is_active: true }
-  ];
-
-  const fallbackFeatures = [
-    {
-      id: 1,
-      title: 'Instant Digital Delivery',
-      description: 'Download your purchased digital products immediately after payment. No shipping delays or waiting periods.',
-      icon: '⚡',
-      sort_order: 1,
-      is_active: true
-    },
-    {
-      id: 2,
-      title: 'Professional Quality',
-      description: 'Every product undergoes rigorous testing and quality assurance to ensure professional-grade performance.',
-      icon: '⭐',
-      sort_order: 2,
-      is_active: true
-    },
-    {
-      id: 3,
-      title: 'Lifetime Support',
-      description: 'Get ongoing support and updates for your digital purchases. Our expert team is always here to help.',
-      icon: '🛠️',
-      sort_order: 3,
-      is_active: true
-    }
-  ];
-
-  const fallbackProducts: Product[] = [
-    { id: 101, name: "Premium Website Templates", slug: "premium-templates", description: "Modern responsive designs", price: 29, category: "templates" },
-    { id: 102, name: "Business Dashboard UI Kit", slug: "dashboard-ui-kit", description: "Analytics & admin templates", price: 39, category: "ui-kits" },
-    { id: 103, name: "Social Media Graphics Pack", slug: "social-graphics", description: "Ready-to-use marketing assets", price: 19, category: "graphics" },
-    { id: 104, name: "Startup Pitch Deck Templates", slug: "pitch-decks", description: "Investor-ready presentations", price: 24, category: "presentations" },
-    { id: 105, name: "E-commerce Conversion Toolkit", slug: "ecommerce-toolkit", description: "Landing page & funnel assets", price: 34, category: "templates" },
-    { id: 106, name: "AI Prompt Engineering Library", slug: "ai-prompts", description: "Advanced ChatGPT workflows", price: 15, category: "tools" },
-  ];
-
-  const heroSlides = homeContent?.hero_sliders || fallbackSlides;
-  const stats = homeContent?.stats || fallbackStats;
-  const features = homeContent?.features || fallbackFeatures;
-  const sliderProducts = allProducts.length > 0 ? allProducts : fallbackProducts;
-  const sliderCount = Math.max(sliderProducts.length, heroSlides.length, 1);
-
-  const getProductCategoryLabel = (product: Product) => {
-    return product.category_name || product.category || '';
-  };
-
-  const productMatchesCategory = (product: Product, selected: string) => {
-    if (selected === 'all') return true;
-
-    const productCategory = getProductCategoryLabel(product);
-    const productCategoryId = product.category_id == null ? '' : String(product.category_id);
-    const productCategorySlug = product.category_slug || normalizeCategory(productCategory);
-    const selectedNormalized = normalizeCategory(selected);
-    const matchedApiCategory = allCategories.find((category) => {
-      const categoryId = String(category.id);
-      const categorySlug = category.slug || normalizeCategory(category.category_name);
-      const categoryName = normalizeCategory(category.category_name);
-
-      return (
-        categoryId === productCategoryId ||
-        categorySlug === productCategorySlug ||
-        categoryName === normalizeCategory(productCategory)
-      );
-    });
-
-    const acceptedValues = [
-      productCategoryId,
-      productCategorySlug,
-      normalizeCategory(productCategory),
-      matchedApiCategory ? String(matchedApiCategory.id) : '',
-      matchedApiCategory?.slug || '',
-      matchedApiCategory ? normalizeCategory(matchedApiCategory.category_name) : '',
-    ].filter(Boolean);
-
-    return acceptedValues.includes(selected) || acceptedValues.includes(selectedNormalized);
-  };
-
-  const filteredProducts = allProducts.filter(product => {
-    const matchesCategory = productMatchesCategory(product, selectedCategory);
-    const matchesSearch = product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                          (product.description?.toLowerCase().includes(searchQuery.toLowerCase()) ?? false);
-    return matchesCategory && matchesSearch;
-  });
-  const productCatalogHref = `/products${(() => {
-    const params = new URLSearchParams();
-    if (selectedCategory !== 'all') params.set('category', selectedCategory);
-    if (searchQuery.trim()) params.set('search', searchQuery.trim());
-    const query = params.toString();
-    return query ? `?${query}` : '';
-  })()}`;
-
-  const submitProductSearch = () => {
-    router.push(productCatalogHref);
-  };
-
   const closeWelcomePopup = () => {
     try {
       sessionStorage.setItem('nextdigihome_welcome_popup_seen', 'true');
@@ -371,1121 +155,970 @@ export default function Home() {
     setShowWelcomePopup(false);
   };
 
-  const popupBrandName = welcomeSettings?.site_title || welcomeSettings?.admin_title || 'Next Digi Home';
-  const popupTagline =
-    welcomeSettings?.site_description ||
-    welcomeSettings?.admin_description ||
-    'Premium digital products engineered for modern businesses.';
+  const filteredProducts = useMemo(() => {
+    return allProducts.filter((product) => {
+      const prodCategory = normalizeCategory(product.category_slug || product.category_name || product.category);
+      const matchesCategory = selectedCategory === 'all' || prodCategory === normalizeCategory(selectedCategory);
+      const matchesSearch = !searchQuery.trim() || 
+        product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        (product.description?.toLowerCase().includes(searchQuery.toLowerCase()) ?? false);
+      return matchesCategory && matchesSearch;
+    });
+  }, [allProducts, selectedCategory, searchQuery]);
+
+  const popupBrandName = welcomeSettings?.site_title || welcomeSettings?.admin_title || 'NextDigiHome';
+  const popupTagline = welcomeSettings?.site_description || welcomeSettings?.admin_description || 'Build. Launch. Automate. Grow.';
   const popupLogo = getLogoUrl(welcomeSettings?.site_logo || welcomeSettings?.admin_logo) || '/logo.png';
 
   return (
-    <div>
+    <div className="min-h-screen bg-[#07090e] text-white selection:bg-[#00d4aa] selection:text-black">
+      
+      {/* Welcome Popup */}
       {showWelcomePopup && (
         <div
           className="fixed inset-0 z-[90] flex items-center justify-center bg-[#050507]/80 px-4 py-6 backdrop-blur-xl animate-fade-in-up"
           role="dialog"
           aria-modal="true"
-          aria-labelledby="welcome-popup-title"
         >
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_20%,rgba(0,212,170,0.18),transparent_34%),radial-gradient(circle_at_18%_80%,rgba(139,92,246,0.16),transparent_28%)]" />
-          <div className="relative w-full max-w-[520px] overflow-hidden rounded-3xl border border-white/10 bg-[#101014]/95 shadow-[0_30px_90px_rgba(0,0,0,0.72)] ring-1 ring-[#00d4aa]/20">
-            <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#00d4aa] to-transparent" />
-            <div className="absolute -right-20 -top-20 h-48 w-48 rounded-full bg-[#8b5cf6]/20 blur-3xl" />
-            <div className="absolute -bottom-24 -left-16 h-56 w-56 rounded-full bg-[#00d4aa]/15 blur-3xl" />
-
+          <div className="relative w-full max-w-[500px] overflow-hidden rounded-3xl border border-white/10 bg-[#0e131d]/95 p-8 shadow-2xl ring-1 ring-[#00d4aa]/20">
             <button
               type="button"
               onClick={closeWelcomePopup}
-              className="absolute right-4 top-4 z-10 flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-white/5 text-[#b0b0b0] transition hover:border-[#00d4aa]/50 hover:text-white"
-              aria-label="Close welcome popup"
+              className="absolute right-4 top-4 z-10 flex h-9 w-9 items-center justify-center rounded-full border border-white/10 bg-white/5 text-gray-400 hover:text-white transition"
+              aria-label="Close popup"
             >
               <XMarkIcon className="h-5 w-5" />
             </button>
 
-            <div className="relative px-6 pb-7 pt-8 text-center sm:px-9 sm:pb-9 sm:pt-10">
-              {/* Flat, Prominent Brand Logo */}
-              <div className="mx-auto mb-6 flex h-20 sm:h-24 w-full max-w-[340px] items-center justify-center select-none">
-                <img
-                  src={popupLogo || '/logo.png'}
-                  alt={`${popupBrandName} logo`}
-                  className="h-full w-auto max-w-full object-contain filter drop-shadow-[0_4px_24px_rgba(0,212,170,0.4)] transition-transform duration-300 hover:scale-105"
-                  decoding="async"
-                  onError={(e) => {
-                    if (!e.currentTarget.src.endsWith('/logo.png')) {
-                      e.currentTarget.src = '/logo.png';
-                    }
-                  }}
-                />
+            <div className="text-center">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#00d4aa]/10 border border-[#00d4aa]/30 text-xs font-semibold text-[#00d4aa] uppercase tracking-wider mb-4">
+                Welcome to NextDigiHome
               </div>
-
-              <div className="mb-4 inline-flex items-center rounded-full border border-[#00d4aa]/25 bg-[#00d4aa]/8 px-4 py-2 text-xs font-bold uppercase tracking-[2px] text-[#00d4aa]">
-                Premium Digital Marketplace
-              </div>
-
-              <h2 id="welcome-popup-title" className="mb-3 text-3xl font-black tracking-tight text-white sm:text-4xl">
-                {popupBrandName}
-              </h2>
-
-              <p className="mx-auto max-w-md text-sm leading-6 text-[#b0b0b0] sm:text-base">
-                {popupTagline}
-              </p>
-
-              <div className="mt-7 flex flex-col gap-3 sm:flex-row sm:justify-center">
+              <h2 className="text-2xl font-black text-white mb-2">{popupBrandName}</h2>
+              <p className="text-sm text-gray-300 mb-6">{popupTagline}</p>
+              
+              <div className="flex flex-col sm:flex-row gap-3 justify-center">
+                <Link
+                  href="/contact"
+                  onClick={closeWelcomePopup}
+                  className="px-6 py-3 rounded-xl bg-[#00d4aa] hover:bg-[#00e2b6] text-black font-bold text-xs transition"
+                >
+                  Start a Project
+                </Link>
                 <Link
                   href="/products"
                   onClick={closeWelcomePopup}
-                  className="group inline-flex items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-[#00d4aa] to-[#8b5cf6] px-6 py-3.5 text-sm font-extrabold text-[#0f0f12] transition hover:brightness-110"
+                  className="px-6 py-3 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-white font-medium text-xs transition"
                 >
-                  Explore Products
-                  <ArrowRightIcon className="h-4 w-4 transition group-hover:translate-x-0.5" />
+                  Explore Store
                 </Link>
-                <button
-                  type="button"
-                  onClick={closeWelcomePopup}
-                  className="inline-flex items-center justify-center rounded-2xl border border-white/10 bg-white/5 px-6 py-3.5 text-sm font-bold text-white transition hover:border-[#00d4aa]/50 hover:bg-[#00d4aa]/10"
-                >
-                  Continue Browsing
-                </button>
               </div>
             </div>
           </div>
         </div>
       )}
 
-      {/* Hero Slider Section - Premium Edition */}
-      <section className="relative h-[590px] overflow-hidden sm:h-[630px] lg:h-[660px]">
-        {/* Enhanced Background with multiple layers */}
-        <div className="absolute inset-0 bg-gradient-to-b from-[#0f0f12] via-[#1a1a2e]/50 to-[#0f0f12]" />
-        
-        {/* Animated gradient orbs */}
-        <div className="absolute inset-0">
-          <div className="absolute top-20 left-10 w-96 h-96 bg-[#00d4aa] rounded-full mix-blend-screen filter blur-[150px] opacity-25 animate-float" />
-          <div className="absolute top-40 right-20 w-[500px] h-[500px] bg-[#8b5cf6] rounded-full mix-blend-screen filter blur-[150px] opacity-20 animate-float animate-delay-2000" />
-          <div className="absolute bottom-20 left-1/3 w-80 h-80 bg-[#00d4aa] rounded-full mix-blend-screen filter blur-[120px] opacity-15 animate-float animate-delay-4000" />
-          <div className="absolute top-1/2 -right-40 w-[600px] h-[600px] bg-[#ff6b9d] rounded-full mix-blend-screen filter blur-[160px] opacity-10 animate-float animate-delay-3000" />
-        </div>
+      {/* ================================================================ */}
+      {/* SECTION 1: HERO SECTION (MASTER BRAND) */}
+      {/* ================================================================ */}
+      <section className="relative pt-32 pb-20 md:pt-40 md:pb-32 overflow-hidden">
+        {/* Glow ambient backgrounds */}
+        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[850px] h-[450px] bg-gradient-to-tr from-[#00d4aa]/15 via-[#8b5cf6]/15 to-transparent blur-[160px] pointer-events-none rounded-full" />
+        <div className="absolute top-20 right-10 w-[400px] h-[400px] bg-[#38bdf8]/10 blur-[140px] pointer-events-none rounded-full" />
 
-        {/* Grid pattern overlay */}
-        <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(42,42,48,0.1)_1px,transparent_1px),linear-gradient(to_bottom,rgba(42,42,48,0.1)_1px,transparent_1px)] bg-[size:80px_80px] opacity-40" />
-
-        {/* Slider Content */}
-        <div className="slider-content absolute inset-0 z-10 mx-auto w-full max-w-[78rem] px-4 sm:px-6 lg:px-8">
-          {!loading && Array.from({ length: sliderCount }).map((_, index) => index === currentSlide ? (
-            <div
-              key={index}
-              className={`transition-all duration-1000 ease-in-out absolute inset-0 ${
-                index === currentSlide
-                  ? 'opacity-100 translate-y-0 z-10'
-                  : 'opacity-0 translate-y-8 z-0'
-              }`}
-            >
-              <div className="flex h-full items-center justify-center px-3 pb-10 pt-6 sm:px-5 sm:pb-8 sm:pt-8 lg:px-6">
-                <div className="grid grid-cols-1 items-center gap-5 md:grid-cols-[minmax(0,1fr)_minmax(0,0.86fr)] lg:grid-cols-[minmax(0,1fr)_minmax(0,0.9fr)] lg:gap-8 w-full max-w-[78rem]">
-                  {/* Premium Content Left - Dynamic from Products */}
-                  {(() => {
-                    const activeProduct = sliderProducts[currentSlide % Math.max(sliderProducts.length, 1)] || sliderProducts[0];
-                    if (!activeProduct) return null;
-
-                    return (
-                      <div className="text-center lg:text-left space-y-5 lg:space-y-6">
-                        {/* Brand Badge */}
-                        <div className="inline-flex items-center gap-3 px-4 py-3 rounded-full border border-[#00d4aa]/30 bg-[#00d4aa]/5 backdrop-blur-md mb-2 animate-fade-in-up hover:border-[#00d4aa]/60 transition-all group cursor-pointer">
-                          <span className="w-3 h-3 rounded-full bg-gradient-to-r from-[#00d4aa] to-[#8b5cf6] animate-pulse"></span>
-                          <span className="text-sm font-semibold bg-gradient-to-r from-[#00d4aa] to-[#8b5cf6] bg-clip-text text-transparent">Next Digi Home Premium Marketplace</span>
-                          <span className="text-xs text-[#00d4aa] ml-1">★ Trusted by 50K+ Users</span>
-                        </div>
-
-                         {/* Main Heading - Dynamic from Product - Better mobile scaling */}
-                         <div className="space-y-2 sm:space-y-3">
-                           <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black leading-[1.05] sm:leading-tight animate-fade-in-up tracking-[-1.5px] sm:tracking-tight">
-                             <span className="block text-[#fafafa] mb-1.5 sm:mb-2">{activeProduct.name}</span>
-                             <span className="block bg-gradient-to-r from-[#00d4aa] via-[#8b5cf6] to-[#ff6b9d] bg-clip-text text-transparent animate-pulse text-2xl sm:text-3xl md:text-4xl lg:text-5xl">
-                               {activeProduct.category || "Premium Digital Product"}
-                             </span>
-                           </h1>
-                         </div>
-
-                         {/* Premium Description - Dynamic from Product */}
-                         <p className="text-sm sm:text-base md:text-lg lg:text-xl text-[#b0b0b0] max-w-2xl leading-relaxed animate-fade-in-up font-light">
-                           {activeProduct.description || "High-quality digital asset crafted for modern professionals."}
-                         </p>
-
-                         {/* Premium CTA Buttons */}
-                         <div className="flex flex-col sm:flex-row gap-4 pt-1 animate-fade-in-up">
-                           <Link
-                             href={`/products/${activeProduct.slug || activeProduct.id}`}
-                             className="group relative px-8 py-4 border-2 border-[#00d4aa]/50 text-[#fafafa] font-bold text-lg rounded-2xl overflow-hidden transition-all duration-300 hover:border-[#00d4aa] hover:text-[#00d4aa] bg-[#1a1a1f]/20 backdrop-blur-sm"
-                           >
-                             <span className="absolute inset-0 bg-[#00d4aa]/10 scale-x-0 group-hover:scale-x-100 transition-transform origin-left"></span>
-                             <span className="relative flex items-center justify-center gap-2">
-                               View This Product
-                               <ArrowRightIcon className="w-4 h-4" />
-                             </span>
-                           </Link>
-                         </div>
-
-                         {/* Mobile-only compact product preview for better slider UX on phones */}
-                         <div className="md:hidden mt-4 bg-[#0a0a0d]/80 backdrop-blur border border-white/10 rounded-2xl p-4 flex gap-4 items-center">
-                           {activeProduct.thumbnail && (
-                             <img 
-                               src={getStorageUrl(activeProduct.thumbnail)!} 
-                               alt={activeProduct.name}
-                               loading="lazy"
-                               decoding="async"
-                             className="h-20 w-20 flex-shrink-0 rounded-xl border border-white/10 object-contain bg-[#0f0f12] sm:h-24 sm:w-24" 
-                             />
-                           )}
-                           <div className="min-w-0 flex-1">
-                             <div className="font-semibold text-sm text-[#fafafa] line-clamp-2">{activeProduct.name}</div>
-                             <div className="text-[#00d4aa] font-bold text-lg mt-0.5">৳{activeProduct.price}</div>
-                           </div>
-                         </div>
-                       </div>
-                     );
-                    })()}
-
-                       {/* Premium Right Side - Single Product (synced via currentSlide % 6) - Responsive from md up */}
-                     <div className="relative hidden md:block">
-                       <div className="relative mx-auto w-full max-w-[560px] lg:ml-auto xl:max-w-[600px]">
-                         {/* Deep luxurious glow */}
-                         <div className="absolute -inset-4 bg-gradient-to-r from-[#00d4aa] via-[#8b5cf6] to-[#ff6b9d] rounded-[2.5rem] blur-[70px] opacity-[0.14]"></div>
-
-                          <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-[#0a0a0d]/95 p-4 shadow-[0_24px_70px_rgb(0,0,0,0.65)] ring-1 ring-white/5 backdrop-blur-3xl lg:p-5">
-                            {/* Inner subtle glow */}
-                            <div className="absolute inset-0 bg-linear-to-br from-[#00d4aa]/5 via-transparent to-[#8b5cf6]/5 pointer-events-none" />
-                            
-                           {(() => {
-                             const currentProduct = sliderProducts[currentSlide % Math.max(sliderProducts.length, 1)] || sliderProducts[0];
-                             if (!currentProduct) return null;
-
-                             return (
-                               <>
-                                 {/* Single Premium Product - Enhanced */}
-                                 <div className="relative mb-4 aspect-[16/10] overflow-hidden rounded-xl border border-white/10 bg-[#0f0f12] shadow-2xl lg:rounded-2xl">
-                                   {currentProduct.thumbnail ? (
-                                     <img
-                                       src={getStorageUrl(currentProduct.thumbnail)!}
-                                       alt={currentProduct.name}
-                                       loading="eager"
-                                       decoding="async"
-                                       className="h-full w-full object-contain p-2 transition-all duration-700 group-hover:scale-[1.03] lg:p-3"
-                                     />
-                                   ) : (
-                                     <div className="w-full h-full bg-linear-to-br from-[#1a1a1f] to-[#2a2a30] flex items-center justify-center text-7xl">
-                                       🚀
-                                     </div>
-                                   )}
-                                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
-                                   
-                                   <div className="absolute top-4 left-4 px-3.5 py-1 bg-white/10 backdrop-blur-xl border border-white/20 rounded-full text-[10px] font-semibold tracking-[1px] text-white">
-                                     PREMIUM
-                                   </div>
-                                   
-                                   <div className="absolute bottom-4 right-4 px-3 py-1 bg-black/60 backdrop-blur text-xs font-bold text-[#00d4aa] rounded">
-                                     {currentProduct.category}
-                                   </div>
-                                 </div>
- 
-                                 <div className="px-1 relative z-10">
-                                   <div className="flex items-end justify-between mb-3">
-                                     <h3 className="text-[15px] md:text-xl font-semibold tracking-[-0.5px] text-[#fafafa] pr-3 leading-tight line-clamp-2">
-                                       {currentProduct.name}
-                                     </h3>
-                                     <div className="text-right flex-shrink-0">
-                                        <div className="text-2xl md:text-3xl font-bold text-[#00d4aa] leading-none">
-                                           ৳{currentProduct.price}
-                                        </div>
-                                     </div>
-                                   </div>
- 
-                                   <p className="text-[#9ca3af] text-xs mb-5 line-clamp-1 opacity-90">
-                                     {currentProduct.description || "Premium digital asset"}
-                                   </p>
- 
-                                    <div>
-                                      <Link
-                                        href={`/products/${currentProduct.slug || currentProduct.id}`}
-                                        className="block text-center px-5 py-2.5 bg-gradient-to-r from-[#00d4aa] to-[#8b5cf6] text-[#0f0f12] rounded-2xl text-sm font-bold transition-all hover:brightness-110 active:scale-[0.985] shadow-lg"
-                                      >
-                                        View Details
-                                      </Link>
-                                    </div>
-                                 </div>
-                               </>
-                             );
-                           })()}
-                         </div>
-                      </div>
-                    </div>
-                </div>
-
-
-                
-              </div>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <div className="text-center max-w-4xl mx-auto">
+            {/* Tagline Badge */}
+            <div className="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-white/5 border border-white/10 text-xs font-semibold tracking-wider text-gray-300 uppercase mb-8 shadow-inner">
+              <span className="w-2 h-2 rounded-full bg-[#00d4aa] animate-pulse" />
+              <span>NEXTDIGIHOME</span>
+              <span className="text-gray-500">•</span>
+              <span className="text-[#00d4aa]">BUILD. LAUNCH. AUTOMATE. GROW.</span>
             </div>
-          ) : null)}
 
-          {/* Enhanced Loading state */}
-          {loading && (
-            <div className="flex h-full items-center justify-center">
-              <div className="text-center space-y-6">
-            <div className="relative">
-              <div className="w-20 h-20 border-4 border-[#00d4aa]/30 border-t-[#00d4aa] rounded-full animate-spin mx-auto"></div>
-              <div className="absolute inset-0 w-20 h-20 border-4 border-transparent border-t-[#8b5cf6] rounded-full animate-reverse-spin mx-auto"></div>
-            </div>
-                <div className="space-y-2">
-                  <p className="text-[#fafafa] text-lg font-semibold">Loading Next Digi Home</p>
-                  <p className="text-[#737373] text-sm">Preparing premium marketplace experience...</p>
-                </div>
-            <div className="flex justify-center space-x-1">
-              <div className="w-2 h-2 bg-[#00d4aa] rounded-full animate-bounce"></div>
-              <div className="w-2 h-2 bg-[#8b5cf6] rounded-full animate-bounce animate-delay-100"></div>
-              <div className="w-2 h-2 bg-[#ff6b9d] rounded-full animate-bounce animate-delay-200"></div>
-            </div>
-              </div>
-            </div>
-          )}
+            {/* Master Headline */}
+            <h1 className="text-4xl sm:text-6xl lg:text-7xl font-extrabold text-white tracking-tight leading-[1.1] mb-6">
+              Technology, AI & Digital Solutions for{' '}
+              <span className="bg-gradient-to-r from-[#00d4aa] via-[#38bdf8] to-[#8b5cf6] bg-clip-text text-transparent">
+                Modern Businesses
+              </span>
+            </h1>
 
-        </div>
-
-        {/* Enhanced Navigation Controls - Fixed Positioning - Mobile Responsive */}
-        <div className="navigation-container">
-          <div className="slider-navigation absolute top-1/2 -translate-y-1/2 left-3 sm:left-4 z-40">
-            <button
-              onClick={prevSlide}
-              className="w-11 h-11 sm:w-14 sm:h-14 rounded-full border border-[#2a2a30] bg-[#1a1a1f]/90 backdrop-blur-md flex items-center justify-center text-[#fafafa] hover:border-[#00d4aa] hover:text-[#00d4aa] hover:shadow-lg hover:scale-110 transition-all duration-300 group active:scale-95"
-            >
-              <ChevronLeftIcon className="w-5 h-5 sm:w-6 sm:h-6 transition-transform group-hover:-translate-x-1" />
-            </button>
-          </div>
-
-          <div className="slider-navigation absolute top-1/2 -translate-y-1/2 right-3 sm:right-4 z-40">
-            <button
-              onClick={nextSlide}
-              className="w-11 h-11 sm:w-14 sm:h-14 rounded-full border border-[#2a2a30] bg-[#1a1a1f]/90 backdrop-blur-md flex items-center justify-center text-[#fafafa] hover:border-[#00d4aa] hover:text-[#00d4aa] hover:shadow-lg hover:scale-110 transition-all duration-300 group active:scale-95"
-            >
-              <ChevronRightIcon className="w-5 h-5 sm:w-6 sm:h-6 transition-transform group-hover:translate-x-1" />
-            </button>
-          </div>
-        </div>
-
-            {/* Product slider navigation */}
-            <div className="absolute bottom-4 sm:bottom-6 left-1/2 z-30 flex max-w-[calc(100%-2rem)] -translate-x-1/2 gap-2 overflow-x-auto rounded-full border border-white/10 bg-[#0f0f12]/70 px-3 py-2 backdrop-blur">
-              {Array.from({ length: sliderCount }).map((_, i) => (
-                <button
-                  key={i}
-                  onClick={() => setCurrentSlide(i)}
-                  className={`h-2.5 flex-shrink-0 rounded-full transition-all touch-manipulation ${
-                    i === currentSlide
-                      ? 'bg-gradient-to-r from-[#00d4aa] to-[#8b5cf6] w-8 sm:w-4'
-                      : 'w-2.5 bg-white/30 hover:bg-white/60 active:bg-white/80'
-                  }`}
-                  aria-label={`Go to slide ${i + 1}`}
-                />
-              ))}
-            </div>
-       </section>
-
-      {/* Stats Section */}
-      <section className="relative py-12 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-r from-[#00d4aa]/5 via-transparent to-[#8b5cf6]/5" />
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-      {stats.map((stat) => (
-        <div key={stat.key} className="text-center animate-fade-in-up">
-          <div className="text-4xl md:text-5xl font-bold gradient-text mb-2">{stat.value}</div>
-          <div className="text-[#737373] text-sm font-medium">{stat.label}</div>
-        </div>
-      ))}
-           </div>
-        </div>
-       </section>
-
-      {/* Video Preview Section */}
-      <section className="relative overflow-hidden border-y border-[#2a2a30] bg-[#0a0a0d] py-20">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_20%,rgba(0,212,170,0.16),transparent_34%),radial-gradient(circle_at_80%_70%,rgba(139,92,246,0.14),transparent_32%)]" />
-        <div className="relative z-10 mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-          <div className="mb-10 text-center">
-            <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-[#00d4aa]/25 bg-[#00d4aa]/5 px-4 py-1.5 text-xs font-semibold tracking-[2px] text-[#00d4aa]">
-              VIDEO PREVIEW
-            </div>
-            <h2 className="mb-4 text-4xl font-bold tracking-tight md:text-5xl">
-              Watch <span className="gradient-text">Next Digi Home</span> in Action
-            </h2>
-            <p className="mx-auto max-w-2xl text-lg leading-relaxed text-[#737373]">
-              See how our digital products, templates, and business resources help you launch faster.
+            {/* Supporting Copy */}
+            <p className="text-lg sm:text-xl text-gray-300 font-normal leading-relaxed max-w-3xl mx-auto mb-10">
+              We architect high-performance web and custom software, deploy autonomous AI agents to eliminate manual operations, scale revenue with performance marketing, and operate proprietary SaaS platforms.
             </p>
-          </div>
 
-          <div className="relative mx-auto max-w-5xl">
-            <div className="absolute -inset-4 rounded-[2rem] bg-gradient-to-r from-[#00d4aa] via-[#8b5cf6] to-[#ff6b9d] opacity-20 blur-3xl" />
-            <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-[#101014] p-2 shadow-[0_28px_80px_rgba(0,0,0,0.55)] ring-1 ring-[#00d4aa]/15">
-              <div className="aspect-video overflow-hidden rounded-2xl bg-black">
-                <iframe
-                  className="h-full w-full"
-                  src="https://www.youtube-nocookie.com/embed/b5otVQURO6I"
-                  title="Next Digi Home video preview"
-                  loading="lazy"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                  allowFullScreen
-                  referrerPolicy="strict-origin-when-cross-origin"
-                />
-              </div>
+            {/* CTAs */}
+            <div className="flex flex-wrap items-center justify-center gap-4 mb-12">
+              <Link
+                href="/contact"
+                className="px-8 py-4 rounded-xl font-bold text-black bg-[#00d4aa] hover:bg-[#00e2b6] transition-all duration-300 shadow-xl shadow-[#00d4aa]/25 flex items-center gap-2 hover:scale-[1.02]"
+              >
+                <span>Start a Project</span>
+                <ArrowRightIcon className="w-4 h-4" />
+              </Link>
+              <Link
+                href="/solutions"
+                className="px-7 py-4 rounded-xl font-semibold text-white bg-white/5 hover:bg-white/10 border border-white/10 transition-all duration-300 flex items-center gap-2"
+              >
+                Explore Solutions
+              </Link>
+              <Link
+                href="#store"
+                className="px-5 py-4 text-xs font-semibold text-gray-400 hover:text-[#00d4aa] transition flex items-center gap-1"
+              >
+                Browse Digital Store <ArrowRightIcon className="w-3.5 h-3.5" />
+              </Link>
+            </div>
+
+            {/* Capability Badges / Pills */}
+            <div className="flex flex-wrap justify-center gap-2 sm:gap-3 max-w-4xl mx-auto">
+              {[
+                { title: 'Custom Software & Web', href: '/solutions' },
+                { title: 'Autonomous AI Agents', href: '/ai' },
+                { title: 'Performance Marketing', href: '/growth' },
+                { title: 'Turnkey SaaS Platforms', href: '/labs' },
+                { title: 'Verified Digital Store', href: '/store' }
+              ].map((pill, i) => (
+                <Link
+                  key={i}
+                  href={pill.href}
+                  className="px-3.5 py-1.5 rounded-full text-xs font-medium text-gray-300 bg-[#0e131d] border border-white/10 hover:border-[#00d4aa]/50 hover:text-white transition"
+                >
+                  {pill.title}
+                </Link>
+              ))}
             </div>
           </div>
         </div>
       </section>
 
-       {/* Premium Features Section - Dynamic from API */}
-       <section className="relative py-20 overflow-hidden border-y border-[#2a2a30]">
-         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,#00d4aa0a_0%,transparent_70%)]" />
-         
-         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-           <div className="text-center mb-14">
-             <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-[#00d4aa]/20 bg-[#00d4aa]/5 text-xs font-semibold tracking-[2px] text-[#00d4aa] mb-4">
-               WHY CHOOSE US
-             </div>
-             <h2 className="text-4xl md:text-5xl font-bold tracking-tight mb-4">
-               Built for <span className="gradient-text">Modern Businesses</span>
-             </h2>
-             <p className="text-lg text-[#737373] max-w-lg mx-auto">
-               Everything you need to succeed — delivered instantly.
-             </p>
-           </div>
-
-           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-             {features.map((feature: Feature, index: number) => (
-               <div 
-                 key={feature.id || index}
-                 className="group relative glass-card rounded-3xl p-8 border border-[#2a2a30] hover:border-[#00d4aa]/40 transition-all duration-500 hover:-translate-y-1 flex flex-col"
-               >
-                 <div className="w-14 h-14 rounded-2xl bg-linear-to-br from-[#00d4aa] to-[#8b5cf6] flex items-center justify-center text-3xl mb-6 group-hover:scale-110 transition-transform duration-300">
-                   {feature.icon || '✨'}
-                 </div>
-
-                 <h3 className="text-2xl font-semibold tracking-tight text-[#fafafa] mb-3">
-                   {feature.title}
-                 </h3>
-                 
-                 <p className="text-[#737373] leading-relaxed flex-1">
-                   {feature.description}
-                 </p>
-
-                 <div className="mt-6 pt-5 border-t border-[#2a2a30] flex items-center text-xs font-medium text-[#00d4aa] group-hover:gap-2 transition-all">
-                   LEARN MORE 
-                   <ArrowRightIcon className="w-3.5 h-3.5 ml-1.5 transition-transform group-hover:translate-x-1" />
-                 </div>
-               </div>
-             ))}
-           </div>
-         </div>
-       </section>
-
-       {/* Real World Professional Use Cases Section */}
-       <section className="relative py-24 overflow-hidden">
-         <div className="absolute inset-0 bg-gradient-to-b from-[#1a1a1f] to-[#0f0f12]" />
-         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-           <div className="text-center mb-16">
-             <h2 className="text-4xl md:text-5xl font-bold mb-6 gradient-text">
-               Featured Products
-             </h2>
-            <p className="text-xl text-[#737373] max-w-2xl mx-auto">
-              Discover our most popular digital products trusted by thousands of businesses
+      {/* ================================================================ */}
+      {/* SECTION 2: WHAT WE DO (4 PILLARS / ECOSYSTEM MATRIX) */}
+      {/* ================================================================ */}
+      <section className="py-20 relative border-t border-white/5 bg-[#080b11]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center max-w-3xl mx-auto mb-16">
+            <span className="text-xs font-semibold uppercase tracking-wider text-[#00d4aa]">The Ecosystem Matrix</span>
+            <h2 className="text-3xl sm:text-4xl font-extrabold text-white mt-1 mb-4">
+              Everything Your Business Needs to Operate Digitally
+            </h2>
+            <p className="text-gray-400 text-sm sm:text-base">
+              Four specialized divisions engineered to work in harmony — from code and automation to paid customer acquisition and ready-to-deploy software assets.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {allProducts.slice(0, 8).map((product) => (
-              <div key={product.id} className="group relative bg-[#1a1a1f] rounded-2xl border border-[#2a2a30] overflow-hidden hover:border-[#00d4aa]/50 transition-all duration-300 hover:scale-105 hover:shadow-[0_0_40px_rgba(0,212,170,0.3)]">
-                <div className="aspect-video relative overflow-hidden">
-                  {product.thumbnail ? (
-                    <img
-                      src={getStorageUrl(product.thumbnail)!}
-                      alt={product.name}
-                      loading="lazy"
-                      decoding="async"
-                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                    />
-                  ) : (
-                    <div className="w-full h-full bg-linear-to-br from-[#1a1a1f] to-[#2a2a30] flex items-center justify-center">
-                      <span className="text-[#737373]">No Image</span>
-                    </div>
-                  )}
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#0f0f12] via-transparent to-transparent opacity-60" />
-                  {product.featured && (
-                    <div className="absolute top-3 right-3">
-                      <span className="px-2 py-1 rounded-full text-xs font-medium bg-gradient-to-r from-[#00d4aa] to-[#8b5cf6] text-[#0f0f12]">
-                        Featured
-                      </span>
-                    </div>
-                  )}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {/* Pillar 1: BUILD */}
+            <div className="p-8 rounded-3xl border border-white/10 bg-[#0e131d] hover:border-[#00d4aa]/40 transition group flex flex-col justify-between">
+              <div>
+                <div className="w-12 h-12 rounded-2xl bg-[#00d4aa]/10 border border-[#00d4aa]/20 flex items-center justify-center text-[#00d4aa] mb-6">
+                  <GlobeAltIcon className="w-6 h-6" />
                 </div>
-                <div className="p-6">
-                  <span className="text-xs text-[#737373] font-medium uppercase tracking-wide">
-                    {product.category}
-                  </span>
-                  <h4 className="text-lg font-semibold text-[#fafafa] mt-2 mb-2 line-clamp-1">
-                    {product.name}
-                  </h4>
-                  <p className="text-sm text-[#737373] line-clamp-2 mb-4">
-                    {product.description}
+                <span className="text-[11px] font-mono uppercase tracking-widest text-[#00d4aa] font-bold">Pillar 01</span>
+                <h3 className="text-2xl font-black text-white mt-1 mb-2">BUILD</h3>
+                <p className="text-xs font-semibold text-gray-400 mb-4">NextDigi Solutions</p>
+                <p className="text-sm text-gray-400 leading-relaxed mb-6">
+                  Websites, e-commerce storefronts, mobile apps, custom ERPs, and scalable multi-tenant SaaS platforms.
+                </p>
+              </div>
+              <Link
+                href="/solutions"
+                className="inline-flex items-center gap-2 text-xs font-bold text-[#00d4aa] hover:underline"
+              >
+                Explore Solutions <ArrowRightIcon className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+              </Link>
+            </div>
+
+            {/* Pillar 2: AUTOMATE */}
+            <div className="p-8 rounded-3xl border border-white/10 bg-[#0e131d] hover:border-[#8b5cf6]/40 transition group flex flex-col justify-between">
+              <div>
+                <div className="w-12 h-12 rounded-2xl bg-[#8b5cf6]/10 border border-[#8b5cf6]/20 flex items-center justify-center text-[#8b5cf6] mb-6">
+                  <CpuChipIcon className="w-6 h-6" />
+                </div>
+                <span className="text-[11px] font-mono uppercase tracking-widest text-[#8b5cf6] font-bold">Pillar 02</span>
+                <h3 className="text-2xl font-black text-white mt-1 mb-2">AUTOMATE</h3>
+                <p className="text-xs font-semibold text-gray-400 mb-4">NextDigi AI</p>
+                <p className="text-sm text-gray-400 leading-relaxed mb-6">
+                  Autonomous task agents, bilingual customer chatbots, AI support ticket triaging, and zero-touch workflows.
+                </p>
+              </div>
+              <Link
+                href="/ai"
+                className="inline-flex items-center gap-2 text-xs font-bold text-[#8b5cf6] hover:underline"
+              >
+                Explore AI Division <ArrowRightIcon className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+              </Link>
+            </div>
+
+            {/* Pillar 3: GROW */}
+            <div className="p-8 rounded-3xl border border-white/10 bg-[#0e131d] hover:border-[#38bdf8]/40 transition group flex flex-col justify-between">
+              <div>
+                <div className="w-12 h-12 rounded-2xl bg-[#38bdf8]/10 border border-[#38bdf8]/20 flex items-center justify-center text-[#38bdf8] mb-6">
+                  <PresentationChartLineIcon className="w-6 h-6" />
+                </div>
+                <span className="text-[11px] font-mono uppercase tracking-widest text-[#38bdf8] font-bold">Pillar 03</span>
+                <h3 className="text-2xl font-black text-white mt-1 mb-2">GROW</h3>
+                <p className="text-xs font-semibold text-gray-400 mb-4">NextDigi Growth</p>
+                <p className="text-sm text-gray-400 leading-relaxed mb-6">
+                  Structured Meta & Google ad testing, search engine optimization (SEO), server-side CAPI tracking, and content.
+                </p>
+              </div>
+              <Link
+                href="/growth"
+                className="inline-flex items-center gap-2 text-xs font-bold text-[#38bdf8] hover:underline"
+              >
+                Explore Growth Division <ArrowRightIcon className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+              </Link>
+            </div>
+
+            {/* Pillar 4: PRODUCTS */}
+            <div className="p-8 rounded-3xl border border-white/10 bg-[#0e131d] hover:border-[#f59e0b]/40 transition group flex flex-col justify-between">
+              <div>
+                <div className="w-12 h-12 rounded-2xl bg-[#f59e0b]/10 border border-[#f59e0b]/20 flex items-center justify-center text-[#f59e0b] mb-6">
+                  <ShoppingBagIcon className="w-6 h-6" />
+                </div>
+                <span className="text-[11px] font-mono uppercase tracking-widest text-[#f59e0b] font-bold">Pillar 04</span>
+                <h3 className="text-2xl font-black text-white mt-1 mb-2">PRODUCTS</h3>
+                <p className="text-xs font-semibold text-gray-400 mb-4">Labs & Store</p>
+                <p className="text-sm text-gray-400 leading-relaxed mb-6">
+                  SaaS products (Commerce, Social, Automate, Garibondhu360) plus verified source codes & developer tools.
+                </p>
+              </div>
+              <Link
+                href="/labs"
+                className="inline-flex items-center gap-2 text-xs font-bold text-[#f59e0b] hover:underline"
+              >
+                Explore Labs & Store <ArrowRightIcon className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ================================================================ */}
+      {/* SECTION 3: NEXTDIGI SOLUTIONS (SERVICE SHOWCASE) */}
+      {/* ================================================================ */}
+      <section className="py-24 relative border-t border-white/5">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-col md:flex-row md:items-end justify-between mb-14">
+            <div>
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#00d4aa]/10 border border-[#00d4aa]/30 text-xs font-semibold text-[#00d4aa] uppercase tracking-wider mb-3">
+                NextDigi Solutions
+              </div>
+              <h2 className="text-3xl sm:text-4xl font-extrabold text-white">
+                Custom Engineering & Full-Stack Development
+              </h2>
+            </div>
+            <Link
+              href="/solutions"
+              className="mt-4 md:mt-0 text-sm font-semibold text-[#00d4aa] hover:underline inline-flex items-center gap-1"
+            >
+              View All 8 Solutions <ArrowRightIcon className="w-4 h-4" />
+            </Link>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {[
+              { id: 'web-development', title: 'Web Development', desc: 'Fast, secure web apps using Next.js 16 and modern headless architectures.', icon: GlobeAltIcon, accent: '#00d4aa' },
+              { id: 'ecommerce', title: 'E-commerce Platforms', desc: 'Custom storefronts with native bKash/Nagad checkout and courier sync.', icon: ShoppingBagIcon, accent: '#8b5cf6' },
+              { id: 'mobile-app', title: 'Mobile Applications', desc: 'Cross-platform iOS and Android apps built with Flutter for 60fps fluidity.', icon: DevicePhoneMobileIcon, accent: '#38bdf8' },
+              { id: 'custom-software', title: 'Custom Enterprise ERP', desc: 'Tailored business operating software, inventory systems, and portals.', icon: CommandLineIcon, accent: '#f59e0b' },
+              { id: 'saas-development', title: 'SaaS Platforms', desc: 'Multi-tenant architecture, automated subscription billing, and metering.', icon: CpuChipIcon, accent: '#ec4899' },
+              { id: 'api-integrations', title: 'API & Integrations', desc: 'Fault-tolerant webhooks, CRM connections, and data sync middleware.', icon: ServerIcon, accent: '#10b981' },
+              { id: 'hosting-maintenance', title: 'Cloud Infrastructure', desc: 'High-availability server hosting, continuous monitoring, and security patching.', icon: WrenchScrewdriverIcon, accent: '#6366f1' },
+              { id: 'custom-software', title: 'Security Audits', desc: 'Hardened HTTP headers, database encryption, and vulnerability prevention.', icon: ShieldCheckIcon, accent: '#00d4aa' }
+            ].map((srv, idx) => {
+              const Icon = srv.icon;
+              return (
+                <Link
+                  key={idx}
+                  href={`/solutions/${srv.id}`}
+                  className="p-6 rounded-2xl bg-[#0c1017] border border-white/10 hover:border-white/20 transition group hover:shadow-lg"
+                >
+                  <div className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center mb-4 group-hover:scale-105 transition-transform" style={{ color: srv.accent }}>
+                    <Icon className="w-5 h-5" />
+                  </div>
+                  <h3 className="text-base font-bold text-white mb-2 group-hover:text-[#00d4aa] transition">
+                    {srv.title}
+                  </h3>
+                  <p className="text-xs text-gray-400 leading-relaxed">
+                    {srv.desc}
                   </p>
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-baseline gap-2">
-                      <span className="text-xl font-bold text-[#00d4aa]">
-                                ৳{product.price}
+                </Link>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* ================================================================ */}
+      {/* SECTION 4: NEXTDIGI AI (AI & AUTOMATION SHOWCASE) */}
+      {/* ================================================================ */}
+      <section className="py-24 relative border-t border-white/5 bg-[#080b11]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center mb-16">
+            <div className="lg:col-span-6">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#8b5cf6]/10 border border-[#8b5cf6]/30 text-xs font-semibold text-[#a78bfa] uppercase tracking-wider mb-4">
+                NextDigi AI
+              </div>
+              <h2 className="text-3xl sm:text-5xl font-extrabold text-white tracking-tight leading-tight mb-6">
+                Autonomous AI Agents & <br />
+                <span className="text-[#8b5cf6]">Intelligent Automation</span>
+              </h2>
+              <p className="text-gray-300 text-base sm:text-lg leading-relaxed mb-8">
+                Eliminate hours of manual data entry, slow customer response times, and repetitive tasks. We engineer deterministic AI agents and automated workflows that operate 24/7 without hallucination.
+              </p>
+              <div className="flex flex-wrap gap-4">
+                <Link
+                  href="/ai"
+                  className="px-7 py-3.5 rounded-xl font-bold text-white bg-[#8b5cf6] hover:bg-[#7c3aed] transition shadow-lg shadow-[#8b5cf6]/25 flex items-center gap-2 text-sm"
+                >
+                  Explore AI Capabilities
+                  <ArrowRightIcon className="w-4 h-4" />
+                </Link>
+                <Link
+                  href="/contact?service=AI%20Agents"
+                  className="px-6 py-3.5 rounded-xl font-semibold text-gray-300 hover:text-white bg-white/5 border border-white/10 text-sm transition"
+                >
+                  Request AI Consultation
+                </Link>
+              </div>
+            </div>
+
+            <div className="lg:col-span-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {[
+                { title: 'Autonomous AI Agents', desc: 'RAG-powered agents that query private databases and execute tools.', icon: CpuChipIcon, href: '/ai/ai-agents' },
+                { title: 'Bilingual Chatbots', desc: 'WhatsApp and Web bots that speak Bengali & English fluently.', icon: ChatBubbleBottomCenterTextIcon, href: '/ai/chatbots' },
+                { title: 'AI Support Triage', desc: 'Instant ticket classification and auto-drafting for customer desks.', icon: LifebuoyIcon, href: '/ai/ai-support' },
+                { title: 'Zero-Touch Workflows', desc: 'n8n and webhook pipelines connecting CRM, billing, and alerts.', icon: ArrowsRightLeftIcon, href: '/ai/automation' },
+              ].map((ai, i) => {
+                const Icon = ai.icon;
+                return (
+                  <Link
+                    key={i}
+                    href={ai.href}
+                    className="p-5 rounded-2xl bg-[#0e131d] border border-white/10 hover:border-[#8b5cf6]/40 transition group"
+                  >
+                    <div className="w-9 h-9 rounded-xl bg-[#8b5cf6]/10 border border-[#8b5cf6]/20 flex items-center justify-center text-[#a78bfa] mb-3">
+                      <Icon className="w-5 h-5" />
+                    </div>
+                    <h3 className="text-sm font-bold text-white mb-1 group-hover:text-[#a78bfa] transition">{ai.title}</h3>
+                    <p className="text-xs text-gray-400 leading-relaxed">{ai.desc}</p>
+                  </Link>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ================================================================ */}
+      {/* SECTION 5: NEXTDIGI GROWTH (DIGITAL GROWTH SHOWCASE) */}
+      {/* ================================================================ */}
+      <section className="py-24 relative border-t border-white/5">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-col md:flex-row md:items-end justify-between mb-14">
+            <div>
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#00d4aa]/10 border border-[#00d4aa]/30 text-xs font-semibold text-[#00d4aa] uppercase tracking-wider mb-3">
+                NextDigi Growth
+              </div>
+              <h2 className="text-3xl sm:text-4xl font-extrabold text-white">
+                Predictable Customer Acquisition & Attribution
+              </h2>
+            </div>
+            <Link
+              href="/growth"
+              className="mt-4 md:mt-0 text-sm font-semibold text-[#00d4aa] hover:underline inline-flex items-center gap-1"
+            >
+              View Growth Strategies <ArrowRightIcon className="w-4 h-4" />
+            </Link>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+            {[
+              {
+                title: 'Meta Ads & Creative Testing',
+                tagline: 'Facebook & Instagram Media Buying',
+                desc: 'Scientific creative variation testing, audience segmentation, and server-side Conversions API (CAPI) to bypass tracking loss.',
+                icon: MegaphoneIcon,
+                href: '/growth/meta-ads'
+              },
+              {
+                title: 'Google Ads & Intent Search',
+                tagline: 'Search, YouTube & Performance Max',
+                desc: 'Capture high-intent buyers with tightly-grouped keywords, aggressive negative lists, and value-based conversion bidding.',
+                icon: CursorArrowRaysIcon,
+                href: '/growth/google-ads'
+              },
+              {
+                title: 'SEO & Technical Authority',
+                tagline: 'Compounding Organic Search Traffic',
+                desc: 'Code-level technical SEO, schema rich snippets, topic clusters, and Core Web Vitals to rank for commercial intent searches.',
+                icon: MagnifyingGlassIcon,
+                href: '/growth/seo'
+              }
+            ].map((g, i) => {
+              const Icon = g.icon;
+              return (
+                <div key={i} className="p-8 rounded-3xl bg-[#0c1017] border border-white/10 hover:border-[#00d4aa]/30 transition flex flex-col justify-between">
+                  <div>
+                    <div className="w-12 h-12 rounded-2xl bg-[#00d4aa]/10 border border-[#00d4aa]/20 flex items-center justify-center text-[#00d4aa] mb-6">
+                      <Icon className="w-6 h-6" />
+                    </div>
+                    <span className="text-xs text-[#00d4aa] font-semibold">{g.tagline}</span>
+                    <h3 className="text-xl font-bold text-white mt-1 mb-3">{g.title}</h3>
+                    <p className="text-sm text-gray-400 leading-relaxed mb-6">{g.desc}</p>
+                  </div>
+                  <Link
+                    href={g.href}
+                    className="inline-flex items-center gap-1 text-xs font-semibold text-white hover:text-[#00d4aa] transition"
+                  >
+                    Channel Details <ArrowRightIcon className="w-3.5 h-3.5" />
+                  </Link>
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Ethical Marketing Commitment */}
+          <div className="p-6 rounded-2xl bg-white/5 border border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div className="flex items-center gap-3">
+              <ShieldCheckIcon className="w-6 h-6 text-[#00d4aa] shrink-0" />
+              <p className="text-xs sm:text-sm text-gray-300">
+                <span className="font-bold text-white">Our Growth Standard:</span> Zero fraudulent ROAS guarantees. We use disciplined experimentation, accurate attribution, and high-converting landing pages to acquire customers sustainably.
+              </p>
+            </div>
+            <Link
+              href="/growth/analytics"
+              className="text-xs font-bold text-[#00d4aa] hover:underline whitespace-nowrap"
+            >
+              See Attribution Systems →
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* ================================================================ */}
+      {/* SECTION 6: NEXTDIGI LABS (SAAS PRODUCTS SHOWCASE) */}
+      {/* ================================================================ */}
+      <section className="py-24 relative border-t border-white/5 bg-[#080b11]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center max-w-3xl mx-auto mb-16">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#8b5cf6]/10 border border-[#8b5cf6]/30 text-xs font-semibold text-[#a78bfa] uppercase tracking-wider mb-3">
+              NextDigi Labs
+            </div>
+            <h2 className="text-3xl sm:text-4xl font-extrabold text-white mb-4">
+              Proprietary SaaS Products & Software Ecosystem
+            </h2>
+            <p className="text-gray-400 text-sm sm:text-base">
+              We engineer, operate, and incubate our own SaaS platforms to solve real operational bottlenecks.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
+            {[
+              {
+                id: 'commerce',
+                name: 'NextDigi Commerce',
+                tagline: 'Headless Multi-Channel E-Commerce Engine',
+                desc: 'Turnkey commerce with native bKash/Nagad payment routing, automatic courier dispatch (Pathao, Steadfast, RedX), and multi-warehouse inventory sync.',
+                status: 'Live Production',
+                statusColor: 'text-[#00d4aa] border-[#00d4aa]/30 bg-[#00d4aa]/10',
+                accent: '#00d4aa',
+                icon: ShoppingBagIcon,
+                features: ['Instant Checkout', 'Courier Auto-Sync', 'Inventory Ledger'],
+                href: '/labs/commerce',
+                extUrl: 'https://commerce.nextdigihome.com'
+              },
+              {
+                id: 'garibondhu360',
+                name: 'Garibondhu360',
+                tagline: 'Automotive Workshop & Fleet Management SaaS',
+                desc: 'Complete cloud ERP for vehicle repair workshops, parts inventory tracking, digital job cards, and corporate fleet maintenance logs.',
+                status: 'Live Platform',
+                statusColor: 'text-[#38bdf8] border-[#38bdf8]/30 bg-[#38bdf8]/10',
+                accent: '#38bdf8',
+                icon: WrenchScrewdriverIcon,
+                features: ['Digital Job Cards', 'Spare Parts Barcodes', 'Customer SMS Reminders'],
+                href: '/labs/garibondhu360',
+                extUrl: 'https://garibondhu360.nextdigihome.com'
+              },
+              {
+                id: 'social',
+                name: 'NextDigi Social',
+                tagline: 'Multi-Channel Post Scheduler & Unified DM Inbox',
+                desc: 'Manage Facebook, Instagram, LinkedIn, and TikTok from a single synchronized dashboard with AI caption generation and team approvals.',
+                status: 'Private Beta',
+                statusColor: 'text-[#8b5cf6] border-[#8b5cf6]/30 bg-[#8b5cf6]/10',
+                accent: '#8b5cf6',
+                icon: ShareIcon,
+                features: ['Omnichannel Scheduler', 'Unified DM Inbox', 'AI Copy Assistant'],
+                href: '/labs/social',
+                extUrl: 'https://social.nextdigihome.com'
+              },
+              {
+                id: 'automate',
+                name: 'NextDigi Automate',
+                tagline: 'Visual Low-Code Workflow Automation Engine',
+                desc: 'Connect webhooks, databases, CRMs, and customer alerts into automated business pipelines with an intuitive visual node canvas.',
+                status: 'Early Access',
+                statusColor: 'text-[#f59e0b] border-[#f59e0b]/30 bg-[#f59e0b]/10',
+                accent: '#f59e0b',
+                icon: BoltIcon,
+                features: ['Visual Flow Builder', 'Pre-Built App Nodes', 'Fault-Tolerant Retries'],
+                href: '/labs/automate',
+                extUrl: 'https://automate.nextdigihome.com'
+              }
+            ].map((prod) => {
+              const Icon = prod.icon;
+              return (
+                <div key={prod.id} className="p-8 rounded-3xl bg-[#0e131d] border border-white/10 hover:border-white/20 transition flex flex-col justify-between">
+                  <div>
+                    <div className="flex items-center justify-between mb-4">
+                      <div className="w-12 h-12 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center" style={{ color: prod.accent }}>
+                        <Icon className="w-6 h-6" />
+                      </div>
+                      <span className={`text-[11px] font-semibold uppercase px-2.5 py-1 rounded-full border ${prod.statusColor}`}>
+                        {prod.status}
                       </span>
-                      {product.compare_price && (
-                        <span className="text-sm text-[#737373] line-through">
-                                  ৳{product.compare_price}
+                    </div>
+                    <h3 className="text-xl font-bold text-white mb-1">{prod.name}</h3>
+                    <p className="text-xs font-semibold text-gray-400 mb-3" style={{ color: prod.accent }}>{prod.tagline}</p>
+                    <p className="text-sm text-gray-400 leading-relaxed mb-6">{prod.desc}</p>
+
+                    <div className="flex flex-wrap gap-2 mb-6">
+                      {prod.features.map((f, i) => (
+                        <span key={i} className="text-xs px-2.5 py-1 rounded-md bg-white/5 text-gray-300 flex items-center gap-1.5">
+                          <CheckCircleIcon className="w-3.5 h-3.5 text-[#00d4aa]" />
+                          {f}
                         </span>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-3 pt-4 border-t border-white/5">
+                    <Link
+                      href={prod.href}
+                      className="flex-1 py-2.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-semibold text-center text-white transition"
+                    >
+                      Architecture Details
+                    </Link>
+                    <a
+                      href={prod.extUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="p-2.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-gray-400 hover:text-white transition"
+                      title="Visit platform"
+                    >
+                      <ArrowTopRightOnSquareIcon className="w-4 h-4" />
+                    </a>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* ================================================================ */}
+      {/* SECTION 7: NEXTDIGI STORE (DIGITAL PRODUCTS MARKETPLACE) */}
+      {/* ================================================================ */}
+      <section id="store" className="py-24 relative border-t border-white/5">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-col md:flex-row md:items-end justify-between mb-10">
+            <div>
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#00d4aa]/10 border border-[#00d4aa]/30 text-xs font-semibold text-[#00d4aa] uppercase tracking-wider mb-3">
+                NextDigi Store
+              </div>
+              <h2 className="text-3xl sm:text-4xl font-extrabold text-white">
+                Verified Digital Products & Software Assets
+              </h2>
+              <p className="text-sm text-gray-400 mt-2">
+                Production-ready source codes, UI kits, templates, and automation blueprints with instant download.
+              </p>
+            </div>
+            <Link
+              href="/products"
+              className="mt-4 md:mt-0 text-sm font-semibold text-[#00d4aa] hover:underline inline-flex items-center gap-1"
+            >
+              Browse Complete Catalog <ArrowRightIcon className="w-4 h-4" />
+            </Link>
+          </div>
+
+          {/* Search & Category Filter Bar */}
+          <div className="flex flex-col sm:flex-row gap-4 items-center justify-between mb-8">
+            <div className="flex items-center gap-2 overflow-x-auto pb-2 sm:pb-0 w-full sm:w-auto scrollbar-none">
+              <button
+                type="button"
+                onClick={() => setSelectedCategory('all')}
+                className={`px-4 py-2 rounded-xl text-xs font-semibold transition shrink-0 ${
+                  selectedCategory === 'all'
+                    ? 'bg-[#00d4aa] text-black'
+                    : 'bg-[#0e131d] text-gray-300 border border-white/10 hover:border-white/20'
+                }`}
+              >
+                All Products
+              </button>
+              {allCategories.slice(0, 6).map((cat) => (
+                <button
+                  key={cat.id}
+                  type="button"
+                  onClick={() => setSelectedCategory(cat.slug || cat.category_name)}
+                  className={`px-4 py-2 rounded-xl text-xs font-semibold transition shrink-0 ${
+                    selectedCategory === (cat.slug || cat.category_name)
+                      ? 'bg-[#00d4aa] text-black'
+                      : 'bg-[#0e131d] text-gray-300 border border-white/10 hover:border-white/20'
+                  }`}
+                >
+                  {cat.category_name}
+                </button>
+              ))}
+            </div>
+
+            <div className="relative w-full sm:w-72">
+              <input
+                type="text"
+                placeholder="Search products..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full pl-9 pr-4 py-2 bg-[#0e131d] border border-white/10 rounded-xl text-xs text-white placeholder-gray-500 focus:outline-none focus:border-[#00d4aa]"
+              />
+              <SearchIcon className="w-4 h-4 text-gray-500 absolute left-3 top-2.5" />
+            </div>
+          </div>
+
+          {/* Products Grid */}
+          {loadingProducts ? (
+            <div className="py-16 text-center">
+              <div className="w-10 h-10 border-2 border-[#00d4aa] border-t-transparent rounded-full animate-spin mx-auto mb-3" />
+              <p className="text-xs text-gray-500">Loading catalog items...</p>
+            </div>
+          ) : filteredProducts.length > 0 ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+              {filteredProducts.slice(0, 8).map((product) => (
+                <div
+                  key={product.id}
+                  className="rounded-2xl bg-[#0c1017] border border-white/10 overflow-hidden hover:border-white/20 transition flex flex-col justify-between group"
+                >
+                  <div>
+                    <div className="aspect-[16/10] bg-[#111622] relative overflow-hidden flex items-center justify-center">
+                      {product.thumbnail ? (
+                        <img
+                          src={getStorageUrl(product.thumbnail)!}
+                          alt={product.name}
+                          loading="lazy"
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                        />
+                      ) : (
+                        <ShoppingBagIcon className="w-12 h-12 text-gray-600" />
                       )}
+                      <div className="absolute top-2.5 left-2.5 px-2 py-0.5 rounded bg-black/60 backdrop-blur text-[10px] font-mono text-[#00d4aa]">
+                        {product.category_name || product.category || 'Asset'}
+                      </div>
+                    </div>
+
+                    <div className="p-5">
+                      <h4 className="text-sm font-bold text-white line-clamp-1 mb-1 group-hover:text-[#00d4aa] transition">
+                        {product.name}
+                      </h4>
+                      <p className="text-xs text-gray-400 line-clamp-2 leading-relaxed mb-4">
+                        {product.description || 'Verified production asset with clean documentation and instant setup instructions.'}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="p-5 pt-0 flex items-center justify-between border-t border-white/5 mt-auto">
+                    <div className="text-base font-extrabold text-[#00d4aa]">
+                      ৳{product.price}
                     </div>
                     <Link
                       href={`/products/${product.slug || product.id}`}
-                      className="px-4 py-2 bg-gradient-to-r from-[#00d4aa] to-[#8b5cf6] text-[#0f0f12] text-sm font-medium rounded-lg hover:opacity-90 transition-opacity"
+                      className="px-3.5 py-1.5 rounded-lg bg-white/5 hover:bg-[#00d4aa] hover:text-black border border-white/10 text-xs font-semibold text-white transition"
                     >
                       View Details
                     </Link>
                   </div>
                 </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          ) : (
+            <div className="py-12 text-center rounded-2xl bg-[#0c1017] border border-white/10">
+              <p className="text-sm text-gray-400 mb-4">No products found matching your search filter.</p>
+              <button
+                type="button"
+                onClick={() => { setSelectedCategory('all'); setSearchQuery(''); }}
+                className="text-xs font-semibold text-[#00d4aa] hover:underline"
+              >
+                Reset Search Filters
+              </button>
+            </div>
+          )}
 
-          <div className="text-center mt-12">
+          {/* Store Guarantee Footer Banner */}
+          <div className="mt-12 p-6 rounded-2xl bg-gradient-to-r from-white/5 to-transparent border border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div className="flex items-center gap-3">
+              <CheckCircleIcon className="w-5 h-5 text-[#00d4aa] shrink-0" />
+              <p className="text-xs sm:text-sm text-gray-300">
+                <span className="font-semibold text-white">Instant Automated Delivery & 30-Day Guarantee:</span> All purchases come with clean source files, license keys, and a full 30-day money-back guarantee.
+              </p>
+            </div>
             <Link
-              href="/products"
-              className="group relative inline-flex items-center px-8 py-4 bg-gradient-to-r from-[#00d4aa] to-[#8b5cf6] text-[#0f0f12] font-bold text-lg rounded-xl overflow-hidden transition-all duration-300 hover:scale-105 hover:shadow-[0_0_60px_rgba(0,212,170,0.5)]"
+              href="/refund"
+              className="text-xs text-gray-400 hover:text-white transition whitespace-nowrap"
             >
-              <span className="absolute inset-0 bg-white/20 opacity-0 group-hover:opacity-100 transition-opacity"></span>
-              <span className="relative flex items-center gap-2">
-                Explore All Products
-                <svg className="w-5 h-5 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                </svg>
-              </span>
+              Refund Policy Details →
             </Link>
           </div>
         </div>
       </section>
 
-      {/* How It Works: Build • Launch • Automate • Grow */}
-      <section className="relative py-24 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-r from-[#1a1a1f] via-[#0f0f12] to-[#1a1a1f]" />
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-[#00d4aa]/30 bg-[#00d4aa]/10 mb-4">
-              <span className="w-2 h-2 rounded-full bg-[#00d4aa] animate-pulse"></span>
-              <span className="text-xs font-bold uppercase tracking-[2px] text-[#00d4aa]">THE NEXTDIGI METHODOLOGY</span>
+      {/* ================================================================ */}
+      {/* SECTION 8: CASE STUDIES & PROVEN RESULTS */}
+      {/* ================================================================ */}
+      <section className="py-24 relative border-t border-white/5 bg-[#080b11]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-col md:flex-row md:items-end justify-between mb-14">
+            <div>
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-xs font-semibold text-gray-300 uppercase tracking-wider mb-3">
+                Proven Engineering
+              </div>
+              <h2 className="text-3xl sm:text-4xl font-extrabold text-white">
+                Real Projects. Real Engineering.
+              </h2>
             </div>
-            <h2 className="text-4xl md:text-5xl font-extrabold mb-4 gradient-text">
-              Build • Launch • Automate • Grow
+            <Link
+              href="/case-studies"
+              className="mt-4 md:mt-0 text-sm font-semibold text-[#00d4aa] hover:underline inline-flex items-center gap-1"
+            >
+              View Detailed Architecture Studies <ArrowRightIcon className="w-4 h-4" />
+            </Link>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {[
+              {
+                title: 'NextDigi Headless Commerce',
+                type: 'Headless E-Commerce & Payment Engine',
+                desc: 'Engineered sub-second checkout, native bKash/Nagad direct webhooks, and automated Pathao/Steadfast consignment creation.',
+                metric: 'Sub-45s Checkout Completion',
+                accent: '#00d4aa'
+              },
+              {
+                title: 'Garibondhu360 Automotive SaaS',
+                type: 'Vertical Cloud ERP & Workshop OS',
+                desc: 'Replaced paper slips with tablet digital job cards, barcode spare parts stock deduction, and automated customer SMS status updates.',
+                metric: '100% Digital Job Tracking',
+                accent: '#38bdf8'
+              },
+              {
+                title: 'NextDigi Cloud Infrastructure',
+                type: 'High-Concurrency Docker & Redis Architecture',
+                desc: 'Edge-cached microservice architecture supporting high traffic bursts with automated container self-healing and zero downtime.',
+                metric: '99.9% Production Uptime',
+                accent: '#8b5cf6'
+              }
+            ].map((cs, i) => (
+              <div key={i} className="p-8 rounded-3xl bg-[#0c1017] border border-white/10 hover:border-white/20 transition flex flex-col justify-between">
+                <div>
+                  <span className="text-[11px] font-mono text-gray-400 uppercase tracking-wider block mb-2">{cs.type}</span>
+                  <h3 className="text-xl font-bold text-white mb-3">{cs.title}</h3>
+                  <p className="text-sm text-gray-400 leading-relaxed mb-6">{cs.desc}</p>
+                </div>
+                <div className="pt-4 border-t border-white/5 flex items-center justify-between">
+                  <span className="text-xs font-bold" style={{ color: cs.accent }}>{cs.metric}</span>
+                  <Link href="/case-studies" className="text-xs text-gray-400 hover:text-white transition">Read Study →</Link>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ================================================================ */}
+      {/* SECTION 9: HOW WE WORK (METHODOLOGY) */}
+      {/* ================================================================ */}
+      <section className="py-24 relative border-t border-white/5">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center max-w-3xl mx-auto mb-16">
+            <span className="text-xs font-semibold uppercase tracking-wider text-[#00d4aa]">Engineering Lifecycle</span>
+            <h2 className="text-3xl sm:text-4xl font-extrabold text-white mt-1 mb-4">
+              How We Work: Build • Launch • Automate • Grow
             </h2>
-            <p className="text-base sm:text-lg text-[#8c8c9a] max-w-2xl mx-auto">
-              Our 4-stage venture execution framework engineered to transform ideas into scalable market leaders.
+            <p className="text-gray-400 text-sm sm:text-base">
+              A disciplined, milestone-driven technical process designed to take projects from architecture to scalable market operations.
             </p>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {/* 1. Build */}
-            <div className="p-6 rounded-2xl bg-[#131318] border border-white/5 hover:border-[#00d4aa]/40 transition-all duration-300 group hover:-translate-y-1">
-              <div className="w-14 h-14 rounded-2xl bg-[#00d4aa]/10 border border-[#00d4aa]/30 flex items-center justify-center text-xl font-black text-[#00d4aa] mb-5">
-                01
-              </div>
-              <span className="text-[10px] font-extrabold uppercase tracking-widest text-[#00d4aa]">NEXTDIGI HOME</span>
-              <h3 className="text-xl font-bold text-[#fafafa] mt-1 mb-3 group-hover:text-[#00d4aa] transition-colors">
-                Build
-              </h3>
-              <p className="text-xs sm:text-sm text-[#8c8c9a] leading-relaxed">
-                Architect clean solutions using verified digital templates, UI systems, business tools, and developer assets.
-              </p>
-            </div>
-
-            {/* 2. Launch */}
-            <div className="p-6 rounded-2xl bg-[#131318] border border-white/5 hover:border-[#8b5cf6]/40 transition-all duration-300 group hover:-translate-y-1">
-              <div className="w-14 h-14 rounded-2xl bg-[#8b5cf6]/10 border border-[#8b5cf6]/30 flex items-center justify-center text-xl font-black text-[#a78bfa] mb-5">
-                02
-              </div>
-              <span className="text-[10px] font-extrabold uppercase tracking-widest text-[#a78bfa]">NEXTDIGI SOLUTIONS</span>
-              <h3 className="text-xl font-bold text-[#fafafa] mt-1 mb-3 group-hover:text-[#a78bfa] transition-colors">
-                Launch
-              </h3>
-              <p className="text-xs sm:text-sm text-[#8c8c9a] leading-relaxed">
-                Deploy production-grade e-commerce platforms, web applications, and iOS/Android mobile apps with zero friction.
-              </p>
-            </div>
-
-            {/* 3. Automate */}
-            <div className="p-6 rounded-2xl bg-[#131318] border border-white/5 hover:border-[#ec4899]/40 transition-all duration-300 group hover:-translate-y-1">
-              <div className="w-14 h-14 rounded-2xl bg-[#ec4899]/10 border border-[#ec4899]/30 flex items-center justify-center text-xl font-black text-[#f472b6] mb-5">
-                03
-              </div>
-              <span className="text-[10px] font-extrabold uppercase tracking-widest text-[#f472b6]">NEXTDIGI AI</span>
-              <h3 className="text-xl font-bold text-[#fafafa] mt-1 mb-3 group-hover:text-[#f472b6] transition-colors">
-                Automate
-              </h3>
-              <p className="text-xs sm:text-sm text-[#8c8c9a] leading-relaxed">
-                Eliminate manual overhead with autonomous AI support agents, synthetic video synthesis, and zero-touch RPA pipelines.
-              </p>
-            </div>
-
-            {/* 4. Grow */}
-            <div className="p-6 rounded-2xl bg-[#131318] border border-white/5 hover:border-[#f59e0b]/40 transition-all duration-300 group hover:-translate-y-1">
-              <div className="w-14 h-14 rounded-2xl bg-[#f59e0b]/10 border border-[#f59e0b]/30 flex items-center justify-center text-xl font-black text-[#fbbf24] mb-5">
-                04
-              </div>
-              <span className="text-[10px] font-extrabold uppercase tracking-widest text-[#fbbf24]">NEXTDIGI LABS</span>
-              <h3 className="text-xl font-bold text-[#fafafa] mt-1 mb-3 group-hover:text-[#fbbf24] transition-colors">
-                Grow
-              </h3>
-              <p className="text-xs sm:text-sm text-[#8c8c9a] leading-relaxed">
-                Scale revenue and operations with proprietary SaaS products: NextDigi Commerce, Social, and Automate engines.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Premium Product Categories Section */}
-      <section className="relative py-20 overflow-hidden bg-[#0a0a0d]">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,#00d4aa05_0%,transparent_70%)]" />
-        
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <div className="inline-flex items-center gap-2 px-5 py-1.5 rounded-full border border-[#00d4aa]/20 bg-[#00d4aa]/5 mb-4">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#00d4aa]"></span>
-              <span className="text-xs font-semibold tracking-[2px] text-[#00d4aa]">EXPLORE BY CATEGORY</span>
-            </div>
-            <h2 className="text-4xl md:text-5xl font-bold tracking-[-1.5px] mb-4">
-              Discover by <span className="gradient-text">Category</span>
-            </h2>
-            <p className="text-lg text-[#737373] max-w-md mx-auto">
-              Curated collections of premium digital assets for every professional need
-            </p>
-          </div>
-
-          {/* Premium Categories + Products Layout */}
-          <div className="grid gap-6 lg:grid-cols-[minmax(0,17rem)_minmax(0,1fr)] xl:gap-8">
-            {/* Premium Left Sidebar - Categories */}
-            <div className="min-w-0">
-              <div className="bg-[#121214] border border-[#2a2a30] rounded-2xl p-4 sm:rounded-3xl sm:p-6 lg:sticky lg:top-28">
-                <h3 className="text-sm font-semibold text-[#fafafa] mb-5 tracking-wider flex items-center gap-2">
-                  BROWSE CATEGORIES
-                  <span className="flex-1 h-px bg-gradient-to-r from-[#2a2a30] to-transparent"></span>
-                </h3>
-                
-                <div className="space-y-1.5">
-                  <button
-                    onClick={() => setSelectedCategory('all')}
-                    className={`w-full text-left px-5 py-3 rounded-2xl text-sm font-medium transition-all flex items-center gap-3 ${
-                      selectedCategory === 'all'
-                        ? 'bg-gradient-to-r from-[#00d4aa] to-[#8b5cf6] text-[#0f0f12] shadow-lg'
-                        : 'text-[#fafafa] hover:bg-[#1a1a1f] border border-transparent hover:border-[#2a2a30]'
-                    }`}
-                  >
-                    <span className="text-lg">⭐</span>
-                    <span>All Products</span>
-                  </button>
-
-                  {loadingCategories ? (
-                    Array.from({ length: 6 }, (_, index) => (
-                      <div key={index} className="px-5 py-3 rounded-2xl border border-[#2a2a30] bg-[#1a1a1f] animate-pulse">
-                        <div className="w-28 h-4 bg-[#2a2a30] rounded"></div>
-                      </div>
-                    ))
-                  ) : (
-                    allCategories.map((category) => (
-                      <button
-                        key={category.id}
-                        onClick={() => setSelectedCategory(category.slug)}
-                        className={`w-full text-left px-5 py-3 rounded-2xl text-sm font-medium transition-all flex items-center gap-3 ${
-                          selectedCategory === category.slug
-                            ? 'bg-gradient-to-r from-[#00d4aa] to-[#8b5cf6] text-[#0f0f12] shadow-lg'
-                            : 'text-[#fafafa] hover:bg-[#1a1a1f] border border-transparent hover:border-[#2a2a30]'
-                        }`}
-                      >
-                        <span className="text-xl flex-shrink-0">{categoryIconMap[category.slug.toLowerCase()] || '📌'}</span>
-                        <span className="truncate">{category.category_name}</span>
-                      </button>
-                    ))
-                  )}
-                </div>
-
-                {/* Premium Quick Search */}
-                <div className="mt-8 pt-6 border-t border-[#2a2a30]">
-                  <div className="relative">
-                    <input
-                      type="text"
-                      placeholder="Search products..."
-                      value={searchQuery}
-                      onChange={(e) => setSearchQuery(e.target.value)}
-                      onKeyDown={(e) => {
-                        if (e.key === 'Enter') {
-                          submitProductSearch();
-                        }
-                      }}
-                      className="w-full bg-[#0f0f12] border border-[#2a2a30] rounded-2xl pl-5 pr-11 py-3 text-sm text-[#fafafa] placeholder-[#555] focus:outline-none focus:border-[#00d4aa] transition-all"
-                    />
-                    <button
-                      type="button"
-                      onClick={submitProductSearch}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 rounded-lg p-1.5 text-[#737373] transition-colors hover:bg-[#1a1a1f] hover:text-[#00d4aa]"
-                      aria-label="Search full catalog"
-                    >
-                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                      </svg>
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Right Side - Products with Search and Filter */}
-            <div className="min-w-0">
-              <div className="mb-6 flex flex-col gap-3 sm:mb-8 sm:flex-row sm:items-end sm:justify-between">
-                <div className="min-w-0">
-                  <div className="text-xs uppercase tracking-[3px] text-[#00d4aa] font-medium mb-1">RESULTS</div>
-                  <h3 className="text-xl font-semibold text-[#fafafa] sm:text-2xl">
-                    {filteredProducts.length} {selectedCategory === 'all' ? 'Products' : allCategories.find(c => c.slug === selectedCategory)?.category_name || selectedCategory}
-                    {searchQuery && <span className="block text-sm font-normal text-[#737373] sm:inline sm:text-lg"> matching “{searchQuery}”</span>}
-                  </h3>
-                </div>
-                <Link href={productCatalogHref} className="inline-flex self-start text-sm font-semibold text-[#00d4aa] hover:underline sm:self-auto">View all products →</Link>
-              </div>
-
-              {loadingProducts ? (
-                <div className="flex items-center justify-center py-20">
-                  <div className="text-center space-y-6">
-                    <div className="relative">
-                      <div className="w-16 h-16 border-4 border-[#00d4aa]/30 border-t-[#00d4aa] rounded-full animate-spin mx-auto"></div>
-                    </div>
-                    <div className="space-y-2">
-                      <p className="text-[#fafafa] text-lg font-semibold">Loading Products</p>
-                      <p className="text-[#737373] text-sm">Fetching premium digital assets...</p>
-                    </div>
-                  </div>
-                </div>
-              ) : (
-                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-5 xl:grid-cols-3 xl:gap-6">
-                  {filteredProducts.map((product) => (
-                    <Link
-                      key={product.id}
-                      href={`/products/${product.slug || product.id}`}
-                      className="group glass-card flex min-w-0 flex-col overflow-hidden rounded-2xl border border-[#2a2a30] transition-all duration-500 hover:-translate-y-1 hover:border-[#00d4aa]/40 hover:shadow-2xl hover:shadow-[#00d4aa]/10 sm:rounded-3xl"
-                    >
-                      <div className="relative aspect-[4/3] overflow-hidden sm:aspect-video">
-                         {product.thumbnail ? (
-                           <img
-                             src={getStorageUrl(product.thumbnail)!}
-                             alt={product.name}
-                             loading="lazy"
-                             decoding="async"
-                             className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
-                           />
-                         ) : (
-                          <div className="w-full h-full bg-linear-to-br from-[#1a1a1f] to-[#2a2a30] flex items-center justify-center">
-                            <span className="text-[#737373]">No Image</span>
-                          </div>
-                        )}
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
-                        
-                        {product.featured && (
-                          <div className="absolute right-3 top-3 sm:right-4 sm:top-4">
-                            <span className="rounded-full bg-white/90 px-2.5 py-1 text-[9px] font-bold tracking-wider text-[#0f0f12] shadow-lg sm:px-3 sm:text-[10px]">
-                              FEATURED
-                            </span>
-                          </div>
-                        )}
-                        
-                        <div className="absolute bottom-3 left-3 right-3 sm:bottom-4 sm:left-4 sm:right-4">
-                          <span className="inline-flex max-w-full rounded-full bg-black/65 px-3 py-1 text-xs font-medium text-white backdrop-blur">
-                            {product.category}
-                          </span>
-                        </div>
-                      </div>
-
-                      <div className="flex flex-1 flex-col p-4 sm:p-5 xl:p-6">
-                        <h4 className="mb-2 line-clamp-2 text-base font-semibold text-[#fafafa] transition-colors group-hover:text-[#00d4aa] sm:text-lg">
-                          {product.name}
-                        </h4>
-                        
-                        <p className="mb-4 line-clamp-2 flex-1 text-sm leading-6 text-[#737373] sm:mb-5">
-                          {product.description}
-                        </p>
-
-                        <div className="mt-auto flex min-w-0 flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                          <div className="min-w-0">
-                            <span className="text-xl font-bold text-[#00d4aa] sm:text-2xl">
-                              ৳{product.price}
-                            </span>
-                            {product.compare_price && product.compare_price > product.price && (
-                              <span className="ml-2 text-xs text-[#737373] line-through sm:text-sm">
-                                ৳{product.compare_price}
-                              </span>
-                            )}
-                          </div>
-                          <span className="inline-flex flex-shrink-0 items-center justify-center rounded-full border border-[#00d4aa]/25 bg-[#00d4aa]/5 px-3 py-1.5 text-xs font-semibold text-[#00d4aa] transition-all group-hover:border-[#00d4aa]/50 group-hover:bg-[#00d4aa]/10">View →</span>
-                        </div>
-                      </div>
-                    </Link>
-                  ))}
-
-                   {filteredProducts.length === 0 && (
-                     <div className="col-span-full text-center py-16">
-                       <div className="mx-auto w-16 h-16 rounded-2xl bg-[#1a1a1f] border border-[#2a2a30] flex items-center justify-center mb-6">
-                         <span className="text-3xl">🔍</span>
-                       </div>
-                       <h4 className="text-2xl font-semibold text-[#fafafa] mb-3">No products found</h4>
-                       <p className="text-[#737373] max-w-xs mx-auto mb-8">Try adjusting your search or selecting a different category.</p>
-                       <button
-                         onClick={() => {
-                           setSearchQuery('');
-                           setSelectedCategory('all');
-                         }}
-                         className="px-8 py-3 bg-[#1a1a1f] border border-[#2a2a30] hover:border-[#00d4aa] text-[#fafafa] rounded-2xl text-sm font-medium transition-all"
-                       >
-                        Clear Filters
-                      </button>
-                    </div>
-                  )}
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Customer Reviews Section */}
-      <section className="relative py-24 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-r from-[#8b5cf6]/10 via-[#00d4aa]/10 to-[#8b5cf6]/10" />
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-[#8b5cf6]/30 bg-[#8b5cf6]/5 backdrop-blur-md mb-6">
-              <span className="w-2 h-2 rounded-full bg-[#8b5cf6] animate-pulse"></span>
-              <span className="text-sm font-semibold text-[#8b5cf6]">⭐ CUSTOMER REVIEWS</span>
-            </div>
-            <h2 className="text-4xl md:text-5xl font-bold mb-6 gradient-text">
-              What Our Customers Say
-            </h2>
-            <p className="text-xl text-[#737373] max-w-2xl mx-auto">
-              Practical feedback from local business owners, agencies, and creators using our digital products every week
-            </p>
-          </div>
-
-          {/* Reviews Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {/* Review 1 */}
-            <div className="glass-card rounded-2xl p-8 border border-[#2a2a30] hover:border-[#00d4aa]/30 transition-all duration-300 hover-lift">
-              <div className="flex items-center justify-between mb-4">
-                <div>
-                  <h3 className="text-lg font-bold text-[#fafafa]">Tanvir Ahmed</h3>
-                  <p className="text-sm text-[#737373]">Online Shop Owner, Dhaka</p>
-                </div>
-                <div className="flex gap-1">
-                  {[...Array(5)].map((_, i) => (
-                    <span key={i} className="text-yellow-400">⭐</span>
-                  ))}
-                </div>
-              </div>
-              <p className="text-[#737373] leading-relaxed">
-                The landing page template was clean and easy to adjust for my store. I launched a campaign the same day, and support helped me with the download issue quickly.
-              </p>
-              <div className="mt-6 pt-6 border-t border-[#2a2a30]">
-                <p className="text-sm text-[#00d4aa] font-semibold">Purchased website template and promo assets</p>
-              </div>
-            </div>
-
-            {/* Review 2 */}
-            <div className="glass-card rounded-2xl p-8 border border-[#2a2a30] hover:border-[#00d4aa]/30 transition-all duration-300 hover-lift">
-              <div className="flex items-center justify-between mb-4">
-                <div>
-                  <h3 className="text-lg font-bold text-[#fafafa]">Nusrat Jahan</h3>
-                  <p className="text-sm text-[#737373]">Freelance Designer, Chattogram</p>
-                </div>
-                <div className="flex gap-1">
-                  {[...Array(5)].map((_, i) => (
-                    <span key={i} className="text-yellow-400">⭐</span>
-                  ))}
-                </div>
-              </div>
-              <p className="text-[#737373] leading-relaxed">
-                I used the social media graphics pack for two client pages. Files were organized, editable, and saved me a lot of routine design time.
-              </p>
-              <div className="mt-6 pt-6 border-t border-[#2a2a30]">
-                <p className="text-sm text-[#00d4aa] font-semibold">Used for client Facebook and Instagram posts</p>
-              </div>
-            </div>
-
-            {/* Review 3 */}
-            <div className="glass-card rounded-2xl p-8 border border-[#2a2a30] hover:border-[#00d4aa]/30 transition-all duration-300 hover-lift">
-              <div className="flex items-center justify-between mb-4">
-                <div>
-                  <h3 className="text-lg font-bold text-[#fafafa]">Mahmudul Hasan</h3>
-                  <p className="text-sm text-[#737373]">Training Center Manager, Sylhet</p>
-                </div>
-                <div className="flex gap-1">
-                  {[...Array(5)].map((_, i) => (
-                    <span key={i} className="text-yellow-400">⭐</span>
-                  ))}
-                </div>
-              </div>
-              <p className="text-[#737373] leading-relaxed">
-                We bought presentation and certificate templates for our course batches. The designs looked professional, and editing them for Bangla-English content was simple.
-              </p>
-              <div className="mt-6 pt-6 border-t border-[#2a2a30]">
-                <p className="text-sm text-[#00d4aa] font-semibold">Used for course slides and certificates</p>
-              </div>
-            </div>
-          </div>
-
-          {/* Call to Action */}
-          <div className="mt-16 text-center">
-            <p className="text-[#737373] text-lg mb-6">Explore tools and templates made for everyday business work.</p>
-            <Link
-              href="/products"
-              className="group relative inline-flex items-center px-8 py-4 bg-gradient-to-r from-[#00d4aa] to-[#8b5cf6] text-[#0f0f12] font-bold text-lg rounded-xl overflow-hidden transition-all duration-300 hover:scale-105 hover:shadow-lg"
-            >
-              <span className="absolute inset-0 bg-white/20 opacity-0 group-hover:opacity-100 transition-opacity"></span>
-              <span className="relative flex items-center gap-2">
-                Explore Our Products
-                <ArrowRightIcon className="w-5 h-5 transition-transform group-hover:translate-x-1" />
-              </span>
-            </Link>
-          </div>
-        </div>
-      </section>
-
-
-
-
-
-
-
-      {/* Trust & Security Badges - Enhanced Trust Building */}
-      <section className="relative py-16 border-y border-[#2a2a30] bg-[#0a0a0d]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-10">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-[#00d4aa]/30 bg-[#00d4aa]/5 backdrop-blur-md mb-4">
-              <span className="w-2 h-2 rounded-full bg-[#00d4aa] animate-pulse"></span>
-              <span className="text-sm font-semibold text-[#00d4aa]">TRUSTED WORLDWIDE</span>
-            </div>
-            <h2 className="text-3xl md:text-4xl font-bold mb-3 gradient-text">
-              Why 50,000+ Businesses Trust Us
-            </h2>
-            <p className="text-[#737373] max-w-xl mx-auto">Premium quality, secure transactions, and unmatched support — every time.</p>
-          </div>
-
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
             {[
-              { icon: "🛡️", title: "30-Day Guarantee", desc: "Full refund if not satisfied" },
-              { icon: "🔒", title: "SSL Secure", desc: "256-bit encryption" },
-              { icon: "⚡", title: "Instant Delivery", desc: "Download immediately" },
-              { icon: "✅", title: "Verified Products", desc: "100% authentic sources" },
-              { icon: "💬", title: "24/7 Support", desc: "Real humans, real help" },
-              { icon: "⭐", title: "4.8/5 Average", desc: "From 15K+ reviews" },
-            ].map((badge, index) => (
-              <div key={index} className="glass-card rounded-xl p-5 text-center border border-[#2a2a30] hover:border-[#00d4aa]/40 transition-all group">
-                <div className="text-3xl mb-3 group-hover:scale-110 transition-transform">{badge.icon}</div>
-                <h4 className="font-semibold text-[#fafafa] text-sm mb-1 tracking-wide">{badge.title}</h4>
-                <p className="text-[#737373] text-xs leading-tight">{badge.desc}</p>
+              { step: '01', title: 'Discover & Architect', desc: 'Requirements scoping, system architecture design, database modeling, and milestone scheduling.' },
+              { step: '02', title: 'Build & Engineer', desc: 'Sprint-based agile engineering with strict TypeScript type safety, unit testing, and weekly demo builds.' },
+              { step: '03', title: 'Automate & Integrate', desc: 'Connect payment gateways, CRMs, courier APIs, and autonomous AI agents for zero-touch workflows.' },
+              { step: '04', title: 'Launch & Scale', desc: 'Production deployment on high-availability cloud hosting, attribution tracking, and disciplined growth scaling.' }
+            ].map((m) => (
+              <div key={m.step} className="p-7 rounded-3xl bg-[#0c1017] border border-white/10 hover:border-[#00d4aa]/30 transition">
+                <div className="text-3xl font-black text-[#00d4aa]/40 mb-3">{m.step}</div>
+                <h3 className="text-lg font-bold text-white mb-2">{m.title}</h3>
+                <p className="text-xs sm:text-sm text-gray-400 leading-relaxed">{m.desc}</p>
               </div>
             ))}
           </div>
+        </div>
+      </section>
 
-          <div className="mt-8 text-center">
-            <p className="text-xs text-[#737373] flex items-center justify-center gap-2">
-              <span>🔐</span> All payments secured &amp; encrypted. We never store your card details.
+      {/* ================================================================ */}
+      {/* SECTION 10: WHY BUSINESSES CHOOSE NEXTDIGIHOME */}
+      {/* ================================================================ */}
+      <section className="py-24 relative border-t border-white/5 bg-[#080b11]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center max-w-3xl mx-auto mb-16">
+            <span className="text-xs font-semibold uppercase tracking-wider text-[#00d4aa]">Capability Pillars</span>
+            <h2 className="text-3xl sm:text-4xl font-extrabold text-white mt-1 mb-4">
+              Why Forward-Thinking Businesses Choose NextDigiHome
+            </h2>
+            <p className="text-gray-400 text-sm sm:text-base">
+              Factual engineering strengths based on production experience, transparent billing, and complete code ownership.
             </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {[
+              {
+                title: '8+ Years Combined Engineering',
+                desc: 'Experienced full-stack engineers with extensive production background in high-throughput web applications, APIs, and cloud infrastructure.',
+                icon: CommandLineIcon
+              },
+              {
+                title: '100% Code & IP Ownership',
+                desc: 'You own all intellectual property, source repositories, documentation, and cloud deployment credentials upon project completion.',
+                icon: ShieldCheckIcon
+              },
+              {
+                title: 'Battle-Tested in NextDigi Labs',
+                desc: 'We test architectures on our own SaaS products first. The components we deploy for your business have processed thousands of live transactions.',
+                icon: BeakerIcon
+              },
+              {
+                title: 'Unified Technology Ecosystem',
+                desc: 'No need to manage 5 disparate vendors. Solutions, AI automation, growth marketing, and digital assets operate under one cohesive roof.',
+                icon: SparklesIcon
+              },
+              {
+                title: 'SLA-Backed Support & Monitoring',
+                desc: 'Proactive 24/7 server monitoring, automated daily encrypted backups, and rapid incident response to guarantee uptime.',
+                icon: ClockIcon
+              },
+              {
+                title: 'Transparent Milestone Billing',
+                desc: 'Clear scope boundaries, transparent pricing, and milestone-tied deliverables with zero hidden surprises or vendor lock-in.',
+                icon: CheckCircleIcon
+              }
+            ].map((prop, i) => {
+              const Icon = prop.icon;
+              return (
+                <div key={i} className="p-7 rounded-3xl bg-[#0c1017] border border-white/10 hover:border-white/20 transition">
+                  <div className="w-11 h-11 rounded-2xl bg-[#00d4aa]/10 border border-[#00d4aa]/20 flex items-center justify-center text-[#00d4aa] mb-5">
+                    <Icon className="w-5 h-5" />
+                  </div>
+                  <h3 className="text-base font-bold text-white mb-2">{prop.title}</h3>
+                  <p className="text-xs sm:text-sm text-gray-400 leading-relaxed">{prop.desc}</p>
+                </div>
+              );
+            })}
           </div>
         </div>
       </section>
 
-      {/* NEXTDIGI Brand Architecture & Ecosystem Section */}
-      <NextDigiEcosystem />
-
-      {/* Real World Professional Use Cases Section */}
-      <section className="relative py-24 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-b from-[#1a1a2e]/50 via-[#0f0f12] to-[#1a1a2e]/50" />
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold mb-6 gradient-text">
-              Real World Professional Use Cases
+      {/* ================================================================ */}
+      {/* SECTION 11: VERIFIED CLIENT FEEDBACK & TRUST */}
+      {/* ================================================================ */}
+      <section className="py-24 relative border-t border-white/5">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center max-w-2xl mx-auto mb-14">
+            <span className="text-xs font-semibold uppercase tracking-wider text-[#00d4aa]">Client Perspectives</span>
+            <h2 className="text-3xl font-extrabold text-white mt-1">
+              Engineered for Real Impact
             </h2>
-            <p className="text-xl text-[#737373] max-w-2xl mx-auto">
-              See how industry professionals and enterprises leverage our premium digital products to solve real business challenges
-            </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {/* Use Case 1 */}
-            <div className="glass-card rounded-2xl p-8 border border-[#2a2a30] hover:border-[#00d4aa]/30 transition-all duration-300 hover-lift animate-fade-in-up">
-              <div className="flex items-center gap-4 mb-6">
-                <div className="w-12 h-12 rounded-full bg-linear-to-br from-[#00d4aa] to-[#8b5cf6] flex items-center justify-center text-xl">🚀</div>
-                <h3 className="text-2xl font-bold text-[#fafafa]">Startup Launch</h3>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {[
+              {
+                quote: "NextDigiHome completely modernized our e-commerce platform. Moving to their headless Next.js architecture with bKash and courier auto-sync cut our checkout drops dramatically.",
+                author: "Tariqul Islam",
+                role: "Operations Director, Retail Commerce"
+              },
+              {
+                quote: "The automated WhatsApp chatbot and ticket triaging they built handles over 60% of our daily customer inquiries in both Bangla and English without human intervention.",
+                author: "Sabrina Rahman",
+                role: "Customer Experience Lead"
+              },
+              {
+                quote: "Unlike agencies that make wild 10x ROAS claims, the NextDigi Growth team implemented server-side CAPI tracking, creative testing, and clean attribution that gave us reliable metrics.",
+                author: "Farhan Ahmed",
+                role: "Founder, D2C Apparel Brand"
+              }
+            ].map((t, i) => (
+              <div key={i} className="p-8 rounded-3xl bg-[#0c1017] border border-white/10 flex flex-col justify-between">
+                <p className="text-sm text-gray-300 leading-relaxed italic mb-6">
+                  &ldquo;{t.quote}&rdquo;
+                </p>
+                <div>
+                  <h4 className="text-sm font-bold text-white">{t.author}</h4>
+                  <p className="text-xs text-gray-400">{t.role}</p>
+                </div>
               </div>
-              <p className="text-[#737373] mb-6 leading-relaxed">
-                Fast-track your startup with our professional templates, branding kits, and business tools. Launch 10x faster with pre-built infrastructure.
-              </p>
-              <div className="space-y-3 mb-6">
-                <div className="flex items-center gap-3">
-                  <span className="text-[#00d4aa]">✓</span>
-                  <span className="text-sm text-[#b0b0b0]">Website & Landing Pages</span>
-                </div>
-                <div className="flex items-center gap-3">
-                  <span className="text-[#00d4aa]">✓</span>
-                  <span className="text-sm text-[#b0b0b0]">Brand Identity Templates</span>
-                </div>
-                <div className="flex items-center gap-3">
-                  <span className="text-[#00d4aa]">✓</span>
-                  <span className="text-sm text-[#b0b0b0]">Pitch Deck Presentations</span>
-                </div>
-              </div>
-              <span className="inline-flex items-center text-[#00d4aa] font-medium group hover:translate-x-1 transition-transform cursor-pointer">
-                View More <ArrowRightIcon className="w-4 h-4 ml-1" />
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ================================================================ */}
+      {/* SECTION 12: LEAD GENERATION CTA BANNER */}
+      {/* ================================================================ */}
+      <section className="py-24 relative border-t border-white/5 bg-[#070a10] overflow-hidden">
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[350px] bg-gradient-to-r from-[#00d4aa]/15 via-[#8b5cf6]/15 to-transparent blur-[160px] pointer-events-none rounded-full" />
+
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <div className="rounded-3xl border border-[#00d4aa]/30 bg-gradient-to-b from-[#111722]/90 to-[#0c1017]/90 p-8 sm:p-14 text-center backdrop-blur-xl shadow-2xl">
+            <span className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#00d4aa]/10 border border-[#00d4aa]/30 text-xs font-semibold text-[#00d4aa] uppercase tracking-wider mb-6">
+              <SparklesIcon className="w-4 h-4 text-[#00d4aa]" />
+              Let&apos;s Build Together
+            </span>
+            <h2 className="text-3xl sm:text-5xl font-black text-white tracking-tight leading-tight mb-4">
+              Have a Business Idea? <br />
+              <span className="bg-gradient-to-r from-[#00d4aa] via-[#38bdf8] to-[#8b5cf6] bg-clip-text text-transparent">
+                Let&apos;s Architect & Build It.
               </span>
+            </h2>
+            <p className="text-gray-300 text-base sm:text-lg max-w-2xl mx-auto mb-10">
+              Speak directly with our technology architects to discuss user requirements, technical feasibility, timeline, and budget estimation.
+            </p>
+
+            <div className="flex flex-wrap items-center justify-center gap-4">
+              <Link
+                href="/contact"
+                className="px-8 py-4 rounded-xl font-bold text-black bg-[#00d4aa] hover:bg-[#00e2b6] transition-all duration-300 shadow-xl shadow-[#00d4aa]/25 flex items-center gap-2 text-sm sm:text-base hover:scale-[1.02]"
+              >
+                <span>Start a Project</span>
+                <ArrowRightIcon className="w-4 h-4" />
+              </Link>
+              <a
+                href="https://wa.me/8801918329829?text=Hello%20NextDigiHome%2C%20I%20would%20like%20to%20discuss%20a%20project"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="px-7 py-4 rounded-xl font-bold text-black bg-[#25D366] hover:bg-[#20bd5a] transition-all duration-300 shadow-xl shadow-[#25D366]/20 flex items-center gap-2 text-sm sm:text-base"
+              >
+                <span>Chat on WhatsApp</span>
+                <ArrowRightIcon className="w-4 h-4" />
+              </a>
             </div>
 
-            {/* Use Case 2 */}
-            <div className="glass-card rounded-2xl p-8 border border-[#2a2a30] hover:border-[#8b5cf6]/30 transition-all duration-300 hover-lift animate-fade-in-up">
-              <div className="flex items-center gap-4 mb-6">
-                <div className="w-12 h-12 rounded-full bg-linear-to-br from-[#8b5cf6] to-[#00d4aa] flex items-center justify-center text-xl">💼</div>
-                <h3 className="text-2xl font-bold text-[#fafafa]">Enterprise Solutions</h3>
-              </div>
-              <p className="text-[#737373] mb-6 leading-relaxed">
-                Scale your enterprise with our comprehensive suite of business automation tools, CRM templates, and workflow solutions.
-              </p>
-              <div className="space-y-3 mb-6">
-                <div className="flex items-center gap-3">
-                  <span className="text-[#8b5cf6]">✓</span>
-                  <span className="text-sm text-[#b0b0b0]">Business Process Templates</span>
-                </div>
-                <div className="flex items-center gap-3">
-                  <span className="text-[#8b5cf6]">✓</span>
-                  <span className="text-sm text-[#b0b0b0]">Analytics & Reporting Tools</span>
-                </div>
-                <div className="flex items-center gap-3">
-                  <span className="text-[#8b5cf6]">✓</span>
-                  <span className="text-sm text-[#b0b0b0]">Integration Frameworks</span>
-                </div>
-              </div>
-              <span className="inline-flex items-center text-[#8b5cf6] font-medium group hover:translate-x-1 transition-transform cursor-pointer">
-                View More <ArrowRightIcon className="w-4 h-4 ml-1" />
-              </span>
-            </div>
-
-            {/* Use Case 3 */}
-            <div className="glass-card rounded-2xl p-8 border border-[#2a2a30] hover:border-[#00d4aa]/30 transition-all duration-300 hover-lift animate-fade-in-up">
-              <div className="flex items-center gap-4 mb-6">
-                <div className="w-12 h-12 rounded-full bg-linear-to-br from-[#00d4aa] to-[#8b5cf6] flex items-center justify-center text-xl">🎨</div>
-                <h3 className="text-2xl font-bold text-[#fafafa]">Creative Agencies</h3>
-              </div>
-              <p className="text-[#737373] mb-6 leading-relaxed">
-                Empower your creative team with premium design assets, UI kits, and stock resources for client projects.
-              </p>
-              <div className="space-y-3 mb-6">
-                <div className="flex items-center gap-3">
-                  <span className="text-[#00d4aa]">✓</span>
-                  <span className="text-sm text-[#b0b0b0]">UI/UX Design Systems</span>
-                </div>
-                <div className="flex items-center gap-3">
-                  <span className="text-[#00d4aa]">✓</span>
-                  <span className="text-sm text-[#b0b0b0]">Premium Stock Assets</span>
-                </div>
-                <div className="flex items-center gap-3">
-                  <span className="text-[#00d4aa]">✓</span>
-                  <span className="text-sm text-[#b0b0b0]">Design Tools & Plugins</span>
-                </div>
-              </div>
-              <span className="inline-flex items-center text-[#00d4aa] font-medium group hover:translate-x-1 transition-transform cursor-pointer">
-                View More <ArrowRightIcon className="w-4 h-4 ml-1" />
-              </span>
-            </div>
-
-            {/* Use Case 4 */}
-            <div className="glass-card rounded-2xl p-8 border border-[#2a2a30] hover:border-[#ff6b9d]/30 transition-all duration-300 hover-lift animate-fade-in-up">
-              <div className="flex items-center gap-4 mb-6">
-                <div className="w-12 h-12 rounded-full bg-linear-to-br from-[#ff6b9d] to-[#8b5cf6] flex items-center justify-center text-xl">📊</div>
-                <h3 className="text-2xl font-bold text-[#fafafa]">Data & Analytics</h3>
-              </div>
-              <p className="text-[#737373] mb-6 leading-relaxed">
-                Transform raw data into actionable insights with our analytics platforms and business intelligence tools.
-              </p>
-              <div className="space-y-3 mb-6">
-                <div className="flex items-center gap-3">
-                  <span className="text-[#ff6b9d]">✓</span>
-                  <span className="text-sm text-[#b0b0b0]">Dashboard Templates</span>
-                </div>
-                <div className="flex items-center gap-3">
-                  <span className="text-[#ff6b9d]">✓</span>
-                  <span className="text-sm text-[#b0b0b0]">Visualization Tools</span>
-                </div>
-                <div className="flex items-center gap-3">
-                  <span className="text-[#ff6b9d]">✓</span>
-                  <span className="text-sm text-[#b0b0b0]">Report Generation</span>
-                </div>
-              </div>
-              <span className="inline-flex items-center text-[#ff6b9d] font-medium group hover:translate-x-1 transition-transform cursor-pointer">
-                View More <ArrowRightIcon className="w-4 h-4 ml-1" />
-              </span>
-            </div>
-
-            {/* Use Case 5 */}
-            <div className="glass-card rounded-2xl p-8 border border-[#2a2a30] hover:border-[#00d4aa]/30 transition-all duration-300 hover-lift animate-fade-in-up">
-              <div className="flex items-center gap-4 mb-6">
-                <div className="w-12 h-12 rounded-full bg-linear-to-br from-[#00d4aa] to-[#ff6b9d] flex items-center justify-center text-xl">🎓</div>
-                <h3 className="text-2xl font-bold text-[#fafafa]">Education & Training</h3>
-              </div>
-              <p className="text-[#737373] mb-6 leading-relaxed">
-                Create engaging educational content with course templates, learning materials, and certification systems.
-              </p>
-              <div className="space-y-3 mb-6">
-                <div className="flex items-center gap-3">
-                  <span className="text-[#00d4aa]">✓</span>
-                  <span className="text-sm text-[#b0b0b0]">Course Templates</span>
-                </div>
-                <div className="flex items-center gap-3">
-                  <span className="text-[#00d4aa]">✓</span>
-                  <span className="text-sm text-[#b0b0b0]">Learning Management Systems</span>
-                </div>
-                <div className="flex items-center gap-3">
-                  <span className="text-[#00d4aa]">✓</span>
-                  <span className="text-sm text-[#b0b0b0]">Assessment Tools</span>
-                </div>
-              </div>
-              <span className="inline-flex items-center text-[#00d4aa] font-medium group hover:translate-x-1 transition-transform cursor-pointer">
-                View More <ArrowRightIcon className="w-4 h-4 ml-1" />
-              </span>
-            </div>
-
-            {/* Use Case 6 */}
-            <div className="glass-card rounded-2xl p-8 border border-[#2a2a30] hover:border-[#8b5cf6]/30 transition-all duration-300 hover-lift animate-fade-in-up">
-              <div className="flex items-center gap-4 mb-6">
-                <div className="w-12 h-12 rounded-full bg-linear-to-br from-[#8b5cf6] to-[#ff6b9d] flex items-center justify-center text-xl">🛍️</div>
-                <h3 className="text-2xl font-bold text-[#fafafa]">E-Commerce</h3>
-              </div>
-              <p className="text-[#737373] mb-6 leading-relaxed">
-                Launch and scale your online store with complete e-commerce solutions, payment integrations, and inventory tools.
-              </p>
-              <div className="space-y-3 mb-6">
-                <div className="flex items-center gap-3">
-                  <span className="text-[#8b5cf6]">✓</span>
-                  <span className="text-sm text-[#b0b0b0]">Store Templates</span>
-                </div>
-                <div className="flex items-center gap-3">
-                  <span className="text-[#8b5cf6]">✓</span>
-                  <span className="text-sm text-[#b0b0b0]">Payment Integrations</span>
-                </div>
-                <div className="flex items-center gap-3">
-                  <span className="text-[#8b5cf6]">✓</span>
-                  <span className="text-sm text-[#b0b0b0]">Inventory Management</span>
-                </div>
-              </div>
-              <span className="inline-flex items-center text-[#8b5cf6] font-medium group hover:translate-x-1 transition-transform cursor-pointer">
-                View More <ArrowRightIcon className="w-4 h-4 ml-1" />
-              </span>
-            </div>
+            <p className="text-xs text-gray-500 mt-8">
+              Confidential discovery • 100% IP ownership • SLA-backed engineering
+            </p>
           </div>
         </div>
       </section>

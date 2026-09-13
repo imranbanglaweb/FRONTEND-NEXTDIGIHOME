@@ -3,7 +3,18 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
-import { ShoppingCartIcon, Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
+import { 
+  ShoppingCartIcon, 
+  Bars3Icon, 
+  XMarkIcon,
+  ChevronDownIcon,
+  ArrowRightIcon,
+  SparklesIcon,
+  GlobeAltIcon,
+  CpuChipIcon,
+  ChartBarIcon,
+  BeakerIcon
+} from "@heroicons/react/24/outline";
 import { apiFetch, BACKEND_BASE_URL, getStorageUrl, getLogoUrl } from './utils/api';
 import NextDigiLogo from './components/NextDigiLogo';
 
@@ -57,7 +68,9 @@ export default function ClientLayout({
   const [isLoading, setIsLoading] = useState(true);
   const [subscribed, setSubscribed] = useState(false);
   const [isHydrated, setIsHydrated] = useState(false);
-const [settings, setSettings] = useState<{
+  const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
+  const [mobileExpanded, setMobileExpanded] = useState<Record<string, boolean>>({});
+  const [settings, setSettings] = useState<{
       site_logo?: string | null;
       admin_logo?: string | null;
       site_title?: string;
@@ -203,6 +216,15 @@ const [settings, setSettings] = useState<{
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  useEffect(() => {
+    setMobileMenuOpen(false);
+    setActiveDropdown(null);
+  }, [pathname]);
+
+  const toggleMobileSection = (key: string) => {
+    setMobileExpanded(prev => ({ ...prev, [key]: !prev[key] }));
+  };
+
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
@@ -247,35 +269,314 @@ const [settings, setSettings] = useState<{
             <Link href="/" className="flex items-center group flex-shrink-0 py-1">
               <NextDigiLogo
                 size="md"
-                subtitle="VENTURE ECOSYSTEM"
+                subtitle="BUILD • LAUNCH • AUTOMATE • GROW"
                 customLogoUrl={isHydrated && (settings?.site_logo || settings?.admin_logo) ? getLogoUrl(settings.site_logo || settings.admin_logo) : null}
               />
             </Link>
 
             {/* Desktop Navigation */}
-            <nav className="hidden md:flex min-w-0 items-center gap-0.5 lg:gap-1">
-              <Link href="/" className={`px-2.5 py-2 lg:px-3.5 rounded-lg transition-all duration-200 text-sm font-medium ${pathname === '/' ? 'text-[#00d4aa] bg-[#2a2a30]/50' : 'text-[#fafafa] hover:text-[#00d4aa] hover:bg-[#2a2a30]/50'}`}>
+            <nav className="hidden md:flex min-w-0 items-center gap-0.5 lg:gap-1" onMouseLeave={() => setActiveDropdown(null)}>
+              <Link 
+                href="/" 
+                className={`px-2.5 py-2 lg:px-3 rounded-lg transition-all duration-200 text-sm font-medium ${pathname === '/' ? 'text-[#00d4aa] bg-[#2a2a30]/50' : 'text-[#fafafa] hover:text-[#00d4aa] hover:bg-[#2a2a30]/50'}`}
+              >
                 Home
               </Link>
-              <Link href="/products" className={`px-2.5 py-2 lg:px-3.5 rounded-lg transition-all duration-200 text-sm font-medium ${pathname.startsWith('/products') ? 'text-[#00d4aa] bg-[#2a2a30]/50' : 'text-[#fafafa] hover:text-[#00d4aa] hover:bg-[#2a2a30]/50'}`}>
-                Store
+
+              {/* Solutions Dropdown */}
+              <div className="relative">
+                <button
+                  onMouseEnter={() => setActiveDropdown('solutions')}
+                  onClick={() => setActiveDropdown(activeDropdown === 'solutions' ? null : 'solutions')}
+                  className={`px-2.5 py-2 lg:px-3 rounded-lg transition-all duration-200 text-sm font-medium flex items-center gap-1 ${
+                    pathname.startsWith('/solutions')
+                      ? 'text-[#00d4aa] bg-[#2a2a30]/50'
+                      : 'text-[#fafafa] hover:text-[#00d4aa] hover:bg-[#2a2a30]/50'
+                  }`}
+                >
+                  Solutions
+                  <ChevronDownIcon className={`w-3.5 h-3.5 transition-transform duration-200 ${activeDropdown === 'solutions' ? 'rotate-180 text-[#00d4aa]' : 'opacity-70'}`} />
+                </button>
+                {activeDropdown === 'solutions' && (
+                  <div
+                    onMouseEnter={() => setActiveDropdown('solutions')}
+                    className="absolute top-full left-0 mt-2 w-80 rounded-2xl bg-[#121217]/98 border border-white/10 p-3 shadow-2xl backdrop-blur-2xl ring-1 ring-white/5 animate-fade-in-up z-50"
+                  >
+                    <div className="px-3 py-2 mb-1 border-b border-white/5">
+                      <span className="text-[10px] font-black uppercase tracking-[2px] text-[#00d4aa]">NextDigi Solutions</span>
+                      <p className="text-xs text-[#8c8c9a]">Full-cycle engineering &amp; infrastructure</p>
+                    </div>
+                    <div className="space-y-1">
+                      {[
+                        { title: 'Web Development', href: '/solutions/web-development', desc: 'Fast, responsive Next.js & React platforms' },
+                        { title: 'E-commerce', href: '/solutions/ecommerce', desc: 'Custom storefronts & payment checkouts' },
+                        { title: 'Mobile Apps', href: '/solutions/mobile-app', desc: 'iOS & Android Flutter applications' },
+                        { title: 'Custom Software', href: '/solutions/custom-software', desc: 'Enterprise ERPs & bespoke systems' },
+                        { title: 'SaaS Development', href: '/solutions/saas-development', desc: 'Scalable multi-tenant cloud apps' },
+                        { title: 'API & Integrations', href: '/solutions/api-integrations', desc: 'Payment, CRM & courier APIs' },
+                        { title: 'Hosting & Maintenance', href: '/solutions/hosting-maintenance', desc: 'Cloud DevOps & 24/7 reliability' },
+                      ].map((sub, idx) => (
+                        <Link
+                          key={idx}
+                          href={sub.href}
+                          onClick={() => setActiveDropdown(null)}
+                          className="group/item flex flex-col px-3 py-1.5 rounded-xl hover:bg-white/5 transition-all"
+                        >
+                          <span className="text-sm font-semibold text-white group-hover/item:text-[#00d4aa] transition-colors">{sub.title}</span>
+                          <span className="text-[11px] text-[#71717a] leading-tight">{sub.desc}</span>
+                        </Link>
+                      ))}
+                    </div>
+                    <div className="pt-2 mt-2 border-t border-white/5 px-2">
+                      <Link
+                        href="/solutions"
+                        onClick={() => setActiveDropdown(null)}
+                        className="text-xs font-bold text-[#00d4aa] hover:underline flex items-center justify-between"
+                      >
+                        <span>Explore All Solutions</span>
+                        <ArrowRightIcon className="w-3.5 h-3.5" />
+                      </Link>
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* AI & Automation Dropdown */}
+              <div className="relative">
+                <button
+                  onMouseEnter={() => setActiveDropdown('ai')}
+                  onClick={() => setActiveDropdown(activeDropdown === 'ai' ? null : 'ai')}
+                  className={`px-2.5 py-2 lg:px-3 rounded-lg transition-all duration-200 text-sm font-medium flex items-center gap-1 ${
+                    pathname.startsWith('/ai')
+                      ? 'text-[#8b5cf6] bg-[#2a2a30]/50'
+                      : 'text-[#fafafa] hover:text-[#a78bfa] hover:bg-[#2a2a30]/50'
+                  }`}
+                >
+                  AI &amp; Automation
+                  <ChevronDownIcon className={`w-3.5 h-3.5 transition-transform duration-200 ${activeDropdown === 'ai' ? 'rotate-180 text-[#8b5cf6]' : 'opacity-70'}`} />
+                </button>
+                {activeDropdown === 'ai' && (
+                  <div
+                    onMouseEnter={() => setActiveDropdown('ai')}
+                    className="absolute top-full left-0 mt-2 w-80 rounded-2xl bg-[#121217]/98 border border-white/10 p-3 shadow-2xl backdrop-blur-2xl ring-1 ring-white/5 animate-fade-in-up z-50"
+                  >
+                    <div className="px-3 py-2 mb-1 border-b border-white/5">
+                      <span className="text-[10px] font-black uppercase tracking-[2px] text-[#8b5cf6]">NextDigi AI</span>
+                      <p className="text-xs text-[#8c8c9a]">Autonomous intelligence &amp; RPA</p>
+                    </div>
+                    <div className="space-y-1">
+                      {[
+                        { title: 'AI Agents', href: '/ai/ai-agents', desc: 'Autonomous tasks, research & lead gen' },
+                        { title: 'AI Chatbots', href: '/ai/chatbots', desc: 'Conversational bots with RAG knowledge' },
+                        { title: 'AI Support', href: '/ai/ai-support', desc: '24/7 WhatsApp & Web support bots' },
+                        { title: 'Workflow Automation', href: '/ai/automation', desc: 'Zero-touch document & API pipelines' },
+                        { title: 'AI Video', href: '/ai/ai-video', desc: 'Synthetic avatars & marketing videos' },
+                      ].map((sub, idx) => (
+                        <Link
+                          key={idx}
+                          href={sub.href}
+                          onClick={() => setActiveDropdown(null)}
+                          className="group/item flex flex-col px-3 py-1.5 rounded-xl hover:bg-white/5 transition-all"
+                        >
+                          <span className="text-sm font-semibold text-white group-hover/item:text-[#a78bfa] transition-colors">{sub.title}</span>
+                          <span className="text-[11px] text-[#71717a] leading-tight">{sub.desc}</span>
+                        </Link>
+                      ))}
+                    </div>
+                    <div className="pt-2 mt-2 border-t border-white/5 px-2">
+                      <Link
+                        href="/ai"
+                        onClick={() => setActiveDropdown(null)}
+                        className="text-xs font-bold text-[#8b5cf6] hover:underline flex items-center justify-between"
+                      >
+                        <span>Explore NextDigi AI</span>
+                        <ArrowRightIcon className="w-3.5 h-3.5" />
+                      </Link>
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* Growth Dropdown */}
+              <div className="relative">
+                <button
+                  onMouseEnter={() => setActiveDropdown('growth')}
+                  onClick={() => setActiveDropdown(activeDropdown === 'growth' ? null : 'growth')}
+                  className={`px-2.5 py-2 lg:px-3 rounded-lg transition-all duration-200 text-sm font-medium flex items-center gap-1 ${
+                    pathname.startsWith('/growth')
+                      ? 'text-[#ec4899] bg-[#2a2a30]/50'
+                      : 'text-[#fafafa] hover:text-[#ec4899] hover:bg-[#2a2a30]/50'
+                  }`}
+                >
+                  Growth
+                  <ChevronDownIcon className={`w-3.5 h-3.5 transition-transform duration-200 ${activeDropdown === 'growth' ? 'rotate-180 text-[#ec4899]' : 'opacity-70'}`} />
+                </button>
+                {activeDropdown === 'growth' && (
+                  <div
+                    onMouseEnter={() => setActiveDropdown('growth')}
+                    className="absolute top-full left-0 mt-2 w-80 rounded-2xl bg-[#121217]/98 border border-white/10 p-3 shadow-2xl backdrop-blur-2xl ring-1 ring-white/5 animate-fade-in-up z-50"
+                  >
+                    <div className="px-3 py-2 mb-1 border-b border-white/5">
+                      <span className="text-[10px] font-black uppercase tracking-[2px] text-[#ec4899]">NextDigi Growth</span>
+                      <p className="text-xs text-[#8c8c9a]">Technology-enabled digital marketing</p>
+                    </div>
+                    <div className="space-y-1">
+                      {[
+                        { title: 'Social Media', href: '/growth/social-media', desc: 'Brand positioning & content distribution' },
+                        { title: 'Meta Ads', href: '/growth/meta-ads', desc: 'Targeted customer acquisition' },
+                        { title: 'Google Ads', href: '/growth/google-ads', desc: 'Intent search & high-intent traffic' },
+                        { title: 'SEO', href: '/growth/seo', desc: 'Search engine performance & rankings' },
+                        { title: 'Analytics & Tracking', href: '/growth/analytics', desc: 'Conversion telemetry & pixels' },
+                      ].map((sub, idx) => (
+                        <Link
+                          key={idx}
+                          href={sub.href}
+                          onClick={() => setActiveDropdown(null)}
+                          className="group/item flex flex-col px-3 py-1.5 rounded-xl hover:bg-white/5 transition-all"
+                        >
+                          <span className="text-sm font-semibold text-white group-hover/item:text-[#f472b6] transition-colors">{sub.title}</span>
+                          <span className="text-[11px] text-[#71717a] leading-tight">{sub.desc}</span>
+                        </Link>
+                      ))}
+                    </div>
+                    <div className="pt-2 mt-2 border-t border-white/5 px-2">
+                      <Link
+                        href="/growth"
+                        onClick={() => setActiveDropdown(null)}
+                        className="text-xs font-bold text-[#ec4899] hover:underline flex items-center justify-between"
+                      >
+                        <span>Explore Growth Solutions</span>
+                        <ArrowRightIcon className="w-3.5 h-3.5" />
+                      </Link>
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* Products Dropdown */}
+              <div className="relative">
+                <button
+                  onMouseEnter={() => setActiveDropdown('products')}
+                  onClick={() => setActiveDropdown(activeDropdown === 'products' ? null : 'products')}
+                  className={`px-2.5 py-2 lg:px-3 rounded-lg transition-all duration-200 text-sm font-medium flex items-center gap-1 ${
+                    pathname.startsWith('/labs') || pathname.startsWith('/store') || pathname.startsWith('/products')
+                      ? 'text-[#f59e0b] bg-[#2a2a30]/50'
+                      : 'text-[#fafafa] hover:text-[#fbbf24] hover:bg-[#2a2a30]/50'
+                  }`}
+                >
+                  Products
+                  <ChevronDownIcon className={`w-3.5 h-3.5 transition-transform duration-200 ${activeDropdown === 'products' ? 'rotate-180 text-[#f59e0b]' : 'opacity-70'}`} />
+                </button>
+                {activeDropdown === 'products' && (
+                  <div
+                    onMouseEnter={() => setActiveDropdown('products')}
+                    className="absolute top-full left-0 mt-2 w-84 rounded-2xl bg-[#121217]/98 border border-white/10 p-3 shadow-2xl backdrop-blur-2xl ring-1 ring-white/5 animate-fade-in-up z-50"
+                  >
+                    <div className="px-3 py-2 mb-1 border-b border-white/5">
+                      <span className="text-[10px] font-black uppercase tracking-[2px] text-[#f59e0b]">NextDigi Labs &amp; Store</span>
+                      <p className="text-xs text-[#8c8c9a]">Proprietary SaaS &amp; Digital Resources</p>
+                    </div>
+                    <div className="space-y-1">
+                      <a
+                        href="https://commerce.nextdigihome.com/"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="group/item flex items-center justify-between px-3 py-2 rounded-xl hover:bg-white/5 transition-all"
+                      >
+                        <div>
+                          <span className="text-sm font-semibold text-white group-hover/item:text-[#00d4aa] transition-colors block">NextDigi Commerce</span>
+                          <span className="text-[11px] text-[#71717a]">AI-powered Ecommerce SaaS</span>
+                        </div>
+                        <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-[#00d4aa]/10 text-[#00d4aa] border border-[#00d4aa]/25">Live</span>
+                      </a>
+                      <a
+                        href="https://social.nextdigihome.com/"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="group/item flex items-center justify-between px-3 py-2 rounded-xl hover:bg-white/5 transition-all"
+                      >
+                        <div>
+                          <span className="text-sm font-semibold text-white group-hover/item:text-[#8b5cf6] transition-colors block">NextDigi Social</span>
+                          <span className="text-[11px] text-[#71717a]">AI social media automation</span>
+                        </div>
+                        <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-[#8b5cf6]/10 text-[#a78bfa] border border-[#8b5cf6]/25">Beta</span>
+                      </a>
+                      <a
+                        href="https://automate.nextdigihome.com/"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="group/item flex items-center justify-between px-3 py-2 rounded-xl hover:bg-white/5 transition-all"
+                      >
+                        <div>
+                          <span className="text-sm font-semibold text-white group-hover/item:text-[#ec4899] transition-colors block">NextDigi Automate</span>
+                          <span className="text-[11px] text-[#71717a]">Enterprise workflow RPA</span>
+                        </div>
+                        <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-white/5 text-[#71717a]">Soon</span>
+                      </a>
+                      <a
+                        href="https://garibondhu360.nextdigihome.com/"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="group/item flex items-center justify-between px-3 py-2 rounded-xl hover:bg-white/5 transition-all"
+                      >
+                        <div>
+                          <span className="text-sm font-semibold text-white group-hover/item:text-[#38bdf8] transition-colors block">Garibondhu360</span>
+                          <span className="text-[11px] text-[#71717a]">Transport operations SaaS</span>
+                        </div>
+                        <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-[#38bdf8]/10 text-[#38bdf8] border border-[#38bdf8]/25">Live</span>
+                      </a>
+                      <div className="my-1 border-t border-white/5" />
+                      <Link
+                        href="/store"
+                        onClick={() => setActiveDropdown(null)}
+                        className="group/item flex items-center justify-between px-3 py-2 rounded-xl bg-[#00d4aa]/5 hover:bg-[#00d4aa]/10 transition-all border border-[#00d4aa]/20"
+                      >
+                        <div>
+                          <span className="text-sm font-bold text-[#00d4aa] block">NextDigi Store</span>
+                          <span className="text-[11px] text-[#8c8c9a]">Templates, eBooks &amp; Resources</span>
+                        </div>
+                        <span className="text-xs font-bold text-[#00d4aa]">Browse →</span>
+                      </Link>
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* Direct Links */}
+              <Link
+                href="/case-studies"
+                className={`px-2.5 py-2 lg:px-3 rounded-lg transition-all duration-200 text-sm font-medium ${
+                  pathname === '/case-studies'
+                    ? 'text-[#00d4aa] bg-[#2a2a30]/50'
+                    : 'text-[#fafafa] hover:text-[#00d4aa] hover:bg-[#2a2a30]/50'
+                }`}
+              >
+                Case Studies
               </Link>
-              <Link href="/services" className={`px-2.5 py-2 lg:px-3.5 rounded-lg transition-all duration-200 text-sm font-medium ${pathname === '/services' ? 'text-[#00d4aa] bg-[#2a2a30]/50' : 'text-[#fafafa] hover:text-[#00d4aa] hover:bg-[#2a2a30]/50'}`}>
-                Solutions &amp; AI
-              </Link>
-              <Link href="/#ecosystem" className={`px-2.5 py-2 lg:px-3.5 rounded-lg transition-all duration-200 text-sm font-medium text-[#fafafa] hover:text-[#00d4aa] hover:bg-[#2a2a30]/50`}>
-                Ecosystem
-              </Link>
-              <Link href="/about" className={`px-2.5 py-2 lg:px-3.5 rounded-lg transition-all duration-200 text-sm font-medium ${pathname === '/about' ? 'text-[#00d4aa] bg-[#2a2a30]/50' : 'text-[#fafafa] hover:text-[#00d4aa] hover:bg-[#2a2a30]/50'}`}>
+              <Link
+                href="/about"
+                className={`px-2.5 py-2 lg:px-3 rounded-lg transition-all duration-200 text-sm font-medium ${
+                  pathname === '/about'
+                    ? 'text-[#00d4aa] bg-[#2a2a30]/50'
+                    : 'text-[#fafafa] hover:text-[#00d4aa] hover:bg-[#2a2a30]/50'
+                }`}
+              >
                 About
               </Link>
-              <Link href="/contact" className={`px-2.5 py-2 lg:px-3.5 rounded-lg transition-all duration-200 text-sm font-medium ${pathname === '/contact' ? 'text-[#00d4aa] bg-[#2a2a30]/50' : 'text-[#fafafa] hover:text-[#00d4aa] hover:bg-[#2a2a30]/50'}`}>
+              <Link
+                href="/contact"
+                className={`px-2.5 py-2 lg:px-3 rounded-lg transition-all duration-200 text-sm font-medium ${
+                  pathname === '/contact'
+                    ? 'text-[#00d4aa] bg-[#2a2a30]/50'
+                    : 'text-[#fafafa] hover:text-[#00d4aa] hover:bg-[#2a2a30]/50'
+                }`}
+              >
                 Contact
               </Link>
             </nav>
 
             {/* Desktop Actions */}
-            <div className="hidden md:flex items-center gap-1 lg:gap-3">
+            <div className="hidden md:flex items-center gap-1.5 lg:gap-2.5">
               <Link href="/cart" className="relative p-2 text-[#fafafa] hover:text-[#00d4aa] transition-colors" title="Shopping Cart">
                 <ShoppingCartIcon className="w-6 h-6" />
                 {cartCount > 0 && (
@@ -284,9 +585,19 @@ const [settings, setSettings] = useState<{
                   </span>
                 )}
               </Link>
+
+              {/* Primary CTA Button: Start a Project */}
+              <Link
+                href="/contact"
+                className="group relative inline-flex items-center gap-1.5 px-3.5 py-2 lg:px-4 rounded-xl font-bold text-xs bg-gradient-to-r from-[#00d4aa] to-[#8b5cf6] text-[#0f0f12] shadow-lg shadow-[#00d4aa]/15 hover:brightness-110 active:scale-95 transition-all"
+              >
+                <span>Start a Project</span>
+                <ArrowRightIcon className="w-3.5 h-3.5 transition-transform duration-200 group-hover:translate-x-0.5" />
+              </Link>
+
               {isAuthenticated ? (
                 <>
-                  <Link href="/dashboard" className="px-4 py-2 text-sm font-medium text-[#00d4aa] hover:text-[#8b5cf6] transition-colors">
+                  <Link href="/dashboard" className="px-2.5 py-2 text-xs font-semibold text-[#00d4aa] hover:text-[#8b5cf6] transition-colors">
                     Dashboard
                   </Link>
                   <button
@@ -295,26 +606,15 @@ const [settings, setSettings] = useState<{
                       localStorage.removeItem('customer_email');
                       window.location.href = '/';
                     }}
-                    className="px-4 py-2 text-sm font-medium text-[#fafafa] hover:text-red-400 transition-colors"
+                    className="px-2 py-2 text-xs font-semibold text-[#8c8c9a] hover:text-red-400 transition-colors"
                   >
                     Logout
                   </button>
                 </>
               ) : (
-                <>
-                  <Link href="/signin" className="px-4 py-2 text-sm font-medium text-[#fafafa] hover:text-[#00d4aa] transition-colors">
-                    Sign In
-                  </Link>
-                  <Link href="/signup" className="group relative px-5 py-2.5 font-medium text-sm">
-                    <span className="absolute inset-0 bg-gradient-to-r from-[#00d4aa] to-[#8b5cf6] rounded-lg opacity-80 group-hover:opacity-100 transition-opacity duration-300"></span>
-                    <span className="relative text-[#0f0f12] flex items-center gap-2">
-                      Sign Up
-                      <svg className="w-4 h-4 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                      </svg>
-                    </span>
-                  </Link>
-                </>
+                <Link href="/signin" className="px-2.5 py-2 text-xs font-semibold text-[#fafafa] hover:text-[#00d4aa] transition-colors">
+                  Sign In
+                </Link>
               )}
             </div>
 
@@ -331,6 +631,7 @@ const [settings, setSettings] = useState<{
               <button
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
                 className="p-2 text-[#fafafa] hover:text-[#00d4aa] transition-colors"
+                aria-label="Toggle menu"
               >
                 {mobileMenuOpen ? <XMarkIcon className="w-6 h-6" /> : <Bars3Icon className="w-6 h-6" />}
               </button>
@@ -339,71 +640,223 @@ const [settings, setSettings] = useState<{
         </div>
         </header>
 
-        {/* Mobile Menu */}
+        {/* Mobile Menu Drawer with Expandable Accordions */}
         {mobileMenuOpen && (
-          <div className="fixed inset-0 z-40 overflow-y-auto bg-[#0f0f12]/95 backdrop-blur-xl md:hidden">
-            <div className="pt-20 pb-8 px-4 space-y-2">
+          <div className="fixed inset-0 z-40 overflow-y-auto bg-[#0f0f12]/98 backdrop-blur-2xl md:hidden">
+            <div className="pt-20 pb-12 px-4 space-y-3">
               <Link
                 href="/"
                 onClick={() => setMobileMenuOpen(false)}
-                className={`block px-4 py-3 rounded-lg text-lg font-medium transition-all ${pathname === '/' ? 'text-[#00d4aa] bg-[#2a2a30]/50' : 'text-[#fafafa] hover:text-[#00d4aa] hover:bg-[#2a2a30]/50'}`}
+                className={`block px-4 py-2.5 rounded-xl text-base font-semibold transition-all ${pathname === '/' ? 'text-[#00d4aa] bg-[#2a2a30]/50' : 'text-[#fafafa] hover:text-[#00d4aa]'}`}
               >
                 Home
               </Link>
-              <Link
-                href="/products"
-                onClick={() => setMobileMenuOpen(false)}
-                className={`block px-4 py-3 rounded-lg text-lg font-medium transition-all ${pathname.startsWith('/products') ? 'text-[#00d4aa] bg-[#2a2a30]/50' : 'text-[#fafafa] hover:text-[#00d4aa] hover:bg-[#2a2a30]/50'}`}
-              >
-                Store (NextDigi Home)
-                {cartCount > 0 && (
-                  <span className="ml-2 px-2 py-0.5 bg-gradient-to-r from-[#00d4aa] to-[#8b5cf6] rounded-full text-xs text-[#0f0f12]">
-                    {cartCount}
+
+              {/* Mobile Solutions Accordion */}
+              <div className="rounded-xl border border-white/5 bg-[#121217]/50 overflow-hidden">
+                <button
+                  onClick={() => toggleMobileSection('solutions')}
+                  className="w-full flex items-center justify-between px-4 py-3 text-base font-semibold text-white"
+                >
+                  <span className="flex items-center gap-2">
+                    <span className="w-2 h-2 rounded-full bg-[#00d4aa]" />
+                    Solutions
                   </span>
+                  <ChevronDownIcon className={`w-4 h-4 transition-transform ${mobileExpanded['solutions'] ? 'rotate-180 text-[#00d4aa]' : ''}`} />
+                </button>
+                {mobileExpanded['solutions'] && (
+                  <div className="px-4 pb-3 space-y-1.5 pt-1 border-t border-white/5">
+                    {[
+                      { title: 'Web Development', href: '/solutions/web-development' },
+                      { title: 'E-commerce', href: '/solutions/ecommerce' },
+                      { title: 'Mobile Apps', href: '/solutions/mobile-app' },
+                      { title: 'Custom Software', href: '/solutions/custom-software' },
+                      { title: 'SaaS Development', href: '/solutions/saas-development' },
+                      { title: 'API & Integrations', href: '/solutions/api-integrations' },
+                      { title: 'Hosting & Maintenance', href: '/solutions/hosting-maintenance' },
+                      { title: 'All Solutions Overview →', href: '/solutions' },
+                    ].map((item, idx) => (
+                      <Link
+                        key={idx}
+                        href={item.href}
+                        onClick={() => setMobileMenuOpen(false)}
+                        className="block px-3 py-1.5 rounded-lg text-sm text-[#8c8c9a] hover:text-[#00d4aa] hover:bg-white/5"
+                      >
+                        {item.title}
+                      </Link>
+                    ))}
+                  </div>
                 )}
-              </Link>
+              </div>
+
+              {/* Mobile AI Accordion */}
+              <div className="rounded-xl border border-white/5 bg-[#121217]/50 overflow-hidden">
+                <button
+                  onClick={() => toggleMobileSection('ai')}
+                  className="w-full flex items-center justify-between px-4 py-3 text-base font-semibold text-white"
+                >
+                  <span className="flex items-center gap-2">
+                    <span className="w-2 h-2 rounded-full bg-[#8b5cf6]" />
+                    AI &amp; Automation
+                  </span>
+                  <ChevronDownIcon className={`w-4 h-4 transition-transform ${mobileExpanded['ai'] ? 'rotate-180 text-[#8b5cf6]' : ''}`} />
+                </button>
+                {mobileExpanded['ai'] && (
+                  <div className="px-4 pb-3 space-y-1.5 pt-1 border-t border-white/5">
+                    {[
+                      { title: 'AI Agents', href: '/ai/ai-agents' },
+                      { title: 'AI Chatbots', href: '/ai/chatbots' },
+                      { title: 'AI Support', href: '/ai/ai-support' },
+                      { title: 'Workflow Automation', href: '/ai/automation' },
+                      { title: 'AI Video', href: '/ai/ai-video' },
+                      { title: 'All AI Solutions →', href: '/ai' },
+                    ].map((item, idx) => (
+                      <Link
+                        key={idx}
+                        href={item.href}
+                        onClick={() => setMobileMenuOpen(false)}
+                        className="block px-3 py-1.5 rounded-lg text-sm text-[#8c8c9a] hover:text-[#a78bfa] hover:bg-white/5"
+                      >
+                        {item.title}
+                      </Link>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              {/* Mobile Growth Accordion */}
+              <div className="rounded-xl border border-white/5 bg-[#121217]/50 overflow-hidden">
+                <button
+                  onClick={() => toggleMobileSection('growth')}
+                  className="w-full flex items-center justify-between px-4 py-3 text-base font-semibold text-white"
+                >
+                  <span className="flex items-center gap-2">
+                    <span className="w-2 h-2 rounded-full bg-[#ec4899]" />
+                    Growth
+                  </span>
+                  <ChevronDownIcon className={`w-4 h-4 transition-transform ${mobileExpanded['growth'] ? 'rotate-180 text-[#ec4899]' : ''}`} />
+                </button>
+                {mobileExpanded['growth'] && (
+                  <div className="px-4 pb-3 space-y-1.5 pt-1 border-t border-white/5">
+                    {[
+                      { title: 'Social Media', href: '/growth/social-media' },
+                      { title: 'Meta Ads', href: '/growth/meta-ads' },
+                      { title: 'Google Ads', href: '/growth/google-ads' },
+                      { title: 'SEO', href: '/growth/seo' },
+                      { title: 'Analytics', href: '/growth/analytics' },
+                      { title: 'All Growth Solutions →', href: '/growth' },
+                    ].map((item, idx) => (
+                      <Link
+                        key={idx}
+                        href={item.href}
+                        onClick={() => setMobileMenuOpen(false)}
+                        className="block px-3 py-1.5 rounded-lg text-sm text-[#8c8c9a] hover:text-[#f472b6] hover:bg-white/5"
+                      >
+                        {item.title}
+                      </Link>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              {/* Mobile Products Accordion */}
+              <div className="rounded-xl border border-white/5 bg-[#121217]/50 overflow-hidden">
+                <button
+                  onClick={() => toggleMobileSection('products')}
+                  className="w-full flex items-center justify-between px-4 py-3 text-base font-semibold text-white"
+                >
+                  <span className="flex items-center gap-2">
+                    <span className="w-2 h-2 rounded-full bg-[#f59e0b]" />
+                    Products &amp; Store
+                  </span>
+                  <ChevronDownIcon className={`w-4 h-4 transition-transform ${mobileExpanded['products'] ? 'rotate-180 text-[#f59e0b]' : ''}`} />
+                </button>
+                {mobileExpanded['products'] && (
+                  <div className="px-4 pb-3 space-y-1.5 pt-1 border-t border-white/5">
+                    <a
+                      href="https://commerce.nextdigihome.com/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="block px-3 py-1.5 rounded-lg text-sm text-[#8c8c9a] hover:text-white"
+                    >
+                      NextDigi Commerce <span className="text-[10px] text-[#00d4aa] ml-1">(Live)</span>
+                    </a>
+                    <a
+                      href="https://social.nextdigihome.com/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="block px-3 py-1.5 rounded-lg text-sm text-[#8c8c9a] hover:text-white"
+                    >
+                      NextDigi Social <span className="text-[10px] text-[#a78bfa] ml-1">(Beta)</span>
+                    </a>
+                    <a
+                      href="https://automate.nextdigihome.com/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="block px-3 py-1.5 rounded-lg text-sm text-[#8c8c9a] hover:text-white"
+                    >
+                      NextDigi Automate <span className="text-[10px] text-[#ec4899] ml-1">(Soon)</span>
+                    </a>
+                    <a
+                      href="https://garibondhu360.nextdigihome.com/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="block px-3 py-1.5 rounded-lg text-sm text-[#8c8c9a] hover:text-white"
+                    >
+                      Garibondhu360 <span className="text-[10px] text-[#38bdf8] ml-1">(Live)</span>
+                    </a>
+                    <Link
+                      href="/store"
+                      onClick={() => setMobileMenuOpen(false)}
+                      className="block px-3 py-1.5 rounded-lg text-sm font-semibold text-[#00d4aa]"
+                    >
+                      NextDigi Store (Marketplace) →
+                    </Link>
+                  </div>
+                )}
+              </div>
+
+              {/* Direct links */}
               <Link
-                href="/services"
+                href="/case-studies"
                 onClick={() => setMobileMenuOpen(false)}
-                className={`block px-4 py-3 rounded-lg text-lg font-medium transition-all ${pathname === '/services' ? 'text-[#00d4aa] bg-[#2a2a30]/50' : 'text-[#fafafa] hover:text-[#00d4aa] hover:bg-[#2a2a30]/50'}`}
+                className={`block px-4 py-2.5 rounded-xl text-base font-semibold transition-all ${pathname === '/case-studies' ? 'text-[#00d4aa] bg-[#2a2a30]/50' : 'text-[#fafafa] hover:text-[#00d4aa]'}`}
               >
-                Solutions &amp; AI
-              </Link>
-              <Link
-                href="/#ecosystem"
-                onClick={() => setMobileMenuOpen(false)}
-                className="block px-4 py-3 rounded-lg text-lg font-medium transition-all text-[#fafafa] hover:text-[#00d4aa] hover:bg-[#2a2a30]/50"
-              >
-                Venture Ecosystem
+                Case Studies
               </Link>
               <Link
                 href="/about"
                 onClick={() => setMobileMenuOpen(false)}
-                className={`block px-4 py-3 rounded-lg text-lg font-medium transition-all ${pathname === '/about' ? 'text-[#00d4aa] bg-[#2a2a30]/50' : 'text-[#fafafa] hover:text-[#00d4aa] hover:bg-[#2a2a30]/50'}`}
+                className={`block px-4 py-2.5 rounded-xl text-base font-semibold transition-all ${pathname === '/about' ? 'text-[#00d4aa] bg-[#2a2a30]/50' : 'text-[#fafafa] hover:text-[#00d4aa]'}`}
               >
                 About
               </Link>
               <Link
-                href="/blog"
-                onClick={() => setMobileMenuOpen(false)}
-                className={`block px-4 py-3 rounded-lg text-lg font-medium transition-all ${pathname.startsWith('/blog') ? 'text-[#00d4aa] bg-[#2a2a30]/50' : 'text-[#fafafa] hover:text-[#00d4aa] hover:bg-[#2a2a30]/50'}`}
-              >
-                Blog
-              </Link>
-              <Link
                 href="/contact"
                 onClick={() => setMobileMenuOpen(false)}
-                className={`block px-4 py-3 rounded-lg text-lg font-medium transition-all ${pathname === '/contact' ? 'text-[#00d4aa] bg-[#2a2a30]/50' : 'text-[#fafafa] hover:text-[#00d4aa] hover:bg-[#2a2a30]/50'}`}
+                className={`block px-4 py-2.5 rounded-xl text-base font-semibold transition-all ${pathname === '/contact' ? 'text-[#00d4aa] bg-[#2a2a30]/50' : 'text-[#fafafa] hover:text-[#00d4aa]'}`}
               >
                 Contact
               </Link>
-              <hr className="border-[#2a2a30] my-4" />
+
+              {/* Mobile CTA */}
+              <div className="pt-2">
+                <Link
+                  href="/contact"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="block w-full text-center py-3 px-4 rounded-xl font-bold text-sm bg-gradient-to-r from-[#00d4aa] to-[#8b5cf6] text-[#0f0f12]"
+                >
+                  Start a Project →
+                </Link>
+              </div>
+
+              <hr className="border-[#2a2a30] my-3" />
               {isAuthenticated ? (
                 <>
                   <Link
                     href="/dashboard"
                     onClick={() => setMobileMenuOpen(false)}
-                    className="block px-4 py-3 rounded-lg text-lg font-medium text-[#00d4aa] hover:text-[#8b5cf6] hover:bg-[#2a2a30]/50 transition-all"
+                    className="block px-4 py-2.5 rounded-lg text-base font-medium text-[#00d4aa]"
                   >
                     Dashboard
                   </Link>
@@ -414,28 +867,28 @@ const [settings, setSettings] = useState<{
                       setMobileMenuOpen(false);
                       window.location.href = '/';
                     }}
-                    className="block w-full text-left px-4 py-3 rounded-lg text-lg font-medium text-[#fafafa] hover:text-red-400 hover:bg-[#2a2a30]/50 transition-all"
+                    className="block w-full text-left px-4 py-2.5 rounded-lg text-base font-medium text-red-400"
                   >
                     Logout
                   </button>
                 </>
               ) : (
-                <>
+                <div className="flex gap-2 pt-1">
                   <Link
                     href="/signin"
                     onClick={() => setMobileMenuOpen(false)}
-                    className="block px-4 py-3 rounded-lg text-lg font-medium text-[#fafafa] hover:text-[#00d4aa] hover:bg-[#2a2a30]/50 transition-all"
+                    className="flex-1 text-center py-2.5 rounded-xl text-sm font-semibold border border-white/10 text-white"
                   >
                     Sign In
                   </Link>
                   <Link
                     href="/signup"
                     onClick={() => setMobileMenuOpen(false)}
-                    className="block px-4 py-3 rounded-lg text-lg font-medium bg-gradient-to-r from-[#00d4aa] to-[#8b5cf6] text-[#0f0f12] text-center"
+                    className="flex-1 text-center py-2.5 rounded-xl text-sm font-semibold bg-white/10 text-white"
                   >
                     Sign Up
                   </Link>
-                </>
+                </div>
               )}
             </div>
           </div>
@@ -519,26 +972,35 @@ const [settings, setSettings] = useState<{
         </div>
       </button>
 
-      {/* Footer - Premium Enhanced */}
+      {/* Footer - Premium Ecosystem Architecture */}
       <footer className="relative z-20 border-t border-[#2a2a30] bg-[#121214]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 lg:gap-12">
-            {/* Brand Column - Now fully dynamic */}
-            <div className="space-y-5">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-8 lg:gap-10">
+            {/* Brand Column (Span 4) */}
+            <div className="lg:col-span-4 space-y-5">
               <div className="flex items-center group py-1">
                 <NextDigiLogo
                   size="lg"
-                  subtitle="VENTURE ECOSYSTEM"
+                  subtitle="BUILD • LAUNCH • AUTOMATE • GROW"
                   customLogoUrl={isHydrated && (settings?.site_logo || settings?.admin_logo) ? getLogoUrl(settings.site_logo || settings.admin_logo) : null}
                 />
               </div>
 
-               <p className="text-[#8c8c9a] text-xs sm:text-sm leading-relaxed pr-2" suppressHydrationWarning>
-                 {isHydrated ? (settings?.admin_description || "Empowering businesses worldwide. Build • Launch • Automate • Grow with curated digital assets, custom enterprise engineering, and autonomous AI systems.") : "Empowering businesses worldwide. Build • Launch • Automate • Grow with curated digital assets, custom enterprise engineering, and autonomous AI systems."}
-               </p>
+              <p className="text-[#8c8c9a] text-xs sm:text-sm leading-relaxed pr-2" suppressHydrationWarning>
+                {isHydrated ? (settings?.admin_description || "Empowering modern enterprises. Build • Launch • Automate • Grow with enterprise software development, intelligent AI systems, SaaS products, and digital growth solutions.") : "Empowering modern enterprises. Build • Launch • Automate • Grow with enterprise software development, intelligent AI systems, SaaS products, and digital growth solutions."}
+              </p>
 
-              {/* Premium Social Icons */}
-              <div className="flex gap-2 pt-1">
+              {/* Division badges */}
+              <div className="flex flex-wrap gap-1.5 pt-1">
+                <span className="px-2 py-0.5 rounded-md text-[10px] font-bold bg-[#00d4aa]/10 text-[#00d4aa] border border-[#00d4aa]/25">Solutions</span>
+                <span className="px-2 py-0.5 rounded-md text-[10px] font-bold bg-[#8b5cf6]/10 text-[#a78bfa] border border-[#8b5cf6]/25">AI &amp; RPA</span>
+                <span className="px-2 py-0.5 rounded-md text-[10px] font-bold bg-[#ec4899]/10 text-[#f472b6] border border-[#ec4899]/25">Growth</span>
+                <span className="px-2 py-0.5 rounded-md text-[10px] font-bold bg-[#f59e0b]/10 text-[#fbbf24] border border-[#f59e0b]/25">Labs</span>
+                <span className="px-2 py-0.5 rounded-md text-[10px] font-bold bg-white/5 text-[#d4d4d8] border border-white/10">Store</span>
+              </div>
+
+              {/* Social Icons */}
+              <div className="flex gap-2 pt-2">
                 {[
                   { 
                     icon: 'M12 2.04C6.5 2.04 2 6.53 2 12.06C2 17.06 5.66 21.21 10.44 21.96V14.96H7.9V12.06H10.44V9.85C10.44 7.34 11.93 5.96 14.22 5.96C15.31 5.96 16.45 6.15 16.45 6.15V8.62H15.19C13.95 8.62 13.56 9.39 13.56 10.18V12.06H16.34L15.89 14.96H13.56V21.96A10 10 0 0 0 22 12.06C22 6.53 17.5 2.04 12 2.04Z', 
@@ -572,28 +1034,27 @@ const [settings, setSettings] = useState<{
               </div>
             </div>
 
-            {/* Column 2: NEXTDIGI HOME */}
-            <div>
-              <h4 className="text-sm font-bold mb-5 text-[#fafafa] tracking-wider flex items-center gap-2">
-                <span className="text-[#00d4aa]">●</span> NEXTDIGI HOME
-                <span className="h-px flex-1 bg-gradient-to-r from-[#00d4aa]/30 to-transparent"></span>
+            {/* Column 2: SOLUTIONS (Span 2) */}
+            <div className="lg:col-span-2">
+              <h4 className="text-xs font-bold mb-4 text-[#fafafa] tracking-wider uppercase flex items-center gap-1.5">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#00d4aa]" />
+                Solutions
               </h4>
-              <ul className="space-y-2.5 text-sm">
+              <ul className="space-y-2 text-xs sm:text-sm">
                 {[
-                  { label: "Digital Products", href: "/products?category=digital-marketing", icon: "📦" },
-                  { label: "Templates & UI Kits", href: "/products?category=templates", icon: "📄" },
-                  { label: "Business Tools", href: "/products?category=business-tools", icon: "🛠️" },
-                  { label: "AI Resources", href: "/products?category=ai-resources", icon: "🧠" },
-                  { label: "Web Development Kits", href: "/products?category=web-development", icon: "💻" },
-                  { label: "Graphic Design Assets", href: "/products?category=graphic-design", icon: "🎨" },
-                  { label: "Browse Entire Store", href: "/products", icon: "🛍️" },
+                  { label: "Web Development", href: "/solutions/web-development" },
+                  { label: "E-commerce", href: "/solutions/ecommerce" },
+                  { label: "Mobile Apps", href: "/solutions/mobile-app" },
+                  { label: "Custom Software", href: "/solutions/custom-software" },
+                  { label: "SaaS Development", href: "/solutions/saas-development" },
+                  { label: "API & Integrations", href: "/solutions/api-integrations" },
+                  { label: "Hosting & Support", href: "/solutions/hosting-maintenance" },
                 ].map((item, idx) => (
                   <li key={idx}>
                     <Link
                       href={item.href}
-                      className="flex items-center gap-2 text-[#8c8c9a] hover:text-[#00d4aa] transition-all duration-200 hover:translate-x-0.5 text-xs sm:text-sm"
+                      className="text-[#8c8c9a] hover:text-[#00d4aa] transition-all duration-200 block truncate"
                     >
-                      <span className="text-sm">{item.icon}</span>
                       {item.label}
                     </Link>
                   </li>
@@ -601,29 +1062,27 @@ const [settings, setSettings] = useState<{
               </ul>
             </div>
 
-            {/* Column 3: NEXTDIGI SOLUTIONS & AI */}
-            <div>
-              <h4 className="text-sm font-bold mb-5 text-[#fafafa] tracking-wider flex items-center gap-2">
-                <span className="text-[#8b5cf6]">●</span> SOLUTIONS &amp; AI
-                <span className="h-px flex-1 bg-gradient-to-r from-[#8b5cf6]/30 to-transparent"></span>
+            {/* Column 3: AI & GROWTH (Span 2) */}
+            <div className="lg:col-span-2">
+              <h4 className="text-xs font-bold mb-4 text-[#fafafa] tracking-wider uppercase flex items-center gap-1.5">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#8b5cf6]" />
+                AI &amp; Growth
               </h4>
-              <ul className="space-y-2.5 text-sm">
+              <ul className="space-y-2 text-xs sm:text-sm">
                 {[
-                  { label: "Web Development", href: "/services", icon: "🌐" },
-                  { label: "E-commerce Platforms", href: "/services", icon: "🛒" },
-                  { label: "iOS & Android Apps", href: "/services", icon: "📱" },
-                  { label: "Enterprise Software", href: "/services", icon: "💻" },
-                  { label: "Social Media Systems", href: "/services", icon: "📢" },
-                  { label: "Cloud Hosting & Maintenance", href: "/services", icon: "☁️" },
-                  { label: "AI Agents & Automation", href: "/services", icon: "🤖" },
-                  { label: "AI Video Synthesis", href: "/services", icon: "🎬" },
+                  { label: "AI Agents", href: "/ai/ai-agents" },
+                  { label: "AI Chatbots", href: "/ai/chatbots" },
+                  { label: "AI Customer Support", href: "/ai/ai-support" },
+                  { label: "Workflow Automation", href: "/ai/automation" },
+                  { label: "Social Media Growth", href: "/growth/social-media" },
+                  { label: "Meta & Google Ads", href: "/growth/meta-ads" },
+                  { label: "SEO & Analytics", href: "/growth/seo" },
                 ].map((item, idx) => (
                   <li key={idx}>
                     <Link
                       href={item.href}
-                      className="flex items-center gap-2 text-[#8c8c9a] hover:text-[#a78bfa] transition-all duration-200 hover:translate-x-0.5 text-xs sm:text-sm"
+                      className="text-[#8c8c9a] hover:text-[#a78bfa] transition-all duration-200 block truncate"
                     >
-                      <span className="text-sm">{item.icon}</span>
                       {item.label}
                     </Link>
                   </li>
@@ -631,121 +1090,122 @@ const [settings, setSettings] = useState<{
               </ul>
             </div>
 
-            {/* Column 4: NEXTDIGI LABS & COMPANY */}
-            <div>
-              <h4 className="text-sm font-bold mb-5 text-[#fafafa] tracking-wider flex items-center gap-2">
-                <span className="text-[#f59e0b]">●</span> LABS &amp; VENTURE
-                <span className="h-px flex-1 bg-gradient-to-r from-[#f59e0b]/30 to-transparent"></span>
+            {/* Column 4: PRODUCTS & LABS (Span 2) */}
+            <div className="lg:col-span-2">
+              <h4 className="text-xs font-bold mb-4 text-[#fafafa] tracking-wider uppercase flex items-center gap-1.5">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#f59e0b]" />
+                Products &amp; Labs
               </h4>
-              <ul className="space-y-2.5 text-sm mb-6">
+              <ul className="space-y-2 text-xs sm:text-sm">
                 {[
-                  { label: "NextDigi Commerce (SaaS)", href: "/services", badge: "Live" },
-                  { label: "NextDigi Social (SaaS)", href: "/services", badge: "Beta" },
-                  { label: "NextDigi Automate (SaaS)", href: "/services", badge: "AI" },
-                  { label: "Venture Architecture Tree", href: "/#ecosystem", badge: "Hub" },
-                  { label: "About Parent Brand", href: "/about", badge: "" },
-                  { label: "Schedule Consultation", href: "/contact", badge: "24/7" },
+                  { label: "NextDigi Commerce", href: "https://commerce.nextdigihome.com/", badge: "Live" },
+                  { label: "NextDigi Social", href: "https://social.nextdigihome.com/", badge: "Beta" },
+                  { label: "NextDigi Automate", href: "https://automate.nextdigihome.com/", badge: "Soon" },
+                  { label: "Garibondhu360", href: "https://garibondhu360.nextdigihome.com/", badge: "Live" },
+                  { label: "NextDigi Store", href: "/store", badge: "Store" },
+                  { label: "Browse Products", href: "/products", badge: "" },
+                ].map((item, idx) => (
+                  <li key={idx}>
+                    {item.href.startsWith('http') ? (
+                      <a
+                        href={item.href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center justify-between text-[#8c8c9a] hover:text-[#fbbf24] transition-all duration-200"
+                      >
+                        <span className="truncate">{item.label}</span>
+                        {item.badge && (
+                          <span className="text-[9px] font-bold px-1.5 py-0.2 rounded bg-white/10 text-white/80">
+                            {item.badge}
+                          </span>
+                        )}
+                      </a>
+                    ) : (
+                      <Link
+                        href={item.href}
+                        className="flex items-center justify-between text-[#8c8c9a] hover:text-[#fbbf24] transition-all duration-200"
+                      >
+                        <span className="truncate">{item.label}</span>
+                        {item.badge && (
+                          <span className="text-[9px] font-bold px-1.5 py-0.2 rounded bg-white/10 text-white/80">
+                            {item.badge}
+                          </span>
+                        )}
+                      </Link>
+                    )}
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* Column 5: COMPANY & LEGAL (Span 2) */}
+            <div className="lg:col-span-2">
+              <h4 className="text-xs font-bold mb-4 text-[#fafafa] tracking-wider uppercase flex items-center gap-1.5">
+                <span className="w-1.5 h-1.5 rounded-full bg-white/60" />
+                Company
+              </h4>
+              <ul className="space-y-2 text-xs sm:text-sm mb-6">
+                {[
+                  { label: "About NextDigi", href: "/about" },
+                  { label: "Case Studies", href: "/case-studies" },
+                  { label: "Start a Project", href: "/contact" },
+                  { label: "Careers & Jobs", href: "/contact?subject=Careers" },
+                  { label: "Privacy Policy", href: "/privacy" },
+                  { label: "Terms of Service", href: "/terms" },
+                  { label: "Refund Policy", href: "/refund" },
                 ].map((item, idx) => (
                   <li key={idx}>
                     <Link
                       href={item.href}
-                      className="flex items-center justify-between text-[#8c8c9a] hover:text-[#fbbf24] transition-all duration-200 hover:translate-x-0.5 text-xs sm:text-sm"
+                      className="text-[#8c8c9a] hover:text-white transition-all duration-200 block truncate"
                     >
-                      <span>{item.label}</span>
-                      {item.badge && (
-                        <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-white/10 text-white/80">
-                          {item.badge}
-                        </span>
-                      )}
+                      {item.label}
                     </Link>
                   </li>
                 ))}
               </ul>
-
-              <div className="mb-6 overflow-hidden rounded-3xl border border-[#00d4aa]/25 bg-[#0f0f12] shadow-[0_24px_70px_rgba(0,0,0,0.32)]">
-                <div className="relative p-4">
-                  <span className="absolute inset-0 bg-[radial-gradient(circle_at_18%_8%,rgba(0,212,170,0.22),transparent_36%),radial-gradient(circle_at_92%_22%,rgba(139,92,246,0.2),transparent_34%)]" />
-                  <span className="absolute left-5 right-5 top-0 h-px bg-gradient-to-r from-transparent via-white/45 to-transparent" />
-
-                  <div className="relative flex items-center gap-3">
-                    <div className="relative h-24 w-16 shrink-0 rotate-[-4deg] rounded-[1.35rem] border border-white/15 bg-[#08080a] p-1.5 shadow-2xl shadow-[#00d4aa]/10">
-                      <div className="absolute left-1/2 top-1 h-1 w-5 -translate-x-1/2 rounded-full bg-white/20" />
-                      <div className="flex h-full flex-col justify-between overflow-hidden rounded-[1rem] bg-gradient-to-br from-[#15151a] via-[#0f2c27] to-[#171024] p-2">
-                        <div className="flex items-center justify-between">
-                          <span className="h-2 w-2 rounded-full bg-[#00d4aa] shadow-[0_0_12px_rgba(0,212,170,0.9)]" />
-                          <span className="h-1.5 w-6 rounded-full bg-white/25" />
-                        </div>
-                        <div className="mx-auto flex h-11 w-11 items-center justify-center rounded-2xl bg-[#00d4aa] text-[#0f0f12] shadow-lg shadow-[#00d4aa]/30">
-                          <svg className="h-7 w-7" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                            <path d="M7.2 9.1h9.6a1 1 0 0 1 1 1v7.1a1 1 0 0 1-1 1h-.7v2.1a1.2 1.2 0 0 1-2.4 0v-2.1H10.3v2.1a1.2 1.2 0 0 1-2.4 0v-2.1h-.7a1 1 0 0 1-1-1v-7.1a1 1 0 0 1 1-1Zm-3.1 1.2c.7 0 1.2.5 1.2 1.2v4.2a1.2 1.2 0 0 1-2.4 0v-4.2c0-.7.5-1.2 1.2-1.2Zm15.8 0c.7 0 1.2.5 1.2 1.2v4.2a1.2 1.2 0 0 1-2.4 0v-4.2c0-.7.5-1.2 1.2-1.2ZM8.4 3.4 7.3 1.5a.5.5 0 1 1 .9-.5l1.1 1.9A6.9 6.9 0 0 1 12 2.4c1 0 1.9.2 2.7.5L15.8 1a.5.5 0 1 1 .9.5l-1.1 1.9A6.2 6.2 0 0 1 18 8H6a6.2 6.2 0 0 1 2.4-4.6ZM9.4 5.9a.7.7 0 1 0 0-1.4.7.7 0 0 0 0 1.4Zm5.2 0a.7.7 0 1 0 0-1.4.7.7 0 0 0 0 1.4Z" />
-                          </svg>
-                        </div>
-                        <div className="space-y-1">
-                          <span className="block h-1.5 rounded-full bg-white/35" />
-                          <span className="block h-1.5 w-2/3 rounded-full bg-[#00d4aa]/60" />
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="min-w-0 flex-1">
-                      <div className="mb-2 inline-flex items-center gap-1.5 rounded-full border border-[#00d4aa]/25 bg-[#00d4aa]/10 px-2.5 py-1 text-[10px] font-bold uppercase tracking-[1.4px] text-[#9ff5e4]">
-                        <span className="h-1.5 w-1.5 rounded-full bg-[#00d4aa] shadow-[0_0_10px_rgba(0,212,170,0.9)]" />
-                        Android App
-                      </div>
-                      <p className="text-base font-black leading-tight text-[#fafafa]">Shop faster from your phone</p>
-                      <p className="mt-1 text-xs leading-relaxed text-[#9a9a9a]">Browse products, checkout, and access your digital downloads anytime.</p>
-                    </div>
-                  </div>
-
-                  <div className="relative mt-4 flex flex-wrap gap-2">
-                    {['Fast checkout', 'Secure access', 'Instant files'].map((item) => (
-                      <span key={item} className="rounded-full border border-white/10 bg-white/[0.04] px-2.5 py-1 text-[10px] font-semibold text-[#cfcfcf]">
-                        {item}
-                      </span>
-                    ))}
-                  </div>
-
-                  <a
-                    href={ANDROID_APP_DOWNLOAD_URL}
-                    download
-                    className="group relative mt-4 flex items-center justify-between rounded-2xl bg-gradient-to-r from-[#00d4aa] to-[#8b5cf6] px-4 py-3 text-[#0f0f12] shadow-lg shadow-[#00d4aa]/20 transition-all duration-300 hover:-translate-y-0.5 hover:brightness-110 active:scale-[0.985]"
-                    aria-label="Download Next Digi Home Android app"
-                  >
-                    <span>
-                      <span className="block text-[10px] font-black uppercase tracking-[1.5px] opacity-70">Download for</span>
-                      <span className="block text-sm font-black">Android APK</span>
-                    </span>
-                    <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#0f0f12]/90 text-[#00d4aa] transition-transform duration-300 group-hover:translate-x-0.5">
-                      <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.4" d="M12 3v12m0 0 4-4m-4 4-4-4M5 21h14" />
-                      </svg>
-                    </span>
-                  </a>
-                </div>
-              </div>
-
-              <div className="pt-4 border-t border-[#2a2a30]">
-                <p className="text-xs text-[#737373] mb-3 tracking-wider">SUBSCRIBE FOR UPDATES</p>
-                <div className="flex min-w-0 flex-col gap-2 sm:flex-row sm:gap-0">
-                  <input 
-                    type="email" 
-                    placeholder="Your email address" 
-                    className="min-w-0 flex-1 rounded-xl border border-[#2a2a30] bg-[#0f0f12] px-4 py-2.5 text-sm text-[#fafafa] placeholder:text-[#555] transition-colors focus:outline-none focus:border-[#00d4aa] sm:rounded-l-2xl sm:rounded-r-none" 
-                  />
-                  <button 
-                    onClick={() => {
-                      setSubscribed(true);
-                      setTimeout(() => setSubscribed(false), 2400);
-                    }}
-                    className="min-w-[78px] rounded-xl bg-gradient-to-r from-[#00d4aa] to-[#8b5cf6] px-5 py-2.5 text-sm font-semibold text-[#0f0f12] transition-all hover:brightness-110 active:scale-[0.985] sm:rounded-l-none sm:rounded-r-2xl"
-                  >
-                    {subscribed ? "Thank you!" : "Join"}
-                  </button>
-                </div>
-                <p className="text-[10px] text-[#555] mt-1.5">No spam. Unsubscribe anytime.</p>
-              </div>
             </div>
           </div>
+
+          {/* Android App & Subscription Banner */}
+          <div className="mt-12 grid grid-cols-1 lg:grid-cols-2 gap-6 items-center p-6 rounded-3xl border border-[#2a2a30] bg-[#0c0c0f]">
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 rounded-2xl bg-[#00d4aa]/10 border border-[#00d4aa]/25 flex items-center justify-center text-[#00d4aa] shrink-0">
+                <svg className="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M7.2 9.1h9.6a1 1 0 0 1 1 1v7.1a1 1 0 0 1-1 1h-.7v2.1a1.2 1.2 0 0 1-2.4 0v-2.1H10.3v2.1a1.2 1.2 0 0 1-2.4 0v-2.1h-.7a1 1 0 0 1-1-1v-7.1a1 1 0 0 1 1-1Zm-3.1 1.2c.7 0 1.2.5 1.2 1.2v4.2a1.2 1.2 0 0 1-2.4 0v-4.2c0-.7.5-1.2 1.2-1.2Zm15.8 0c.7 0 1.2.5 1.2 1.2v4.2a1.2 1.2 0 0 1-2.4 0v-4.2c0-.7.5-1.2 1.2-1.2ZM8.4 3.4 7.3 1.5a.5.5 0 1 1 .9-.5l1.1 1.9A6.9 6.9 0 0 1 12 2.4c1 0 1.9.2 2.7.5L15.8 1a.5.5 0 1 1 .9.5l-1.1 1.9A6.2 6.2 0 0 1 18 8H6a6.2 6.2 0 0 1 2.4-4.6ZM9.4 5.9a.7.7 0 1 0 0-1.4.7.7 0 0 0 0 1.4Zm5.2 0a.7.7 0 1 0 0-1.4.7.7 0 0 0 0 1.4Z" />
+                </svg>
+              </div>
+              <div>
+                <p className="text-sm font-bold text-white">NextDigi Mobile App (Android APK)</p>
+                <p className="text-xs text-[#8c8c9a]">Access digital orders and software assets on the go.</p>
+              </div>
+              <a
+                href={ANDROID_APP_DOWNLOAD_URL}
+                download
+                className="ml-auto inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold bg-[#00d4aa]/15 text-[#00d4aa] border border-[#00d4aa]/30 hover:bg-[#00d4aa] hover:text-[#0f0f12] transition-all"
+              >
+                Download APK
+              </a>
+            </div>
+
+            <div className="flex min-w-0 flex-col gap-2 sm:flex-row sm:gap-0">
+              <input 
+                type="email" 
+                placeholder="Enter email for ecosystem updates..." 
+                className="min-w-0 flex-1 rounded-xl border border-[#2a2a30] bg-[#0f0f12] px-4 py-2.5 text-xs sm:text-sm text-[#fafafa] placeholder:text-[#555] transition-colors focus:outline-none focus:border-[#00d4aa] sm:rounded-l-2xl sm:rounded-r-none" 
+              />
+              <button 
+                onClick={() => {
+                  setSubscribed(true);
+                  setTimeout(() => setSubscribed(false), 2400);
+                }}
+                className="min-w-[80px] rounded-xl bg-gradient-to-r from-[#00d4aa] to-[#8b5cf6] px-5 py-2.5 text-xs sm:text-sm font-semibold text-[#0f0f12] transition-all hover:brightness-110 sm:rounded-l-none sm:rounded-r-2xl"
+              >
+                {subscribed ? "Subscribed!" : "Join"}
+              </button>
+            </div>
+          </div>
+
 
           {/* Premium Payment Methods */}
           <div className="mt-12 pt-8 border-t border-[#2a2a30]">
