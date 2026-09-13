@@ -2,9 +2,9 @@ import { Metadata } from "next";
 import { generateBreadcrumbSchema, StructuredData } from '../utils/seo';
 
 export const metadata: Metadata = {
-  title: "Premium Digital Products | Templates, UI Kits & Business Tools",
-  description: "Browse 10,000+ premium digital products including templates, UI kits, and business tools. Instant downloads for entrepreneurs with lifetime access.",
-  keywords: ["digital products", "templates", "UI kits", "business tools", "premium downloads", "web templates", "graphic design"],
+  title: "NextDigi Store | Digital Products & Business Resources",
+  description: "Premium digital products, templates and business resources from NextDigi Store, a division of NEXTDIGIHOME.",
+  keywords: ["NextDigi Store", "digital products", "business resources", "software templates", "UI kits", "instant downloads"],
   alternates: {
     canonical: "https://nextdigihome.com/products",
   },
@@ -20,7 +20,7 @@ export function generateViewport() {
 
 const breadcrumbSchema = generateBreadcrumbSchema([
   { label: "Home", path: "/" },
-  { label: "Products", path: "/products" },
+  { label: "Store", path: "/products" },
 ]);
 
 export default function ProductsMetadata() {

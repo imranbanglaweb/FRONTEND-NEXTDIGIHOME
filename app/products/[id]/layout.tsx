@@ -4,7 +4,7 @@ import { getApiUrl } from "../../utils/api";
 import { StructuredData, generateBreadcrumbSchema } from "../../utils/seo";
 
 const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL || "https://nextdigihome.com").replace(/\/$/, "");
-const SITE_NAME = "NEXTDIGIHOME";
+const SITE_NAME = "NextDigi Store";
 const DEFAULT_IMAGE = `${SITE_URL}/og-image.svg`;
 
 type ProductSegmentProps = {
@@ -151,7 +151,7 @@ async function getProduct(id: string): Promise<Product | null> {
 
 function getDescription(product: Product | null): string {
   if (!product) {
-    return "Premium digital products, templates, and business tools from NextDigi Store and NEXTDIGIHOME.";
+    return "Premium digital products, templates and business resources from NextDigi Store, a division of NEXTDIGIHOME.";
   }
 
   const rawDescription = product.detailed_description || product.description || "";
@@ -163,7 +163,7 @@ function getDescription(product: Product | null): string {
 
   const category = product.category ? `${product.category} ` : "";
   const price = product.price ? ` Price: BDT ${Number(product.price).toLocaleString("en-BD")}.` : "";
-  return truncate(`Buy ${product.name}, a premium ${category}product from NEXTDIGIHOME with secure checkout, instant access, and trusted support.${price}`, 160);
+  return truncate(`Buy ${product.name}, a premium ${category}product from NextDigi Store with secure checkout, instant access, and trusted support.${price}`, 160);
 }
 
 function getKeywords(product: Product): string[] {
@@ -349,7 +349,7 @@ export default async function ProductDetailLayout({ children, params }: ProductR
         name: "Is this product authentic?",
         acceptedAnswer: {
           "@type": "Answer",
-          text: "Yes. Products are sourced and published by NEXTDIGIHOME with clear product details and secure checkout.",
+          text: "Yes. Products are verified and delivered by NextDigi Store, a division of NEXTDIGIHOME, with clear documentation and secure checkout.",
         },
       },
       {

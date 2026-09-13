@@ -21,8 +21,8 @@ interface Product {
 export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
   // In a real app, you would fetch the product data here
   return {
-    title: "Product | NEXTDIGIHOME",
-    description: "Premium digital products for modern businesses.",
+    title: "Product | NextDigi Store",
+    description: "Premium digital products, templates and business resources from NextDigi Store.",
     alternates: {
       canonical: `${BASE_URL}/products/${params.id}`,
     },

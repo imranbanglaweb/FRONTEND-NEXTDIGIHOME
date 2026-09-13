@@ -582,12 +582,14 @@ function ProductsPageContent() {
               <span className="text-xs sm:text-sm font-bold uppercase tracking-[2px] text-[#00d4aa]">
                 NEXTDIGI STORE
               </span>
+              <span className="w-1 h-3 bg-white/20 hidden sm:inline" />
+              <span className="text-slate-400 text-xs hidden sm:inline">A Division of NEXTDIGIHOME</span>
             </div>
             <h1 className="text-4xl sm:text-5xl md:text-6xl font-black mb-6 gradient-text">
-              Digital Products &amp; Assets
+              Digital Products &amp; Resources
             </h1>
             <p className="text-base sm:text-lg text-[#a1a1aa] max-w-3xl mx-auto leading-relaxed">
-              Curated verified assets and developer resources from NextDigi Store, a division of NEXTDIGIHOME: <span className="text-white font-semibold">Digital Products</span> • <span className="text-white font-semibold">Templates</span> • <span className="text-white font-semibold">Business Tools</span> • <span className="text-white font-semibold">AI Resources</span>.
+              Premium digital products, templates and business resources for modern creators and ambitious businesses.
             </p>
             <div className="mt-8 grid grid-cols-1 gap-3 sm:grid-cols-3">
               {[

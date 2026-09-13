@@ -644,13 +644,13 @@ export default function Home() {
             <div>
               <div className="inline-flex items-center gap-2 text-xs font-bold tracking-widest text-[#00d4aa] uppercase mb-3">
                 <ShoppingBagIcon className="w-4 h-4 text-[#00d4aa]" />
-                NextDigi Store
+                NEXTDIGI STORE
               </div>
               <h2 className="text-3xl sm:text-4xl font-black text-white tracking-tight">
-                Production-Ready Source Code &amp; Software
+                Digital Products &amp; Resources
               </h2>
               <p className="text-sm text-slate-400 mt-2 max-w-xl">
-                Skip months of manual engineering. Deploy verified, commercial-license full-stack application codebases, Flutter mobile apps, and automation kits with instant delivery.
+                Premium digital products, templates and business resources from NextDigi Store, a division of NEXTDIGIHOME. Verified production-ready source codes, Flutter mobile apps, and business tools with instant delivery.
               </p>
             </div>
 

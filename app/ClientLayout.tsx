@@ -819,7 +819,7 @@ export default function ClientLayout({
                       onClick={() => setMobileMenuOpen(false)}
                       className="block px-3 py-1.5 rounded-lg text-sm font-semibold text-[#00d4aa]"
                     >
-                      NextDigi Store (Marketplace) →
+                      NextDigi Store (Digital Products) →
                     </Link>
                   </div>
                 )}

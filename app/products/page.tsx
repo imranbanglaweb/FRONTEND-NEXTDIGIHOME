@@ -132,8 +132,8 @@ export async function generateMetadata({ searchParams }: { searchParams: Product
   ].filter(Boolean);
 
   return {
-    title: `${titleParts.join(" - ")} | NEXTDIGIHOME`,
-    description: "Browse premium digital products, templates, UI kits, design assets, and business tools with secure checkout and fast access.",
+    title: `${titleParts.join(" - ") || "Digital Products & Resources"} | NextDigi Store`,
+    description: "Premium digital products, templates and business resources from NextDigi Store, a division of NEXTDIGIHOME.",
     alternates: {
       canonical: isVariantPage ? "/products" : path,
     },
@@ -149,17 +149,17 @@ export async function generateMetadata({ searchParams }: { searchParams: Product
       },
     },
     openGraph: {
-      title: titleParts.join(" - ") || "Premium Digital Products",
-      description: "Browse premium digital products, templates, UI kits, design assets, and business tools.",
+      title: titleParts.join(" - ") || "NextDigi Store | Digital Products & Resources",
+      description: "Premium digital products, templates and business resources from NextDigi Store.",
       url: `${SITE_URL}${isVariantPage ? "/products" : path}`,
       type: "website",
-      siteName: "NEXTDIGIHOME",
-      images: [{ url: `${SITE_URL}/og-image.svg`, width: 1200, height: 630, alt: "NEXTDIGIHOME products" }],
+      siteName: "NextDigi Store",
+      images: [{ url: `${SITE_URL}/og-image.svg`, width: 1200, height: 630, alt: "NextDigi Store products" }],
     },
     twitter: {
       card: "summary_large_image",
-      title: titleParts.join(" - ") || "Premium Digital Products",
-      description: "Browse premium digital products, templates, UI kits, design assets, and business tools.",
+      title: titleParts.join(" - ") || "NextDigi Store | Digital Products & Resources",
+      description: "Premium digital products, templates and business resources from NextDigi Store.",
       images: [`${SITE_URL}/og-image.svg`],
     },
   };
@@ -186,7 +186,7 @@ export default async function ProductsPage({ searchParams }: { searchParams: Pro
   const itemListSchema = {
     "@context": "https://schema.org",
     "@type": "ItemList",
-    name: "NEXTDIGIHOME products",
+    name: "NextDigi Store Products & Resources",
     url: `${SITE_URL}${canonicalPath}`,
     numberOfItems: products.length,
     itemListElement: products.map((product, index) => ({

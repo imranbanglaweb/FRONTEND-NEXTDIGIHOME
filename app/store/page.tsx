@@ -16,8 +16,8 @@ import {
 import { generatePageMetadata } from '@/app/utils/seo';
 
 export const metadata: Metadata = generatePageMetadata({
-  title: "NextDigi Store | Verified Digital Products, Source Code & Software Templates",
-  description: "Browse verified digital assets, full-stack application source codes, Flutter templates, UI systems, and automation scripts with instant delivery and a 30-day money-back guarantee.",
+  title: "NextDigi Store | Digital Products & Business Resources",
+  description: "Premium digital products, templates and business resources from NextDigi Store, a division of NEXTDIGIHOME.",
   path: "/store",
 });
 
@@ -40,38 +40,38 @@ export default function NextDigiStorePage() {
       count: 'iOS & Android'
     },
     {
-      title: 'UI Kits & Design Systems',
-      description: 'Clean, tokenized Figma files, component libraries, and Tailwind CSS design kits built for fast iteration.',
+      title: 'UI Design Kits & Systems',
+      description: 'Handcrafted Figma component libraries, responsive design systems, and icon sets ready for design-to-code pipelines.',
       icon: PaintBrushIcon,
-      accent: '#ec4899',
+      accent: '#a855f7',
       href: '/products?category=ui-kits',
-      count: 'Design & Assets'
+      count: 'Figma & Code'
     },
     {
-      title: 'Automation & Scripts',
-      description: 'Ready-to-deploy n8n workflows, Python scraping utilities, and webhook listener boilerplates.',
+      title: 'Automation & AI Tools',
+      description: 'Python automation pipelines, deterministic AI agent workflows, and scraping toolkits to streamline operations.',
       icon: BoltIcon,
-      accent: '#f59e0b',
-      href: '/products?category=scripts',
-      count: 'Automation Blueprints'
+      accent: '#fbbf24',
+      href: '/products?category=automation',
+      count: 'Scripts & Workflows'
     }
   ];
 
   const guarantees = [
     {
-      title: 'Instant Automated Delivery',
-      desc: 'Access your download links and license keys immediately after checkout without manual waiting.',
-      icon: ArrowDownTrayIcon,
-    },
-    {
-      title: 'Clean, Documented Code',
-      desc: 'All source files are strictly vetted for clean modular architecture, security, and setup documentation.',
       icon: ShieldCheckIcon,
+      title: '100% Verified Quality',
+      desc: 'Every template and codebase passes strict architecture and security review before listing.'
     },
     {
-      title: '30-Day Money-Back Guarantee',
-      desc: 'If a product does not function as advertised or has unresolved defects, request a full refund within 30 days.',
+      icon: ArrowDownTrayIcon,
+      title: 'Instant Secure Downloads',
+      desc: 'Immediate access to clean GitHub repositories, ZIP archives, and license keys upon checkout.'
+    },
+    {
       icon: ArrowPathIcon,
+      title: 'Lifetime Free Updates',
+      desc: 'Receive all future version updates and dependency upgrades at zero additional cost.'
     }
   ];
 
@@ -93,13 +93,13 @@ export default function NextDigiStorePage() {
         <div className="text-center max-w-3xl mx-auto mb-16">
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#00d4aa]/10 border border-[#00d4aa]/30 text-xs font-semibold tracking-wider text-[#00d4aa] uppercase mb-5">
             <ShoppingBagIcon className="w-4 h-4 text-[#00d4aa]" />
-            DIVISION: NEXTDIGI STORE
+            NEXTDIGI STORE &bull; DIVISION OF NEXTDIGIHOME
           </div>
           <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-white mb-6 leading-tight">
-            Verified Digital Products & <span className="bg-gradient-to-r from-[#00d4aa] via-[#38bdf8] to-[#8b5cf6] bg-clip-text text-transparent">Source Code Marketplace</span>
+            Digital Products &amp; <span className="bg-gradient-to-r from-[#00d4aa] via-[#38bdf8] to-[#8b5cf6] bg-clip-text text-transparent">Resources</span>
           </h1>
           <p className="text-gray-400 text-base sm:text-lg leading-relaxed">
-            Accelerate your development timeline by weeks. Explore our library of production-ready software source codes, UI design kits, mobile templates, and automation scripts.
+            Premium digital products, templates and business resources for modern creators and ambitious businesses. Explore our library of production-ready software source codes, UI design kits, mobile templates, and automation scripts.
           </p>
           <div className="mt-8 flex flex-wrap justify-center gap-4">
             <Link
