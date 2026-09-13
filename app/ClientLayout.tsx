@@ -288,6 +288,78 @@ export default function ClientLayout({
                 Home
               </Link>
 
+              {/* About — directly after Home */}
+              <Link
+                href="/about"
+                className={`px-3 py-2 rounded-xl text-sm transition-all ${
+                  pathname === '/about'
+                    ? 'text-[#00d4aa] font-bold bg-[#00d4aa]/10 border border-[#00d4aa]/25'
+                    : 'text-slate-300 hover:text-white hover:bg-white/5 font-medium'
+                }`}
+              >
+                About
+              </Link>
+
+              {/* Store — Click directly navigates to show all products */}
+              <div className="relative">
+                <Link
+                  href="/products"
+                  onMouseEnter={() => setActiveDropdown('store')}
+                  className={`px-3 py-2 rounded-xl text-sm flex items-center gap-1.5 transition-all ${
+                    pathname.startsWith('/store') || pathname.startsWith('/products')
+                      ? 'text-[#00d4aa] font-bold bg-[#00d4aa]/10 border border-[#00d4aa]/25'
+                      : 'text-slate-300 hover:text-white hover:bg-white/5 font-medium'
+                  }`}
+                >
+                  <ShoppingBagIcon className="w-4 h-4 text-[#00d4aa]" />
+                  <span>Store</span>
+                  <span className="text-[9px] font-black px-1.5 py-0.5 rounded-full bg-[#00d4aa] text-black tracking-wider uppercase">Hot</span>
+                  <ChevronDownIcon className={`w-3.5 h-3.5 transition-transform ${activeDropdown === 'store' ? 'rotate-180 text-[#00d4aa]' : ''}`} />
+                </Link>
+                {activeDropdown === 'store' && (
+                  <div
+                    onMouseEnter={() => setActiveDropdown('store')}
+                    className="absolute top-full left-0 mt-2 w-80 rounded-2xl bg-[#0d121f]/98 border border-white/10 p-3 shadow-2xl backdrop-blur-2xl z-50 animate-fade-in-up"
+                  >
+                    <div className="px-3 py-2 mb-2 border-b border-white/5 flex items-center justify-between">
+                      <span className="text-[10px] font-bold uppercase tracking-widest text-[#00d4aa]">Digital Store &amp; Products</span>
+                      <span className="text-[9px] text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full font-bold">All Products</span>
+                    </div>
+                    <div className="space-y-1">
+                      {[
+                        { title: 'Full-Stack Source Code', href: '/products?category=source-code', desc: 'Next.js, Laravel & Node.js codebases', icon: '💻' },
+                        { title: 'Mobile App Templates', href: '/products?category=mobile-apps', desc: 'Flutter iOS & Android applications', icon: '📱' },
+                        { title: 'AI & Automation Scripts', href: '/products?category=scripts', desc: 'n8n workflows, scrapers & bot kits', icon: '🤖' },
+                        { title: 'UI Kits & Design Systems', href: '/products?category=ui-kits', desc: 'Figma files & Tailwind design systems', icon: '🎨' },
+                      ].map((item, idx) => (
+                        <Link
+                          key={idx}
+                          href={item.href}
+                          onClick={() => setActiveDropdown(null)}
+                          className="flex items-start gap-2.5 p-2 rounded-xl hover:bg-white/5 transition-all group"
+                        >
+                          <span className="text-base">{item.icon}</span>
+                          <div>
+                            <div className="text-xs font-semibold text-white group-hover:text-[#00d4aa] transition-colors">{item.title}</div>
+                            <div className="text-[10px] text-slate-400">{item.desc}</div>
+                          </div>
+                        </Link>
+                      ))}
+                    </div>
+                    <div className="pt-2 mt-2 border-t border-white/5">
+                      <Link
+                        href="/products"
+                        onClick={() => setActiveDropdown(null)}
+                        className="flex items-center justify-between px-3 py-2 rounded-xl bg-[#00d4aa]/10 hover:bg-[#00d4aa]/20 text-xs font-bold text-[#00d4aa] transition-all"
+                      >
+                        <span>Show All Products (100+ Catalog)</span>
+                        <ArrowRightIcon className="w-3.5 h-3.5" />
+                      </Link>
+                    </div>
+                  </div>
+                )}
+              </div>
+
               {/* Solutions */}
               <div className="relative">
                 <button
@@ -480,74 +552,6 @@ export default function ClientLayout({
                 )}
               </div>
 
-              {/* Digital Store - Featured Menu with Category Dropdown */}
-              <div className="relative">
-                <button
-                  onMouseEnter={() => setActiveDropdown('store')}
-                  onClick={() => setActiveDropdown(activeDropdown === 'store' ? null : 'store')}
-                  className={`px-3 py-1.5 rounded-lg text-sm flex items-center gap-1.5 transition-all ${
-                    pathname.startsWith('/store') || pathname.startsWith('/products')
-                      ? 'text-[#00d4aa] font-bold bg-[#00d4aa]/10 border border-[#00d4aa]/30'
-                      : 'text-gray-300 hover:text-[#00d4aa] hover:bg-white/5 font-medium'
-                  }`}
-                >
-                  <ShoppingBagIcon className="w-4 h-4 text-[#00d4aa]" />
-                  <span>Store</span>
-                  <span className="text-[9px] font-black px-1.5 py-0.5 rounded-full bg-[#00d4aa] text-black tracking-wider uppercase">Hot</span>
-                  <ChevronDownIcon className={`w-3 h-3 transition-transform ${activeDropdown === 'store' ? 'rotate-180' : ''}`} />
-                </button>
-                {activeDropdown === 'store' && (
-                  <div
-                    onMouseEnter={() => setActiveDropdown('store')}
-                    className="absolute top-full left-0 mt-2 w-80 rounded-2xl bg-[#0d121f]/98 border border-white/10 p-3 shadow-2xl backdrop-blur-2xl z-50 animate-fade-in-up"
-                  >
-                    <div className="px-3 py-2 mb-2 border-b border-white/5 flex items-center justify-between">
-                      <span className="text-[10px] font-bold uppercase tracking-widest text-[#00d4aa]">Digital Assets &amp; Source Code</span>
-                      <span className="text-[9px] text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full font-bold">Instant Delivery</span>
-                    </div>
-                    <div className="space-y-1">
-                      {[
-                        { title: 'Full-Stack Source Code', href: '/products?category=source-code', desc: 'Next.js, Laravel & Node.js codebases', icon: '💻' },
-                        { title: 'Mobile App Templates', href: '/products?category=mobile-apps', desc: 'Flutter iOS & Android applications', icon: '📱' },
-                        { title: 'AI & Automation Scripts', href: '/products?category=scripts', desc: 'n8n workflows, scrapers & bot kits', icon: '🤖' },
-                        { title: 'UI Kits & Design Systems', href: '/products?category=ui-kits', desc: 'Figma files & Tailwind design systems', icon: '🎨' },
-                      ].map((item, idx) => (
-                        <Link
-                          key={idx}
-                          href={item.href}
-                          onClick={() => setActiveDropdown(null)}
-                          className="flex items-start gap-2.5 p-2 rounded-xl hover:bg-white/5 transition-all group"
-                        >
-                          <span className="text-base">{item.icon}</span>
-                          <div>
-                            <div className="text-xs font-semibold text-white group-hover:text-[#00d4aa] transition-colors">{item.title}</div>
-                            <div className="text-[10px] text-slate-400">{item.desc}</div>
-                          </div>
-                        </Link>
-                      ))}
-                    </div>
-                    <div className="pt-2 mt-2 border-t border-white/5">
-                      <Link
-                        href="/store"
-                        onClick={() => setActiveDropdown(null)}
-                        className="flex items-center justify-between px-3 py-2 rounded-xl bg-[#00d4aa]/10 hover:bg-[#00d4aa]/15 text-xs font-bold text-[#00d4aa] transition-all"
-                      >
-                        <span>Visit Full Store (100+ Products)</span>
-                        <ArrowRightIcon className="w-3.5 h-3.5" />
-                      </Link>
-                    </div>
-                  </div>
-                )}
-              </div>
-
-              <Link href="/about"
-                className={`px-3 py-2 rounded-xl text-sm font-medium transition-all ${
-                  pathname === '/about'
-                    ? 'text-[#00d4aa] font-bold bg-[#00d4aa]/10 border border-[#00d4aa]/25'
-                    : 'text-slate-300 hover:text-white hover:bg-white/5'
-                }`}>
-                About
-              </Link>
             </nav>
 
             {/* Right side: cart + CTA + auth */}
@@ -622,6 +626,14 @@ export default function ClientLayout({
                 Home
               </Link>
 
+              <Link
+                href="/about"
+                onClick={() => setMobileMenuOpen(false)}
+                className={`block px-4 py-2.5 rounded-xl text-base font-semibold transition-all ${pathname === '/about' ? 'text-[#00d4aa] bg-[#2a2a30]/50' : 'text-[#fafafa] hover:text-[#00d4aa]'}`}
+              >
+                About
+              </Link>
+
               {/* Prominent Mobile Store Banner */}
               <Link
                 href="/products"
@@ -632,7 +644,7 @@ export default function ClientLayout({
                   <ShoppingBagIcon className="w-5 h-5 text-[#00d4aa]" />
                   <span>Digital Products Store</span>
                 </div>
-                <span className="text-xs px-2 py-0.5 rounded-full bg-[#00d4aa] text-black font-extrabold">100+ Assets</span>
+                <span className="text-xs px-2 py-0.5 rounded-full bg-[#00d4aa] text-black font-extrabold">Show All Products</span>
               </Link>
 
               {/* Mobile Solutions Accordion */}
@@ -799,28 +811,6 @@ export default function ClientLayout({
                 )}
               </div>
 
-              {/* Direct links */}
-              <Link
-                href="/case-studies"
-                onClick={() => setMobileMenuOpen(false)}
-                className={`block px-4 py-2.5 rounded-xl text-base font-semibold transition-all ${pathname === '/case-studies' ? 'text-[#00d4aa] bg-[#2a2a30]/50' : 'text-[#fafafa] hover:text-[#00d4aa]'}`}
-              >
-                Case Studies
-              </Link>
-              <Link
-                href="/about"
-                onClick={() => setMobileMenuOpen(false)}
-                className={`block px-4 py-2.5 rounded-xl text-base font-semibold transition-all ${pathname === '/about' ? 'text-[#00d4aa] bg-[#2a2a30]/50' : 'text-[#fafafa] hover:text-[#00d4aa]'}`}
-              >
-                About
-              </Link>
-              <Link
-                href="/contact"
-                onClick={() => setMobileMenuOpen(false)}
-                className={`block px-4 py-2.5 rounded-xl text-base font-semibold transition-all ${pathname === '/contact' ? 'text-[#00d4aa] bg-[#2a2a30]/50' : 'text-[#fafafa] hover:text-[#00d4aa]'}`}
-              >
-                Contact
-              </Link>
 
               {/* Mobile CTA */}
               <div className="pt-2">
