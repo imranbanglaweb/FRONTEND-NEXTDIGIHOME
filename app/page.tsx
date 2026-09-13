@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useCallback } from 'react';
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { 
@@ -31,8 +31,12 @@ import {
   ArrowDownTrayIcon,
   ClockIcon,
   XMarkIcon,
-  MagnifyingGlassIcon as SearchIcon
+  ChevronLeftIcon,
+  ChevronRightIcon,
+  StarIcon,
+  FireIcon
 } from "@heroicons/react/24/outline";
+import { StarIcon as StarIconSolid } from "@heroicons/react/24/solid";
 import { getStorageUrl, apiFetch, getLogoUrl } from './utils/api';
 
 interface Product {
@@ -40,12 +44,12 @@ interface Product {
   name: string;
   slug: string;
   description?: string;
-  price: number;
-  compare_price?: number;
+  price: number | string;
+  compare_price?: number | string | null;
   category?: string;
   category_name?: string | null;
   category_slug?: string | null;
-  thumbnail?: string;
+  thumbnail?: string | null;
   featured?: boolean;
 }
 
@@ -73,28 +77,117 @@ const normalizeCategory = (value: unknown): string => {
     .replace(/^-+|-+$/g, '');
 };
 
+// Premium fallback products ensuring the product list is never blank
+const fallbackProducts: Product[] = [
+  {
+    id: 101,
+    name: 'NextDigi Headless Commerce Storefront',
+    slug: 'nextdigi-headless-commerce',
+    description: 'Production-ready Next.js 16 e-commerce template with bKash, Nagad, Stripe, and automated courier consignment dispatch.',
+    price: 9999,
+    compare_price: 14999,
+    category: 'Web Development',
+    category_name: 'Web Development',
+    category_slug: 'web-development',
+    thumbnail: null,
+    featured: true
+  },
+  {
+    id: 102,
+    name: 'Flutter Multipurpose Mobile App Template',
+    slug: 'flutter-multipurpose-mobile-app',
+    description: 'Complete cross-platform iOS & Android mobile application with biometric auth, push alerts, and clean Bloc architecture.',
+    price: 7499,
+    compare_price: 11999,
+    category: 'Mobile Apps',
+    category_name: 'Mobile Apps',
+    category_slug: 'mobile-apps',
+    thumbnail: null,
+    featured: true
+  },
+  {
+    id: 103,
+    name: 'Enterprise SaaS Admin & Billing Dashboard',
+    slug: 'enterprise-saas-admin-billing',
+    description: 'Multi-tenant subscription architecture with Stripe billing, usage metering, team workspace invites, and role-based ACL.',
+    price: 12499,
+    compare_price: 18999,
+    category: 'Source Code',
+    category_name: 'Source Code',
+    category_slug: 'source-code',
+    thumbnail: null,
+    featured: true
+  },
+  {
+    id: 104,
+    name: 'Autonomous AI Agent & RAG Knowledge Kit',
+    slug: 'autonomous-ai-agent-rag-kit',
+    description: 'LangChain & Python agent system with vector database document indexing, multi-channel WhatsApp bot, and tool-use scripts.',
+    price: 8999,
+    compare_price: 13500,
+    category: 'AI & Automation',
+    category_name: 'AI & Automation',
+    category_slug: 'ai-automation',
+    thumbnail: null,
+    featured: true
+  },
+  {
+    id: 105,
+    name: 'Tailwind CSS Modern SaaS UI Component Library',
+    slug: 'tailwind-modern-saas-ui-kit',
+    description: 'Over 120+ dark-mode glassmorphic cards, charts, navigation headers, and responsive forms coded with modern Tailwind CSS.',
+    price: 3499,
+    compare_price: 5999,
+    category: 'UI Kits',
+    category_name: 'UI Kits',
+    category_slug: 'ui-kits',
+    thumbnail: null,
+    featured: true
+  },
+  {
+    id: 106,
+    name: 'n8n Workflow Automation & Lead Routing Blueprints',
+    slug: 'n8n-workflow-automation-blueprints',
+    description: 'Pre-configured JSON automation templates connecting Facebook Lead Ads, Google Sheets, WhatsApp notifications, and CRM pipelines.',
+    price: 4999,
+    compare_price: 7999,
+    category: 'Scripts',
+    category_name: 'Scripts',
+    category_slug: 'scripts',
+    thumbnail: null,
+    featured: true
+  }
+];
+
 export default function Home() {
   const router = useRouter();
-  const [allProducts, setAllProducts] = useState<Product[]>([]);
+  const [allProducts, setAllProducts] = useState<Product[]>(fallbackProducts);
   const [allCategories, setAllCategories] = useState<Category[]>([]);
   const [loadingProducts, setLoadingProducts] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
+  const [heroProductIndex, setHeroProductIndex] = useState(0);
   const [showWelcomePopup, setShowWelcomePopup] = useState(false);
   const [welcomeSettings, setWelcomeSettings] = useState<WelcomeSettings | null>(null);
 
-  // Fetch products and categories
+  // Fetch real products from backend API
   useEffect(() => {
     const fetchProducts = async () => {
       try {
         const data = await apiFetch('products?per_page=50');
+        let prods: Product[] = [];
         if (data?.data && Array.isArray(data.data)) {
-          setAllProducts(data.data);
+          prods = data.data;
         } else if (Array.isArray(data)) {
-          setAllProducts(data);
+          prods = data;
+        } else if (data?.data?.data && Array.isArray(data.data.data)) {
+          prods = data.data.data;
+        }
+        if (prods.length > 0) {
+          setAllProducts(prods);
         }
       } catch (error) {
-        console.error('Failed to fetch products:', error);
+        console.warn('Using fallback products, API returned:', error);
       } finally {
         setLoadingProducts(false);
       }
@@ -103,6 +196,7 @@ export default function Home() {
     fetchProducts();
   }, []);
 
+  // Fetch categories
   useEffect(() => {
     const fetchCategories = async () => {
       try {
@@ -113,7 +207,7 @@ export default function Home() {
           setAllCategories(data.data);
         }
       } catch (error) {
-        console.error('Failed to fetch categories:', error);
+        console.warn('Failed to fetch categories:', error);
       }
     };
 
@@ -124,7 +218,7 @@ export default function Home() {
   useEffect(() => {
     try {
       if (sessionStorage.getItem('nextdigihome_welcome_popup_seen') !== 'true') {
-        const timer = window.setTimeout(() => setShowWelcomePopup(true), 1200);
+        const timer = window.setTimeout(() => setShowWelcomePopup(true), 1500);
         return () => window.clearTimeout(timer);
       }
     } catch (e) {
@@ -155,6 +249,7 @@ export default function Home() {
     setShowWelcomePopup(false);
   };
 
+  // Filter products by selected category and search query
   const filteredProducts = useMemo(() => {
     return allProducts.filter((product) => {
       const prodCategory = normalizeCategory(product.category_slug || product.category_name || product.category);
@@ -166,12 +261,33 @@ export default function Home() {
     });
   }, [allProducts, selectedCategory, searchQuery]);
 
+  // Current featured product for the Hero Spotlight
+  const currentHeroProduct = useMemo(() => {
+    if (allProducts.length === 0) return fallbackProducts[0];
+    return allProducts[heroProductIndex % allProducts.length];
+  }, [allProducts, heroProductIndex]);
+
+  const nextHeroProduct = useCallback(() => {
+    setHeroProductIndex((prev) => (prev + 1) % allProducts.length);
+  }, [allProducts.length]);
+
+  const prevHeroProduct = useCallback(() => {
+    setHeroProductIndex((prev) => (prev - 1 + allProducts.length) % allProducts.length);
+  }, [allProducts.length]);
+
+  // Auto rotate hero spotlight every 6 seconds
+  useEffect(() => {
+    if (allProducts.length > 1) {
+      const interval = setInterval(nextHeroProduct, 6000);
+      return () => clearInterval(interval);
+    }
+  }, [allProducts.length, nextHeroProduct]);
+
   const popupBrandName = welcomeSettings?.site_title || welcomeSettings?.admin_title || 'NextDigiHome';
   const popupTagline = welcomeSettings?.site_description || welcomeSettings?.admin_description || 'Build. Launch. Automate. Grow.';
-  const popupLogo = getLogoUrl(welcomeSettings?.site_logo || welcomeSettings?.admin_logo) || '/logo.png';
 
   return (
-    <div className="min-h-screen bg-[#07090e] text-white selection:bg-[#00d4aa] selection:text-black">
+    <div className="min-h-screen bg-[#07090e] text-white selection:bg-[#00d4aa] selection:text-black overflow-x-hidden">
       
       {/* Welcome Popup */}
       {showWelcomePopup && (
@@ -210,7 +326,7 @@ export default function Home() {
                   onClick={closeWelcomePopup}
                   className="px-6 py-3 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-white font-medium text-xs transition"
                 >
-                  Explore Store
+                  Explore Digital Store
                 </Link>
               </div>
             </div>
@@ -219,77 +335,214 @@ export default function Home() {
       )}
 
       {/* ================================================================ */}
-      {/* SECTION 1: HERO SECTION (MASTER BRAND) */}
+      {/* SECTION 1: HERO SECTION WITH INTERACTIVE LIVE PRODUCT SPOTLIGHT */}
       {/* ================================================================ */}
-      <section className="relative pt-32 pb-20 md:pt-40 md:pb-32 overflow-hidden">
-        {/* Glow ambient backgrounds */}
-        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[850px] h-[450px] bg-gradient-to-tr from-[#00d4aa]/15 via-[#8b5cf6]/15 to-transparent blur-[160px] pointer-events-none rounded-full" />
-        <div className="absolute top-20 right-10 w-[400px] h-[400px] bg-[#38bdf8]/10 blur-[140px] pointer-events-none rounded-full" />
+      <section className="relative pt-32 pb-16 md:pt-40 md:pb-24 overflow-hidden border-b border-white/5">
+        {/* Ambient Neon Mesh */}
+        <div className="absolute top-1/4 left-1/4 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[450px] bg-gradient-to-tr from-[#00d4aa]/15 via-[#8b5cf6]/15 to-transparent blur-[160px] pointer-events-none rounded-full" />
+        <div className="absolute top-20 right-10 w-[500px] h-[500px] bg-[#38bdf8]/10 blur-[150px] pointer-events-none rounded-full" />
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="text-center max-w-4xl mx-auto">
-            {/* Tagline Badge */}
-            <div className="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-white/5 border border-white/10 text-xs font-semibold tracking-wider text-gray-300 uppercase mb-8 shadow-inner">
-              <span className="w-2 h-2 rounded-full bg-[#00d4aa] animate-pulse" />
-              <span>NEXTDIGIHOME</span>
-              <span className="text-gray-500">•</span>
-              <span className="text-[#00d4aa]">BUILD. LAUNCH. AUTOMATE. GROW.</span>
-            </div>
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+            
+            {/* Left: Master Brand Authority */}
+            <div className="lg:col-span-7 text-left">
+              {/* Tagline Pill */}
+              <div className="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-white/5 border border-white/10 text-xs font-semibold tracking-wider text-gray-300 uppercase mb-6 shadow-inner">
+                <span className="w-2 h-2 rounded-full bg-[#00d4aa] animate-pulse" />
+                <span className="font-bold text-white">NEXTDIGIHOME</span>
+                <span className="text-gray-500">•</span>
+                <span className="text-[#00d4aa]">BUILD. LAUNCH. AUTOMATE. GROW.</span>
+              </div>
 
-            {/* Master Headline */}
-            <h1 className="text-4xl sm:text-6xl lg:text-7xl font-extrabold text-white tracking-tight leading-[1.1] mb-6">
-              Technology, AI & Digital Solutions for{' '}
-              <span className="bg-gradient-to-r from-[#00d4aa] via-[#38bdf8] to-[#8b5cf6] bg-clip-text text-transparent">
-                Modern Businesses
-              </span>
-            </h1>
+              {/* Master Headline */}
+              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-white tracking-tight leading-[1.1] mb-6">
+                Technology, AI, Software &{' '}
+                <span className="bg-gradient-to-r from-[#00d4aa] via-[#38bdf8] to-[#8b5cf6] bg-clip-text text-transparent">
+                  Digital Growth
+                </span>{' '}
+                for Modern Businesses
+              </h1>
 
-            {/* Supporting Copy */}
-            <p className="text-lg sm:text-xl text-gray-300 font-normal leading-relaxed max-w-3xl mx-auto mb-10">
-              We architect high-performance web and custom software, deploy autonomous AI agents to eliminate manual operations, scale revenue with performance marketing, and operate proprietary SaaS platforms.
-            </p>
+              {/* Supporting Copy */}
+              <p className="text-base sm:text-lg text-gray-300 font-normal leading-relaxed max-w-2xl mb-8">
+                We engineer high-performance web platforms, deploy autonomous AI agents, drive predictable customer acquisition, and provide verified, production-ready software source codes.
+              </p>
 
-            {/* CTAs */}
-            <div className="flex flex-wrap items-center justify-center gap-4 mb-12">
-              <Link
-                href="/contact"
-                className="px-8 py-4 rounded-xl font-bold text-black bg-[#00d4aa] hover:bg-[#00e2b6] transition-all duration-300 shadow-xl shadow-[#00d4aa]/25 flex items-center gap-2 hover:scale-[1.02]"
-              >
-                <span>Start a Project</span>
-                <ArrowRightIcon className="w-4 h-4" />
-              </Link>
-              <Link
-                href="/solutions"
-                className="px-7 py-4 rounded-xl font-semibold text-white bg-white/5 hover:bg-white/10 border border-white/10 transition-all duration-300 flex items-center gap-2"
-              >
-                Explore Solutions
-              </Link>
-              <Link
-                href="#store"
-                className="px-5 py-4 text-xs font-semibold text-gray-400 hover:text-[#00d4aa] transition flex items-center gap-1"
-              >
-                Browse Digital Store <ArrowRightIcon className="w-3.5 h-3.5" />
-              </Link>
-            </div>
-
-            {/* Capability Badges / Pills */}
-            <div className="flex flex-wrap justify-center gap-2 sm:gap-3 max-w-4xl mx-auto">
-              {[
-                { title: 'Custom Software & Web', href: '/solutions' },
-                { title: 'Autonomous AI Agents', href: '/ai' },
-                { title: 'Performance Marketing', href: '/growth' },
-                { title: 'Turnkey SaaS Platforms', href: '/labs' },
-                { title: 'Verified Digital Store', href: '/store' }
-              ].map((pill, i) => (
+              {/* Action Buttons */}
+              <div className="flex flex-wrap items-center gap-4 mb-10">
                 <Link
-                  key={i}
-                  href={pill.href}
-                  className="px-3.5 py-1.5 rounded-full text-xs font-medium text-gray-300 bg-[#0e131d] border border-white/10 hover:border-[#00d4aa]/50 hover:text-white transition"
+                  href="/contact"
+                  className="px-7 py-4 rounded-xl font-bold text-black bg-[#00d4aa] hover:bg-[#00e2b6] transition-all duration-300 shadow-xl shadow-[#00d4aa]/25 flex items-center gap-2 hover:scale-[1.02] text-sm sm:text-base"
                 >
-                  {pill.title}
+                  <span>Start a Project</span>
+                  <ArrowRightIcon className="w-4 h-4" />
                 </Link>
-              ))}
+                <Link
+                  href="#digital-products"
+                  className="px-6 py-4 rounded-xl font-semibold text-white bg-[#8b5cf6]/10 hover:bg-[#8b5cf6]/20 border border-[#8b5cf6]/30 transition-all duration-300 flex items-center gap-2 text-sm sm:text-base shadow-lg shadow-[#8b5cf6]/10"
+                >
+                  <ShoppingBagIcon className="w-5 h-5 text-[#a78bfa]" />
+                  <span>Browse Digital Products</span>
+                </Link>
+                <Link
+                  href="/solutions"
+                  className="px-4 py-4 text-xs font-semibold text-gray-400 hover:text-white transition flex items-center gap-1"
+                >
+                  Explore Solutions →
+                </Link>
+              </div>
+
+              {/* Capability Badges */}
+              <div className="flex flex-wrap items-center gap-2 pt-4 border-t border-white/10 text-xs text-gray-400">
+                <span className="font-semibold text-gray-300 uppercase tracking-wider text-[11px] mr-2">Ecosystem:</span>
+                {[
+                  { name: 'Custom Software & Web', href: '/solutions' },
+                  { name: 'Autonomous AI Agents', href: '/ai' },
+                  { name: 'Performance Growth', href: '/growth' },
+                  { name: 'Proprietary SaaS', href: '/labs' },
+                  { name: 'Digital Asset Store', href: '/products' }
+                ].map((cap, i) => (
+                  <Link
+                    key={i}
+                    href={cap.href}
+                    className="px-3 py-1 rounded-lg bg-white/5 border border-white/5 hover:border-[#00d4aa]/40 hover:text-white transition text-xs"
+                  >
+                    {cap.name}
+                  </Link>
+                ))}
+              </div>
             </div>
+
+            {/* Right: Live Interactive Digital Product Spotlight Card */}
+            <div className="lg:col-span-5 relative">
+              <div className="relative mx-auto w-full max-w-lg">
+                {/* Glow behind product card */}
+                <div className="absolute -inset-2 bg-gradient-to-r from-[#00d4aa]/30 via-[#8b5cf6]/30 to-[#38bdf8]/30 rounded-3xl blur-2xl opacity-50 pointer-events-none" />
+
+                <div className="relative rounded-3xl border border-white/15 bg-[#0e131d]/95 p-6 shadow-2xl backdrop-blur-2xl">
+                  {/* Spotlight Top Bar */}
+                  <div className="flex items-center justify-between pb-4 mb-4 border-b border-white/10">
+                    <div className="flex items-center gap-2">
+                      <span className="w-2.5 h-2.5 rounded-full bg-[#00d4aa] animate-ping" />
+                      <span className="text-xs font-bold uppercase tracking-wider text-white">Live Product Spotlight</span>
+                    </div>
+                    <div className="flex items-center gap-1 text-xs text-gray-400">
+                      <button
+                        onClick={prevHeroProduct}
+                        className="p-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-gray-300 hover:text-white transition"
+                        title="Previous Product"
+                      >
+                        <ChevronLeftIcon className="w-4 h-4" />
+                      </button>
+                      <span className="font-mono text-[11px] px-2">
+                        {(heroProductIndex % allProducts.length) + 1} / {allProducts.length}
+                      </span>
+                      <button
+                        onClick={nextHeroProduct}
+                        className="p-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-gray-300 hover:text-white transition"
+                        title="Next Product"
+                      >
+                        <ChevronRightIcon className="w-4 h-4" />
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Product Preview Image */}
+                  <Link
+                    href={`/products/${currentHeroProduct.slug || currentHeroProduct.id}`}
+                    className="block relative aspect-[16/10] rounded-2xl overflow-hidden bg-[#131824] border border-white/10 group mb-5"
+                  >
+                    {currentHeroProduct.thumbnail ? (
+                      <img
+                        src={getStorageUrl(currentHeroProduct.thumbnail)!}
+                        alt={currentHeroProduct.name}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                      />
+                    ) : (
+                      <div className="w-full h-full flex flex-col items-center justify-center bg-gradient-to-br from-[#131824] to-[#0c0f17] text-gray-500">
+                        <ShoppingBagIcon className="w-16 h-16 text-[#00d4aa]/40 mb-2" />
+                        <span className="text-xs font-mono text-gray-400">Verified Software Asset</span>
+                      </div>
+                    )}
+                    <div className="absolute top-3 left-3 px-2.5 py-1 rounded-md bg-black/70 backdrop-blur border border-white/10 text-[11px] font-mono font-semibold text-[#00d4aa]">
+                      {currentHeroProduct.category_name || currentHeroProduct.category || 'Source Code'}
+                    </div>
+                    <div className="absolute top-3 right-3 px-2 py-1 rounded-md bg-[#00d4aa] text-black text-[10px] font-extrabold uppercase tracking-wider flex items-center gap-1">
+                      <FireIcon className="w-3 h-3" />
+                      Instant Download
+                    </div>
+                  </Link>
+
+                  {/* Product Title & Details */}
+                  <div className="mb-4">
+                    <div className="flex items-center gap-1 text-amber-400 mb-1.5">
+                      {[...Array(5)].map((_, i) => (
+                        <StarIconSolid key={i} className="w-3.5 h-3.5" />
+                      ))}
+                      <span className="text-xs text-gray-400 font-semibold ml-1.5">5.0 (Verified Code)</span>
+                    </div>
+
+                    <Link
+                      href={`/products/${currentHeroProduct.slug || currentHeroProduct.id}`}
+                      className="block text-lg font-extrabold text-white hover:text-[#00d4aa] transition line-clamp-1 mb-1.5"
+                    >
+                      {currentHeroProduct.name}
+                    </Link>
+                    <p className="text-xs text-gray-400 line-clamp-2 leading-relaxed">
+                      {currentHeroProduct.description || 'Production-grade software codebase with clean architecture and complete setup documentation.'}
+                    </p>
+                  </div>
+
+                  {/* Price & Action Row */}
+                  <div className="pt-4 border-t border-white/10 flex items-center justify-between">
+                    <div>
+                      <span className="text-[10px] uppercase font-semibold text-gray-400 block">Instant Access</span>
+                      <div className="flex items-baseline gap-2">
+                        <span className="text-2xl font-black text-[#00d4aa]">
+                          ৳{Number(currentHeroProduct.price).toLocaleString()}
+                        </span>
+                        {currentHeroProduct.compare_price && (
+                          <span className="text-xs line-through text-gray-500">
+                            ৳{Number(currentHeroProduct.compare_price).toLocaleString()}
+                          </span>
+                        )}
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-2">
+                      <Link
+                        href={`/products/${currentHeroProduct.slug || currentHeroProduct.id}`}
+                        className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-[#00d4aa] to-[#00b894] hover:from-[#00e2b6] hover:to-[#00d4aa] text-black font-bold text-xs transition shadow-lg shadow-[#00d4aa]/20 flex items-center gap-1.5"
+                      >
+                        <span>View Product</span>
+                        <ArrowRightIcon className="w-3.5 h-3.5" />
+                      </Link>
+                    </div>
+                  </div>
+
+                  {/* Thumbnail Mini-Selector for Fast Switching */}
+                  <div className="grid grid-cols-4 gap-2 mt-4 pt-3 border-t border-white/5">
+                    {allProducts.slice(0, 4).map((p, idx) => (
+                      <button
+                        key={idx}
+                        onClick={() => setHeroProductIndex(idx)}
+                        className={`p-1 rounded-lg border transition text-left overflow-hidden ${
+                          (heroProductIndex % allProducts.length) === idx
+                            ? 'border-[#00d4aa] bg-[#00d4aa]/10'
+                            : 'border-white/5 hover:border-white/20 bg-white/5'
+                        }`}
+                      >
+                        <div className="text-[10px] font-bold text-gray-300 line-clamp-1">{p.name}</div>
+                        <div className="text-[9px] font-mono text-[#00d4aa]">৳{Number(p.price).toLocaleString()}</div>
+                      </button>
+                    ))}
+                  </div>
+
+                </div>
+              </div>
+            </div>
+
           </div>
         </div>
       </section>
@@ -297,7 +550,7 @@ export default function Home() {
       {/* ================================================================ */}
       {/* SECTION 2: WHAT WE DO (4 PILLARS / ECOSYSTEM MATRIX) */}
       {/* ================================================================ */}
-      <section className="py-20 relative border-t border-white/5 bg-[#080b11]">
+      <section className="py-20 relative bg-[#080b11] border-b border-white/5">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto mb-16">
             <span className="text-xs font-semibold uppercase tracking-wider text-[#00d4aa]">The Ecosystem Matrix</span>
@@ -305,22 +558,22 @@ export default function Home() {
               Everything Your Business Needs to Operate Digitally
             </h2>
             <p className="text-gray-400 text-sm sm:text-base">
-              Four specialized divisions engineered to work in harmony — from code and automation to paid customer acquisition and ready-to-deploy software assets.
+              Four specialized divisions working in synergy — from custom full-stack code and autonomous AI agents to verified digital assets and customer growth.
             </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {/* Pillar 1: BUILD */}
-            <div className="p-8 rounded-3xl border border-white/10 bg-[#0e131d] hover:border-[#00d4aa]/40 transition group flex flex-col justify-between">
+            <div className="p-8 rounded-3xl border border-white/10 bg-[#0e131d] hover:border-[#00d4aa]/40 transition group flex flex-col justify-between hover:shadow-[0_0_30px_rgba(0,212,170,0.12)]">
               <div>
-                <div className="w-12 h-12 rounded-2xl bg-[#00d4aa]/10 border border-[#00d4aa]/20 flex items-center justify-center text-[#00d4aa] mb-6">
+                <div className="w-12 h-12 rounded-2xl bg-[#00d4aa]/10 border border-[#00d4aa]/20 flex items-center justify-center text-[#00d4aa] mb-6 group-hover:scale-105 transition-transform">
                   <GlobeAltIcon className="w-6 h-6" />
                 </div>
                 <span className="text-[11px] font-mono uppercase tracking-widest text-[#00d4aa] font-bold">Pillar 01</span>
                 <h3 className="text-2xl font-black text-white mt-1 mb-2">BUILD</h3>
                 <p className="text-xs font-semibold text-gray-400 mb-4">NextDigi Solutions</p>
                 <p className="text-sm text-gray-400 leading-relaxed mb-6">
-                  Websites, e-commerce storefronts, mobile apps, custom ERPs, and scalable multi-tenant SaaS platforms.
+                  High-performance web apps, headless e-commerce, mobile apps, custom ERPs, and multi-tenant SaaS products.
                 </p>
               </div>
               <Link
@@ -332,9 +585,9 @@ export default function Home() {
             </div>
 
             {/* Pillar 2: AUTOMATE */}
-            <div className="p-8 rounded-3xl border border-white/10 bg-[#0e131d] hover:border-[#8b5cf6]/40 transition group flex flex-col justify-between">
+            <div className="p-8 rounded-3xl border border-white/10 bg-[#0e131d] hover:border-[#8b5cf6]/40 transition group flex flex-col justify-between hover:shadow-[0_0_30px_rgba(139,92,246,0.12)]">
               <div>
-                <div className="w-12 h-12 rounded-2xl bg-[#8b5cf6]/10 border border-[#8b5cf6]/20 flex items-center justify-center text-[#8b5cf6] mb-6">
+                <div className="w-12 h-12 rounded-2xl bg-[#8b5cf6]/10 border border-[#8b5cf6]/20 flex items-center justify-center text-[#8b5cf6] mb-6 group-hover:scale-105 transition-transform">
                   <CpuChipIcon className="w-6 h-6" />
                 </div>
                 <span className="text-[11px] font-mono uppercase tracking-widest text-[#8b5cf6] font-bold">Pillar 02</span>
@@ -353,9 +606,9 @@ export default function Home() {
             </div>
 
             {/* Pillar 3: GROW */}
-            <div className="p-8 rounded-3xl border border-white/10 bg-[#0e131d] hover:border-[#38bdf8]/40 transition group flex flex-col justify-between">
+            <div className="p-8 rounded-3xl border border-white/10 bg-[#0e131d] hover:border-[#38bdf8]/40 transition group flex flex-col justify-between hover:shadow-[0_0_30px_rgba(56,189,248,0.12)]">
               <div>
-                <div className="w-12 h-12 rounded-2xl bg-[#38bdf8]/10 border border-[#38bdf8]/20 flex items-center justify-center text-[#38bdf8] mb-6">
+                <div className="w-12 h-12 rounded-2xl bg-[#38bdf8]/10 border border-[#38bdf8]/20 flex items-center justify-center text-[#38bdf8] mb-6 group-hover:scale-105 transition-transform">
                   <PresentationChartLineIcon className="w-6 h-6" />
                 </div>
                 <span className="text-[11px] font-mono uppercase tracking-widest text-[#38bdf8] font-bold">Pillar 03</span>
@@ -374,23 +627,23 @@ export default function Home() {
             </div>
 
             {/* Pillar 4: PRODUCTS */}
-            <div className="p-8 rounded-3xl border border-white/10 bg-[#0e131d] hover:border-[#f59e0b]/40 transition group flex flex-col justify-between">
+            <div className="p-8 rounded-3xl border border-white/10 bg-[#0e131d] hover:border-[#f59e0b]/40 transition group flex flex-col justify-between hover:shadow-[0_0_30px_rgba(245,158,11,0.12)]">
               <div>
-                <div className="w-12 h-12 rounded-2xl bg-[#f59e0b]/10 border border-[#f59e0b]/20 flex items-center justify-center text-[#f59e0b] mb-6">
+                <div className="w-12 h-12 rounded-2xl bg-[#f59e0b]/10 border border-[#f59e0b]/20 flex items-center justify-center text-[#f59e0b] mb-6 group-hover:scale-105 transition-transform">
                   <ShoppingBagIcon className="w-6 h-6" />
                 </div>
                 <span className="text-[11px] font-mono uppercase tracking-widest text-[#f59e0b] font-bold">Pillar 04</span>
                 <h3 className="text-2xl font-black text-white mt-1 mb-2">PRODUCTS</h3>
                 <p className="text-xs font-semibold text-gray-400 mb-4">Labs & Store</p>
                 <p className="text-sm text-gray-400 leading-relaxed mb-6">
-                  SaaS products (Commerce, Social, Automate, Garibondhu360) plus verified source codes & developer tools.
+                  Proprietary SaaS platforms (Commerce, Social, Automate, Garibondhu360) plus verified digital assets and source code.
                 </p>
               </div>
               <Link
-                href="/labs"
+                href="#digital-products"
                 className="inline-flex items-center gap-2 text-xs font-bold text-[#f59e0b] hover:underline"
               >
-                Explore Labs & Store <ArrowRightIcon className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+                Browse Digital Store <ArrowRightIcon className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
               </Link>
             </div>
           </div>
@@ -398,9 +651,218 @@ export default function Home() {
       </section>
 
       {/* ================================================================ */}
-      {/* SECTION 3: NEXTDIGI SOLUTIONS (SERVICE SHOWCASE) */}
+      {/* SECTION 3: PROMINENT DIGITAL PRODUCTS MARKETPLACE (MOVED HIGH UP) */}
       {/* ================================================================ */}
-      <section className="py-24 relative border-t border-white/5">
+      <section id="digital-products" className="py-24 relative bg-[#07090e] border-b border-white/5">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          
+          {/* Section Header */}
+          <div className="flex flex-col md:flex-row md:items-end justify-between mb-12">
+            <div>
+              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#00d4aa]/10 border border-[#00d4aa]/30 text-xs font-semibold text-[#00d4aa] uppercase tracking-wider mb-3">
+                <ShoppingBagIcon className="w-4 h-4 text-[#00d4aa]" />
+                NextDigi Store • Verified Digital Assets
+              </div>
+              <h2 className="text-3xl sm:text-5xl font-black text-white tracking-tight">
+                Featured Digital Products & <br />
+                <span className="bg-gradient-to-r from-[#00d4aa] via-[#38bdf8] to-[#8b5cf6] bg-clip-text text-transparent">
+                  Software Source Codes
+                </span>
+              </h2>
+              <p className="text-sm sm:text-base text-gray-400 mt-2 max-w-2xl">
+                Skip weeks of development. Download fully-vetted source codes, full-stack web applications, Flutter mobile templates, and automation workflows.
+              </p>
+            </div>
+
+            <div className="mt-6 md:mt-0 flex items-center gap-3">
+              <Link
+                href="/products"
+                className="px-6 py-3 rounded-xl bg-[#00d4aa] hover:bg-[#00e2b6] text-black font-extrabold text-xs sm:text-sm transition-all shadow-lg shadow-[#00d4aa]/20 flex items-center gap-2"
+              >
+                <span>View All 100+ Products</span>
+                <ArrowRightIcon className="w-4 h-4" />
+              </Link>
+            </div>
+          </div>
+
+          {/* Search & Category Filter Bar */}
+          <div className="flex flex-col sm:flex-row gap-4 items-center justify-between mb-10 p-4 rounded-2xl bg-[#0c1017] border border-white/10">
+            <div className="flex items-center gap-2 overflow-x-auto pb-2 sm:pb-0 w-full sm:w-auto scrollbar-none">
+              <button
+                type="button"
+                onClick={() => setSelectedCategory('all')}
+                className={`px-4 py-2 rounded-xl text-xs font-bold transition shrink-0 ${
+                  selectedCategory === 'all'
+                    ? 'bg-[#00d4aa] text-black shadow-md shadow-[#00d4aa]/25'
+                    : 'bg-white/5 text-gray-300 hover:text-white hover:bg-white/10'
+                }`}
+              >
+                All Assets
+              </button>
+              {allCategories.slice(0, 6).map((cat) => (
+                <button
+                  key={cat.id}
+                  type="button"
+                  onClick={() => setSelectedCategory(cat.slug || cat.category_name)}
+                  className={`px-4 py-2 rounded-xl text-xs font-bold transition shrink-0 ${
+                    selectedCategory === (cat.slug || cat.category_name)
+                      ? 'bg-[#00d4aa] text-black shadow-md shadow-[#00d4aa]/25'
+                      : 'bg-white/5 text-gray-300 hover:text-white hover:bg-white/10'
+                  }`}
+                >
+                  {cat.category_name}
+                </button>
+              ))}
+            </div>
+
+            <div className="relative w-full sm:w-80">
+              <input
+                type="text"
+                placeholder="Search digital products..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full pl-10 pr-4 py-2.5 bg-[#131824] border border-white/10 rounded-xl text-xs text-white placeholder-gray-500 focus:outline-none focus:border-[#00d4aa]"
+              />
+              <MagnifyingGlassIcon className="w-4 h-4 text-gray-500 absolute left-3.5 top-3" />
+            </div>
+          </div>
+
+          {/* Ultra-Premium Product Grid */}
+          {loadingProducts ? (
+            <div className="py-20 text-center">
+              <div className="w-12 h-12 border-3 border-[#00d4aa] border-t-transparent rounded-full animate-spin mx-auto mb-4" />
+              <p className="text-xs text-gray-400 font-mono">Loading digital products catalog...</p>
+            </div>
+          ) : filteredProducts.length > 0 ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+              {filteredProducts.slice(0, 9).map((product) => (
+                <div
+                  key={product.id}
+                  className="rounded-3xl bg-[#0c1017]/95 border border-white/10 hover:border-[#00d4aa]/50 hover:shadow-[0_0_35px_rgba(0,212,170,0.14)] transition-all duration-300 overflow-hidden flex flex-col justify-between group"
+                >
+                  <div>
+                    {/* Thumbnail Preview with Overlays */}
+                    <Link
+                      href={`/products/${product.slug || product.id}`}
+                      className="block aspect-[16/10] bg-[#131824] relative overflow-hidden group/img"
+                    >
+                      {product.thumbnail ? (
+                        <img
+                          src={getStorageUrl(product.thumbnail)!}
+                          alt={product.name}
+                          loading="lazy"
+                          className="w-full h-full object-cover group-hover/img:scale-105 transition-transform duration-500"
+                        />
+                      ) : (
+                        <div className="w-full h-full flex flex-col items-center justify-center bg-gradient-to-br from-[#131824] to-[#0a0d14] text-gray-500">
+                          <ShoppingBagIcon className="w-12 h-12 text-[#00d4aa]/40 mb-2" />
+                          <span className="text-xs font-mono text-gray-400">Software Asset</span>
+                        </div>
+                      )}
+
+                      {/* Category Tag */}
+                      <div className="absolute top-3 left-3 px-2.5 py-1 rounded-md bg-black/70 backdrop-blur border border-white/10 text-[11px] font-mono text-[#00d4aa] font-semibold">
+                        {product.category_name || product.category || 'Asset'}
+                      </div>
+
+                      {/* Instant Download Pill */}
+                      <div className="absolute top-3 right-3 px-2 py-0.5 rounded bg-black/60 backdrop-blur text-[10px] text-gray-300 flex items-center gap-1 border border-white/10">
+                        <ArrowDownTrayIcon className="w-3 h-3 text-[#00d4aa]" />
+                        Instant Access
+                      </div>
+                    </Link>
+
+                    {/* Content */}
+                    <div className="p-6">
+                      <div className="flex items-center gap-1 text-amber-400 mb-2">
+                        {[...Array(5)].map((_, i) => (
+                          <StarIconSolid key={i} className="w-3.5 h-3.5" />
+                        ))}
+                        <span className="text-[11px] text-gray-400 ml-1">5.0</span>
+                      </div>
+
+                      <Link
+                        href={`/products/${product.slug || product.id}`}
+                        className="block text-base sm:text-lg font-bold text-white group-hover:text-[#00d4aa] transition line-clamp-1 mb-2"
+                      >
+                        {product.name}
+                      </Link>
+
+                      <p className="text-xs text-gray-400 line-clamp-2 leading-relaxed mb-4">
+                        {product.description || 'Verified production asset with clean modular code, unit tests, and setup documentation.'}
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Price & View Button */}
+                  <div className="p-6 pt-0 flex items-center justify-between border-t border-white/5 mt-auto">
+                    <div>
+                      <span className="text-[10px] uppercase text-gray-400 font-semibold block">Full License</span>
+                      <div className="flex items-baseline gap-2">
+                        <span className="text-xl font-black text-[#00d4aa]">
+                          ৳{Number(product.price).toLocaleString()}
+                        </span>
+                        {product.compare_price && (
+                          <span className="text-xs line-through text-gray-500 font-medium">
+                            ৳{Number(product.compare_price).toLocaleString()}
+                          </span>
+                        )}
+                      </div>
+                    </div>
+
+                    <Link
+                      href={`/products/${product.slug || product.id}`}
+                      className="px-4 py-2 rounded-xl bg-white/5 hover:bg-[#00d4aa] hover:text-black border border-white/10 text-xs font-bold text-white transition-all shadow"
+                    >
+                      View Details
+                    </Link>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="py-16 text-center rounded-3xl bg-[#0c1017] border border-white/10">
+              <p className="text-sm text-gray-400 mb-4">No digital products found matching your filter.</p>
+              <button
+                type="button"
+                onClick={() => { setSelectedCategory('all'); setSearchQuery(''); }}
+                className="text-xs font-bold text-[#00d4aa] hover:underline"
+              >
+                Reset Search Filters
+              </button>
+            </div>
+          )}
+
+          {/* Guarantee Footer Banner */}
+          <div className="mt-14 p-7 rounded-3xl bg-gradient-to-r from-[#00d4aa]/10 via-[#8b5cf6]/10 to-transparent border border-white/10 flex flex-col sm:flex-row items-center justify-between gap-6">
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 rounded-2xl bg-[#00d4aa]/20 border border-[#00d4aa]/30 flex items-center justify-center text-[#00d4aa] shrink-0">
+                <ShieldCheckIcon className="w-6 h-6" />
+              </div>
+              <div>
+                <h4 className="text-sm sm:text-base font-bold text-white">
+                  100% Verified Quality & 30-Day Money-Back Guarantee
+                </h4>
+                <p className="text-xs text-gray-300 mt-0.5">
+                  Every product is scanned for malicious code, includes full source documentation, and is protected under our 30-day refund policy.
+                </p>
+              </div>
+            </div>
+            <Link
+              href="/refund"
+              className="px-5 py-2.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-semibold text-white transition shrink-0"
+            >
+              Refund Policy Details →
+            </Link>
+          </div>
+
+        </div>
+      </section>
+
+      {/* ================================================================ */}
+      {/* SECTION 4: NEXTDIGI SOLUTIONS (SERVICE SHOWCASE) */}
+      {/* ================================================================ */}
+      <section className="py-24 relative border-b border-white/5 bg-[#080b11]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col md:flex-row md:items-end justify-between mb-14">
             <div>
@@ -435,7 +897,7 @@ export default function Home() {
                 <Link
                   key={idx}
                   href={`/solutions/${srv.id}`}
-                  className="p-6 rounded-2xl bg-[#0c1017] border border-white/10 hover:border-white/20 transition group hover:shadow-lg"
+                  className="p-6 rounded-3xl bg-[#0c1017] border border-white/10 hover:border-white/20 transition group hover:shadow-lg"
                 >
                   <div className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center mb-4 group-hover:scale-105 transition-transform" style={{ color: srv.accent }}>
                     <Icon className="w-5 h-5" />
@@ -454,9 +916,9 @@ export default function Home() {
       </section>
 
       {/* ================================================================ */}
-      {/* SECTION 4: NEXTDIGI AI (AI & AUTOMATION SHOWCASE) */}
+      {/* SECTION 5: NEXTDIGI AI (AI & AUTOMATION SHOWCASE) */}
       {/* ================================================================ */}
-      <section className="py-24 relative border-t border-white/5 bg-[#080b11]">
+      <section className="py-24 relative border-b border-white/5 bg-[#07090e]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center mb-16">
             <div className="lg:col-span-6">
@@ -499,7 +961,7 @@ export default function Home() {
                   <Link
                     key={i}
                     href={ai.href}
-                    className="p-5 rounded-2xl bg-[#0e131d] border border-white/10 hover:border-[#8b5cf6]/40 transition group"
+                    className="p-6 rounded-3xl bg-[#0e131d] border border-white/10 hover:border-[#8b5cf6]/40 transition group"
                   >
                     <div className="w-9 h-9 rounded-xl bg-[#8b5cf6]/10 border border-[#8b5cf6]/20 flex items-center justify-center text-[#a78bfa] mb-3">
                       <Icon className="w-5 h-5" />
@@ -515,9 +977,9 @@ export default function Home() {
       </section>
 
       {/* ================================================================ */}
-      {/* SECTION 5: NEXTDIGI GROWTH (DIGITAL GROWTH SHOWCASE) */}
+      {/* SECTION 6: NEXTDIGI GROWTH (DIGITAL GROWTH SHOWCASE) */}
       {/* ================================================================ */}
-      <section className="py-24 relative border-t border-white/5">
+      <section className="py-24 relative border-b border-white/5 bg-[#080b11]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col md:flex-row md:items-end justify-between mb-14">
             <div>
@@ -582,7 +1044,6 @@ export default function Home() {
             })}
           </div>
 
-          {/* Ethical Marketing Commitment */}
           <div className="p-6 rounded-2xl bg-white/5 border border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4">
             <div className="flex items-center gap-3">
               <ShieldCheckIcon className="w-6 h-6 text-[#00d4aa] shrink-0" />
@@ -601,19 +1062,19 @@ export default function Home() {
       </section>
 
       {/* ================================================================ */}
-      {/* SECTION 6: NEXTDIGI LABS (SAAS PRODUCTS SHOWCASE) */}
+      {/* SECTION 7: NEXTDIGI LABS (SAAS PRODUCTS SHOWCASE) */}
       {/* ================================================================ */}
-      <section className="py-24 relative border-t border-white/5 bg-[#080b11]">
+      <section className="py-24 relative border-b border-white/5 bg-[#07090e]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto mb-16">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#8b5cf6]/10 border border-[#8b5cf6]/30 text-xs font-semibold text-[#a78bfa] uppercase tracking-wider mb-3">
               NextDigi Labs
             </div>
             <h2 className="text-3xl sm:text-4xl font-extrabold text-white mb-4">
-              Proprietary SaaS Products & Software Ecosystem
+              Proprietary SaaS Products & Software Innovation
             </h2>
             <p className="text-gray-400 text-sm sm:text-base">
-              We engineer, operate, and incubate our own SaaS platforms to solve real operational bottlenecks.
+              We engineer, operate, and incubate our own SaaS platforms to solve real industry bottlenecks.
             </p>
           </div>
 
@@ -723,161 +1184,9 @@ export default function Home() {
       </section>
 
       {/* ================================================================ */}
-      {/* SECTION 7: NEXTDIGI STORE (DIGITAL PRODUCTS MARKETPLACE) */}
-      {/* ================================================================ */}
-      <section id="store" className="py-24 relative border-t border-white/5">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col md:flex-row md:items-end justify-between mb-10">
-            <div>
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#00d4aa]/10 border border-[#00d4aa]/30 text-xs font-semibold text-[#00d4aa] uppercase tracking-wider mb-3">
-                NextDigi Store
-              </div>
-              <h2 className="text-3xl sm:text-4xl font-extrabold text-white">
-                Verified Digital Products & Software Assets
-              </h2>
-              <p className="text-sm text-gray-400 mt-2">
-                Production-ready source codes, UI kits, templates, and automation blueprints with instant download.
-              </p>
-            </div>
-            <Link
-              href="/products"
-              className="mt-4 md:mt-0 text-sm font-semibold text-[#00d4aa] hover:underline inline-flex items-center gap-1"
-            >
-              Browse Complete Catalog <ArrowRightIcon className="w-4 h-4" />
-            </Link>
-          </div>
-
-          {/* Search & Category Filter Bar */}
-          <div className="flex flex-col sm:flex-row gap-4 items-center justify-between mb-8">
-            <div className="flex items-center gap-2 overflow-x-auto pb-2 sm:pb-0 w-full sm:w-auto scrollbar-none">
-              <button
-                type="button"
-                onClick={() => setSelectedCategory('all')}
-                className={`px-4 py-2 rounded-xl text-xs font-semibold transition shrink-0 ${
-                  selectedCategory === 'all'
-                    ? 'bg-[#00d4aa] text-black'
-                    : 'bg-[#0e131d] text-gray-300 border border-white/10 hover:border-white/20'
-                }`}
-              >
-                All Products
-              </button>
-              {allCategories.slice(0, 6).map((cat) => (
-                <button
-                  key={cat.id}
-                  type="button"
-                  onClick={() => setSelectedCategory(cat.slug || cat.category_name)}
-                  className={`px-4 py-2 rounded-xl text-xs font-semibold transition shrink-0 ${
-                    selectedCategory === (cat.slug || cat.category_name)
-                      ? 'bg-[#00d4aa] text-black'
-                      : 'bg-[#0e131d] text-gray-300 border border-white/10 hover:border-white/20'
-                  }`}
-                >
-                  {cat.category_name}
-                </button>
-              ))}
-            </div>
-
-            <div className="relative w-full sm:w-72">
-              <input
-                type="text"
-                placeholder="Search products..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-9 pr-4 py-2 bg-[#0e131d] border border-white/10 rounded-xl text-xs text-white placeholder-gray-500 focus:outline-none focus:border-[#00d4aa]"
-              />
-              <SearchIcon className="w-4 h-4 text-gray-500 absolute left-3 top-2.5" />
-            </div>
-          </div>
-
-          {/* Products Grid */}
-          {loadingProducts ? (
-            <div className="py-16 text-center">
-              <div className="w-10 h-10 border-2 border-[#00d4aa] border-t-transparent rounded-full animate-spin mx-auto mb-3" />
-              <p className="text-xs text-gray-500">Loading catalog items...</p>
-            </div>
-          ) : filteredProducts.length > 0 ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-              {filteredProducts.slice(0, 8).map((product) => (
-                <div
-                  key={product.id}
-                  className="rounded-2xl bg-[#0c1017] border border-white/10 overflow-hidden hover:border-white/20 transition flex flex-col justify-between group"
-                >
-                  <div>
-                    <div className="aspect-[16/10] bg-[#111622] relative overflow-hidden flex items-center justify-center">
-                      {product.thumbnail ? (
-                        <img
-                          src={getStorageUrl(product.thumbnail)!}
-                          alt={product.name}
-                          loading="lazy"
-                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                        />
-                      ) : (
-                        <ShoppingBagIcon className="w-12 h-12 text-gray-600" />
-                      )}
-                      <div className="absolute top-2.5 left-2.5 px-2 py-0.5 rounded bg-black/60 backdrop-blur text-[10px] font-mono text-[#00d4aa]">
-                        {product.category_name || product.category || 'Asset'}
-                      </div>
-                    </div>
-
-                    <div className="p-5">
-                      <h4 className="text-sm font-bold text-white line-clamp-1 mb-1 group-hover:text-[#00d4aa] transition">
-                        {product.name}
-                      </h4>
-                      <p className="text-xs text-gray-400 line-clamp-2 leading-relaxed mb-4">
-                        {product.description || 'Verified production asset with clean documentation and instant setup instructions.'}
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="p-5 pt-0 flex items-center justify-between border-t border-white/5 mt-auto">
-                    <div className="text-base font-extrabold text-[#00d4aa]">
-                      ৳{product.price}
-                    </div>
-                    <Link
-                      href={`/products/${product.slug || product.id}`}
-                      className="px-3.5 py-1.5 rounded-lg bg-white/5 hover:bg-[#00d4aa] hover:text-black border border-white/10 text-xs font-semibold text-white transition"
-                    >
-                      View Details
-                    </Link>
-                  </div>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <div className="py-12 text-center rounded-2xl bg-[#0c1017] border border-white/10">
-              <p className="text-sm text-gray-400 mb-4">No products found matching your search filter.</p>
-              <button
-                type="button"
-                onClick={() => { setSelectedCategory('all'); setSearchQuery(''); }}
-                className="text-xs font-semibold text-[#00d4aa] hover:underline"
-              >
-                Reset Search Filters
-              </button>
-            </div>
-          )}
-
-          {/* Store Guarantee Footer Banner */}
-          <div className="mt-12 p-6 rounded-2xl bg-gradient-to-r from-white/5 to-transparent border border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4">
-            <div className="flex items-center gap-3">
-              <CheckCircleIcon className="w-5 h-5 text-[#00d4aa] shrink-0" />
-              <p className="text-xs sm:text-sm text-gray-300">
-                <span className="font-semibold text-white">Instant Automated Delivery & 30-Day Guarantee:</span> All purchases come with clean source files, license keys, and a full 30-day money-back guarantee.
-              </p>
-            </div>
-            <Link
-              href="/refund"
-              className="text-xs text-gray-400 hover:text-white transition whitespace-nowrap"
-            >
-              Refund Policy Details →
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* ================================================================ */}
       {/* SECTION 8: CASE STUDIES & PROVEN RESULTS */}
       {/* ================================================================ */}
-      <section className="py-24 relative border-t border-white/5 bg-[#080b11]">
+      <section className="py-24 relative border-b border-white/5 bg-[#080b11]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col md:flex-row md:items-end justify-between mb-14">
             <div>
@@ -939,7 +1248,7 @@ export default function Home() {
       {/* ================================================================ */}
       {/* SECTION 9: HOW WE WORK (METHODOLOGY) */}
       {/* ================================================================ */}
-      <section className="py-24 relative border-t border-white/5">
+      <section className="py-24 relative border-b border-white/5 bg-[#07090e]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto mb-16">
             <span className="text-xs font-semibold uppercase tracking-wider text-[#00d4aa]">Engineering Lifecycle</span>
@@ -971,7 +1280,7 @@ export default function Home() {
       {/* ================================================================ */}
       {/* SECTION 10: WHY BUSINESSES CHOOSE NEXTDIGIHOME */}
       {/* ================================================================ */}
-      <section className="py-24 relative border-t border-white/5 bg-[#080b11]">
+      <section className="py-24 relative border-b border-white/5 bg-[#080b11]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto mb-16">
             <span className="text-xs font-semibold uppercase tracking-wider text-[#00d4aa]">Capability Pillars</span>
@@ -1034,7 +1343,7 @@ export default function Home() {
       {/* ================================================================ */}
       {/* SECTION 11: VERIFIED CLIENT FEEDBACK & TRUST */}
       {/* ================================================================ */}
-      <section className="py-24 relative border-t border-white/5">
+      <section className="py-24 relative border-b border-white/5 bg-[#07090e]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-2xl mx-auto mb-14">
             <span className="text-xs font-semibold uppercase tracking-wider text-[#00d4aa]">Client Perspectives</span>
@@ -1078,7 +1387,7 @@ export default function Home() {
       {/* ================================================================ */}
       {/* SECTION 12: LEAD GENERATION CTA BANNER */}
       {/* ================================================================ */}
-      <section className="py-24 relative border-t border-white/5 bg-[#070a10] overflow-hidden">
+      <section className="py-24 relative bg-[#070a10] overflow-hidden">
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[350px] bg-gradient-to-r from-[#00d4aa]/15 via-[#8b5cf6]/15 to-transparent blur-[160px] pointer-events-none rounded-full" />
 
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">

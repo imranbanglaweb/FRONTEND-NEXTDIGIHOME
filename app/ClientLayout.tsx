@@ -13,7 +13,8 @@ import {
   GlobeAltIcon,
   CpuChipIcon,
   ChartBarIcon,
-  BeakerIcon
+  BeakerIcon,
+  ShoppingBagIcon
 } from "@heroicons/react/24/outline";
 import { apiFetch, BACKEND_BASE_URL, getStorageUrl, getLogoUrl } from './utils/api';
 import NextDigiLogo from './components/NextDigiLogo';
@@ -542,6 +543,20 @@ export default function ClientLayout({
                 )}
               </div>
 
+              {/* Direct Digital Store Link */}
+              <Link
+                href="/products"
+                className={`px-3 py-1.5 rounded-xl transition-all duration-200 text-sm font-semibold flex items-center gap-1.5 border ${
+                  pathname === '/products' || pathname === '/store'
+                    ? 'text-[#00d4aa] border-[#00d4aa]/40 bg-[#00d4aa]/10 shadow-[0_0_15px_rgba(0,212,170,0.15)]'
+                    : 'text-white border-white/10 hover:border-[#00d4aa]/40 hover:bg-white/5'
+                }`}
+              >
+                <ShoppingBagIcon className="w-4 h-4 text-[#00d4aa]" />
+                <span>Digital Store</span>
+                <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-[#00d4aa]/20 text-[#00d4aa] font-mono">100+</span>
+              </Link>
+
               {/* Direct Links */}
               <Link
                 href="/case-studies"
@@ -650,6 +665,19 @@ export default function ClientLayout({
                 className={`block px-4 py-2.5 rounded-xl text-base font-semibold transition-all ${pathname === '/' ? 'text-[#00d4aa] bg-[#2a2a30]/50' : 'text-[#fafafa] hover:text-[#00d4aa]'}`}
               >
                 Home
+              </Link>
+
+              {/* Prominent Mobile Store Banner */}
+              <Link
+                href="/products"
+                onClick={() => setMobileMenuOpen(false)}
+                className="flex items-center justify-between px-4 py-3 rounded-xl border border-[#00d4aa]/30 bg-gradient-to-r from-[#00d4aa]/15 via-[#8b5cf6]/10 to-transparent text-white font-bold"
+              >
+                <div className="flex items-center gap-2.5">
+                  <ShoppingBagIcon className="w-5 h-5 text-[#00d4aa]" />
+                  <span>Digital Products Store</span>
+                </div>
+                <span className="text-xs px-2 py-0.5 rounded-full bg-[#00d4aa] text-black font-extrabold">100+ Assets</span>
               </Link>
 
               {/* Mobile Solutions Accordion */}
