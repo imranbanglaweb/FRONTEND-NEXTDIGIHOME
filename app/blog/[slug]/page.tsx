@@ -31,7 +31,7 @@ const fallbackBlogPosts: Record<string, BlogPost> = {
     title: "UI Kit Trends to Watch in 2025",
     content: "Explore the latest UI kit design trends shaping the digital product landscape this year...",
     date: "2025-01-15",
-    author: "Next Digi Home Team",
+    author: "NEXTDIGIHOME Team",
   },
   "boost-productivity-with-templates": {
     slug: "boost-productivity-with-templates",
@@ -114,7 +114,7 @@ export async function generateMetadata({ params }: BlogPostPageProps): Promise<M
 
   if (!post) {
     return {
-      title: "Blog Post Not Found | Next Digi Home",
+      title: "Blog Post Not Found | NEXTDIGIHOME",
       robots: {
         index: false,
         follow: true,
@@ -126,7 +126,7 @@ export async function generateMetadata({ params }: BlogPostPageProps): Promise<M
   const image = post.image || post.thumbnail || DEFAULT_IMAGE;
 
   return {
-    title: `${post.title} | Next Digi Home Blog`,
+    title: `${post.title} | NEXTDIGIHOME Blog`,
     description,
     alternates: {
       canonical: `/blog/${slug}`,
@@ -136,10 +136,10 @@ export async function generateMetadata({ params }: BlogPostPageProps): Promise<M
       description,
       url: `${SITE_URL}/blog/${slug}`,
       type: "article",
-      siteName: "Next Digi Home",
+      siteName: "NEXTDIGIHOME",
       publishedTime: getPublishedDate(post),
       modifiedTime: post.updated_at || getPublishedDate(post),
-      authors: [post.author || "Next Digi Home Team"],
+      authors: [post.author || "NEXTDIGIHOME Team"],
       images: [{ url: image, width: 1200, height: 630, alt: post.title }],
     },
     twitter: {
@@ -177,11 +177,11 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
     dateModified: post.updated_at || publishedDate,
     author: {
       "@type": "Organization",
-      name: post.author || "Next Digi Home",
+      name: post.author || "NEXTDIGIHOME",
     },
     publisher: {
       "@type": "Organization",
-      name: "Next Digi Home",
+      name: "NEXTDIGIHOME",
       logo: {
         "@type": "ImageObject",
         url: `${SITE_URL}/logo.png`,
@@ -202,7 +202,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
           <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">{post.title}</h1>
           <div className="flex gap-4 text-sm text-gray-400 mb-12">
             <span>{new Date(publishedDate).toLocaleDateString()}</span>
-            <span>by {post.author || "Next Digi Home Team"}</span>
+            <span>by {post.author || "NEXTDIGIHOME Team"}</span>
           </div>
           <div className="prose prose-invert max-w-none">
             <div

@@ -13,7 +13,7 @@ interface NextDigiLogoProps {
 export default function NextDigiLogo({
   size = 'md',
   showText = true,
-  subtitle = 'VENTURE ECOSYSTEM',
+  subtitle = 'MASTER TECHNOLOGY ECOSYSTEM',
   customLogoUrl = null,
   className = '',
 }: NextDigiLogoProps) {
@@ -59,7 +59,7 @@ export default function NextDigiLogo({
       <div className={`relative flex items-center select-none ${heightMap[size]} ${className}`}>
         <img
           src={customLogoUrl}
-          alt="NEXTDIGI"
+          alt="NEXTDIGIHOME"
           decoding="async"
           className="h-full w-auto max-h-10 sm:max-h-12 md:max-h-14 max-w-[240px] sm:max-w-[320px] object-contain transition-transform duration-300 group-hover:scale-105"
           onError={() => setImageFailed(true)}
@@ -128,14 +128,14 @@ export default function NextDigiLogo({
       {/* Brand Typography */}
       {showText && (
         <div className="flex flex-col justify-center min-w-0">
-          <div className="flex items-baseline gap-1 font-black tracking-tight leading-none">
+          <div className="flex items-baseline font-black tracking-tight leading-none">
             <span className={`text-white tracking-[-0.5px] ${titleSizeMap[size]}`}>
               NEXT
             </span>
             <span className={`bg-gradient-to-r from-[#00d4aa] via-[#8b5cf6] to-[#ec4899] bg-clip-text text-transparent ${titleSizeMap[size]}`}>
               DIGI
             </span>
-            <span className="text-[10px] font-bold text-[#00d4aa] ml-0.5 opacity-90 hidden sm:inline">
+            <span className={`text-white tracking-[-0.5px] ${titleSizeMap[size]}`}>
               HOME
             </span>
           </div>

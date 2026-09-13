@@ -103,7 +103,7 @@ export default function ClientLayout({
       seo_og_image?: string | null;
       google_analytics_id?: string | null;
       favicon?: string | null;
-    } | null>({ admin_title: 'Next Digi Home' });  // Simple default, no localStorage access to avoid hydration mismatch
+    } | null>({ admin_title: 'NEXTDIGIHOME' });  // Simple default, no localStorage access to avoid hydration mismatch
 
   const [categories, setCategories] = useState<Array<{
     id: number;
@@ -974,16 +974,16 @@ export default function ClientLayout({
               </div>
 
               <p className="text-[#8c8c9a] text-xs sm:text-sm leading-relaxed pr-2" suppressHydrationWarning>
-                {isHydrated ? (settings?.admin_description || "Empowering modern enterprises. Build • Launch • Automate • Grow with enterprise software development, intelligent AI systems, SaaS products, and digital growth solutions.") : "Empowering modern enterprises. Build • Launch • Automate • Grow with enterprise software development, intelligent AI systems, SaaS products, and digital growth solutions."}
+                {isHydrated ? (settings?.admin_description || "NEXTDIGIHOME is the master technology ecosystem powering modern enterprises. Build • Launch • Automate • Grow with NextDigi Solutions, NextDigi AI, NextDigi Growth, NextDigi Labs, and NextDigi Store.") : "NEXTDIGIHOME is the master technology ecosystem powering modern enterprises. Build • Launch • Automate • Grow with NextDigi Solutions, NextDigi AI, NextDigi Growth, NextDigi Labs, and NextDigi Store."}
               </p>
 
               {/* Division badges */}
               <div className="flex flex-wrap gap-1.5 pt-1">
-                <span className="px-2 py-0.5 rounded-md text-[10px] font-bold bg-[#00d4aa]/10 text-[#00d4aa] border border-[#00d4aa]/25">Solutions</span>
-                <span className="px-2 py-0.5 rounded-md text-[10px] font-bold bg-[#8b5cf6]/10 text-[#a78bfa] border border-[#8b5cf6]/25">AI &amp; RPA</span>
-                <span className="px-2 py-0.5 rounded-md text-[10px] font-bold bg-[#ec4899]/10 text-[#f472b6] border border-[#ec4899]/25">Growth</span>
-                <span className="px-2 py-0.5 rounded-md text-[10px] font-bold bg-[#f59e0b]/10 text-[#fbbf24] border border-[#f59e0b]/25">Labs</span>
-                <span className="px-2 py-0.5 rounded-md text-[10px] font-bold bg-white/5 text-[#d4d4d8] border border-white/10">Store</span>
+                <span className="px-2 py-0.5 rounded-md text-[10px] font-bold bg-[#00d4aa]/10 text-[#00d4aa] border border-[#00d4aa]/25">NextDigi Solutions</span>
+                <span className="px-2 py-0.5 rounded-md text-[10px] font-bold bg-[#8b5cf6]/10 text-[#a78bfa] border border-[#8b5cf6]/25">NextDigi AI</span>
+                <span className="px-2 py-0.5 rounded-md text-[10px] font-bold bg-[#06b6d4]/10 text-[#22d3ee] border border-[#06b6d4]/25">NextDigi Growth</span>
+                <span className="px-2 py-0.5 rounded-md text-[10px] font-bold bg-[#f59e0b]/10 text-[#fbbf24] border border-[#f59e0b]/25">NextDigi Labs</span>
+                <span className="px-2 py-0.5 rounded-md text-[10px] font-bold bg-white/5 text-[#d4d4d8] border border-white/10">NextDigi Store</span>
               </div>
 
               {/* Social Icons */}
@@ -1133,7 +1133,7 @@ export default function ClientLayout({
               </h4>
               <ul className="space-y-2 text-xs sm:text-sm mb-6">
                 {[
-                  { label: "About NextDigi", href: "/about" },
+                  { label: "About NEXTDIGIHOME", href: "/about" },
                   { label: "Case Studies", href: "/case-studies" },
                   { label: "Start a Project", href: "/contact" },
                   { label: "Careers & Jobs", href: "/contact?subject=Careers" },
@@ -1300,7 +1300,7 @@ export default function ClientLayout({
 
           {/* Premium Bottom Bar */}
           <div className="mt-10 pt-6 border-t border-[#2a2a30] flex flex-col md:flex-row justify-between items-center gap-3 text-xs text-[#737373]">
-            <p>© 2026 Next Digi Home. All rights reserved. Crafted for ambitious businesses worldwide.</p>
+            <p>© 2026 NEXTDIGIHOME. All rights reserved. Crafted for ambitious businesses worldwide.</p>
             <div className="flex items-center gap-2 text-[11px]">
               <span>Powered by</span>
               <div className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded bg-gradient-to-r from-[#00d4aa] to-[#8b5cf6] text-[#0f0f12] font-medium">
@@ -1311,7 +1311,7 @@ export default function ClientLayout({
                     <svg className="w-2 h-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
                   )}
                 </div>
-                <span className="font-bold tracking-widest text-[10px]">DIGI</span>
+                <span className="font-bold tracking-widest text-[10px]">NEXTDIGIHOME</span>
               </div>
             </div>
           </div>

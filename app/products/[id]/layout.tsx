@@ -4,7 +4,7 @@ import { getApiUrl } from "../../utils/api";
 import { StructuredData, generateBreadcrumbSchema } from "../../utils/seo";
 
 const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL || "https://nextdigihome.com").replace(/\/$/, "");
-const SITE_NAME = "Next Digi Home";
+const SITE_NAME = "NEXTDIGIHOME";
 const DEFAULT_IMAGE = `${SITE_URL}/og-image.svg`;
 
 type ProductSegmentProps = {
@@ -151,7 +151,7 @@ async function getProduct(id: string): Promise<Product | null> {
 
 function getDescription(product: Product | null): string {
   if (!product) {
-    return "Premium digital products, templates, and business tools from Next Digi Home.";
+    return "Premium digital products, templates, and business tools from NextDigi Store and NEXTDIGIHOME.";
   }
 
   const rawDescription = product.detailed_description || product.description || "";
@@ -163,7 +163,7 @@ function getDescription(product: Product | null): string {
 
   const category = product.category ? `${product.category} ` : "";
   const price = product.price ? ` Price: BDT ${Number(product.price).toLocaleString("en-BD")}.` : "";
-  return truncate(`Buy ${product.name}, a premium ${category}product from Next Digi Home with secure checkout, instant access, and trusted support.${price}`, 160);
+  return truncate(`Buy ${product.name}, a premium ${category}product from NEXTDIGIHOME with secure checkout, instant access, and trusted support.${price}`, 160);
 }
 
 function getKeywords(product: Product): string[] {
@@ -172,7 +172,8 @@ function getKeywords(product: Product): string[] {
     product.name,
     product.category || "digital products",
     ...tags,
-    "Next Digi Home",
+    "NEXTDIGIHOME",
+    "NextDigi Store",
     "premium digital products",
     "digital downloads",
     "business tools",
@@ -348,7 +349,7 @@ export default async function ProductDetailLayout({ children, params }: ProductR
         name: "Is this product authentic?",
         acceptedAnswer: {
           "@type": "Answer",
-          text: "Yes. Products are sourced and published by Next Digi Home with clear product details and secure checkout.",
+          text: "Yes. Products are sourced and published by NEXTDIGIHOME with clear product details and secure checkout.",
         },
       },
       {

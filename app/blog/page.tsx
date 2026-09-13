@@ -19,24 +19,24 @@ type BlogPost = {
 };
 
 export const metadata: Metadata = {
-  title: "Blog | Digital Products Insights & Business Tips | Next Digi Home",
+  title: "Blog | Technology, AI & Digital Product Insights | NEXTDIGIHOME",
   description: "Discover expert insights on digital products, templates, and business growth strategies. Learn from industry professionals.",
   keywords: ["digital products blog", "business tips", "templates guide", "UI kits", "marketing tools"],
   alternates: {
     canonical: "/blog",
   },
   openGraph: {
-    title: "Next Digi Home Blog",
-    description: "Digital product insights, business tips, and growth guides from Next Digi Home.",
+    title: "NEXTDIGIHOME Blog",
+    description: "Digital product insights, technology solutions, and business tips from NEXTDIGIHOME.",
     url: `${SITE_URL}/blog`,
     type: "website",
-    siteName: "Next Digi Home",
-    images: [{ url: `${SITE_URL}/og-image.svg`, width: 1200, height: 630, alt: "Next Digi Home blog" }],
+    siteName: "NEXTDIGIHOME",
+    images: [{ url: `${SITE_URL}/og-image.svg`, width: 1200, height: 630, alt: "NEXTDIGIHOME blog" }],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Next Digi Home Blog",
-    description: "Digital product insights, business tips, and growth guides from Next Digi Home.",
+    title: "NEXTDIGIHOME Blog",
+    description: "Digital product insights, technology solutions, and business tips from NEXTDIGIHOME.",
     images: [`${SITE_URL}/og-image.svg`],
   },
 };
@@ -48,7 +48,7 @@ const fallbackBlogPosts: BlogPost[] = [
     title: "UI Kit Trends to Watch in 2025",
     excerpt: "Explore the latest UI kit design trends shaping the digital product landscape this year.",
     date: "2025-01-15",
-    author: "Next Digi Home Team",
+    author: "NEXTDIGIHOME Team",
     category: "Design",
   },
   {
@@ -123,7 +123,7 @@ export default async function BlogPage() {
   const blogSchema = {
     "@context": "https://schema.org",
     "@type": "Blog",
-    name: "Next Digi Home Blog",
+    name: "NEXTDIGIHOME Blog",
     url: `${SITE_URL}/blog`,
     blogPost: blogPosts.map((post) => ({
       "@type": "BlogPosting",
@@ -132,7 +132,7 @@ export default async function BlogPage() {
       datePublished: getPublishedDate(post),
       author: {
         "@type": "Organization",
-        name: post.author || "Next Digi Home",
+        name: post.author || "NEXTDIGIHOME",
       },
     })),
   };
@@ -164,7 +164,7 @@ export default async function BlogPage() {
                   </p>
                   <div className="flex items-center justify-between text-xs text-[#737373]">
                     <span>{new Date(getPublishedDate(post)).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}</span>
-                    <span>by {post.author || "Next Digi Home"}</span>
+                    <span>by {post.author || "NEXTDIGIHOME"}</span>
                   </div>
                   <Link href={`/blog/${post.slug}`} className="mt-4 inline-block text-[#00d4aa] font-medium hover:text-[#8b5cf6] transition-colors">
                     Read More

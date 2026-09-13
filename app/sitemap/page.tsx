@@ -3,8 +3,8 @@ import Link from "next/link";
 import { generatePageMetadata } from "@/app/utils/seo";
 
 export const metadata: Metadata = generatePageMetadata({
-  title: "Sitemap - Next Digi Home",
-  description: "HTML sitemap of Next Digi Home. Navigate to the important public pages of our digital products marketplace.",
+  title: "Sitemap - NEXTDIGIHOME",
+  description: "HTML sitemap of NEXTDIGIHOME. Navigate to the important public pages of our technology and product ecosystem.",
   keywords: ["sitemap", "navigation", "site map", "website structure"],
   path: "/sitemap",
 });
@@ -70,7 +70,7 @@ export default function SitemapPage() {
 
         <h1 className="text-3xl font-bold gradient-text mb-8">Sitemap</h1>
         <p className="mb-10 max-w-3xl text-[#737373]">
-          Browse the important pages on Next Digi Home, including products, company pages, account pages, and search engine files.
+          Browse the important pages on NEXTDIGIHOME, including products, company pages, account pages, and search engine files.
         </p>
 
         <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">

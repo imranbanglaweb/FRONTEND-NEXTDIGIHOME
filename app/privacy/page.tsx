@@ -6,7 +6,7 @@ import { generatePageMetadata } from "@/app/utils/seo";
 
 export const metadata: Metadata = generatePageMetadata({
   title: "Privacy Policy",
-  description: "Read Next Digi Home's privacy policy. We protect your data with industry-leading security while providing premium digital products and services.",
+  description: "Read NEXTDIGIHOME's privacy policy. We protect your data with industry-leading security while providing premium technology services, software, and digital products.",
   path: "/privacy",
 });
 

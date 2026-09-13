@@ -2,8 +2,8 @@ import { Metadata } from "next";
 import { generateBreadcrumbSchema, StructuredData } from '../utils/seo';
 
 export const metadata: Metadata = {
-  title: "Contact Us | Next Digi Home - Get in Touch",
-  description: "Contact Next Digi Home for support, sales inquiries, or partnership opportunities. We respond within 24 hours.",
+  title: "Contact Us | NEXTDIGIHOME - Get in Touch",
+  description: "Contact NEXTDIGIHOME for technology services, support, sales inquiries, or partnership opportunities. We respond within 24 hours.",
   alternates: {
     canonical: "https://nextdigihome.com/contact",
   },

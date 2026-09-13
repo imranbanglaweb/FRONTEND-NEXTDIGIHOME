@@ -115,7 +115,7 @@ export default function AboutPage() {
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-6 gradient-text">
-              About Next Digi Home
+              About NEXTDIGIHOME
             </h1>
             <p className="text-xl text-[#737373] max-w-3xl mx-auto mb-8">
               Empowering businesses worldwide with premium digital products and innovative solutions since 2020.

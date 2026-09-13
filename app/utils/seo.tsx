@@ -3,7 +3,7 @@ import React from "react";
 
 const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://nextdigihome.com";
 const DEFAULT_IMAGE = "/og-image.svg";
-const SITE_NAME = "Next Digi Home";
+const SITE_NAME = "NEXTDIGIHOME";
 
 /**
  * Generate page metadata with all SEO best practices
@@ -33,7 +33,7 @@ export function generatePageMetadata(options: {
     applicationName: SITE_NAME,
     creator: SITE_NAME,
     publisher: SITE_NAME,
-    category: "Digital Marketplace",
+    category: "Technology Ecosystem & Digital Solutions",
     alternates: {
       canonical: options.path,
     },

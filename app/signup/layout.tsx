@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Sign Up | Next Digi Home",
+  title: "Sign Up | NEXTDIGIHOME",
   alternates: {
     canonical: "/signup",
   },

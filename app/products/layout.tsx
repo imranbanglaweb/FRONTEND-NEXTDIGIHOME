@@ -5,7 +5,7 @@ export const metadata: Metadata = generatePageMetadata({
   title: "Premium Digital Products, Templates & Business Tools",
   description: "Search premium digital products, templates, UI kits, design assets, and business tools with instant downloads and lifetime access.",
   keywords: ["premium digital products", "search digital products", "templates", "UI kits", "business tools", "instant downloads"],
-  imageAlt: "Next Digi Home product catalog with premium digital templates and business tools",
+  imageAlt: "NEXTDIGIHOME product catalog with premium digital templates and business tools",
   path: "/products",
 });
 

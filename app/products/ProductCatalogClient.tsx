@@ -580,14 +580,14 @@ function ProductsPageContent() {
             <div className="inline-flex max-w-full items-center gap-2 rounded-full border border-[#00d4aa]/30 bg-[#00d4aa]/10 px-4 py-2 mb-6 shadow-lg shadow-[#00d4aa]/10">
               <StarIcon className="w-4 h-4 text-[#00d4aa]" />
               <span className="text-xs sm:text-sm font-bold uppercase tracking-[2px] text-[#00d4aa]">
-                NEXTDIGI HOME MARKETPLACE
+                NEXTDIGI STORE
               </span>
             </div>
             <h1 className="text-4xl sm:text-5xl md:text-6xl font-black mb-6 gradient-text">
               Digital Products &amp; Assets
             </h1>
             <p className="text-base sm:text-lg text-[#a1a1aa] max-w-3xl mx-auto leading-relaxed">
-              Curated verified assets across the 4 core pillars of NextDigi Home: <span className="text-white font-semibold">Digital Products</span> • <span className="text-white font-semibold">Templates</span> • <span className="text-white font-semibold">Business Tools</span> • <span className="text-white font-semibold">AI Resources</span>.
+              Curated verified assets and developer resources from NextDigi Store, a division of NEXTDIGIHOME: <span className="text-white font-semibold">Digital Products</span> • <span className="text-white font-semibold">Templates</span> • <span className="text-white font-semibold">Business Tools</span> • <span className="text-white font-semibold">AI Resources</span>.
             </p>
             <div className="mt-8 grid grid-cols-1 gap-3 sm:grid-cols-3">
               {[

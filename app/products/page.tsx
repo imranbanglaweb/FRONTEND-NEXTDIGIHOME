@@ -132,7 +132,7 @@ export async function generateMetadata({ searchParams }: { searchParams: Product
   ].filter(Boolean);
 
   return {
-    title: `${titleParts.join(" - ")} | Next Digi Home`,
+    title: `${titleParts.join(" - ")} | NEXTDIGIHOME`,
     description: "Browse premium digital products, templates, UI kits, design assets, and business tools with secure checkout and fast access.",
     alternates: {
       canonical: isVariantPage ? "/products" : path,
@@ -153,8 +153,8 @@ export async function generateMetadata({ searchParams }: { searchParams: Product
       description: "Browse premium digital products, templates, UI kits, design assets, and business tools.",
       url: `${SITE_URL}${isVariantPage ? "/products" : path}`,
       type: "website",
-      siteName: "Next Digi Home",
-      images: [{ url: `${SITE_URL}/og-image.svg`, width: 1200, height: 630, alt: "Next Digi Home products" }],
+      siteName: "NEXTDIGIHOME",
+      images: [{ url: `${SITE_URL}/og-image.svg`, width: 1200, height: 630, alt: "NEXTDIGIHOME products" }],
     },
     twitter: {
       card: "summary_large_image",
@@ -186,7 +186,7 @@ export default async function ProductsPage({ searchParams }: { searchParams: Pro
   const itemListSchema = {
     "@context": "https://schema.org",
     "@type": "ItemList",
-    name: "Next Digi Home products",
+    name: "NEXTDIGIHOME products",
     url: `${SITE_URL}${canonicalPath}`,
     numberOfItems: products.length,
     itemListElement: products.map((product, index) => ({

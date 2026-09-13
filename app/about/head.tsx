@@ -1,8 +1,8 @@
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "About Us | Next Digi Home - Premium Digital Marketplace",
-  description: "Learn about Next Digi Home's mission to empower businesses with premium digital products. Trusted by 50K+ professionals worldwide since 2020.",
+  title: "About Us | NEXTDIGIHOME - Master Technology Ecosystem",
+  description: "Learn about NEXTDIGIHOME's mission to empower businesses with technology services, software, AI, and digital growth.",
   alternates: {
     canonical: "https://nextdigihome.com/about",
   },

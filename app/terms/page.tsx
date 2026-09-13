@@ -6,7 +6,7 @@ import { generatePageMetadata } from "@/app/utils/seo";
 
 export const metadata: Metadata = generatePageMetadata({
   title: "Terms of Service",
-  description: "Read the terms of service for Next Digi Home. Learn about our 30-day money-back guarantee, licensing, and usage rights for all premium digital products.",
+  description: "Read the terms of service for NEXTDIGIHOME. Learn about our licensing, usage rights, and policies.",
   path: "/terms",
 });
 
@@ -34,7 +34,7 @@ async function getTermsContent(): Promise<TermsContent> {
   return {
     id: 1,
     title: 'Terms of Service',
-    description: 'Please read these terms carefully before using our services. By using Next Digi Home, you agree to be bound by these terms.',
+    description: 'Please read these terms carefully before using our services. By using NEXTDIGIHOME, you agree to be bound by these terms.',
     content: `
       <h2 className="text-2xl font-bold text-[#fafafa] mb-6">1. Acceptance of Terms</h2>
       <p className="text-[#737373] mb-8 leading-relaxed">
@@ -70,7 +70,7 @@ export default async function TermsPage() {
               {content?.title || 'Terms of Service'}
             </h1>
             <p className="text-xl text-[#737373] max-w-3xl mx-auto">
-              {content?.description || 'Please read these terms carefully before using our services. By using Next Digi Home, you agree to be bound by these terms.'}
+              {content?.description || 'Please read these terms carefully before using our services. By using NEXTDIGIHOME, you agree to be bound by these terms.'}
             </p>
           </div>
         </div>
@@ -91,12 +91,12 @@ export default async function TermsPage() {
                 <>
                   <h2 className="text-2xl font-bold text-[#fafafa] mb-6">1. Acceptance of Terms</h2>
                   <p className="text-[#737373] mb-8 leading-relaxed">
-                    By accessing and using Next Digi Home, you accept and agree to be bound by the terms and provision of this agreement.
+                    By accessing and using NEXTDIGIHOME, you accept and agree to be bound by the terms and provision of this agreement.
                   </p>
 
                   <h2 className="text-2xl font-bold text-[#fafafa] mb-6">2. Use License</h2>
                   <p className="text-[#737373] mb-6 leading-relaxed">
-                    Permission is granted to temporarily download one copy of the materials on Next Digi Home for personal, non-commercial transitory viewing only.
+                    Permission is granted to temporarily download one copy of the materials on NEXTDIGIHOME for personal, non-commercial transitory viewing only.
                   </p>
                   <ul className="text-[#737373] mb-8 space-y-2">
                     <li>• Modify or copy the materials</li>
@@ -107,7 +107,7 @@ export default async function TermsPage() {
 
                   <h2 className="text-2xl font-bold text-[#fafafa] mb-6">3. Digital Product License</h2>
                   <p className="text-[#737373] mb-6 leading-relaxed">
-                When you purchase a digital product from Next Digi Home, you are granted a non-exclusive, non-transferable license to use the product according to the following terms:
+                When you purchase a digital product from NextDigi Store or NEXTDIGIHOME, you are granted a non-exclusive, non-transferable license to use the product according to the following terms:
               </p>
               <ul className="text-[#737373] mb-8 space-y-2">
                 <li>• Use the product for personal or commercial projects</li>
@@ -146,7 +146,7 @@ export default async function TermsPage() {
 
               <h2 className="text-2xl font-bold text-[#fafafa] mb-6">7. Intellectual Property</h2>
               <p className="text-[#737373] mb-8 leading-relaxed">
-                The service and its original content, features, and functionality are and will remain the exclusive property of Next Digi Home and its licensors. The service is protected by copyright, trademark, and other laws. Our trademarks and trade dress may not be used in connection with any product or service without our prior written consent.
+                The service and its original content, features, and functionality are and will remain the exclusive property of NEXTDIGIHOME and its licensors. The service is protected by copyright, trademark, and other laws. Our trademarks and trade dress may not be used in connection with any product or service without our prior written consent.
               </p>
 
               <h2 className="text-2xl font-bold text-[#fafafa] mb-6">8. Termination</h2>
@@ -156,7 +156,7 @@ export default async function TermsPage() {
 
               <h2 className="text-2xl font-bold text-[#fafafa] mb-6">9. Limitation of Liability</h2>
               <p className="text-[#737373] mb-8 leading-relaxed">
-                In no event shall Next Digi Home, nor its directors, employees, partners, agents, suppliers, or affiliates, be liable for any indirect, incidental, special, consequential, or punitive damages, including without limitation, loss of profits, data, use, goodwill, or other intangible losses, resulting from your use of the service.
+                In no event shall NEXTDIGIHOME, nor its directors, employees, partners, agents, suppliers, or affiliates, be liable for any indirect, incidental, special, consequential, or punitive damages, including without limitation, loss of profits, data, use, goodwill, or other intangible losses, resulting from your use of the service.
               </p>
 
               <h2 className="text-2xl font-bold text-[#fafafa] mb-6">10. Governing Law</h2>

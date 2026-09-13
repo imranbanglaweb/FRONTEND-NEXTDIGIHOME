@@ -312,7 +312,7 @@ export default function Home() {
           {/* Top Status & Ecosystem Announcement Ribbon */}
           <div className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full bg-[#00d4aa]/10 border border-[#00d4aa]/30 text-xs font-bold text-[#00d4aa] mb-8 shadow-lg shadow-[#00d4aa]/10">
             <span className="w-2 h-2 rounded-full bg-[#00d4aa] animate-ping" />
-            <span className="tracking-wide">NEXTDIGI 2.0 ECOSYSTEM</span>
+            <span className="tracking-wide">NEXTDIGIHOME ECOSYSTEM</span>
             <span className="w-1 h-3 bg-white/20 hidden sm:inline" />
             <span className="text-slate-300 font-medium hidden sm:inline">Software Engineering • Autonomous AI • 100+ Production Codebases</span>
           </div>
@@ -327,7 +327,7 @@ export default function Home() {
 
           {/* Subtitle Value Proposition */}
           <p className="text-base sm:text-lg lg:text-xl text-slate-300 leading-relaxed max-w-3xl mx-auto mb-10">
-            NextDigiHome empowers ambitious businesses with custom web platforms, deterministic 24/7 AI agents, and predictable revenue acquisition — backed by 100+ verified production digital products ready for instant deployment.
+            NEXTDIGIHOME empowers ambitious businesses with custom web platforms, deterministic 24/7 AI agents, and predictable revenue acquisition — backed by 100+ verified production digital products ready for instant deployment.
           </p>
 
           {/* Action CTAs */}
@@ -346,7 +346,7 @@ export default function Home() {
               className="inline-flex items-center gap-2.5 px-7 py-4 rounded-2xl bg-[#0f1523]/90 border border-white/10 hover:border-[#00d4aa]/40 text-white font-bold text-sm hover:bg-white/5 transition-all shadow-xl"
             >
               <ShoppingBagIcon className="w-4 h-4 text-[#00d4aa]" />
-              <span>Browse Digital Store</span>
+              <span>Browse NextDigi Store</span>
               <span className="text-[10px] font-black px-2 py-0.5 rounded-full bg-[#00d4aa]/15 text-[#00d4aa] border border-[#00d4aa]/30">
                 100+ Assets
               </span>
@@ -414,7 +414,7 @@ export default function Home() {
 
               <div className="hidden xl:flex items-center gap-2 text-xs font-mono text-slate-400">
                 <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                <span>NextDigi Production Systems v2.4</span>
+                <span>NEXTDIGIHOME Production Systems v2.4</span>
               </div>
             </div>
 
@@ -644,7 +644,7 @@ export default function Home() {
             <div>
               <div className="inline-flex items-center gap-2 text-xs font-bold tracking-widest text-[#00d4aa] uppercase mb-3">
                 <ShoppingBagIcon className="w-4 h-4 text-[#00d4aa]" />
-                NextDigi Digital Store
+                NextDigi Store
               </div>
               <h2 className="text-3xl sm:text-4xl font-black text-white tracking-tight">
                 Production-Ready Source Code &amp; Software
@@ -840,13 +840,13 @@ export default function Home() {
               <div>
                 <div className="inline-flex items-center gap-2 text-xs font-bold tracking-widest text-[#00d4aa] uppercase mb-4">
                   <span className="w-4 h-px bg-[#00d4aa]" />
-                  Four Core Divisions • Unified Execution
+                  Five Official Divisions • Master Brand Architecture
                 </div>
                 <h2 className="text-3xl sm:text-4xl lg:text-[2.6rem] font-black text-white leading-[1.15] mb-5 tracking-tight">
                   One Ecosystem.<br />Total Business Execution.
                 </h2>
                 <p className="text-sm text-slate-400 leading-relaxed mb-6">
-                  Eliminate the friction of managing disparate freelancers and agencies. A single visionary human operator commands full-stack software architecture, autonomous AI agents, growth marketing engines, and verified digital products under one unified roof.
+                  Eliminate the friction of managing disparate freelancers and agencies. NEXTDIGIHOME unifies NextDigi Solutions, NextDigi AI, NextDigi Growth, NextDigi Labs, and NextDigi Store under one master technology ecosystem.
                 </p>
                 <div className="mb-6">
                   <Link
@@ -1001,7 +1001,7 @@ export default function Home() {
                     </div>
                     <div className="text-left hidden sm:block">
                       <div className="text-[10px] font-bold text-white">04 STORE</div>
-                      <div className="text-[9px] text-[#fbbf24]">100+ Codes</div>
+                      <div className="text-[9px] text-[#00d4aa]">NextDigi Store</div>
                     </div>
                   </button>
                 </div>
@@ -1009,17 +1009,17 @@ export default function Home() {
                 {/* Dynamic Status Display Bar */}
                 <div className="mt-3 pt-3 border-t border-white/5 flex items-center justify-between text-[11px]">
                   <span className="text-slate-400 font-mono line-clamp-1">
-                    {hoveredDivision === 'solutions' && 'Active Command: Full-Stack Engineering (Next.js, Flutter, ERP)'}
-                    {hoveredDivision === 'ai' && 'Active Command: Autonomous AI Runtimes (RAG Agents, Chatbots)'}
-                    {hoveredDivision === 'growth' && 'Active Command: Performance Scaling (Meta CAPI, Ads, SEO)'}
-                    {hoveredDivision === 'products' && 'Active Command: Instant Digital Assets (100+ Production Codebases)'}
+                    {hoveredDivision === 'solutions' && 'Active Command: Full-Stack Engineering (NextDigi Solutions)'}
+                    {hoveredDivision === 'ai' && 'Active Command: Autonomous AI & Automation (NextDigi AI)'}
+                    {hoveredDivision === 'growth' && 'Active Command: Performance Scaling & Ads (NextDigi Growth)'}
+                    {hoveredDivision === 'products' && 'Active Command: Digital Products & Assets (NextDigi Store)'}
                   </span>
                   <span className="text-[#00d4aa] font-bold shrink-0 ml-2">● Synced</span>
                 </div>
               </div>
             </div>
 
-            {/* Right Column: 4 Core Division Interactive Cards */}
+            {/* Right Column: 5 Official Division Interactive Cards */}
             <div className="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-4">
               {[
                 {
@@ -1033,7 +1033,8 @@ export default function Home() {
                   icon: CodeBracketIcon,
                   accent: '#00d4aa',
                   pills: ['Next.js 15', 'Flutter App', 'Custom ERP', 'Cloud APIs'],
-                  capability: '⚡ 100% Code Ownership Transfer'
+                  capability: '⚡ 100% Code Ownership Transfer',
+                  className: ''
                 },
                 {
                   id: 'ai',
@@ -1046,7 +1047,8 @@ export default function Home() {
                   icon: CpuChipIcon,
                   accent: '#8b5cf6',
                   pills: ['AI Agents', 'WhatsApp RAG', 'n8n Pipelines', 'Zero Touch'],
-                  capability: '🤖 0.8s RAG Latency • 24/7 Autonomous'
+                  capability: '🤖 0.8s RAG Latency • 24/7 Autonomous',
+                  className: ''
                 },
                 {
                   id: 'growth',
@@ -1059,20 +1061,36 @@ export default function Home() {
                   icon: RocketLaunchIcon,
                   accent: '#38bdf8',
                   pills: ['Meta CAPI', 'Google Ads', 'Technical SEO', 'SMS Recovery'],
-                  capability: '📈 4.6x Audited ROAS Across 50+ Stores'
+                  capability: '📈 4.6x Audited ROAS Across 50+ Stores',
+                  className: ''
+                },
+                {
+                  id: 'labs',
+                  num: '04',
+                  title: 'LABS',
+                  subtitle: 'NextDigi Labs',
+                  desc: 'In-house proprietary SaaS platforms and automation tools including NextDigi Commerce, NextDigi Social, and Garibondhu360.',
+                  href: '/labs',
+                  tag: 'Proprietary SaaS',
+                  icon: BeakerIcon,
+                  accent: '#f59e0b',
+                  pills: ['NextDigi Commerce', 'NextDigi Social', 'Automate', 'Cloud ERP'],
+                  capability: '🚀 Live Production Cloud SaaS',
+                  className: ''
                 },
                 {
                   id: 'products',
-                  num: '04',
-                  title: 'PRODUCTS',
-                  subtitle: 'NextDigi Labs & Store',
-                  desc: 'Proprietary SaaS products plus 100+ production-ready source codes, full-stack templates, and digital assets.',
+                  num: '05',
+                  title: 'STORE',
+                  subtitle: 'NextDigi Store',
+                  desc: '100+ verified production-ready full-stack application codebases, Flutter mobile apps, and instant digital assets.',
                   href: '/products',
-                  tag: 'Instant Access',
+                  tag: 'Digital Products',
                   icon: ShoppingBagIcon,
-                  accent: '#f59e0b',
-                  pills: ['100+ Repos', 'SaaS Tools', 'Instant Source', 'Full License'],
-                  capability: '📦 Instant Download & Full Documentation'
+                  accent: '#00d4aa',
+                  pills: ['100+ Repos', 'Full-Stack Kits', 'Mobile Apps', 'Instant Download'],
+                  capability: '📦 Instant Download & Full Documentation',
+                  className: 'sm:col-span-2'
                 },
               ].map((p) => {
                 const IconComponent = p.icon;
@@ -1082,7 +1100,7 @@ export default function Home() {
                     key={p.num}
                     href={p.href}
                     onMouseEnter={() => setHoveredDivision(p.id as any)}
-                    className={`group p-6 rounded-2xl transition-all duration-300 flex flex-col justify-between relative overflow-hidden ${
+                    className={`group p-6 rounded-2xl transition-all duration-300 flex flex-col justify-between relative overflow-hidden ${p.className} ${
                       isHovered
                         ? 'bg-[#131b2e] shadow-xl border'
                         : 'bg-[#0f1523]/80 border border-white/8 hover:border-white/20'

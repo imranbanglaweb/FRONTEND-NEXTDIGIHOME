@@ -239,14 +239,14 @@ export default function ServicesPage() {
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <Link href="/" className="inline-flex items-center gap-2 text-[#00d4aa] hover:text-[#00d4aa]/80 mb-8 transition text-sm font-semibold">
             <ArrowLeftIcon className="w-4 h-4" />
-            Back to NEXTDIGI HOME
+            Back to NEXTDIGIHOME
           </Link>
           
           <div className="text-center">
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-[#00d4aa]/30 bg-[#00d4aa]/10 mb-6 shadow-lg shadow-[#00d4aa]/10">
               <SparklesIcon className="w-4 h-4 text-[#00d4aa]" />
               <span className="text-xs font-extrabold uppercase tracking-[2px] text-[#00d4aa]">
-                NEXTDIGI SOLUTIONS • AI • LABS
+                NEXTDIGI SOLUTIONS • AI • GROWTH • LABS
               </span>
             </div>
             
@@ -449,7 +449,7 @@ export default function ServicesPage() {
               href="/products"
               className="inline-flex items-center justify-center px-8 py-4 border border-white/20 text-[#fafafa] rounded-xl font-bold hover:bg-white/5 transition"
             >
-              Browse NextDigi Home Products
+              Browse NextDigi Store
             </Link>
           </div>
         </div>

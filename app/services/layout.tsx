@@ -2,18 +2,18 @@ import type { Metadata } from "next";
 import { generateBreadcrumbSchema, StructuredData } from "../utils/seo";
 
 export const metadata: Metadata = {
-  title: "Premium Digital Services for Web, Marketing & Design",
-  description: "Explore premium web development, e-commerce, SEO, digital marketing, UI/UX design, and business growth services from Next Digi Home.",
-  keywords: ["digital services", "web development", "SEO services", "digital marketing", "UI UX design", "e-commerce development"],
+  title: "Premium Technology Services, AI & Growth Solutions",
+  description: "Explore custom web development, e-commerce, software engineering, AI automation, and digital growth services from NEXTDIGIHOME.",
+  keywords: ["technology services", "web development", "AI automation", "custom software", "digital growth", "e-commerce development"],
   alternates: {
     canonical: "/services",
   },
   openGraph: {
-    title: "Digital Services | Next Digi Home",
-    description: "Premium digital services for business websites, marketing, design, and e-commerce growth.",
+    title: "Technology Services & Solutions | NEXTDIGIHOME",
+    description: "Premium technology services for enterprise platforms, AI automation, and scalable digital growth.",
     url: "/services",
     type: "website",
-    images: [{ url: "/og-image.svg", width: 1200, height: 630, alt: "Next Digi Home services" }],
+    images: [{ url: "/og-image.svg", width: 1200, height: 630, alt: "NEXTDIGIHOME services" }],
   },
 };
 
