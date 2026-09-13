@@ -251,403 +251,291 @@ export default function ClientLayout({
 
   return (
     <>
-      {/* Animated Background */}
-      <div className="fixed inset-0 -z-10 overflow-hidden">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_50%_50%,rgba(0,212,170,0.08)_0%,rgba(8,8,8,0)_50%)]" />
-        <div className="absolute -top-24 -right-24 h-56 w-56 rounded-full bg-[#8b5cf6] opacity-15 mix-blend-screen blur-[90px] filter sm:-top-40 sm:-right-40 sm:h-96 sm:w-96 sm:opacity-20 sm:blur-[120px] animate-float" style={{ animationDelay: '0s' }} />
-        <div className="absolute top-1/2 left-1/4 h-56 w-56 rounded-full bg-[#00d4aa] opacity-10 mix-blend-screen blur-[90px] filter sm:left-1/3 sm:h-96 sm:w-96 sm:opacity-15 sm:blur-[120px] animate-float" style={{ animationDelay: '2s' }} />
-        <div className="absolute -bottom-24 -left-24 h-56 w-56 rounded-full bg-[#8b5cf6] opacity-15 mix-blend-screen blur-[90px] filter sm:-bottom-40 sm:-left-40 sm:h-96 sm:w-96 sm:opacity-20 sm:blur-[120px] animate-float" style={{ animationDelay: '4s' }} />
-        <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(42,42,48,0.3)_1px,transparent_1px),linear-gradient(to_bottom,rgba(42,42,48,0.3)_1px,transparent_1px)] bg-[size:60px_60px]" />
+      {/* Minimal background — single subtle teal glow only */}
+      <div className="fixed inset-0 -z-10 overflow-hidden pointer-events-none">
+        <div className="absolute inset-0 bg-[#080808]" />
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[900px] h-[400px] bg-[#00d4aa]/4 blur-[200px] rounded-full" />
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(255,255,255,0.015)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.015)_1px,transparent_1px)] bg-[size:72px_72px]" />
       </div>
 
-        {/* ── Announcement Bar ── */}
-        <div className="fixed top-0 left-0 right-0 z-[51] flex items-center justify-center gap-3 bg-gradient-to-r from-[#00d4aa]/10 via-[#8b5cf6]/10 to-[#ec4899]/10 border-b border-white/5 py-1.5 px-4 text-center text-[11px] font-semibold text-gray-300 backdrop-blur-md">
-          <span className="w-1.5 h-1.5 rounded-full bg-[#00d4aa] animate-pulse shrink-0" />
-          <span>🚀 NextDigiHome — Build. Launch. Automate. Grow. &nbsp;<Link href="/contact" className="text-[#00d4aa] hover:underline font-bold">Start your project →</Link></span>
-        </div>
-
-        <header className={`header fixed top-7 left-0 right-0 z-50 border-b transition-all duration-500 ${
+        <header className={`header fixed top-0 left-0 right-0 z-50 border-b transition-all duration-300 ${
           isScrolled
-            ? 'bg-[#0a0a0d]/96 backdrop-blur-2xl shadow-2xl shadow-black/40 border-white/8'
+            ? 'bg-[#080808]/95 backdrop-blur-xl border-white/6'
             : 'bg-transparent border-transparent'
         }`}>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center py-3 md:py-2.5 gap-2 lg:gap-3">
-            {/* Logo – fixed width so nav can center properly */}
-            <Link href="/" className="flex items-center group flex-shrink-0 mr-4">
+        <div className="max-w-7xl mx-auto px-6 lg:px-8">
+          <div className="flex items-center h-16 gap-8">
+            {/* Logo */}
+            <Link href="/" className="flex items-center group flex-shrink-0">
               <NextDigiLogo
                 size="sm"
-                subtitle="BUILD • LAUNCH • AUTOMATE • GROW"
+                subtitle=""
                 customLogoUrl={isHydrated && (settings?.site_logo || settings?.admin_logo) ? getLogoUrl(settings.site_logo || settings.admin_logo) : null}
               />
             </Link>
 
-            {/* Desktop Navigation – takes remaining space, centered */}
-            <nav className="hidden lg:flex flex-1 min-w-0 items-center justify-center gap-0.5 xl:gap-1" onMouseLeave={() => setActiveDropdown(null)}>
-              <Link 
-                href="/" 
-                className={`px-2.5 py-2 lg:px-3 rounded-lg transition-all duration-200 text-sm font-medium ${pathname === '/' ? 'text-[#00d4aa] bg-[#2a2a30]/50' : 'text-[#fafafa] hover:text-[#00d4aa] hover:bg-[#2a2a30]/50'}`}
+            {/* Desktop Navigation */}
+            <nav className="hidden lg:flex flex-1 min-w-0 items-center gap-1" onMouseLeave={() => setActiveDropdown(null)}>
+              <Link
+                href="/"
+                className={`px-3 py-2 rounded-lg text-sm transition-colors ${
+                  pathname === '/' ? 'text-white font-semibold' : 'text-[#777] hover:text-white font-medium'
+                }`}
               >
                 Home
               </Link>
 
-              {/* Solutions Dropdown */}
+              {/* Solutions */}
               <div className="relative">
                 <button
                   onMouseEnter={() => setActiveDropdown('solutions')}
                   onClick={() => setActiveDropdown(activeDropdown === 'solutions' ? null : 'solutions')}
-                  className={`px-2.5 py-2 lg:px-3 rounded-lg transition-all duration-200 text-sm font-medium flex items-center gap-1 ${
-                    pathname.startsWith('/solutions')
-                      ? 'text-[#00d4aa] bg-[#2a2a30]/50'
-                      : 'text-[#fafafa] hover:text-[#00d4aa] hover:bg-[#2a2a30]/50'
+                  className={`px-3 py-2 rounded-lg text-sm flex items-center gap-1 transition-colors ${
+                    pathname.startsWith('/solutions') ? 'text-white font-semibold' : 'text-[#777] hover:text-white font-medium'
                   }`}
                 >
                   Solutions
-                  <ChevronDownIcon className={`w-3.5 h-3.5 transition-transform duration-200 ${activeDropdown === 'solutions' ? 'rotate-180 text-[#00d4aa]' : 'opacity-70'}`} />
+                  <ChevronDownIcon className={`w-3.5 h-3.5 transition-transform ${activeDropdown === 'solutions' ? 'rotate-180' : ''}`} />
                 </button>
                 {activeDropdown === 'solutions' && (
                   <div
                     onMouseEnter={() => setActiveDropdown('solutions')}
-                    className="absolute top-full left-0 mt-2 w-80 rounded-2xl bg-[#121217]/98 border border-white/10 p-3 shadow-2xl backdrop-blur-2xl ring-1 ring-white/5 animate-fade-in-up z-50"
+                    className="absolute top-full left-0 mt-2 w-72 rounded-2xl bg-[#111]/98 border border-white/8 p-3 shadow-2xl backdrop-blur-xl z-50 animate-fade-in-up"
                   >
-                    <div className="px-3 py-2 mb-1 border-b border-white/5">
-                      <span className="text-[10px] font-black uppercase tracking-[2px] text-[#00d4aa]">NextDigi Solutions</span>
-                      <p className="text-xs text-[#8c8c9a]">Full-cycle engineering &amp; infrastructure</p>
+                    <div className="px-3 py-2 mb-2 border-b border-white/5">
+                      <span className="text-[10px] font-bold uppercase tracking-widest text-[#00d4aa]">Solutions</span>
                     </div>
-                    <div className="space-y-1">
+                    <div className="space-y-0.5">
                       {[
-                        { title: 'Web Development', href: '/solutions/web-development', desc: 'Fast, responsive Next.js & React platforms' },
-                        { title: 'E-commerce', href: '/solutions/ecommerce', desc: 'Custom storefronts & payment checkouts' },
-                        { title: 'Mobile Apps', href: '/solutions/mobile-app', desc: 'iOS & Android Flutter applications' },
-                        { title: 'Custom Software', href: '/solutions/custom-software', desc: 'Enterprise ERPs & bespoke systems' },
-                        { title: 'SaaS Development', href: '/solutions/saas-development', desc: 'Scalable multi-tenant cloud apps' },
+                        { title: 'Web Development', href: '/solutions/web-development', desc: 'Next.js & React platforms' },
+                        { title: 'E-commerce', href: '/solutions/ecommerce', desc: 'bKash, Nagad & Stripe checkout' },
+                        { title: 'Mobile Apps', href: '/solutions/mobile-app', desc: 'Flutter iOS & Android' },
+                        { title: 'Custom Software', href: '/solutions/custom-software', desc: 'Enterprise ERPs & systems' },
+                        { title: 'SaaS Development', href: '/solutions/saas-development', desc: 'Multi-tenant cloud apps' },
                         { title: 'API & Integrations', href: '/solutions/api-integrations', desc: 'Payment, CRM & courier APIs' },
-                        { title: 'Hosting & Maintenance', href: '/solutions/hosting-maintenance', desc: 'Cloud DevOps & 24/7 reliability' },
+                        { title: 'Hosting & Maintenance', href: '/solutions/hosting-maintenance', desc: 'DevOps & 24/7 reliability' },
                       ].map((sub, idx) => (
-                        <Link
-                          key={idx}
-                          href={sub.href}
-                          onClick={() => setActiveDropdown(null)}
-                          className="group/item flex flex-col px-3 py-1.5 rounded-xl hover:bg-white/5 transition-all"
-                        >
-                          <span className="text-sm font-semibold text-white group-hover/item:text-[#00d4aa] transition-colors">{sub.title}</span>
-                          <span className="text-[11px] text-[#71717a] leading-tight">{sub.desc}</span>
+                        <Link key={idx} href={sub.href} onClick={() => setActiveDropdown(null)}
+                          className="flex flex-col px-3 py-1.5 rounded-xl hover:bg-white/4 transition-all">
+                          <span className="text-sm font-medium text-white">{sub.title}</span>
+                          <span className="text-[11px] text-[#555]">{sub.desc}</span>
                         </Link>
                       ))}
                     </div>
-                    <div className="pt-2 mt-2 border-t border-white/5 px-2">
-                      <Link
-                        href="/solutions"
-                        onClick={() => setActiveDropdown(null)}
-                        className="text-xs font-bold text-[#00d4aa] hover:underline flex items-center justify-between"
-                      >
-                        <span>Explore All Solutions</span>
-                        <ArrowRightIcon className="w-3.5 h-3.5" />
+                    <div className="pt-2 mt-2 border-t border-white/5">
+                      <Link href="/solutions" onClick={() => setActiveDropdown(null)}
+                        className="flex items-center justify-between px-3 py-1.5 text-xs font-semibold text-[#00d4aa] hover:underline">
+                        View All Solutions <ArrowRightIcon className="w-3.5 h-3.5" />
                       </Link>
                     </div>
                   </div>
                 )}
               </div>
 
-              {/* AI & Automation Dropdown */}
+              {/* AI */}
               <div className="relative">
                 <button
                   onMouseEnter={() => setActiveDropdown('ai')}
                   onClick={() => setActiveDropdown(activeDropdown === 'ai' ? null : 'ai')}
-                  className={`px-2.5 py-2 lg:px-3 rounded-lg transition-all duration-200 text-sm font-medium flex items-center gap-1 ${
-                    pathname.startsWith('/ai')
-                      ? 'text-[#8b5cf6] bg-[#2a2a30]/50'
-                      : 'text-[#fafafa] hover:text-[#a78bfa] hover:bg-[#2a2a30]/50'
+                  className={`px-3 py-2 rounded-lg text-sm flex items-center gap-1 transition-colors ${
+                    pathname.startsWith('/ai') ? 'text-white font-semibold' : 'text-[#777] hover:text-white font-medium'
                   }`}
                 >
                   AI &amp; Automation
-                  <ChevronDownIcon className={`w-3.5 h-3.5 transition-transform duration-200 ${activeDropdown === 'ai' ? 'rotate-180 text-[#8b5cf6]' : 'opacity-70'}`} />
+                  <ChevronDownIcon className={`w-3.5 h-3.5 transition-transform ${activeDropdown === 'ai' ? 'rotate-180' : ''}`} />
                 </button>
                 {activeDropdown === 'ai' && (
                   <div
                     onMouseEnter={() => setActiveDropdown('ai')}
-                    className="absolute top-full left-0 mt-2 w-80 rounded-2xl bg-[#121217]/98 border border-white/10 p-3 shadow-2xl backdrop-blur-2xl ring-1 ring-white/5 animate-fade-in-up z-50"
+                    className="absolute top-full left-0 mt-2 w-68 rounded-2xl bg-[#111]/98 border border-white/8 p-3 shadow-2xl backdrop-blur-xl z-50 animate-fade-in-up"
                   >
-                    <div className="px-3 py-2 mb-1 border-b border-white/5">
-                      <span className="text-[10px] font-black uppercase tracking-[2px] text-[#8b5cf6]">NextDigi AI</span>
-                      <p className="text-xs text-[#8c8c9a]">Autonomous intelligence &amp; RPA</p>
+                    <div className="px-3 py-2 mb-2 border-b border-white/5">
+                      <span className="text-[10px] font-bold uppercase tracking-widest text-[#00d4aa]">AI & Automation</span>
                     </div>
-                    <div className="space-y-1">
+                    <div className="space-y-0.5">
                       {[
-                        { title: 'AI Agents', href: '/ai/ai-agents', desc: 'Autonomous tasks, research & lead gen' },
-                        { title: 'AI Chatbots', href: '/ai/chatbots', desc: 'Conversational bots with RAG knowledge' },
-                        { title: 'AI Support', href: '/ai/ai-support', desc: '24/7 WhatsApp & Web support bots' },
-                        { title: 'Workflow Automation', href: '/ai/automation', desc: 'Zero-touch document & API pipelines' },
+                        { title: 'AI Agents', href: '/ai/ai-agents', desc: 'Autonomous task & research agents' },
+                        { title: 'AI Chatbots', href: '/ai/chatbots', desc: 'RAG-powered bots for web & WhatsApp' },
+                        { title: 'AI Support', href: '/ai/ai-support', desc: '24/7 bilingual customer support' },
+                        { title: 'Workflow Automation', href: '/ai/automation', desc: 'Zero-touch pipelines & APIs' },
                         { title: 'AI Video', href: '/ai/ai-video', desc: 'Synthetic avatars & marketing videos' },
                       ].map((sub, idx) => (
-                        <Link
-                          key={idx}
-                          href={sub.href}
-                          onClick={() => setActiveDropdown(null)}
-                          className="group/item flex flex-col px-3 py-1.5 rounded-xl hover:bg-white/5 transition-all"
-                        >
-                          <span className="text-sm font-semibold text-white group-hover/item:text-[#a78bfa] transition-colors">{sub.title}</span>
-                          <span className="text-[11px] text-[#71717a] leading-tight">{sub.desc}</span>
+                        <Link key={idx} href={sub.href} onClick={() => setActiveDropdown(null)}
+                          className="flex flex-col px-3 py-1.5 rounded-xl hover:bg-white/4 transition-all">
+                          <span className="text-sm font-medium text-white">{sub.title}</span>
+                          <span className="text-[11px] text-[#555]">{sub.desc}</span>
                         </Link>
                       ))}
                     </div>
-                    <div className="pt-2 mt-2 border-t border-white/5 px-2">
-                      <Link
-                        href="/ai"
-                        onClick={() => setActiveDropdown(null)}
-                        className="text-xs font-bold text-[#8b5cf6] hover:underline flex items-center justify-between"
-                      >
-                        <span>Explore NextDigi AI</span>
-                        <ArrowRightIcon className="w-3.5 h-3.5" />
+                    <div className="pt-2 mt-2 border-t border-white/5">
+                      <Link href="/ai" onClick={() => setActiveDropdown(null)}
+                        className="flex items-center justify-between px-3 py-1.5 text-xs font-semibold text-[#00d4aa] hover:underline">
+                        Explore AI Division <ArrowRightIcon className="w-3.5 h-3.5" />
                       </Link>
                     </div>
                   </div>
                 )}
               </div>
 
-              {/* Growth Dropdown */}
+              {/* Growth */}
               <div className="relative">
                 <button
                   onMouseEnter={() => setActiveDropdown('growth')}
                   onClick={() => setActiveDropdown(activeDropdown === 'growth' ? null : 'growth')}
-                  className={`px-2.5 py-2 lg:px-3 rounded-lg transition-all duration-200 text-sm font-medium flex items-center gap-1 ${
-                    pathname.startsWith('/growth')
-                      ? 'text-[#ec4899] bg-[#2a2a30]/50'
-                      : 'text-[#fafafa] hover:text-[#ec4899] hover:bg-[#2a2a30]/50'
+                  className={`px-3 py-2 rounded-lg text-sm flex items-center gap-1 transition-colors ${
+                    pathname.startsWith('/growth') ? 'text-white font-semibold' : 'text-[#777] hover:text-white font-medium'
                   }`}
                 >
                   Growth
-                  <ChevronDownIcon className={`w-3.5 h-3.5 transition-transform duration-200 ${activeDropdown === 'growth' ? 'rotate-180 text-[#ec4899]' : 'opacity-70'}`} />
+                  <ChevronDownIcon className={`w-3.5 h-3.5 transition-transform ${activeDropdown === 'growth' ? 'rotate-180' : ''}`} />
                 </button>
                 {activeDropdown === 'growth' && (
                   <div
                     onMouseEnter={() => setActiveDropdown('growth')}
-                    className="absolute top-full left-0 mt-2 w-80 rounded-2xl bg-[#121217]/98 border border-white/10 p-3 shadow-2xl backdrop-blur-2xl ring-1 ring-white/5 animate-fade-in-up z-50"
+                    className="absolute top-full left-0 mt-2 w-64 rounded-2xl bg-[#111]/98 border border-white/8 p-3 shadow-2xl backdrop-blur-xl z-50 animate-fade-in-up"
                   >
-                    <div className="px-3 py-2 mb-1 border-b border-white/5">
-                      <span className="text-[10px] font-black uppercase tracking-[2px] text-[#ec4899]">NextDigi Growth</span>
-                      <p className="text-xs text-[#8c8c9a]">Technology-enabled digital marketing</p>
+                    <div className="px-3 py-2 mb-2 border-b border-white/5">
+                      <span className="text-[10px] font-bold uppercase tracking-widest text-[#00d4aa]">Growth Marketing</span>
                     </div>
-                    <div className="space-y-1">
+                    <div className="space-y-0.5">
                       {[
-                        { title: 'Social Media', href: '/growth/social-media', desc: 'Brand positioning & content distribution' },
-                        { title: 'Meta Ads', href: '/growth/meta-ads', desc: 'Targeted customer acquisition' },
-                        { title: 'Google Ads', href: '/growth/google-ads', desc: 'Intent search & high-intent traffic' },
-                        { title: 'SEO', href: '/growth/seo', desc: 'Search engine performance & rankings' },
-                        { title: 'Analytics & Tracking', href: '/growth/analytics', desc: 'Conversion telemetry & pixels' },
+                        { title: 'Social Media', href: '/growth/social-media', desc: 'Content & brand distribution' },
+                        { title: 'Meta Ads', href: '/growth/meta-ads', desc: 'Facebook & Instagram buying' },
+                        { title: 'Google Ads', href: '/growth/google-ads', desc: 'Search & Performance Max' },
+                        { title: 'SEO', href: '/growth/seo', desc: 'Technical & content SEO' },
+                        { title: 'Analytics & Tracking', href: '/growth/analytics', desc: 'CAPI & conversion pixels' },
                       ].map((sub, idx) => (
-                        <Link
-                          key={idx}
-                          href={sub.href}
-                          onClick={() => setActiveDropdown(null)}
-                          className="group/item flex flex-col px-3 py-1.5 rounded-xl hover:bg-white/5 transition-all"
-                        >
-                          <span className="text-sm font-semibold text-white group-hover/item:text-[#f472b6] transition-colors">{sub.title}</span>
-                          <span className="text-[11px] text-[#71717a] leading-tight">{sub.desc}</span>
+                        <Link key={idx} href={sub.href} onClick={() => setActiveDropdown(null)}
+                          className="flex flex-col px-3 py-1.5 rounded-xl hover:bg-white/4 transition-all">
+                          <span className="text-sm font-medium text-white">{sub.title}</span>
+                          <span className="text-[11px] text-[#555]">{sub.desc}</span>
                         </Link>
                       ))}
                     </div>
-                    <div className="pt-2 mt-2 border-t border-white/5 px-2">
-                      <Link
-                        href="/growth"
-                        onClick={() => setActiveDropdown(null)}
-                        className="text-xs font-bold text-[#ec4899] hover:underline flex items-center justify-between"
-                      >
-                        <span>Explore Growth Solutions</span>
-                        <ArrowRightIcon className="w-3.5 h-3.5" />
+                    <div className="pt-2 mt-2 border-t border-white/5">
+                      <Link href="/growth" onClick={() => setActiveDropdown(null)}
+                        className="flex items-center justify-between px-3 py-1.5 text-xs font-semibold text-[#00d4aa] hover:underline">
+                        View Growth Services <ArrowRightIcon className="w-3.5 h-3.5" />
                       </Link>
                     </div>
                   </div>
                 )}
               </div>
 
-              {/* Products Dropdown */}
+              {/* Products / Labs */}
               <div className="relative">
                 <button
                   onMouseEnter={() => setActiveDropdown('products')}
                   onClick={() => setActiveDropdown(activeDropdown === 'products' ? null : 'products')}
-                  className={`px-2.5 py-2 lg:px-3 rounded-lg transition-all duration-200 text-sm font-medium flex items-center gap-1 ${
-                    pathname.startsWith('/labs') || pathname.startsWith('/store') || pathname.startsWith('/products')
-                      ? 'text-[#f59e0b] bg-[#2a2a30]/50'
-                      : 'text-[#fafafa] hover:text-[#fbbf24] hover:bg-[#2a2a30]/50'
+                  className={`px-3 py-2 rounded-lg text-sm flex items-center gap-1 transition-colors ${
+                    pathname.startsWith('/labs') ? 'text-white font-semibold' : 'text-[#777] hover:text-white font-medium'
                   }`}
                 >
                   Products
-                  <ChevronDownIcon className={`w-3.5 h-3.5 transition-transform duration-200 ${activeDropdown === 'products' ? 'rotate-180 text-[#f59e0b]' : 'opacity-70'}`} />
+                  <ChevronDownIcon className={`w-3.5 h-3.5 transition-transform ${activeDropdown === 'products' ? 'rotate-180' : ''}`} />
                 </button>
                 {activeDropdown === 'products' && (
                   <div
                     onMouseEnter={() => setActiveDropdown('products')}
-                    className="absolute top-full left-0 mt-2 w-84 rounded-2xl bg-[#121217]/98 border border-white/10 p-3 shadow-2xl backdrop-blur-2xl ring-1 ring-white/5 animate-fade-in-up z-50"
+                    className="absolute top-full left-0 mt-2 w-72 rounded-2xl bg-[#111]/98 border border-white/8 p-3 shadow-2xl backdrop-blur-xl z-50 animate-fade-in-up"
                   >
-                    <div className="px-3 py-2 mb-1 border-b border-white/5">
-                      <span className="text-[10px] font-black uppercase tracking-[2px] text-[#f59e0b]">NextDigi Labs &amp; Store</span>
-                      <p className="text-xs text-[#8c8c9a]">Proprietary SaaS &amp; Digital Resources</p>
+                    <div className="px-3 py-2 mb-2 border-b border-white/5">
+                      <span className="text-[10px] font-bold uppercase tracking-widest text-[#00d4aa]">SaaS Products</span>
                     </div>
-                    <div className="space-y-1">
-                      <a
-                        href="https://commerce.nextdigihome.com/"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="group/item flex items-center justify-between px-3 py-2 rounded-xl hover:bg-white/5 transition-all"
-                      >
-                        <div>
-                          <span className="text-sm font-semibold text-white group-hover/item:text-[#00d4aa] transition-colors block">NextDigi Commerce</span>
-                          <span className="text-[11px] text-[#71717a]">AI-powered Ecommerce SaaS</span>
+                    <div className="space-y-0.5">
+                      {[
+                        { title: 'NextDigi Commerce', href: '/labs/commerce', sub: 'Headless e-commerce SaaS', badge: 'Live', ext: 'https://commerce.nextdigihome.com' },
+                        { title: 'NextDigi Social', href: '/labs/social', sub: 'Multi-channel social scheduler', badge: 'Beta', ext: 'https://social.nextdigihome.com' },
+                        { title: 'NextDigi Automate', href: '/labs/automate', sub: 'Visual workflow automation', badge: 'Soon', ext: 'https://automate.nextdigihome.com' },
+                        { title: 'Garibondhu360', href: '/labs/garibondhu360', sub: 'Workshop & fleet management ERP', badge: 'Live', ext: 'https://garibondhu360.nextdigihome.com' },
+                      ].map((p, idx) => (
+                        <div key={idx} className="flex items-center justify-between px-3 py-1.5 rounded-xl hover:bg-white/4 transition-all">
+                          <Link href={p.href} onClick={() => setActiveDropdown(null)} className="flex flex-col flex-1 min-w-0">
+                            <span className="text-sm font-medium text-white">{p.title}</span>
+                            <span className="text-[11px] text-[#555]">{p.sub}</span>
+                          </Link>
+                          <a href={p.ext} target="_blank" rel="noopener noreferrer"
+                            className="ml-2 text-[10px] font-bold px-2 py-0.5 rounded bg-[#00d4aa]/8 text-[#00d4aa] border border-[#00d4aa]/15 shrink-0">{p.badge}</a>
                         </div>
-                        <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-[#00d4aa]/10 text-[#00d4aa] border border-[#00d4aa]/25">Live</span>
-                      </a>
-                      <a
-                        href="https://social.nextdigihome.com/"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="group/item flex items-center justify-between px-3 py-2 rounded-xl hover:bg-white/5 transition-all"
-                      >
-                        <div>
-                          <span className="text-sm font-semibold text-white group-hover/item:text-[#8b5cf6] transition-colors block">NextDigi Social</span>
-                          <span className="text-[11px] text-[#71717a]">AI social media automation</span>
-                        </div>
-                        <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-[#8b5cf6]/10 text-[#a78bfa] border border-[#8b5cf6]/25">Beta</span>
-                      </a>
-                      <a
-                        href="https://automate.nextdigihome.com/"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="group/item flex items-center justify-between px-3 py-2 rounded-xl hover:bg-white/5 transition-all"
-                      >
-                        <div>
-                          <span className="text-sm font-semibold text-white group-hover/item:text-[#ec4899] transition-colors block">NextDigi Automate</span>
-                          <span className="text-[11px] text-[#71717a]">Enterprise workflow RPA</span>
-                        </div>
-                        <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-white/5 text-[#71717a]">Soon</span>
-                      </a>
-                      <a
-                        href="https://garibondhu360.nextdigihome.com/"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="group/item flex items-center justify-between px-3 py-2 rounded-xl hover:bg-white/5 transition-all"
-                      >
-                        <div>
-                          <span className="text-sm font-semibold text-white group-hover/item:text-[#38bdf8] transition-colors block">Garibondhu360</span>
-                          <span className="text-[11px] text-[#71717a]">Transport operations SaaS</span>
-                        </div>
-                        <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-[#38bdf8]/10 text-[#38bdf8] border border-[#38bdf8]/25">Live</span>
-                      </a>
-                      <div className="my-1 border-t border-white/5" />
-                      <Link
-                        href="/store"
-                        onClick={() => setActiveDropdown(null)}
-                        className="group/item flex items-center justify-between px-3 py-2 rounded-xl bg-[#00d4aa]/5 hover:bg-[#00d4aa]/10 transition-all border border-[#00d4aa]/20"
-                      >
-                        <div>
-                          <span className="text-sm font-bold text-[#00d4aa] block">NextDigi Store</span>
-                          <span className="text-[11px] text-[#8c8c9a]">Templates, eBooks &amp; Resources</span>
-                        </div>
-                        <span className="text-xs font-bold text-[#00d4aa]">Browse →</span>
+                      ))}
+                    </div>
+                    <div className="pt-2 mt-2 border-t border-white/5">
+                      <Link href="/labs" onClick={() => setActiveDropdown(null)}
+                        className="flex items-center justify-between px-3 py-1.5 text-xs font-semibold text-[#00d4aa] hover:underline">
+                        View All Products <ArrowRightIcon className="w-3.5 h-3.5" />
                       </Link>
                     </div>
                   </div>
                 )}
               </div>
 
-              {/* Direct Digital Store Link */}
+              {/* Store — standalone nav item */}
               <Link
-                href="/products"
-                className={`px-3 py-1.5 rounded-xl transition-all duration-200 text-sm font-semibold flex items-center gap-1.5 border ${
-                  pathname === '/products' || pathname === '/store'
-                    ? 'text-[#00d4aa] border-[#00d4aa]/40 bg-[#00d4aa]/10 shadow-[0_0_15px_rgba(0,212,170,0.15)]'
-                    : 'text-white border-white/10 hover:border-[#00d4aa]/40 hover:bg-white/5'
+                href="/store"
+                className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
+                  pathname === '/store' || pathname === '/products'
+                    ? 'text-[#00d4aa] font-semibold'
+                    : 'text-[#777] hover:text-white'
                 }`}
               >
-                <ShoppingBagIcon className="w-4 h-4 text-[#00d4aa]" />
-                <span>Digital Store</span>
-                <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-[#00d4aa]/20 text-[#00d4aa] font-mono">100+</span>
+                Store
               </Link>
 
-              {/* Direct Links */}
-              <Link
-                href="/case-studies"
-                className={`px-2.5 py-2 lg:px-3 rounded-lg transition-all duration-200 text-sm font-medium ${
-                  pathname === '/case-studies'
-                    ? 'text-[#00d4aa] bg-[#2a2a30]/50'
-                    : 'text-[#fafafa] hover:text-[#00d4aa] hover:bg-[#2a2a30]/50'
-                }`}
-              >
+              <Link href="/case-studies"
+                className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
+                  pathname === '/case-studies' ? 'text-white font-semibold' : 'text-[#777] hover:text-white'
+                }`}>
                 Case Studies
               </Link>
-              <Link
-                href="/about"
-                className={`px-2.5 py-2 lg:px-3 rounded-lg transition-all duration-200 text-sm font-medium ${
-                  pathname === '/about'
-                    ? 'text-[#00d4aa] bg-[#2a2a30]/50'
-                    : 'text-[#fafafa] hover:text-[#00d4aa] hover:bg-[#2a2a30]/50'
-                }`}
-              >
+              <Link href="/about"
+                className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
+                  pathname === '/about' ? 'text-white font-semibold' : 'text-[#777] hover:text-white'
+                }`}>
                 About
               </Link>
-              <Link
-                href="/contact"
-                className={`px-2.5 py-2 lg:px-3 rounded-lg transition-all duration-200 text-sm font-medium ${
-                  pathname === '/contact'
-                    ? 'text-[#00d4aa] bg-[#2a2a30]/50'
-                    : 'text-[#fafafa] hover:text-[#00d4aa] hover:bg-[#2a2a30]/50'
-                }`}
-              >
+              <Link href="/contact"
+                className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
+                  pathname === '/contact' ? 'text-white font-semibold' : 'text-[#777] hover:text-white'
+                }`}>
                 Contact
               </Link>
             </nav>
 
-            {/* Desktop Actions – fixed width to balance logo */}
-            <div className="hidden lg:flex items-center gap-2 ml-auto shrink-0">
-              <Link href="/cart" className="relative p-2 text-[#fafafa] hover:text-[#00d4aa] transition-colors" title="Shopping Cart">
-                <ShoppingCartIcon className="w-6 h-6" />
+            {/* Right side: cart + CTA + auth */}
+            <div className="hidden lg:flex items-center gap-3 ml-auto shrink-0">
+              <Link href="/cart" className="relative p-2 text-[#555] hover:text-white transition-colors" title="Shopping Cart">
+                <ShoppingCartIcon className="w-5 h-5" />
                 {cartCount > 0 && (
-                  <span className="absolute -top-1 -right-1 w-5 h-5 bg-gradient-to-r from-[#00d4aa] to-[#8b5cf6] rounded-full text-xs font-bold text-[#0f0f12] flex items-center justify-center">
+                  <span className="absolute -top-1 -right-1 w-4 h-4 bg-[#00d4aa] rounded-full text-[10px] font-bold text-black flex items-center justify-center">
                     {cartCount}
                   </span>
                 )}
               </Link>
-
-              {/* Primary CTA Button: Start a Project */}
               <Link
                 href="/contact"
-                className="group relative inline-flex items-center gap-1.5 px-3.5 py-2 lg:px-4 rounded-xl font-bold text-xs bg-gradient-to-r from-[#00d4aa] to-[#8b5cf6] text-[#0f0f12] shadow-lg shadow-[#00d4aa]/15 hover:brightness-110 active:scale-95 transition-all"
+                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl font-bold text-sm bg-[#00d4aa] text-black hover:bg-[#00e2b6] active:scale-95 transition-all"
               >
-                <span>Start a Project</span>
-                <ArrowRightIcon className="w-3.5 h-3.5 transition-transform duration-200 group-hover:translate-x-0.5" />
+                Start a Project
+                <ArrowRightIcon className="w-3.5 h-3.5" />
               </Link>
-
               {isAuthenticated ? (
                 <>
-                  <Link href="/dashboard" className="px-2.5 py-2 text-xs font-semibold text-[#00d4aa] hover:text-[#8b5cf6] transition-colors">
-                    Dashboard
-                  </Link>
+                  <Link href="/dashboard" className="text-xs font-semibold text-[#555] hover:text-white transition-colors">Dashboard</Link>
                   <button
-                    onClick={() => {
-                      localStorage.removeItem('auth_token');
-                      localStorage.removeItem('customer_email');
-                      window.location.href = '/';
-                    }}
-                    className="px-2 py-2 text-xs font-semibold text-[#8c8c9a] hover:text-red-400 transition-colors"
-                  >
-                    Logout
-                  </button>
+                    onClick={() => { localStorage.removeItem('auth_token'); localStorage.removeItem('customer_email'); window.location.href = '/'; }}
+                    className="text-xs font-semibold text-[#555] hover:text-red-400 transition-colors"
+                  >Logout</button>
                 </>
               ) : (
-                <Link href="/signin" className="px-2.5 py-2 text-xs font-semibold text-[#fafafa] hover:text-[#00d4aa] transition-colors">
-                  Sign In
-                </Link>
+                <Link href="/signin" className="text-xs font-semibold text-[#555] hover:text-white transition-colors">Sign In</Link>
               )}
             </div>
 
-            {/* Tablet (md) – condensed CTA only */}
+            {/* Tablet – compact CTA */}
             <div className="hidden md:flex lg:hidden items-center gap-2 ml-auto shrink-0">
-              <Link
-                href="/contact"
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl font-bold text-xs bg-gradient-to-r from-[#00d4aa] to-[#8b5cf6] text-[#0f0f12] shadow-lg hover:brightness-110 active:scale-95 transition-all"
-              >
-                <span>Start Project</span>
-                <ArrowRightIcon className="w-3 h-3" />
+              <Link href="/contact"
+                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl font-bold text-xs bg-[#00d4aa] text-black hover:bg-[#00e2b6] active:scale-95 transition-all">
+                Start Project <ArrowRightIcon className="w-3 h-3" />
               </Link>
             </div>
 
@@ -671,10 +559,6 @@ export default function ClientLayout({
             </div>
           </div>
         </div>
-        {/* Gradient accent line at bottom of header when scrolled */}
-        {isScrolled && (
-          <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#00d4aa]/40 to-transparent" />
-        )}
         </header>
 
         {/* Mobile Menu Drawer with Expandable Accordions */}
