@@ -25,6 +25,8 @@ interface Product extends CommercialInfo {
   price: number | string;
   compare_price: number | string | null;
   thumbnail: string | null;
+  thumbnail_url?: string | null;
+  image_url?: string | null;
   featured: boolean;
   category: string | null;
   category_id?: number | string | null;
@@ -63,6 +65,16 @@ const normalizeCategory = (value: unknown): string => {
     .replace(/&/g, 'and')
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/^-+|-+$/g, '');
+};
+
+const resolveProductImage = (product: Product): string => {
+  if (product.thumbnail) {
+    const storageUrl = getStorageUrl(product.thumbnail);
+    if (storageUrl) return storageUrl;
+  }
+  if (product.thumbnail_url) return product.thumbnail_url;
+  if (product.image_url) return product.image_url;
+  return '/placeholder.png';
 };
 
 const unwrapArray = <T,>(data: unknown): T[] => {
@@ -761,15 +773,15 @@ function ProductsPageContent() {
                    className="group glass-card rounded-2xl overflow-hidden border border-[#2a2a30] hover:border-[#00d4aa]/50 transition-all duration-300 animate-fade-in-up"
                  >
                     <div className="relative aspect-video overflow-hidden">
-                       {product.thumbnail ? (
+                       {(product.thumbnail || product.thumbnail_url || product.image_url) ? (
                          <img
-                             src={getStorageUrl(product.thumbnail) || '/placeholder.png'}
+                           src={resolveProductImage(product)}
                            alt={product.name}
                            loading="lazy"
                            decoding="async"
                            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                            onError={(e) => {
-                             (e.target as HTMLImageElement).style.display = 'none';
+                             (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=800&q=80';
                            }}
                          />
                        ) : (
@@ -867,15 +879,15 @@ function ProductsPageContent() {
                    className="group glass-card rounded-2xl overflow-hidden border border-[#2a2a30] hover:border-[#00d4aa]/50 transition-all duration-300 animate-fade-in-up"
                  >
                     <div className="relative aspect-video overflow-hidden">
-                       {product.thumbnail ? (
+                       {(product.thumbnail || product.thumbnail_url || product.image_url) ? (
                          <img
-                             src={getStorageUrl(product.thumbnail) || '/placeholder.png'}
+                           src={resolveProductImage(product)}
                            alt={product.name}
                            loading="lazy"
                            decoding="async"
                            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                            onError={(e) => {
-                             (e.target as HTMLImageElement).style.display = 'none';
+                             (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=800&q=80';
                            }}
                          />
                        ) : (
@@ -986,18 +998,18 @@ function ProductsPageContent() {
             <div className="flex flex-col lg:flex-row">
               {/* Product Image */}
               <div className="lg:w-1/2 relative">
-{quickViewProduct.thumbnail ? (
-                    <img
-                      src={getStorageUrl(quickViewProduct.thumbnail) || '/placeholder.png'}
-                      alt={quickViewProduct.name}
-                      loading="lazy"
-                      decoding="async"
-                     className="w-full h-64 lg:h-full object-cover"
-                     onError={(e) => {
-                       (e.target as HTMLImageElement).style.display = 'none';
-                     }}
-                   />
-                 ) : (
+                {(quickViewProduct.thumbnail || quickViewProduct.thumbnail_url || quickViewProduct.image_url) ? (
+                  <img
+                    src={resolveProductImage(quickViewProduct)}
+                    alt={quickViewProduct.name}
+                    loading="lazy"
+                    decoding="async"
+                    className="w-full h-64 lg:h-full object-cover"
+                    onError={(e) => {
+                      (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=800&q=80';
+                    }}
+                  />
+                ) : (
                   <div className="w-full h-64 lg:h-full bg-linear-to-br from-[#1a1a1f] to-[#2a2a30] flex items-center justify-center">
                     <span className="text-[#737373]">No Image</span>
                   </div>

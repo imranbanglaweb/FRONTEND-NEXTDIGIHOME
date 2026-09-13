@@ -300,65 +300,19 @@ export default function ClientLayout({
                 About
               </Link>
 
-              {/* Store — Click directly navigates to show all products */}
-              <div className="relative">
-                <Link
-                  href="/products"
-                  onMouseEnter={() => setActiveDropdown('store')}
-                  className={`px-3 py-2 rounded-xl text-sm flex items-center gap-1.5 transition-all ${
-                    pathname.startsWith('/store') || pathname.startsWith('/products')
-                      ? 'text-[#00d4aa] font-bold bg-[#00d4aa]/10 border border-[#00d4aa]/25'
-                      : 'text-slate-300 hover:text-white hover:bg-white/5 font-medium'
-                  }`}
-                >
-                  <ShoppingBagIcon className="w-4 h-4 text-[#00d4aa]" />
-                  <span>Store</span>
-                  <span className="text-[9px] font-black px-1.5 py-0.5 rounded-full bg-[#00d4aa] text-black tracking-wider uppercase">Hot</span>
-                  <ChevronDownIcon className={`w-3.5 h-3.5 transition-transform ${activeDropdown === 'store' ? 'rotate-180 text-[#00d4aa]' : ''}`} />
-                </Link>
-                {activeDropdown === 'store' && (
-                  <div
-                    onMouseEnter={() => setActiveDropdown('store')}
-                    className="absolute top-full left-0 mt-2 w-80 rounded-2xl bg-[#0d121f]/98 border border-white/10 p-3 shadow-2xl backdrop-blur-2xl z-50 animate-fade-in-up"
-                  >
-                    <div className="px-3 py-2 mb-2 border-b border-white/5 flex items-center justify-between">
-                      <span className="text-[10px] font-bold uppercase tracking-widest text-[#00d4aa]">Digital Store &amp; Products</span>
-                      <span className="text-[9px] text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full font-bold">All Products</span>
-                    </div>
-                    <div className="space-y-1">
-                      {[
-                        { title: 'Full-Stack Source Code', href: '/products?category=source-code', desc: 'Next.js, Laravel & Node.js codebases', icon: '💻' },
-                        { title: 'Mobile App Templates', href: '/products?category=mobile-apps', desc: 'Flutter iOS & Android applications', icon: '📱' },
-                        { title: 'AI & Automation Scripts', href: '/products?category=scripts', desc: 'n8n workflows, scrapers & bot kits', icon: '🤖' },
-                        { title: 'UI Kits & Design Systems', href: '/products?category=ui-kits', desc: 'Figma files & Tailwind design systems', icon: '🎨' },
-                      ].map((item, idx) => (
-                        <Link
-                          key={idx}
-                          href={item.href}
-                          onClick={() => setActiveDropdown(null)}
-                          className="flex items-start gap-2.5 p-2 rounded-xl hover:bg-white/5 transition-all group"
-                        >
-                          <span className="text-base">{item.icon}</span>
-                          <div>
-                            <div className="text-xs font-semibold text-white group-hover:text-[#00d4aa] transition-colors">{item.title}</div>
-                            <div className="text-[10px] text-slate-400">{item.desc}</div>
-                          </div>
-                        </Link>
-                      ))}
-                    </div>
-                    <div className="pt-2 mt-2 border-t border-white/5">
-                      <Link
-                        href="/products"
-                        onClick={() => setActiveDropdown(null)}
-                        className="flex items-center justify-between px-3 py-2 rounded-xl bg-[#00d4aa]/10 hover:bg-[#00d4aa]/20 text-xs font-bold text-[#00d4aa] transition-all"
-                      >
-                        <span>Show All Products (100+ Catalog)</span>
-                        <ArrowRightIcon className="w-3.5 h-3.5" />
-                      </Link>
-                    </div>
-                  </div>
-                )}
-              </div>
+              {/* Store — Single click navigates directly to show all dynamic digital products */}
+              <Link
+                href="/products"
+                className={`px-3 py-2 rounded-xl text-sm flex items-center gap-1.5 transition-all ${
+                  pathname.startsWith('/store') || pathname.startsWith('/products')
+                    ? 'text-[#00d4aa] font-bold bg-[#00d4aa]/10 border border-[#00d4aa]/25'
+                    : 'text-slate-300 hover:text-white hover:bg-white/5 font-medium'
+                }`}
+              >
+                <ShoppingBagIcon className="w-4 h-4 text-[#00d4aa]" />
+                <span>Store</span>
+                <span className="text-[9px] font-black px-1.5 py-0.5 rounded-full bg-[#00d4aa] text-black tracking-wider uppercase">Hot</span>
+              </Link>
 
               {/* Solutions */}
               <div className="relative">
@@ -867,7 +821,7 @@ export default function ClientLayout({
           </div>
         )}
 
-        <main className="relative z-10 flex-1 pt-20 sm:pt-24 lg:pt-28">
+        <main className="relative z-10 flex-1 pt-16 md:pt-18">
         {children}
       </main>
 

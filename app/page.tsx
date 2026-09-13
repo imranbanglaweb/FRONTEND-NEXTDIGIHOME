@@ -31,7 +31,7 @@ import {
 } from '@heroicons/react/24/outline';
 import { StarIcon as StarIconSolid } from '@heroicons/react/24/solid';
 import Swal from 'sweetalert2';
-import { apiFetch } from './utils/api';
+import { apiFetch, getStorageUrl } from './utils/api';
 
 interface Product {
   id: number | string;
@@ -44,8 +44,20 @@ interface Product {
   category_name?: string | null;
   category_slug?: string | null;
   thumbnail?: string | null;
+  thumbnail_url?: string | null;
+  image_url?: string | null;
   featured?: boolean;
 }
+
+const getProductImage = (prod: Product): string => {
+  if (prod.thumbnail) {
+    const storage = getStorageUrl(prod.thumbnail);
+    if (storage) return storage;
+  }
+  if (prod.thumbnail_url) return prod.thumbnail_url;
+  if (prod.image_url) return prod.image_url;
+  return '/placeholder.png';
+};
 
 interface WelcomeSettings {
   site_title?: string;
@@ -281,7 +293,7 @@ export default function Home() {
       {/* ================================================================ */}
       {/* 1. FULL-WIDTH IMMERSIVE PANORAMIC HERO SECTION                   */}
       {/* ================================================================ */}
-      <section className="relative w-full overflow-hidden pt-36 pb-20 md:pt-44 md:pb-28">
+      <section className="relative w-full overflow-hidden pt-6 pb-16 sm:pt-8 md:pt-10 md:pb-24">
         
         {/* Full-Width Ambient Canvas & Radial Glow Mesh */}
         <div className="absolute inset-0 pointer-events-none -z-10 overflow-hidden">
@@ -411,7 +423,7 @@ export default function Home() {
                     <h3 className="text-xl font-bold text-white mt-0.5">Top Verified Digital Products from NextDigi Store</h3>
                   </div>
                   <Link
-                    href="/store"
+                    href="/products"
                     className="text-xs font-bold text-[#00d4aa] hover:underline flex items-center gap-1 shrink-0"
                   >
                     <span>View All 100+ Products</span>
@@ -420,60 +432,83 @@ export default function Home() {
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-                  {fallbackProducts.slice(0, 3).map((prod) => (
+                  {allProducts.slice(0, 3).map((prod) => (
                     <div
                       key={prod.id}
-                      className="p-5 rounded-2xl bg-gradient-to-br from-[#141b2e] to-[#0c101d] border border-white/10 hover:border-[#00d4aa]/40 transition-all flex flex-col justify-between group"
+                      className="rounded-2xl bg-gradient-to-br from-[#141b2e] to-[#0c101d] border border-white/10 hover:border-[#00d4aa]/40 transition-all flex flex-col justify-between group overflow-hidden shadow-xl"
                     >
-                      <div>
-                        <div className="flex items-center justify-between mb-3">
-                          <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-[#00d4aa]/15 text-[#00d4aa] border border-[#00d4aa]/30">
-                            {prod.category_name}
+                      {/* Dynamic Product Image */}
+                      <div className="relative h-44 w-full bg-[#0b0f19] overflow-hidden border-b border-white/5">
+                        {(prod.thumbnail || prod.thumbnail_url || prod.image_url) ? (
+                          <img
+                            src={getProductImage(prod)}
+                            alt={prod.name}
+                            loading="lazy"
+                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                            onError={(e) => {
+                              (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=800&q=80';
+                            }}
+                          />
+                        ) : (
+                          <div className="w-full h-full bg-gradient-to-br from-[#162035] via-[#101726] to-[#090d16] flex items-center justify-center">
+                            <CodeBracketIcon className="w-10 h-10 text-[#00d4aa]/60" />
+                          </div>
+                        )}
+                        <div className="absolute inset-0 bg-gradient-to-t from-[#0c101d] via-transparent to-black/30 pointer-events-none" />
+                        <div className="absolute top-3 left-3">
+                          <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-[#0d121f]/90 text-[#00d4aa] border border-[#00d4aa]/30 backdrop-blur-md">
+                            {prod.category_name || prod.category || 'Digital Asset'}
                           </span>
-                          <span className="text-[10px] font-extrabold text-amber-400 flex items-center gap-1">
+                        </div>
+                        <div className="absolute top-3 right-3">
+                          <span className="text-[10px] font-extrabold text-amber-400 flex items-center gap-1 bg-black/60 px-2 py-0.5 rounded-full backdrop-blur-md border border-white/10">
                             <StarIconSolid className="w-3.5 h-3.5" /> 5.0
                           </span>
                         </div>
-
-                        <h4 className="text-base font-bold text-white group-hover:text-[#00d4aa] transition-colors line-clamp-1 mb-2">
-                          {prod.name}
-                        </h4>
-
-                        <p className="text-xs text-slate-400 leading-relaxed line-clamp-2 mb-4">
-                          {prod.description}
-                        </p>
-
-                        <div className="flex flex-wrap gap-1.5 mb-4">
-                          <span className="text-[9px] font-mono px-2 py-0.5 rounded bg-white/5 text-slate-300 border border-white/5">Instant Download</span>
-                          <span className="text-[9px] font-mono px-2 py-0.5 rounded bg-white/5 text-slate-300 border border-white/5">Full Source</span>
-                        </div>
                       </div>
 
-                      <div className="pt-3.5 border-t border-white/10 flex items-center justify-between">
+                      <div className="p-5 flex-1 flex flex-col justify-between">
                         <div>
-                          <span className="text-[9px] uppercase font-bold text-slate-500 block">License</span>
-                          <div className="flex items-baseline gap-1.5">
-                            <span className="text-lg font-black text-[#00d4aa]">৳{Number(prod.price).toLocaleString()}</span>
-                            {prod.compare_price && (
-                              <span className="text-xs line-through text-slate-500">৳{Number(prod.compare_price).toLocaleString()}</span>
-                            )}
+                          <h4 className="text-base font-bold text-white group-hover:text-[#00d4aa] transition-colors line-clamp-1 mb-2">
+                            {prod.name}
+                          </h4>
+
+                          <p className="text-xs text-slate-400 leading-relaxed line-clamp-2 mb-4">
+                            {prod.description}
+                          </p>
+
+                          <div className="flex flex-wrap gap-1.5 mb-4">
+                            <span className="text-[9px] font-mono px-2 py-0.5 rounded bg-white/5 text-slate-300 border border-white/5">Instant Download</span>
+                            <span className="text-[9px] font-mono px-2 py-0.5 rounded bg-white/5 text-slate-300 border border-white/5">Commercial License</span>
                           </div>
                         </div>
 
-                        <div className="flex items-center gap-2">
-                          <button
-                            onClick={(e) => handleAddToCart(e, prod)}
-                            className="p-2 rounded-xl bg-white/5 hover:bg-[#00d4aa] hover:text-black text-slate-300 transition-all border border-white/5"
-                            title="Add to cart"
-                          >
-                            <ShoppingBagIcon className="w-4 h-4" />
-                          </button>
-                          <Link
-                            href={`/products/${prod.slug || prod.id}`}
-                            className="px-3.5 py-2 rounded-xl bg-[#00d4aa] hover:bg-[#00e2b6] text-black font-bold text-xs transition-all shadow-md shadow-[#00d4aa]/20"
-                          >
-                            Details
-                          </Link>
+                        <div className="pt-3.5 border-t border-white/10 flex items-center justify-between">
+                          <div>
+                            <span className="text-[9px] uppercase font-bold text-slate-500 block">License</span>
+                            <div className="flex items-baseline gap-1.5">
+                              <span className="text-lg font-black text-[#00d4aa]">৳{Number(prod.price).toLocaleString()}</span>
+                              {prod.compare_price && (
+                                <span className="text-xs line-through text-slate-500">৳{Number(prod.compare_price).toLocaleString()}</span>
+                              )}
+                            </div>
+                          </div>
+
+                          <div className="flex items-center gap-2">
+                            <button
+                              onClick={(e) => handleAddToCart(e, prod)}
+                              className="p-2 rounded-xl bg-white/5 hover:bg-[#00d4aa] hover:text-black text-slate-300 transition-all border border-white/5"
+                              title="Add to cart"
+                            >
+                              <ShoppingBagIcon className="w-4 h-4" />
+                            </button>
+                            <Link
+                              href={`/products/${prod.slug || prod.id}`}
+                              className="px-3.5 py-2 rounded-xl bg-[#00d4aa] hover:bg-[#00e2b6] text-black font-bold text-xs transition-all shadow-md shadow-[#00d4aa]/20"
+                            >
+                              Details
+                            </Link>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -659,33 +694,45 @@ export default function Home() {
                 className="group rounded-2xl bg-[#0f1523]/90 border border-white/8 hover:border-[#00d4aa]/40 transition-all duration-300 flex flex-col justify-between overflow-hidden hover:shadow-xl hover:shadow-[#00d4aa]/5"
               >
                 <div>
-                  {/* Top visual frame */}
-                  <div className="relative h-40 bg-gradient-to-br from-[#162035] via-[#101726] to-[#090d16] p-4 flex flex-col justify-between border-b border-white/5 overflow-hidden">
-                    <div className="flex items-center justify-between z-10">
-                      <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-[#00d4aa]/15 text-[#00d4aa] border border-[#00d4aa]/25">
+                  {/* Top visual frame with dynamic image */}
+                  <div className="relative h-48 bg-[#0b0f19] border-b border-white/5 overflow-hidden group">
+                    {(prod.thumbnail || prod.thumbnail_url || prod.image_url) ? (
+                      <img
+                        src={getProductImage(prod)}
+                        alt={prod.name}
+                        loading="lazy"
+                        decoding="async"
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                        onError={(e) => {
+                          (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=800&q=80';
+                        }}
+                      />
+                    ) : (
+                      <div className="w-full h-full bg-gradient-to-br from-[#162035] via-[#101726] to-[#090d16] flex items-center justify-center">
+                        <CodeBracketIcon className="w-10 h-10 text-[#00d4aa]/60" />
+                      </div>
+                    )}
+
+                    {/* Gradient Overlay & Badges */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#0f1523] via-transparent to-black/40 pointer-events-none" />
+
+                    <div className="absolute top-3 left-3 right-3 flex items-center justify-between z-10">
+                      <span className="text-[10px] font-bold px-2.5 py-1 rounded-full bg-[#0d121f]/90 text-[#00d4aa] border border-[#00d4aa]/30 backdrop-blur-md">
                         {prod.category_name || prod.category || 'Software'}
                       </span>
-                      <span className="text-[9px] font-bold uppercase px-2 py-0.5 rounded-md bg-white/10 text-white backdrop-blur">
+                      <span className="text-[9px] font-bold uppercase px-2 py-0.5 rounded-md bg-black/60 text-white backdrop-blur border border-white/10">
                         Instant Access
                       </span>
                     </div>
 
-                    <div className="flex items-center justify-center my-auto z-10">
-                      <div className="w-12 h-12 rounded-xl bg-[#00d4aa]/10 border border-[#00d4aa]/20 flex items-center justify-center text-[#00d4aa] group-hover:scale-110 transition-transform">
-                        <CodeBracketIcon className="w-6 h-6" />
-                      </div>
-                    </div>
-
-                    <div className="flex items-center justify-between z-10 text-[10px] text-slate-400">
+                    <div className="absolute bottom-2.5 left-3 right-3 flex items-center justify-between z-10 text-[10px]">
                       <div className="flex items-center text-amber-400 gap-0.5">
                         {[...Array(5)].map((_, i) => (
                           <StarIconSolid key={i} className="w-3 h-3" />
                         ))}
                       </div>
-                      <span className="font-semibold text-slate-400">Verified License</span>
+                      <span className="font-semibold text-slate-300 drop-shadow">Verified License</span>
                     </div>
-
-                    <div className="absolute inset-0 bg-[radial-gradient(#00d4aa_1px,transparent_1px)] [background-size:16px_16px] opacity-10 pointer-events-none" />
                   </div>
 
                   {/* Product Details */}
