@@ -335,78 +335,102 @@ export default function Home() {
       )}
 
       {/* ================================================================ */}
-      {/* SECTION 1: HERO SECTION WITH INTERACTIVE LIVE PRODUCT SPOTLIGHT */}
+      {/* SECTION 1: HERO — PREMIUM CINEMATIC SPLIT LAYOUT                 */}
       {/* ================================================================ */}
-      <section className="relative pt-32 pb-16 md:pt-40 md:pb-24 overflow-hidden border-b border-white/5">
-        {/* Ambient Neon Mesh */}
-        <div className="absolute top-1/4 left-1/4 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[450px] bg-gradient-to-tr from-[#00d4aa]/15 via-[#8b5cf6]/15 to-transparent blur-[160px] pointer-events-none rounded-full" />
-        <div className="absolute top-20 right-10 w-[500px] h-[500px] bg-[#38bdf8]/10 blur-[150px] pointer-events-none rounded-full" />
+      <section className="relative pt-36 pb-20 md:pt-48 md:pb-28 overflow-hidden border-b border-white/5">
+        {/* — Multi-layer ambient mesh — */}
+        <div className="absolute inset-0 pointer-events-none overflow-hidden">
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[900px] h-[550px] bg-gradient-to-b from-[#00d4aa]/10 via-[#8b5cf6]/8 to-transparent blur-[140px] rounded-full" />
+          <div className="absolute top-32 right-0 w-[480px] h-[480px] bg-[#8b5cf6]/10 blur-[130px] rounded-full" />
+          <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-[#38bdf8]/8 blur-[120px] rounded-full" />
+          {/* Fine dot-grid overlay */}
+          <div className="absolute inset-0 opacity-[0.04]" style={{ backgroundImage: 'radial-gradient(circle, #ffffff 1px, transparent 1px)', backgroundSize: '28px 28px' }} />
+        </div>
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-            
-            {/* Left: Master Brand Authority */}
-            <div className="lg:col-span-7 text-left">
-              {/* Tagline Pill */}
-              <div className="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-white/5 border border-white/10 text-xs font-semibold tracking-wider text-gray-300 uppercase mb-6 shadow-inner">
-                <span className="w-2 h-2 rounded-full bg-[#00d4aa] animate-pulse" />
-                <span className="font-bold text-white">NEXTDIGIHOME</span>
-                <span className="text-gray-500">•</span>
-                <span className="text-[#00d4aa]">BUILD. LAUNCH. AUTOMATE. GROW.</span>
-              </div>
 
-              {/* Master Headline */}
-              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-white tracking-tight leading-[1.1] mb-6">
-                Technology, AI, Software &{' '}
-                <span className="bg-gradient-to-r from-[#00d4aa] via-[#38bdf8] to-[#8b5cf6] bg-clip-text text-transparent">
-                  Digital Growth
-                </span>{' '}
-                for Modern Businesses
+          {/* ── Breadcrumb / Status row ── */}
+          <div className="flex flex-wrap items-center justify-center gap-3 mb-12">
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#00d4aa]/8 border border-[#00d4aa]/25 text-xs font-bold tracking-widest text-[#00d4aa] uppercase">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#00d4aa] animate-pulse" />
+              Technology Ecosystem
+            </div>
+            <span className="hidden sm:flex items-center gap-2 text-xs text-gray-500">
+              <span className="w-px h-3 bg-white/10" />
+              Web • AI • Growth • SaaS • Digital Store
+            </span>
+          </div>
+
+          {/* ── Main Split Grid ── */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 xl:gap-16 items-center">
+
+            {/* LEFT ─ Brand Authority Column */}
+            <div className="lg:col-span-7 text-center lg:text-left">
+
+              {/* Headline */}
+              <h1 className="text-[2.6rem] sm:text-5xl lg:text-[3.5rem] xl:text-[4rem] font-black text-white tracking-tight leading-[1.08] mb-7">
+                <span className="block text-gray-200">Technology, AI &</span>
+                <span className="block bg-gradient-to-r from-[#00d4aa] via-[#38bdf8] to-[#8b5cf6] bg-clip-text text-transparent pb-1">Digital Growth</span>
+                <span className="block text-white">for Modern Business</span>
               </h1>
 
-              {/* Supporting Copy */}
-              <p className="text-base sm:text-lg text-gray-300 font-normal leading-relaxed max-w-2xl mb-8">
-                We engineer high-performance web platforms, deploy autonomous AI agents, drive predictable customer acquisition, and provide verified, production-ready software source codes.
+              {/* Sub-copy */}
+              <p className="text-base sm:text-lg text-gray-400 leading-relaxed max-w-xl mx-auto lg:mx-0 mb-8">
+                We engineer high-performance web platforms, deploy autonomous AI agents, drive predictable customer acquisition — and provide verified, production-ready digital products.
               </p>
 
-              {/* Action Buttons */}
-              <div className="flex flex-wrap items-center gap-4 mb-10">
+              {/* CTA row */}
+              <div className="flex flex-wrap items-center justify-center lg:justify-start gap-3 mb-10">
                 <Link
                   href="/contact"
-                  className="px-7 py-4 rounded-xl font-bold text-black bg-[#00d4aa] hover:bg-[#00e2b6] transition-all duration-300 shadow-xl shadow-[#00d4aa]/25 flex items-center gap-2 hover:scale-[1.02] text-sm sm:text-base"
+                  className="group relative inline-flex items-center gap-2 px-7 py-3.5 rounded-2xl font-extrabold text-sm text-black bg-[#00d4aa] hover:bg-[#00e2b6] shadow-[0_0_32px_rgba(0,212,170,0.35)] hover:shadow-[0_0_48px_rgba(0,212,170,0.55)] hover:scale-[1.03] active:scale-[0.98] transition-all duration-300"
                 >
+                  <BoltIcon className="w-4 h-4" />
                   <span>Start a Project</span>
-                  <ArrowRightIcon className="w-4 h-4" />
+                  <ArrowRightIcon className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
                 </Link>
                 <Link
                   href="#digital-products"
-                  className="px-6 py-4 rounded-xl font-semibold text-white bg-[#8b5cf6]/10 hover:bg-[#8b5cf6]/20 border border-[#8b5cf6]/30 transition-all duration-300 flex items-center gap-2 text-sm sm:text-base shadow-lg shadow-[#8b5cf6]/10"
+                  className="inline-flex items-center gap-2 px-6 py-3.5 rounded-2xl font-bold text-sm text-white bg-white/5 hover:bg-white/10 border border-white/10 hover:border-[#8b5cf6]/40 shadow-lg transition-all duration-300"
                 >
-                  <ShoppingBagIcon className="w-5 h-5 text-[#a78bfa]" />
-                  <span>Browse Digital Products</span>
+                  <ShoppingBagIcon className="w-4 h-4 text-[#a78bfa]" />
+                  Browse Digital Store
                 </Link>
                 <Link
                   href="/solutions"
-                  className="px-4 py-4 text-xs font-semibold text-gray-400 hover:text-white transition flex items-center gap-1"
+                  className="text-xs font-semibold text-gray-500 hover:text-gray-300 transition flex items-center gap-1"
                 >
                   Explore Solutions →
                 </Link>
               </div>
 
-              {/* Capability Badges */}
-              <div className="flex flex-wrap items-center gap-2 pt-4 border-t border-white/10 text-xs text-gray-400">
-                <span className="font-semibold text-gray-300 uppercase tracking-wider text-[11px] mr-2">Ecosystem:</span>
+              {/* Live stats bar */}
+              <div className="grid grid-cols-3 gap-3 max-w-md mx-auto lg:mx-0 pt-6 border-t border-white/8">
                 {[
-                  { name: 'Custom Software & Web', href: '/solutions' },
-                  { name: 'Autonomous AI Agents', href: '/ai' },
-                  { name: 'Performance Growth', href: '/growth' },
-                  { name: 'Proprietary SaaS', href: '/labs' },
-                  { name: 'Digital Asset Store', href: '/products' }
+                  { val: '150+', label: 'Projects Delivered', color: '#00d4aa' },
+                  { val: '5 Div.', label: 'Service Divisions', color: '#8b5cf6' },
+                  { val: '100+', label: 'Digital Assets', color: '#38bdf8' },
+                ].map((stat, i) => (
+                  <div key={i} className="text-center lg:text-left">
+                    <div className="text-2xl font-black" style={{ color: stat.color }}>{stat.val}</div>
+                    <div className="text-[11px] text-gray-500 leading-tight mt-0.5">{stat.label}</div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Ecosystem badges */}
+              <div className="flex flex-wrap items-center justify-center lg:justify-start gap-2 mt-6">
+                {[
+                  { name: 'Custom Software', href: '/solutions' },
+                  { name: 'AI Agents', href: '/ai' },
+                  { name: 'Growth Marketing', href: '/growth' },
+                  { name: 'SaaS Products', href: '/labs' },
+                  { name: 'Digital Store', href: '/products' },
                 ].map((cap, i) => (
                   <Link
                     key={i}
                     href={cap.href}
-                    className="px-3 py-1 rounded-lg bg-white/5 border border-white/5 hover:border-[#00d4aa]/40 hover:text-white transition text-xs"
+                    className="px-3 py-1 rounded-lg bg-white/4 border border-white/8 hover:border-[#00d4aa]/40 hover:text-white text-[11px] text-gray-400 font-medium transition-all"
                   >
                     {cap.name}
                   </Link>
@@ -414,36 +438,44 @@ export default function Home() {
               </div>
             </div>
 
-            {/* Right: Live Interactive Digital Product Spotlight Card */}
+            {/* RIGHT ─ Interactive Product Spotlight Card */}
             <div className="lg:col-span-5 relative">
-              <div className="relative mx-auto w-full max-w-lg">
-                {/* Glow behind product card */}
-                <div className="absolute -inset-2 bg-gradient-to-r from-[#00d4aa]/30 via-[#8b5cf6]/30 to-[#38bdf8]/30 rounded-3xl blur-2xl opacity-50 pointer-events-none" />
+              <div className="relative mx-auto w-full max-w-[440px]">
 
-                <div className="relative rounded-3xl border border-white/15 bg-[#0e131d]/95 p-6 shadow-2xl backdrop-blur-2xl">
+                {/* Multi-layer glow frame */}
+                <div className="absolute -inset-1 bg-gradient-to-br from-[#00d4aa]/40 via-[#8b5cf6]/30 to-[#ec4899]/20 rounded-[28px] blur-2xl opacity-60 animate-float pointer-events-none" style={{ animationDelay: '1s' }} />
+                <div className="absolute -inset-px rounded-[26px] bg-gradient-to-br from-[#00d4aa]/30 via-[#8b5cf6]/20 to-transparent" />
+
+                <div className="relative rounded-3xl border border-white/12 bg-[#0b0f1a]/96 p-5 shadow-2xl backdrop-blur-2xl overflow-hidden">
+                  {/* Card shimmer bar at top */}
+                  <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#00d4aa]/60 to-transparent" />
+
                   {/* Spotlight Top Bar */}
-                  <div className="flex items-center justify-between pb-4 mb-4 border-b border-white/10">
+                  <div className="flex items-center justify-between pb-4 mb-4 border-b border-white/8">
                     <div className="flex items-center gap-2">
-                      <span className="w-2.5 h-2.5 rounded-full bg-[#00d4aa] animate-ping" />
-                      <span className="text-xs font-bold uppercase tracking-wider text-white">Live Product Spotlight</span>
+                      <div className="relative">
+                        <span className="w-2.5 h-2.5 rounded-full bg-[#00d4aa] block" />
+                        <span className="absolute inset-0 w-2.5 h-2.5 rounded-full bg-[#00d4aa] animate-ping opacity-60" />
+                      </div>
+                      <span className="text-[11px] font-bold uppercase tracking-widest text-white">Live Product Spotlight</span>
                     </div>
-                    <div className="flex items-center gap-1 text-xs text-gray-400">
+                    <div className="flex items-center gap-1">
                       <button
                         onClick={prevHeroProduct}
-                        className="p-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-gray-300 hover:text-white transition"
+                        className="p-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-gray-400 hover:text-white transition"
                         title="Previous Product"
                       >
-                        <ChevronLeftIcon className="w-4 h-4" />
+                        <ChevronLeftIcon className="w-3.5 h-3.5" />
                       </button>
-                      <span className="font-mono text-[11px] px-2">
-                        {(heroProductIndex % allProducts.length) + 1} / {allProducts.length}
+                      <span className="font-mono text-[10px] text-gray-500 px-1.5">
+                        {(heroProductIndex % allProducts.length) + 1}/{allProducts.length}
                       </span>
                       <button
                         onClick={nextHeroProduct}
-                        className="p-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-gray-300 hover:text-white transition"
+                        className="p-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-gray-400 hover:text-white transition"
                         title="Next Product"
                       >
-                        <ChevronRightIcon className="w-4 h-4" />
+                        <ChevronRightIcon className="w-3.5 h-3.5" />
                       </button>
                     </div>
                   </div>
@@ -451,98 +483,105 @@ export default function Home() {
                   {/* Product Preview Image */}
                   <Link
                     href={`/products/${currentHeroProduct.slug || currentHeroProduct.id}`}
-                    className="block relative aspect-[16/10] rounded-2xl overflow-hidden bg-[#131824] border border-white/10 group mb-5"
+                    className="block relative aspect-[16/9] rounded-2xl overflow-hidden bg-[#0d1220] border border-white/8 group mb-4"
                   >
                     {currentHeroProduct.thumbnail ? (
                       <img
                         src={getStorageUrl(currentHeroProduct.thumbnail)!}
                         alt={currentHeroProduct.name}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                       />
                     ) : (
-                      <div className="w-full h-full flex flex-col items-center justify-center bg-gradient-to-br from-[#131824] to-[#0c0f17] text-gray-500">
-                        <ShoppingBagIcon className="w-16 h-16 text-[#00d4aa]/40 mb-2" />
-                        <span className="text-xs font-mono text-gray-400">Verified Software Asset</span>
+                      <div className="w-full h-full flex flex-col items-center justify-center bg-gradient-to-br from-[#0d1220] via-[#111827] to-[#0a0d14]">
+                        <div className="w-14 h-14 rounded-2xl bg-[#00d4aa]/10 border border-[#00d4aa]/20 flex items-center justify-center mb-3">
+                          <ShoppingBagIcon className="w-7 h-7 text-[#00d4aa]/60" />
+                        </div>
+                        <span className="text-[11px] font-mono text-gray-500">Verified Software Asset</span>
                       </div>
                     )}
-                    <div className="absolute top-3 left-3 px-2.5 py-1 rounded-md bg-black/70 backdrop-blur border border-white/10 text-[11px] font-mono font-semibold text-[#00d4aa]">
+                    {/* Badges */}
+                    <div className="absolute top-2.5 left-2.5 px-2 py-1 rounded-lg bg-black/75 backdrop-blur border border-white/10 text-[10px] font-mono font-semibold text-[#00d4aa]">
                       {currentHeroProduct.category_name || currentHeroProduct.category || 'Source Code'}
                     </div>
-                    <div className="absolute top-3 right-3 px-2 py-1 rounded-md bg-[#00d4aa] text-black text-[10px] font-extrabold uppercase tracking-wider flex items-center gap-1">
+                    <div className="absolute top-2.5 right-2.5 px-2 py-1 rounded-lg bg-gradient-to-r from-[#00d4aa] to-[#00b894] text-black text-[9px] font-extrabold uppercase tracking-wider flex items-center gap-1">
                       <FireIcon className="w-3 h-3" />
-                      Instant Download
+                      Instant
                     </div>
+                    {/* Hover overlay */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                   </Link>
 
-                  {/* Product Title & Details */}
+                  {/* Rating + Name */}
                   <div className="mb-4">
-                    <div className="flex items-center gap-1 text-amber-400 mb-1.5">
+                    <div className="flex items-center gap-1 text-amber-400 mb-2">
                       {[...Array(5)].map((_, i) => (
-                        <StarIconSolid key={i} className="w-3.5 h-3.5" />
+                        <StarIconSolid key={i} className="w-3 h-3" />
                       ))}
-                      <span className="text-xs text-gray-400 font-semibold ml-1.5">5.0 (Verified Code)</span>
+                      <span className="text-[10px] text-gray-400 font-semibold ml-1">5.0 Verified</span>
                     </div>
-
                     <Link
                       href={`/products/${currentHeroProduct.slug || currentHeroProduct.id}`}
-                      className="block text-lg font-extrabold text-white hover:text-[#00d4aa] transition line-clamp-1 mb-1.5"
+                      className="block text-base font-extrabold text-white hover:text-[#00d4aa] transition line-clamp-1 mb-1"
                     >
                       {currentHeroProduct.name}
                     </Link>
-                    <p className="text-xs text-gray-400 line-clamp-2 leading-relaxed">
-                      {currentHeroProduct.description || 'Production-grade software codebase with clean architecture and complete setup documentation.'}
+                    <p className="text-[11px] text-gray-500 line-clamp-2 leading-relaxed">
+                      {currentHeroProduct.description || 'Production-grade software codebase with full setup documentation.'}
                     </p>
                   </div>
 
-                  {/* Price & Action Row */}
-                  <div className="pt-4 border-t border-white/10 flex items-center justify-between">
+                  {/* Price & CTA */}
+                  <div className="flex items-center justify-between pt-3.5 border-t border-white/8">
                     <div>
-                      <span className="text-[10px] uppercase font-semibold text-gray-400 block">Instant Access</span>
-                      <div className="flex items-baseline gap-2">
-                        <span className="text-2xl font-black text-[#00d4aa]">
-                          ৳{Number(currentHeroProduct.price).toLocaleString()}
-                        </span>
+                      <span className="text-[9px] uppercase font-bold text-gray-500 tracking-wider block mb-0.5">Full License</span>
+                      <div className="flex items-baseline gap-1.5">
+                        <span className="text-xl font-black text-[#00d4aa]">৳{Number(currentHeroProduct.price).toLocaleString()}</span>
                         {currentHeroProduct.compare_price && (
-                          <span className="text-xs line-through text-gray-500">
-                            ৳{Number(currentHeroProduct.compare_price).toLocaleString()}
-                          </span>
+                          <span className="text-xs line-through text-gray-600">৳{Number(currentHeroProduct.compare_price).toLocaleString()}</span>
                         )}
                       </div>
                     </div>
-
-                    <div className="flex items-center gap-2">
-                      <Link
-                        href={`/products/${currentHeroProduct.slug || currentHeroProduct.id}`}
-                        className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-[#00d4aa] to-[#00b894] hover:from-[#00e2b6] hover:to-[#00d4aa] text-black font-bold text-xs transition shadow-lg shadow-[#00d4aa]/20 flex items-center gap-1.5"
-                      >
-                        <span>View Product</span>
-                        <ArrowRightIcon className="w-3.5 h-3.5" />
-                      </Link>
-                    </div>
+                    <Link
+                      href={`/products/${currentHeroProduct.slug || currentHeroProduct.id}`}
+                      className="px-5 py-2 rounded-xl bg-gradient-to-r from-[#00d4aa] to-[#00b894] hover:from-[#00e2b6] text-black font-bold text-xs transition-all shadow-lg shadow-[#00d4aa]/20 flex items-center gap-1.5"
+                    >
+                      View Product
+                      <ArrowRightIcon className="w-3.5 h-3.5" />
+                    </Link>
                   </div>
 
-                  {/* Thumbnail Mini-Selector for Fast Switching */}
-                  <div className="grid grid-cols-4 gap-2 mt-4 pt-3 border-t border-white/5">
+                  {/* Mini product selector */}
+                  <div className="grid grid-cols-4 gap-1.5 mt-4 pt-3 border-t border-white/5">
                     {allProducts.slice(0, 4).map((p, idx) => (
                       <button
                         key={idx}
                         onClick={() => setHeroProductIndex(idx)}
-                        className={`p-1 rounded-lg border transition text-left overflow-hidden ${
+                        className={`p-1.5 rounded-lg border transition-all text-left overflow-hidden ${
                           (heroProductIndex % allProducts.length) === idx
-                            ? 'border-[#00d4aa] bg-[#00d4aa]/10'
-                            : 'border-white/5 hover:border-white/20 bg-white/5'
+                            ? 'border-[#00d4aa]/60 bg-[#00d4aa]/8 shadow-sm shadow-[#00d4aa]/10'
+                            : 'border-white/5 hover:border-white/15 bg-white/3'
                         }`}
                       >
-                        <div className="text-[10px] font-bold text-gray-300 line-clamp-1">{p.name}</div>
-                        <div className="text-[9px] font-mono text-[#00d4aa]">৳{Number(p.price).toLocaleString()}</div>
+                        <div className="text-[9px] font-bold text-gray-300 line-clamp-1">{p.name}</div>
+                        <div className="text-[8px] font-mono text-[#00d4aa] mt-0.5">৳{Number(p.price).toLocaleString()}</div>
                       </button>
                     ))}
                   </div>
+                </div>
+              </div>
 
+              {/* Floating trust badges */}
+              <div className="absolute -right-4 top-8 hidden xl:flex flex-col gap-2">
+                <div className="flex items-center gap-2 px-3 py-2 rounded-xl bg-[#0e131d]/95 border border-white/10 backdrop-blur text-[10px] font-semibold text-gray-300 shadow-lg animate-float" style={{ animationDelay: '0.5s' }}>
+                  <ShieldCheckIcon className="w-4 h-4 text-[#00d4aa]" />
+                  30-Day Guarantee
+                </div>
+                <div className="flex items-center gap-2 px-3 py-2 rounded-xl bg-[#0e131d]/95 border border-white/10 backdrop-blur text-[10px] font-semibold text-gray-300 shadow-lg animate-float" style={{ animationDelay: '1.5s' }}>
+                  <BoltIcon className="w-4 h-4 text-[#8b5cf6]" />
+                  Instant Download
                 </div>
               </div>
             </div>
-
           </div>
         </div>
       </section>

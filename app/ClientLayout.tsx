@@ -260,23 +260,30 @@ export default function ClientLayout({
         <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(42,42,48,0.3)_1px,transparent_1px),linear-gradient(to_bottom,rgba(42,42,48,0.3)_1px,transparent_1px)] bg-[size:60px_60px]" />
       </div>
 
-        <header className={`header fixed top-0 left-0 right-0 z-50 border-b transition-all duration-300 ${
+        {/* ── Announcement Bar ── */}
+        <div className="fixed top-0 left-0 right-0 z-[51] flex items-center justify-center gap-3 bg-gradient-to-r from-[#00d4aa]/10 via-[#8b5cf6]/10 to-[#ec4899]/10 border-b border-white/5 py-1.5 px-4 text-center text-[11px] font-semibold text-gray-300 backdrop-blur-md">
+          <span className="w-1.5 h-1.5 rounded-full bg-[#00d4aa] animate-pulse shrink-0" />
+          <span>🚀 NextDigiHome — Build. Launch. Automate. Grow. &nbsp;<Link href="/contact" className="text-[#00d4aa] hover:underline font-bold">Start your project →</Link></span>
+        </div>
+
+        <header className={`header fixed top-7 left-0 right-0 z-50 border-b transition-all duration-500 ${
           isScrolled
-            ? 'bg-[#0f0f12]/95 backdrop-blur-xl shadow-lg border-[#2a2a30]'
+            ? 'bg-[#0a0a0d]/96 backdrop-blur-2xl shadow-2xl shadow-black/40 border-white/8'
             : 'bg-transparent border-transparent'
         }`}>
-        <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center py-2 md:py-1 gap-2 lg:gap-4">
-            <Link href="/" className="flex items-center group flex-shrink-0 py-1">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center py-3 md:py-2.5 gap-2 lg:gap-3">
+            {/* Logo – fixed width so nav can center properly */}
+            <Link href="/" className="flex items-center group flex-shrink-0 mr-4">
               <NextDigiLogo
-                size="md"
+                size="sm"
                 subtitle="BUILD • LAUNCH • AUTOMATE • GROW"
                 customLogoUrl={isHydrated && (settings?.site_logo || settings?.admin_logo) ? getLogoUrl(settings.site_logo || settings.admin_logo) : null}
               />
             </Link>
 
-            {/* Desktop Navigation */}
-            <nav className="hidden md:flex min-w-0 items-center gap-0.5 lg:gap-1" onMouseLeave={() => setActiveDropdown(null)}>
+            {/* Desktop Navigation – takes remaining space, centered */}
+            <nav className="hidden lg:flex flex-1 min-w-0 items-center justify-center gap-0.5 xl:gap-1" onMouseLeave={() => setActiveDropdown(null)}>
               <Link 
                 href="/" 
                 className={`px-2.5 py-2 lg:px-3 rounded-lg transition-all duration-200 text-sm font-medium ${pathname === '/' ? 'text-[#00d4aa] bg-[#2a2a30]/50' : 'text-[#fafafa] hover:text-[#00d4aa] hover:bg-[#2a2a30]/50'}`}
@@ -590,8 +597,8 @@ export default function ClientLayout({
               </Link>
             </nav>
 
-            {/* Desktop Actions */}
-            <div className="hidden md:flex items-center gap-1.5 lg:gap-2.5">
+            {/* Desktop Actions – fixed width to balance logo */}
+            <div className="hidden lg:flex items-center gap-2 ml-auto shrink-0">
               <Link href="/cart" className="relative p-2 text-[#fafafa] hover:text-[#00d4aa] transition-colors" title="Shopping Cart">
                 <ShoppingCartIcon className="w-6 h-6" />
                 {cartCount > 0 && (
@@ -633,8 +640,19 @@ export default function ClientLayout({
               )}
             </div>
 
+            {/* Tablet (md) – condensed CTA only */}
+            <div className="hidden md:flex lg:hidden items-center gap-2 ml-auto shrink-0">
+              <Link
+                href="/contact"
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl font-bold text-xs bg-gradient-to-r from-[#00d4aa] to-[#8b5cf6] text-[#0f0f12] shadow-lg hover:brightness-110 active:scale-95 transition-all"
+              >
+                <span>Start Project</span>
+                <ArrowRightIcon className="w-3 h-3" />
+              </Link>
+            </div>
+
             {/* Mobile Menu Button */}
-            <div className="flex md:hidden items-center space-x-2">
+            <div className="flex md:hidden items-center space-x-2 ml-auto">
               <Link href="/cart" className="relative p-2 text-[#fafafa] hover:text-[#00d4aa] transition-colors">
                 <ShoppingCartIcon className="w-6 h-6" />
                 {cartCount > 0 && (
@@ -653,12 +671,16 @@ export default function ClientLayout({
             </div>
           </div>
         </div>
+        {/* Gradient accent line at bottom of header when scrolled */}
+        {isScrolled && (
+          <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#00d4aa]/40 to-transparent" />
+        )}
         </header>
 
         {/* Mobile Menu Drawer with Expandable Accordions */}
         {mobileMenuOpen && (
-          <div className="fixed inset-0 z-40 overflow-y-auto bg-[#0f0f12]/98 backdrop-blur-2xl md:hidden">
-            <div className="pt-20 pb-12 px-4 space-y-3">
+          <div className="fixed inset-0 z-40 overflow-y-auto bg-[#07090e]/98 backdrop-blur-2xl md:hidden">
+            <div className="pt-28 pb-12 px-4 space-y-3">
               <Link
                 href="/"
                 onClick={() => setMobileMenuOpen(false)}

@@ -197,6 +197,36 @@
   animation: paymentBadgeShine 3.8s ease-in-out infinite;
 }
 
+/* ── Hero Section Extras ── */
+@keyframes glowPulse {
+  0%, 100% { box-shadow: 0 0 28px rgba(0, 212, 170, 0.30), 0 0 0 0 rgba(0, 212, 170, 0.15); }
+  50%       { box-shadow: 0 0 52px rgba(0, 212, 170, 0.55), 0 0 0 8px rgba(0, 212, 170, 0); }
+}
+
+@keyframes shimmerCard {
+  0%   { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+
+.animate-glow-pulse {
+  animation: glowPulse 2.8s ease-in-out infinite;
+}
+
+.hero-card-shimmer {
+  background: linear-gradient(90deg, transparent 20%, rgba(0,212,170,0.06) 50%, transparent 80%);
+  background-size: 200% 100%;
+  animation: shimmerCard 3s ease-in-out infinite;
+}
+
+.scrollbar-none {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+
+
 body {
   background: var(--background);
   color: var(--foreground);
@@ -207,8 +237,9 @@ body {
 
 html {
   overflow-x: clip;
-  scroll-padding-top: 96px;
+  scroll-padding-top: 112px;
 }
+
 
 * {
   box-sizing: border-box;
