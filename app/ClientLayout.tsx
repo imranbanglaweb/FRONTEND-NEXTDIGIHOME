@@ -251,20 +251,21 @@ export default function ClientLayout({
 
   return (
     <>
-      {/* Minimal background — single subtle teal glow only */}
+      {/* Sophisticated Dark Ambiance with subtle cyan glow and tech grid */}
       <div className="fixed inset-0 -z-10 overflow-hidden pointer-events-none">
-        <div className="absolute inset-0 bg-[#080808]" />
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[900px] h-[400px] bg-[#00d4aa]/4 blur-[200px] rounded-full" />
-        <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(255,255,255,0.015)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.015)_1px,transparent_1px)] bg-[size:72px_72px]" />
+        <div className="absolute inset-0 bg-[#090d16]" />
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[500px] bg-gradient-to-b from-[#00d4aa]/8 via-[#38bdf8]/4 to-transparent blur-[160px] rounded-full" />
+        <div className="absolute top-1/3 right-0 w-[500px] h-[500px] bg-[#6366f1]/4 blur-[180px] rounded-full" />
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:64px_64px] opacity-60" />
       </div>
 
-        <header className={`header fixed top-0 left-0 right-0 z-50 border-b transition-all duration-300 ${
-          isScrolled
-            ? 'bg-[#080808]/95 backdrop-blur-xl border-white/6'
-            : 'bg-transparent border-transparent'
-        }`}>
-        <div className="max-w-7xl mx-auto px-6 lg:px-8">
-          <div className="flex items-center h-16 gap-8">
+      <header className={`header fixed top-0 left-0 right-0 z-50 border-b transition-all duration-300 ${
+        isScrolled
+          ? 'bg-[#090d16]/95 backdrop-blur-xl border-white/10 shadow-lg shadow-black/30'
+          : 'bg-[#090d16]/75 backdrop-blur-md border-white/5'
+      }`}>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center h-16 md:h-18 gap-6 justify-between">
             {/* Logo */}
             <Link href="/" className="flex items-center group flex-shrink-0">
               <NextDigiLogo
@@ -469,41 +470,89 @@ export default function ClientLayout({
                 )}
               </div>
 
-              {/* Store — standalone nav item */}
-              <Link
-                href="/store"
-                className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
-                  pathname === '/store' || pathname === '/products'
-                    ? 'text-[#00d4aa] font-semibold'
-                    : 'text-[#777] hover:text-white'
-                }`}
-              >
-                Store
-              </Link>
+              {/* Digital Store - Featured Menu with Category Dropdown */}
+              <div className="relative">
+                <button
+                  onMouseEnter={() => setActiveDropdown('store')}
+                  onClick={() => setActiveDropdown(activeDropdown === 'store' ? null : 'store')}
+                  className={`px-3 py-1.5 rounded-lg text-sm flex items-center gap-1.5 transition-all ${
+                    pathname.startsWith('/store') || pathname.startsWith('/products')
+                      ? 'text-[#00d4aa] font-bold bg-[#00d4aa]/10 border border-[#00d4aa]/30'
+                      : 'text-gray-300 hover:text-[#00d4aa] hover:bg-white/5 font-medium'
+                  }`}
+                >
+                  <ShoppingBagIcon className="w-4 h-4 text-[#00d4aa]" />
+                  <span>Store</span>
+                  <span className="text-[9px] font-black px-1.5 py-0.5 rounded-full bg-[#00d4aa] text-black tracking-wider uppercase">Hot</span>
+                  <ChevronDownIcon className={`w-3 h-3 transition-transform ${activeDropdown === 'store' ? 'rotate-180' : ''}`} />
+                </button>
+                {activeDropdown === 'store' && (
+                  <div
+                    onMouseEnter={() => setActiveDropdown('store')}
+                    className="absolute top-full left-0 mt-2 w-80 rounded-2xl bg-[#0d121f]/98 border border-white/10 p-3 shadow-2xl backdrop-blur-2xl z-50 animate-fade-in-up"
+                  >
+                    <div className="px-3 py-2 mb-2 border-b border-white/5 flex items-center justify-between">
+                      <span className="text-[10px] font-bold uppercase tracking-widest text-[#00d4aa]">Digital Assets &amp; Source Code</span>
+                      <span className="text-[9px] text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full font-bold">Instant Delivery</span>
+                    </div>
+                    <div className="space-y-1">
+                      {[
+                        { title: 'Full-Stack Source Code', href: '/products?category=source-code', desc: 'Next.js, Laravel & Node.js codebases', icon: '💻' },
+                        { title: 'Mobile App Templates', href: '/products?category=mobile-apps', desc: 'Flutter iOS & Android applications', icon: '📱' },
+                        { title: 'AI & Automation Scripts', href: '/products?category=scripts', desc: 'n8n workflows, scrapers & bot kits', icon: '🤖' },
+                        { title: 'UI Kits & Design Systems', href: '/products?category=ui-kits', desc: 'Figma files & Tailwind design systems', icon: '🎨' },
+                      ].map((item, idx) => (
+                        <Link
+                          key={idx}
+                          href={item.href}
+                          onClick={() => setActiveDropdown(null)}
+                          className="flex items-start gap-2.5 p-2 rounded-xl hover:bg-white/5 transition-all group"
+                        >
+                          <span className="text-base">{item.icon}</span>
+                          <div>
+                            <div className="text-xs font-semibold text-white group-hover:text-[#00d4aa] transition-colors">{item.title}</div>
+                            <div className="text-[10px] text-slate-400">{item.desc}</div>
+                          </div>
+                        </Link>
+                      ))}
+                    </div>
+                    <div className="pt-2 mt-2 border-t border-white/5">
+                      <Link
+                        href="/store"
+                        onClick={() => setActiveDropdown(null)}
+                        className="flex items-center justify-between px-3 py-2 rounded-xl bg-[#00d4aa]/10 hover:bg-[#00d4aa]/15 text-xs font-bold text-[#00d4aa] transition-all"
+                      >
+                        <span>Visit Full Store (100+ Products)</span>
+                        <ArrowRightIcon className="w-3.5 h-3.5" />
+                      </Link>
+                    </div>
+                  </div>
+                )}
+              </div>
 
               <Link href="/case-studies"
                 className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
-                  pathname === '/case-studies' ? 'text-white font-semibold' : 'text-[#777] hover:text-white'
+                  pathname === '/case-studies' ? 'text-white font-semibold' : 'text-gray-300 hover:text-white'
                 }`}>
                 Case Studies
               </Link>
               <Link href="/about"
                 className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
-                  pathname === '/about' ? 'text-white font-semibold' : 'text-[#777] hover:text-white'
+                  pathname === '/about' ? 'text-white font-semibold' : 'text-gray-300 hover:text-white'
                 }`}>
                 About
               </Link>
               <Link href="/contact"
                 className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
-                  pathname === '/contact' ? 'text-white font-semibold' : 'text-[#777] hover:text-white'
+                  pathname === '/contact' ? 'text-white font-semibold' : 'text-gray-300 hover:text-white'
                 }`}>
                 Contact
               </Link>
             </nav>
 
             {/* Right side: cart + CTA + auth */}
-            <div className="hidden lg:flex items-center gap-3 ml-auto shrink-0">
-              <Link href="/cart" className="relative p-2 text-[#555] hover:text-white transition-colors" title="Shopping Cart">
+            <div className="hidden lg:flex items-center gap-3.5 ml-auto shrink-0">
+              <Link href="/cart" className="relative p-2 text-gray-300 hover:text-[#00d4aa] transition-colors" title="Shopping Cart">
                 <ShoppingCartIcon className="w-5 h-5" />
                 {cartCount > 0 && (
                   <span className="absolute -top-1 -right-1 w-4 h-4 bg-[#00d4aa] rounded-full text-[10px] font-bold text-black flex items-center justify-center">
@@ -513,21 +562,21 @@ export default function ClientLayout({
               </Link>
               <Link
                 href="/contact"
-                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl font-bold text-sm bg-[#00d4aa] text-black hover:bg-[#00e2b6] active:scale-95 transition-all"
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-xl font-bold text-sm bg-[#00d4aa] text-black hover:bg-[#00e2b6] shadow-[0_0_20px_rgba(0,212,170,0.25)] active:scale-95 transition-all"
               >
-                Start a Project
+                <span>Start a Project</span>
                 <ArrowRightIcon className="w-3.5 h-3.5" />
               </Link>
               {isAuthenticated ? (
                 <>
-                  <Link href="/dashboard" className="text-xs font-semibold text-[#555] hover:text-white transition-colors">Dashboard</Link>
+                  <Link href="/dashboard" className="text-xs font-semibold text-gray-300 hover:text-white transition-colors">Dashboard</Link>
                   <button
                     onClick={() => { localStorage.removeItem('auth_token'); localStorage.removeItem('customer_email'); window.location.href = '/'; }}
-                    className="text-xs font-semibold text-[#555] hover:text-red-400 transition-colors"
+                    className="text-xs font-semibold text-gray-300 hover:text-red-400 transition-colors"
                   >Logout</button>
                 </>
               ) : (
-                <Link href="/signin" className="text-xs font-semibold text-[#555] hover:text-white transition-colors">Sign In</Link>
+                <Link href="/signin" className="text-xs font-semibold text-gray-300 hover:text-white transition-colors">Sign In</Link>
               )}
             </div>
 
