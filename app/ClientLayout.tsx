@@ -266,21 +266,23 @@ export default function ClientLayout({
       }`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center h-16 md:h-18 gap-6 justify-between">
-            {/* Logo */}
+            {/* Dynamic Backend Logo */}
             <Link href="/" className="flex items-center group flex-shrink-0">
               <NextDigiLogo
                 size="sm"
                 subtitle=""
-                customLogoUrl={isHydrated && (settings?.site_logo || settings?.admin_logo) ? getLogoUrl(settings.site_logo || settings.admin_logo) : null}
+                customLogoUrl={getLogoUrl(settings?.site_logo || settings?.admin_logo || 'logo.png')}
               />
             </Link>
 
             {/* Desktop Navigation */}
-            <nav className="hidden lg:flex flex-1 min-w-0 items-center gap-1" onMouseLeave={() => setActiveDropdown(null)}>
+            <nav className="hidden lg:flex flex-1 min-w-0 items-center gap-1.5 ml-4" onMouseLeave={() => setActiveDropdown(null)}>
               <Link
                 href="/"
-                className={`px-3 py-2 rounded-lg text-sm transition-colors ${
-                  pathname === '/' ? 'text-white font-semibold' : 'text-[#777] hover:text-white font-medium'
+                className={`px-3 py-2 rounded-xl text-sm transition-all ${
+                  pathname === '/'
+                    ? 'text-[#00d4aa] font-bold bg-[#00d4aa]/10 border border-[#00d4aa]/25'
+                    : 'text-slate-300 hover:text-white hover:bg-white/5 font-medium'
                 }`}
               >
                 Home
@@ -291,17 +293,19 @@ export default function ClientLayout({
                 <button
                   onMouseEnter={() => setActiveDropdown('solutions')}
                   onClick={() => setActiveDropdown(activeDropdown === 'solutions' ? null : 'solutions')}
-                  className={`px-3 py-2 rounded-lg text-sm flex items-center gap-1 transition-colors ${
-                    pathname.startsWith('/solutions') ? 'text-white font-semibold' : 'text-[#777] hover:text-white font-medium'
+                  className={`px-3 py-2 rounded-xl text-sm flex items-center gap-1.5 transition-all ${
+                    pathname.startsWith('/solutions')
+                      ? 'text-[#00d4aa] font-bold bg-[#00d4aa]/10 border border-[#00d4aa]/25'
+                      : 'text-slate-300 hover:text-white hover:bg-white/5 font-medium'
                   }`}
                 >
-                  Solutions
-                  <ChevronDownIcon className={`w-3.5 h-3.5 transition-transform ${activeDropdown === 'solutions' ? 'rotate-180' : ''}`} />
+                  <span>Solutions</span>
+                  <ChevronDownIcon className={`w-3.5 h-3.5 transition-transform ${activeDropdown === 'solutions' ? 'rotate-180 text-[#00d4aa]' : ''}`} />
                 </button>
                 {activeDropdown === 'solutions' && (
                   <div
                     onMouseEnter={() => setActiveDropdown('solutions')}
-                    className="absolute top-full left-0 mt-2 w-72 rounded-2xl bg-[#111]/98 border border-white/8 p-3 shadow-2xl backdrop-blur-xl z-50 animate-fade-in-up"
+                    className="absolute top-full left-0 mt-2 w-72 rounded-2xl bg-[#0d121f]/98 border border-white/10 p-3 shadow-2xl backdrop-blur-2xl z-50 animate-fade-in-up"
                   >
                     <div className="px-3 py-2 mb-2 border-b border-white/5">
                       <span className="text-[10px] font-bold uppercase tracking-widest text-[#00d4aa]">Solutions</span>
@@ -338,17 +342,19 @@ export default function ClientLayout({
                 <button
                   onMouseEnter={() => setActiveDropdown('ai')}
                   onClick={() => setActiveDropdown(activeDropdown === 'ai' ? null : 'ai')}
-                  className={`px-3 py-2 rounded-lg text-sm flex items-center gap-1 transition-colors ${
-                    pathname.startsWith('/ai') ? 'text-white font-semibold' : 'text-[#777] hover:text-white font-medium'
+                  className={`px-3 py-2 rounded-xl text-sm flex items-center gap-1.5 transition-all ${
+                    pathname.startsWith('/ai')
+                      ? 'text-[#00d4aa] font-bold bg-[#00d4aa]/10 border border-[#00d4aa]/25'
+                      : 'text-slate-300 hover:text-white hover:bg-white/5 font-medium'
                   }`}
                 >
-                  AI &amp; Automation
-                  <ChevronDownIcon className={`w-3.5 h-3.5 transition-transform ${activeDropdown === 'ai' ? 'rotate-180' : ''}`} />
+                  <span>AI &amp; Automation</span>
+                  <ChevronDownIcon className={`w-3.5 h-3.5 transition-transform ${activeDropdown === 'ai' ? 'rotate-180 text-[#00d4aa]' : ''}`} />
                 </button>
                 {activeDropdown === 'ai' && (
                   <div
                     onMouseEnter={() => setActiveDropdown('ai')}
-                    className="absolute top-full left-0 mt-2 w-68 rounded-2xl bg-[#111]/98 border border-white/8 p-3 shadow-2xl backdrop-blur-xl z-50 animate-fade-in-up"
+                    className="absolute top-full left-0 mt-2 w-72 rounded-2xl bg-[#0d121f]/98 border border-white/10 p-3 shadow-2xl backdrop-blur-2xl z-50 animate-fade-in-up"
                   >
                     <div className="px-3 py-2 mb-2 border-b border-white/5">
                       <span className="text-[10px] font-bold uppercase tracking-widest text-[#00d4aa]">AI & Automation</span>
@@ -362,9 +368,9 @@ export default function ClientLayout({
                         { title: 'AI Video', href: '/ai/ai-video', desc: 'Synthetic avatars & marketing videos' },
                       ].map((sub, idx) => (
                         <Link key={idx} href={sub.href} onClick={() => setActiveDropdown(null)}
-                          className="flex flex-col px-3 py-1.5 rounded-xl hover:bg-white/4 transition-all">
+                          className="flex flex-col px-3 py-1.5 rounded-xl hover:bg-white/5 transition-all">
                           <span className="text-sm font-medium text-white">{sub.title}</span>
-                          <span className="text-[11px] text-[#555]">{sub.desc}</span>
+                          <span className="text-[11px] text-slate-400">{sub.desc}</span>
                         </Link>
                       ))}
                     </div>
@@ -383,17 +389,19 @@ export default function ClientLayout({
                 <button
                   onMouseEnter={() => setActiveDropdown('growth')}
                   onClick={() => setActiveDropdown(activeDropdown === 'growth' ? null : 'growth')}
-                  className={`px-3 py-2 rounded-lg text-sm flex items-center gap-1 transition-colors ${
-                    pathname.startsWith('/growth') ? 'text-white font-semibold' : 'text-[#777] hover:text-white font-medium'
+                  className={`px-3 py-2 rounded-xl text-sm flex items-center gap-1.5 transition-all ${
+                    pathname.startsWith('/growth')
+                      ? 'text-[#00d4aa] font-bold bg-[#00d4aa]/10 border border-[#00d4aa]/25'
+                      : 'text-slate-300 hover:text-white hover:bg-white/5 font-medium'
                   }`}
                 >
-                  Growth
-                  <ChevronDownIcon className={`w-3.5 h-3.5 transition-transform ${activeDropdown === 'growth' ? 'rotate-180' : ''}`} />
+                  <span>Growth</span>
+                  <ChevronDownIcon className={`w-3.5 h-3.5 transition-transform ${activeDropdown === 'growth' ? 'rotate-180 text-[#00d4aa]' : ''}`} />
                 </button>
                 {activeDropdown === 'growth' && (
                   <div
                     onMouseEnter={() => setActiveDropdown('growth')}
-                    className="absolute top-full left-0 mt-2 w-64 rounded-2xl bg-[#111]/98 border border-white/8 p-3 shadow-2xl backdrop-blur-xl z-50 animate-fade-in-up"
+                    className="absolute top-full left-0 mt-2 w-72 rounded-2xl bg-[#0d121f]/98 border border-white/10 p-3 shadow-2xl backdrop-blur-2xl z-50 animate-fade-in-up"
                   >
                     <div className="px-3 py-2 mb-2 border-b border-white/5">
                       <span className="text-[10px] font-bold uppercase tracking-widest text-[#00d4aa]">Growth Marketing</span>
@@ -407,9 +415,9 @@ export default function ClientLayout({
                         { title: 'Analytics & Tracking', href: '/growth/analytics', desc: 'CAPI & conversion pixels' },
                       ].map((sub, idx) => (
                         <Link key={idx} href={sub.href} onClick={() => setActiveDropdown(null)}
-                          className="flex flex-col px-3 py-1.5 rounded-xl hover:bg-white/4 transition-all">
+                          className="flex flex-col px-3 py-1.5 rounded-xl hover:bg-white/5 transition-all">
                           <span className="text-sm font-medium text-white">{sub.title}</span>
-                          <span className="text-[11px] text-[#555]">{sub.desc}</span>
+                          <span className="text-[11px] text-slate-400">{sub.desc}</span>
                         </Link>
                       ))}
                     </div>
@@ -428,17 +436,19 @@ export default function ClientLayout({
                 <button
                   onMouseEnter={() => setActiveDropdown('products')}
                   onClick={() => setActiveDropdown(activeDropdown === 'products' ? null : 'products')}
-                  className={`px-3 py-2 rounded-lg text-sm flex items-center gap-1 transition-colors ${
-                    pathname.startsWith('/labs') ? 'text-white font-semibold' : 'text-[#777] hover:text-white font-medium'
+                  className={`px-3 py-2 rounded-xl text-sm flex items-center gap-1.5 transition-all ${
+                    pathname.startsWith('/labs')
+                      ? 'text-[#00d4aa] font-bold bg-[#00d4aa]/10 border border-[#00d4aa]/25'
+                      : 'text-slate-300 hover:text-white hover:bg-white/5 font-medium'
                   }`}
                 >
-                  Products
-                  <ChevronDownIcon className={`w-3.5 h-3.5 transition-transform ${activeDropdown === 'products' ? 'rotate-180' : ''}`} />
+                  <span>Labs</span>
+                  <ChevronDownIcon className={`w-3.5 h-3.5 transition-transform ${activeDropdown === 'products' ? 'rotate-180 text-[#00d4aa]' : ''}`} />
                 </button>
                 {activeDropdown === 'products' && (
                   <div
                     onMouseEnter={() => setActiveDropdown('products')}
-                    className="absolute top-full left-0 mt-2 w-72 rounded-2xl bg-[#111]/98 border border-white/8 p-3 shadow-2xl backdrop-blur-xl z-50 animate-fade-in-up"
+                    className="absolute top-full left-0 mt-2 w-72 rounded-2xl bg-[#0d121f]/98 border border-white/10 p-3 shadow-2xl backdrop-blur-2xl z-50 animate-fade-in-up"
                   >
                     <div className="px-3 py-2 mb-2 border-b border-white/5">
                       <span className="text-[10px] font-bold uppercase tracking-widest text-[#00d4aa]">SaaS Products</span>
@@ -450,13 +460,13 @@ export default function ClientLayout({
                         { title: 'NextDigi Automate', href: '/labs/automate', sub: 'Visual workflow automation', badge: 'Soon', ext: 'https://automate.nextdigihome.com' },
                         { title: 'Garibondhu360', href: '/labs/garibondhu360', sub: 'Workshop & fleet management ERP', badge: 'Live', ext: 'https://garibondhu360.nextdigihome.com' },
                       ].map((p, idx) => (
-                        <div key={idx} className="flex items-center justify-between px-3 py-1.5 rounded-xl hover:bg-white/4 transition-all">
+                        <div key={idx} className="flex items-center justify-between px-3 py-1.5 rounded-xl hover:bg-white/5 transition-all">
                           <Link href={p.href} onClick={() => setActiveDropdown(null)} className="flex flex-col flex-1 min-w-0">
                             <span className="text-sm font-medium text-white">{p.title}</span>
-                            <span className="text-[11px] text-[#555]">{p.sub}</span>
+                            <span className="text-[11px] text-slate-400">{p.sub}</span>
                           </Link>
                           <a href={p.ext} target="_blank" rel="noopener noreferrer"
-                            className="ml-2 text-[10px] font-bold px-2 py-0.5 rounded bg-[#00d4aa]/8 text-[#00d4aa] border border-[#00d4aa]/15 shrink-0">{p.badge}</a>
+                            className="ml-2 text-[10px] font-bold px-2 py-0.5 rounded bg-[#00d4aa]/10 text-[#00d4aa] border border-[#00d4aa]/20 shrink-0">{p.badge}</a>
                         </div>
                       ))}
                     </div>

@@ -50,11 +50,10 @@ export default function NextDigiLogo({
 
   const hasCustomLogo = Boolean(
     customLogoUrl &&
-    !customLogoUrl.includes('/logo.png') &&
     !imageFailed
   );
 
-  // If a valid custom logo exists, render it FLAT with unrestricted width for high visibility
+  // If a valid custom logo exists from the backend API, render it with crisp sizing
   if (hasCustomLogo && customLogoUrl) {
     return (
       <div className={`relative flex items-center select-none ${heightMap[size]} ${className}`}>
@@ -62,7 +61,7 @@ export default function NextDigiLogo({
           src={customLogoUrl}
           alt="NEXTDIGI"
           decoding="async"
-          className="h-full w-auto max-w-[260px] sm:max-w-[340px] md:max-w-[420px] object-contain filter drop-shadow-[0_2px_12px_rgba(255,255,255,0.2)] drop-shadow-[0_4px_24px_rgba(0,212,170,0.3)] brightness-110 contrast-105 transition-transform duration-300 group-hover:scale-105"
+          className="h-full w-auto max-h-10 sm:max-h-12 md:max-h-14 max-w-[240px] sm:max-w-[320px] object-contain transition-transform duration-300 group-hover:scale-105"
           onError={() => setImageFailed(true)}
         />
       </div>
