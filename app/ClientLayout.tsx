@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { 
   ShoppingCartIcon, 
   Bars3Icon, 
@@ -70,6 +70,24 @@ export default function ClientLayout({
   const [subscribed, setSubscribed] = useState(false);
   const [isHydrated, setIsHydrated] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
+  const dropdownTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  const handleOpenDropdown = (menu: string) => {
+    if (dropdownTimeoutRef.current) {
+      clearTimeout(dropdownTimeoutRef.current);
+      dropdownTimeoutRef.current = null;
+    }
+    setActiveDropdown(menu);
+  };
+
+  const handleCloseDropdown = () => {
+    if (dropdownTimeoutRef.current) {
+      clearTimeout(dropdownTimeoutRef.current);
+    }
+    dropdownTimeoutRef.current = setTimeout(() => {
+      setActiveDropdown(null);
+    }, 180);
+  };
   const [mobileExpanded, setMobileExpanded] = useState<Record<string, boolean>>({});
   const [settings, setSettings] = useState<{
       site_logo?: string | null;
@@ -276,7 +294,7 @@ export default function ClientLayout({
             </Link>
 
             {/* Desktop Navigation */}
-            <nav className="hidden lg:flex flex-1 min-w-0 items-center gap-1.5 ml-4" onMouseLeave={() => setActiveDropdown(null)}>
+            <nav className="hidden lg:flex flex-1 min-w-0 items-center gap-1.5 ml-4">
               <Link
                 href="/"
                 className={`px-3 py-2 rounded-xl text-sm transition-all ${
@@ -315,9 +333,12 @@ export default function ClientLayout({
               </Link>
 
               {/* Solutions */}
-              <div className="relative">
+              <div
+                className="relative"
+                onMouseEnter={() => handleOpenDropdown('solutions')}
+                onMouseLeave={handleCloseDropdown}
+              >
                 <button
-                  onMouseEnter={() => setActiveDropdown('solutions')}
                   onClick={() => setActiveDropdown(activeDropdown === 'solutions' ? null : 'solutions')}
                   className={`px-3 py-2 rounded-xl text-sm flex items-center gap-1.5 transition-all ${
                     pathname.startsWith('/solutions')
@@ -329,44 +350,54 @@ export default function ClientLayout({
                   <ChevronDownIcon className={`w-3.5 h-3.5 transition-transform ${activeDropdown === 'solutions' ? 'rotate-180 text-[#00d4aa]' : ''}`} />
                 </button>
                 {activeDropdown === 'solutions' && (
-                  <div
-                    onMouseEnter={() => setActiveDropdown('solutions')}
-                    className="absolute top-full left-0 mt-2 w-72 rounded-2xl bg-[#0d121f]/98 border border-white/10 p-3 shadow-2xl backdrop-blur-2xl z-50 animate-fade-in-up"
-                  >
-                    <div className="px-3 py-2 mb-2 border-b border-white/5">
-                      <span className="text-[10px] font-bold uppercase tracking-widest text-[#00d4aa]">Solutions</span>
-                    </div>
-                    <div className="space-y-0.5">
-                      {[
-                        { title: 'Web Development', href: '/solutions/web-development', desc: 'Next.js & React platforms' },
-                        { title: 'E-commerce', href: '/solutions/ecommerce', desc: 'bKash, Nagad & Stripe checkout' },
-                        { title: 'Mobile Apps', href: '/solutions/mobile-app', desc: 'Flutter iOS & Android' },
-                        { title: 'Custom Software', href: '/solutions/custom-software', desc: 'Enterprise ERPs & systems' },
-                        { title: 'SaaS Development', href: '/solutions/saas-development', desc: 'Multi-tenant cloud apps' },
-                        { title: 'API & Integrations', href: '/solutions/api-integrations', desc: 'Payment, CRM & courier APIs' },
-                        { title: 'Hosting & Maintenance', href: '/solutions/hosting-maintenance', desc: 'DevOps & 24/7 reliability' },
-                      ].map((sub, idx) => (
-                        <Link key={idx} href={sub.href} onClick={() => setActiveDropdown(null)}
-                          className="flex flex-col px-3 py-1.5 rounded-xl hover:bg-white/4 transition-all">
-                          <span className="text-sm font-medium text-white">{sub.title}</span>
-                          <span className="text-[11px] text-[#555]">{sub.desc}</span>
+                  <div className="absolute top-full left-0 pt-2 z-50 animate-fade-in">
+                    <div className="w-[520px] rounded-2xl bg-[#0d121f]/98 border border-white/10 p-3.5 shadow-2xl backdrop-blur-2xl">
+                      <div className="px-3 py-2 mb-2 border-b border-white/5 flex items-center justify-between">
+                        <span className="text-[10px] font-bold uppercase tracking-widest text-[#00d4aa]">Engineering Solutions</span>
+                        <span className="text-[10px] text-slate-400">7 Core Verticals</span>
+                      </div>
+                      <div className="grid grid-cols-2 gap-1">
+                        {[
+                          { title: 'Web Development', href: '/solutions/web-development', desc: 'Next.js & React platforms' },
+                          { title: 'E-commerce', href: '/solutions/ecommerce', desc: 'bKash, Nagad & Stripe checkout' },
+                          { title: 'Mobile Apps', href: '/solutions/mobile-app', desc: 'Flutter iOS & Android' },
+                          { title: 'Custom Software', href: '/solutions/custom-software', desc: 'Enterprise ERPs & systems' },
+                          { title: 'SaaS Development', href: '/solutions/saas-development', desc: 'Multi-tenant cloud apps' },
+                          { title: 'API & Integrations', href: '/solutions/api-integrations', desc: 'Payment, CRM & courier APIs' },
+                          { title: 'Hosting & Maintenance', href: '/solutions/hosting-maintenance', desc: 'DevOps & 24/7 reliability' },
+                        ].map((sub, idx) => (
+                          <Link
+                            key={idx}
+                            href={sub.href}
+                            onClick={() => setActiveDropdown(null)}
+                            className="flex flex-col px-3 py-2 rounded-xl hover:bg-white/5 transition-all group"
+                          >
+                            <span className="text-sm font-semibold text-white group-hover:text-[#00d4aa] transition-colors">{sub.title}</span>
+                            <span className="text-[11px] text-slate-400 group-hover:text-slate-300">{sub.desc}</span>
+                          </Link>
+                        ))}
+                      </div>
+                      <div className="pt-2.5 mt-2 border-t border-white/5">
+                        <Link
+                          href="/solutions"
+                          onClick={() => setActiveDropdown(null)}
+                          className="flex items-center justify-between px-3 py-1.5 text-xs font-semibold text-[#00d4aa] hover:underline"
+                        >
+                          View All Solutions <ArrowRightIcon className="w-3.5 h-3.5" />
                         </Link>
-                      ))}
-                    </div>
-                    <div className="pt-2 mt-2 border-t border-white/5">
-                      <Link href="/solutions" onClick={() => setActiveDropdown(null)}
-                        className="flex items-center justify-between px-3 py-1.5 text-xs font-semibold text-[#00d4aa] hover:underline">
-                        View All Solutions <ArrowRightIcon className="w-3.5 h-3.5" />
-                      </Link>
+                      </div>
                     </div>
                   </div>
                 )}
               </div>
 
-              {/* AI */}
-              <div className="relative">
+              {/* AI & Automation */}
+              <div
+                className="relative"
+                onMouseEnter={() => handleOpenDropdown('ai')}
+                onMouseLeave={handleCloseDropdown}
+              >
                 <button
-                  onMouseEnter={() => setActiveDropdown('ai')}
                   onClick={() => setActiveDropdown(activeDropdown === 'ai' ? null : 'ai')}
                   className={`px-3 py-2 rounded-xl text-sm flex items-center gap-1.5 transition-all ${
                     pathname.startsWith('/ai')
@@ -378,42 +409,52 @@ export default function ClientLayout({
                   <ChevronDownIcon className={`w-3.5 h-3.5 transition-transform ${activeDropdown === 'ai' ? 'rotate-180 text-[#00d4aa]' : ''}`} />
                 </button>
                 {activeDropdown === 'ai' && (
-                  <div
-                    onMouseEnter={() => setActiveDropdown('ai')}
-                    className="absolute top-full left-0 mt-2 w-72 rounded-2xl bg-[#0d121f]/98 border border-white/10 p-3 shadow-2xl backdrop-blur-2xl z-50 animate-fade-in-up"
-                  >
-                    <div className="px-3 py-2 mb-2 border-b border-white/5">
-                      <span className="text-[10px] font-bold uppercase tracking-widest text-[#00d4aa]">AI & Automation</span>
-                    </div>
-                    <div className="space-y-0.5">
-                      {[
-                        { title: 'AI Agents', href: '/ai/ai-agents', desc: 'Autonomous task & research agents' },
-                        { title: 'AI Chatbots', href: '/ai/chatbots', desc: 'RAG-powered bots for web & WhatsApp' },
-                        { title: 'AI Support', href: '/ai/ai-support', desc: '24/7 bilingual customer support' },
-                        { title: 'Workflow Automation', href: '/ai/automation', desc: 'Zero-touch pipelines & APIs' },
-                        { title: 'AI Video', href: '/ai/ai-video', desc: 'Synthetic avatars & marketing videos' },
-                      ].map((sub, idx) => (
-                        <Link key={idx} href={sub.href} onClick={() => setActiveDropdown(null)}
-                          className="flex flex-col px-3 py-1.5 rounded-xl hover:bg-white/5 transition-all">
-                          <span className="text-sm font-medium text-white">{sub.title}</span>
-                          <span className="text-[11px] text-slate-400">{sub.desc}</span>
+                  <div className="absolute top-full left-0 pt-2 z-50 animate-fade-in">
+                    <div className="w-80 rounded-2xl bg-[#0d121f]/98 border border-white/10 p-3 shadow-2xl backdrop-blur-2xl">
+                      <div className="px-3 py-2 mb-2 border-b border-white/5 flex items-center justify-between">
+                        <span className="text-[10px] font-bold uppercase tracking-widest text-[#00d4aa]">AI &amp; Automation</span>
+                        <span className="text-[10px] text-slate-400">Autonomous Runtimes</span>
+                      </div>
+                      <div className="space-y-0.5">
+                        {[
+                          { title: 'AI Agents', href: '/ai/ai-agents', desc: 'Autonomous task & research agents' },
+                          { title: 'AI Chatbots', href: '/ai/chatbots', desc: 'RAG-powered bots for web & WhatsApp' },
+                          { title: 'AI Support', href: '/ai/ai-support', desc: '24/7 bilingual customer support' },
+                          { title: 'Workflow Automation', href: '/ai/automation', desc: 'Zero-touch pipelines & APIs' },
+                          { title: 'AI Video', href: '/ai/ai-video', desc: 'Synthetic avatars & marketing videos' },
+                        ].map((sub, idx) => (
+                          <Link
+                            key={idx}
+                            href={sub.href}
+                            onClick={() => setActiveDropdown(null)}
+                            className="flex flex-col px-3 py-2 rounded-xl hover:bg-white/5 transition-all group"
+                          >
+                            <span className="text-sm font-semibold text-white group-hover:text-[#00d4aa] transition-colors">{sub.title}</span>
+                            <span className="text-[11px] text-slate-400 group-hover:text-slate-300">{sub.desc}</span>
+                          </Link>
+                        ))}
+                      </div>
+                      <div className="pt-2 mt-2 border-t border-white/5">
+                        <Link
+                          href="/ai"
+                          onClick={() => setActiveDropdown(null)}
+                          className="flex items-center justify-between px-3 py-1.5 text-xs font-semibold text-[#00d4aa] hover:underline"
+                        >
+                          Explore AI Division <ArrowRightIcon className="w-3.5 h-3.5" />
                         </Link>
-                      ))}
-                    </div>
-                    <div className="pt-2 mt-2 border-t border-white/5">
-                      <Link href="/ai" onClick={() => setActiveDropdown(null)}
-                        className="flex items-center justify-between px-3 py-1.5 text-xs font-semibold text-[#00d4aa] hover:underline">
-                        Explore AI Division <ArrowRightIcon className="w-3.5 h-3.5" />
-                      </Link>
+                      </div>
                     </div>
                   </div>
                 )}
               </div>
 
               {/* Growth */}
-              <div className="relative">
+              <div
+                className="relative"
+                onMouseEnter={() => handleOpenDropdown('growth')}
+                onMouseLeave={handleCloseDropdown}
+              >
                 <button
-                  onMouseEnter={() => setActiveDropdown('growth')}
                   onClick={() => setActiveDropdown(activeDropdown === 'growth' ? null : 'growth')}
                   className={`px-3 py-2 rounded-xl text-sm flex items-center gap-1.5 transition-all ${
                     pathname.startsWith('/growth')
@@ -425,42 +466,52 @@ export default function ClientLayout({
                   <ChevronDownIcon className={`w-3.5 h-3.5 transition-transform ${activeDropdown === 'growth' ? 'rotate-180 text-[#00d4aa]' : ''}`} />
                 </button>
                 {activeDropdown === 'growth' && (
-                  <div
-                    onMouseEnter={() => setActiveDropdown('growth')}
-                    className="absolute top-full left-0 mt-2 w-72 rounded-2xl bg-[#0d121f]/98 border border-white/10 p-3 shadow-2xl backdrop-blur-2xl z-50 animate-fade-in-up"
-                  >
-                    <div className="px-3 py-2 mb-2 border-b border-white/5">
-                      <span className="text-[10px] font-bold uppercase tracking-widest text-[#00d4aa]">Growth Marketing</span>
-                    </div>
-                    <div className="space-y-0.5">
-                      {[
-                        { title: 'Social Media', href: '/growth/social-media', desc: 'Content & brand distribution' },
-                        { title: 'Meta Ads', href: '/growth/meta-ads', desc: 'Facebook & Instagram buying' },
-                        { title: 'Google Ads', href: '/growth/google-ads', desc: 'Search & Performance Max' },
-                        { title: 'SEO', href: '/growth/seo', desc: 'Technical & content SEO' },
-                        { title: 'Analytics & Tracking', href: '/growth/analytics', desc: 'CAPI & conversion pixels' },
-                      ].map((sub, idx) => (
-                        <Link key={idx} href={sub.href} onClick={() => setActiveDropdown(null)}
-                          className="flex flex-col px-3 py-1.5 rounded-xl hover:bg-white/5 transition-all">
-                          <span className="text-sm font-medium text-white">{sub.title}</span>
-                          <span className="text-[11px] text-slate-400">{sub.desc}</span>
+                  <div className="absolute top-full left-0 pt-2 z-50 animate-fade-in">
+                    <div className="w-80 rounded-2xl bg-[#0d121f]/98 border border-white/10 p-3 shadow-2xl backdrop-blur-2xl">
+                      <div className="px-3 py-2 mb-2 border-b border-white/5 flex items-center justify-between">
+                        <span className="text-[10px] font-bold uppercase tracking-widest text-[#00d4aa]">Growth Marketing</span>
+                        <span className="text-[10px] text-slate-400">Data-Driven Scale</span>
+                      </div>
+                      <div className="space-y-0.5">
+                        {[
+                          { title: 'Social Media', href: '/growth/social-media', desc: 'Content & brand distribution' },
+                          { title: 'Meta Ads', href: '/growth/meta-ads', desc: 'Facebook & Instagram buying' },
+                          { title: 'Google Ads', href: '/growth/google-ads', desc: 'Search & Performance Max' },
+                          { title: 'SEO', href: '/growth/seo', desc: 'Technical & content SEO' },
+                          { title: 'Analytics & Tracking', href: '/growth/analytics', desc: 'CAPI & conversion pixels' },
+                        ].map((sub, idx) => (
+                          <Link
+                            key={idx}
+                            href={sub.href}
+                            onClick={() => setActiveDropdown(null)}
+                            className="flex flex-col px-3 py-2 rounded-xl hover:bg-white/5 transition-all group"
+                          >
+                            <span className="text-sm font-semibold text-white group-hover:text-[#00d4aa] transition-colors">{sub.title}</span>
+                            <span className="text-[11px] text-slate-400 group-hover:text-slate-300">{sub.desc}</span>
+                          </Link>
+                        ))}
+                      </div>
+                      <div className="pt-2 mt-2 border-t border-white/5">
+                        <Link
+                          href="/growth"
+                          onClick={() => setActiveDropdown(null)}
+                          className="flex items-center justify-between px-3 py-1.5 text-xs font-semibold text-[#00d4aa] hover:underline"
+                        >
+                          View Growth Services <ArrowRightIcon className="w-3.5 h-3.5" />
                         </Link>
-                      ))}
-                    </div>
-                    <div className="pt-2 mt-2 border-t border-white/5">
-                      <Link href="/growth" onClick={() => setActiveDropdown(null)}
-                        className="flex items-center justify-between px-3 py-1.5 text-xs font-semibold text-[#00d4aa] hover:underline">
-                        View Growth Services <ArrowRightIcon className="w-3.5 h-3.5" />
-                      </Link>
+                      </div>
                     </div>
                   </div>
                 )}
               </div>
 
               {/* Products / Labs */}
-              <div className="relative">
+              <div
+                className="relative"
+                onMouseEnter={() => handleOpenDropdown('products')}
+                onMouseLeave={handleCloseDropdown}
+              >
                 <button
-                  onMouseEnter={() => setActiveDropdown('products')}
                   onClick={() => setActiveDropdown(activeDropdown === 'products' ? null : 'products')}
                   className={`px-3 py-2 rounded-xl text-sm flex items-center gap-1.5 transition-all ${
                     pathname.startsWith('/labs')
@@ -472,35 +523,44 @@ export default function ClientLayout({
                   <ChevronDownIcon className={`w-3.5 h-3.5 transition-transform ${activeDropdown === 'products' ? 'rotate-180 text-[#00d4aa]' : ''}`} />
                 </button>
                 {activeDropdown === 'products' && (
-                  <div
-                    onMouseEnter={() => setActiveDropdown('products')}
-                    className="absolute top-full left-0 mt-2 w-72 rounded-2xl bg-[#0d121f]/98 border border-white/10 p-3 shadow-2xl backdrop-blur-2xl z-50 animate-fade-in-up"
-                  >
-                    <div className="px-3 py-2 mb-2 border-b border-white/5">
-                      <span className="text-[10px] font-bold uppercase tracking-widest text-[#00d4aa]">SaaS Products</span>
-                    </div>
-                    <div className="space-y-0.5">
-                      {[
-                        { title: 'NextDigi Commerce', href: '/labs/commerce', sub: 'Headless e-commerce SaaS', badge: 'Live', ext: 'https://commerce.nextdigihome.com' },
-                        { title: 'NextDigi Social', href: '/labs/social', sub: 'Multi-channel social scheduler', badge: 'Beta', ext: 'https://social.nextdigihome.com' },
-                        { title: 'NextDigi Automate', href: '/labs/automate', sub: 'Visual workflow automation', badge: 'Soon', ext: 'https://automate.nextdigihome.com' },
-                        { title: 'Garibondhu360', href: '/labs/garibondhu360', sub: 'Workshop & fleet management ERP', badge: 'Live', ext: 'https://garibondhu360.nextdigihome.com' },
-                      ].map((p, idx) => (
-                        <div key={idx} className="flex items-center justify-between px-3 py-1.5 rounded-xl hover:bg-white/5 transition-all">
-                          <Link href={p.href} onClick={() => setActiveDropdown(null)} className="flex flex-col flex-1 min-w-0">
-                            <span className="text-sm font-medium text-white">{p.title}</span>
-                            <span className="text-[11px] text-slate-400">{p.sub}</span>
-                          </Link>
-                          <a href={p.ext} target="_blank" rel="noopener noreferrer"
-                            className="ml-2 text-[10px] font-bold px-2 py-0.5 rounded bg-[#00d4aa]/10 text-[#00d4aa] border border-[#00d4aa]/20 shrink-0">{p.badge}</a>
-                        </div>
-                      ))}
-                    </div>
-                    <div className="pt-2 mt-2 border-t border-white/5">
-                      <Link href="/labs" onClick={() => setActiveDropdown(null)}
-                        className="flex items-center justify-between px-3 py-1.5 text-xs font-semibold text-[#00d4aa] hover:underline">
-                        View All Products <ArrowRightIcon className="w-3.5 h-3.5" />
-                      </Link>
+                  <div className="absolute top-full right-0 pt-2 z-50 animate-fade-in">
+                    <div className="w-80 rounded-2xl bg-[#0d121f]/98 border border-white/10 p-3 shadow-2xl backdrop-blur-2xl">
+                      <div className="px-3 py-2 mb-2 border-b border-white/5 flex items-center justify-between">
+                        <span className="text-[10px] font-bold uppercase tracking-widest text-[#00d4aa]">SaaS Products</span>
+                        <span className="text-[10px] text-slate-400">NextDigi Labs</span>
+                      </div>
+                      <div className="space-y-0.5">
+                        {[
+                          { title: 'NextDigi Commerce', href: '/labs/commerce', sub: 'Headless e-commerce SaaS', badge: 'Live', ext: 'https://commerce.nextdigihome.com' },
+                          { title: 'NextDigi Social', href: '/labs/social', sub: 'Multi-channel social scheduler', badge: 'Beta', ext: 'https://social.nextdigihome.com' },
+                          { title: 'NextDigi Automate', href: '/labs/automate', sub: 'Visual workflow automation', badge: 'Soon', ext: 'https://automate.nextdigihome.com' },
+                          { title: 'Garibondhu360', href: '/labs/garibondhu360', sub: 'Workshop & fleet management ERP', badge: 'Live', ext: 'https://garibondhu360.nextdigihome.com' },
+                        ].map((p, idx) => (
+                          <div key={idx} className="flex items-center justify-between px-3 py-2 rounded-xl hover:bg-white/5 transition-all group">
+                            <Link href={p.href} onClick={() => setActiveDropdown(null)} className="flex flex-col flex-1 min-w-0">
+                              <span className="text-sm font-semibold text-white group-hover:text-[#00d4aa] transition-colors">{p.title}</span>
+                              <span className="text-[11px] text-slate-400 group-hover:text-slate-300">{p.sub}</span>
+                            </Link>
+                            <a
+                              href={p.ext}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="ml-2 text-[10px] font-bold px-2 py-0.5 rounded bg-[#00d4aa]/10 text-[#00d4aa] border border-[#00d4aa]/20 shrink-0"
+                            >
+                              {p.badge}
+                            </a>
+                          </div>
+                        ))}
+                      </div>
+                      <div className="pt-2 mt-2 border-t border-white/5">
+                        <Link
+                          href="/labs"
+                          onClick={() => setActiveDropdown(null)}
+                          className="flex items-center justify-between px-3 py-1.5 text-xs font-semibold text-[#00d4aa] hover:underline"
+                        >
+                          View All Products <ArrowRightIcon className="w-3.5 h-3.5" />
+                        </Link>
+                      </div>
                     </div>
                   </div>
                 )}
