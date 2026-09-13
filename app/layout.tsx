@@ -25,7 +25,7 @@ export const metadata: Metadata = {
     default: "NextDigiHome | Technology, AI, Software & Digital Solutions",
     template: "%s | NextDigiHome",
   },
-  description: "NextDigiHome helps modern businesses build, launch, automate and grow with web development, e-commerce, software, AI automation, SaaS products and digital growth solutions.",
+  description: "NextDigiHome helps modern businesses build, launch, automate and grow with web development, e-commerce, custom software, SaaS, AI automation and digital growth solutions.",
   keywords: [
     "NextDigiHome", "technology ecosystem", "software development", "web development", "ecommerce development",
     "mobile apps", "custom software", "SaaS development", "AI agents", "AI chatbots", "workflow automation",
@@ -53,7 +53,7 @@ export const metadata: Metadata = {
   },
   openGraph: {
     title: "NextDigiHome | Technology, AI, Software & Digital Solutions",
-    description: "NextDigiHome helps modern businesses build, launch, automate and grow with web development, e-commerce, software, AI automation, SaaS products and digital growth solutions.",
+    description: "NextDigiHome helps modern businesses build, launch, automate and grow with web development, e-commerce, custom software, SaaS, AI automation and digital growth solutions.",
     images: [
       {
         url: "https://nextdigihome.com/og-image.svg",
@@ -71,7 +71,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "NextDigiHome | Technology, AI, Software & Digital Solutions",
-    description: "NextDigiHome helps modern businesses build, launch, automate and grow with web development, e-commerce, software, AI automation, SaaS products and digital growth solutions.",
+    description: "NextDigiHome helps modern businesses build, launch, automate and grow with web development, e-commerce, custom software, SaaS, AI automation and digital growth solutions.",
     images: ["https://nextdigihome.com/og-image.svg"],
     creator: "@nextdigihome",
     site: "@nextdigihome",

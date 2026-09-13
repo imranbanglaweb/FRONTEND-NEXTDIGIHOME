@@ -182,7 +182,7 @@ export default function Home() {
   const [products, setProducts] = useState<Product[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [activeCategoryTab, setActiveCategoryTab] = useState<'all' | 'source-code' | 'mobile-apps' | 'scripts' | 'business-tools'>('all');
-  const [heroConsoleTab, setHeroConsoleTab] = useState<'flagship' | 'ai-engine' | 'architecture' | 'growth'>('flagship');
+  const [heroConsoleTab, setHeroConsoleTab] = useState<'saas' | 'ai' | 'growth'>('saas');
   const [hoveredDivision, setHoveredDivision] = useState<'solutions' | 'ai' | 'growth' | 'products'>('solutions');
 
   useEffect(() => {
@@ -295,341 +295,320 @@ export default function Home() {
     <div className="min-h-screen text-slate-100 overflow-x-hidden w-full">
 
       {/* ================================================================ */}
-      {/* 1. FULL-WIDTH IMMERSIVE PANORAMIC HERO SECTION                   */}
+      {/* 1. HOMEPAGE HERO SECTION — NEXTDIGIHOME MASTER TECHNOLOGY ECOSYSTEM */}
       {/* ================================================================ */}
-      <section className="relative w-full overflow-hidden pt-6 pb-16 sm:pt-8 md:pt-10 md:pb-24">
+      <section className="relative w-full overflow-hidden pt-8 pb-16 sm:pt-12 sm:pb-20 lg:pt-16 lg:pb-24">
         
-        {/* Full-Width Ambient Canvas & Radial Glow Mesh */}
+        {/* Ambient Canvas & Subtle Radial Glow Mesh */}
         <div className="absolute inset-0 pointer-events-none -z-10 overflow-hidden">
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-[1500px] h-[650px] bg-[radial-gradient(ellipse_80%_60%_at_50%_-10%,rgba(0,212,170,0.14),rgba(56,189,248,0.06)_45%,transparent_80%)]" />
-          <div className="absolute top-1/3 left-0 w-[500px] h-[500px] bg-[#6366f1]/5 blur-[180px] rounded-full" />
-          <div className="absolute top-1/4 right-0 w-[500px] h-[500px] bg-[#00d4aa]/6 blur-[180px] rounded-full" />
-          <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:64px_64px] opacity-70" />
+          <div className="absolute top-0 left-1/4 -translate-x-1/2 w-[600px] h-[500px] bg-[#00d4aa]/10 blur-[150px] rounded-full" />
+          <div className="absolute top-1/3 right-1/4 w-[500px] h-[450px] bg-[#8b5cf6]/10 blur-[160px] rounded-full" />
+          <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:56px_56px] opacity-60" />
         </div>
 
-        <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
-
-          {/* Top Status & Ecosystem Announcement Ribbon */}
-          <div className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full bg-[#00d4aa]/10 border border-[#00d4aa]/30 text-xs font-bold text-[#00d4aa] mb-8 shadow-lg shadow-[#00d4aa]/10">
-            <span className="w-2 h-2 rounded-full bg-[#00d4aa] animate-ping" />
-            <span className="tracking-wide">NEXTDIGIHOME ECOSYSTEM</span>
-            <span className="w-1 h-3 bg-white/20 hidden sm:inline" />
-            <span className="text-slate-300 font-medium hidden sm:inline">Software Engineering • Autonomous AI • 100+ Production Codebases</span>
-          </div>
-
-          {/* High-Authority Full-Width Headline */}
-          <h1 className="text-4xl sm:text-6xl lg:text-7xl xl:text-[5rem] font-black text-white tracking-tight leading-[1.08] max-w-5xl mx-auto mb-7">
-            Engineering Next-Gen Web,
-            <span className="block mt-1 bg-gradient-to-r from-[#00d4aa] via-[#38bdf8] to-[#00d4aa] bg-clip-text text-transparent">
-              AI &amp; Autonomous Digital Growth.
-            </span>
-          </h1>
-
-          {/* Subtitle Value Proposition */}
-          <p className="text-base sm:text-lg lg:text-xl text-slate-300 leading-relaxed max-w-3xl mx-auto mb-10">
-            NEXTDIGIHOME empowers ambitious businesses with custom web platforms, deterministic 24/7 AI agents, and predictable revenue acquisition — backed by 100+ verified production digital products ready for instant deployment.
-          </p>
-
-          {/* Action CTAs */}
-          <div className="flex flex-wrap items-center justify-center gap-4 mb-16">
-            <Link
-              href="/contact"
-              className="inline-flex items-center gap-2.5 px-8 py-4 rounded-2xl bg-[#00d4aa] text-black font-black text-sm hover:bg-[#00e2b6] shadow-[0_0_35px_rgba(0,212,170,0.35)] hover:scale-[1.02] active:scale-[0.98] transition-all"
-            >
-              <BoltIcon className="w-4 h-4" />
-              <span>Start Your Project</span>
-              <ArrowRightIcon className="w-4 h-4" />
-            </Link>
-
-            <Link
-              href="#featured-products"
-              className="inline-flex items-center gap-2.5 px-7 py-4 rounded-2xl bg-[#0f1523]/90 border border-white/10 hover:border-[#00d4aa]/40 text-white font-bold text-sm hover:bg-white/5 transition-all shadow-xl"
-            >
-              <ShoppingBagIcon className="w-4 h-4 text-[#00d4aa]" />
-              <span>Browse NextDigi Store</span>
-              <span className="text-[10px] font-black px-2 py-0.5 rounded-full bg-[#00d4aa]/15 text-[#00d4aa] border border-[#00d4aa]/30">
-                100+ Assets
-              </span>
-            </Link>
-
-            <a
-              href="https://wa.me/8801700000000?text=Hi%20NextDigiHome,%20I%20would%20like%20to%20consult%20about%20a%20project."
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-5 py-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 hover:bg-emerald-500/20 font-semibold text-xs transition-all"
-            >
-              <ChatBubbleBottomCenterTextIcon className="w-4 h-4" />
-              <span>Direct WhatsApp Chat</span>
-            </a>
-          </div>
-
-          {/* Full-Width 4-Pillar Metric Glass Ribbon */}
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 max-w-5xl mx-auto mb-16">
-            {[
-              { val: '150+', title: 'Shipped Platforms', sub: '100% Code & IP Ownership' },
-              { val: '99.4%', title: 'Delivery SLA', sub: 'Sprint Milestone Guarantee' },
-              { val: '100+', title: 'Verified Codebases', sub: 'Instant Download & Licensing' },
-              { val: '24/7', title: 'Engineering Support', sub: 'Cloud & DevOps Monitoring' },
-            ].map((stat, i) => (
-              <div
-                key={i}
-                className="p-5 rounded-2xl bg-[#0f1523]/80 border border-white/8 backdrop-blur-xl text-left"
-              >
-                <div className="text-3xl sm:text-4xl font-black text-white">{stat.val}</div>
-                <div className="text-xs font-bold text-[#00d4aa] mt-1">{stat.title}</div>
-                <div className="text-[11px] text-slate-400 mt-0.5">{stat.sub}</div>
-              </div>
-            ))}
-          </div>
-
-          {/* FULL-WIDTH INTERACTIVE STUDIO CONSOLE (PANORAMIC CENTERPIECE) */}
-          <div className="w-full rounded-3xl bg-[#0d121f]/95 border border-white/10 p-6 sm:p-8 shadow-2xl backdrop-blur-2xl text-left">
+        <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
             
-            {/* Control Switcher Tabs */}
-            <div className="flex flex-wrap items-center justify-between gap-2 pb-6 border-b border-white/10 mb-6">
-              <div className="flex flex-wrap items-center gap-2">
+            {/* LEFT COLUMN: HERO CONTENT */}
+            <div className="lg:col-span-7 xl:col-span-6 flex flex-col text-left">
+              
+              {/* Eyebrow */}
+              <div className="inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-[#00d4aa]/10 border border-[#00d4aa]/30 text-xs font-bold tracking-wider text-[#00d4aa] uppercase w-fit mb-6 shadow-sm">
+                <span className="w-2 h-2 rounded-full bg-[#00d4aa] animate-pulse" />
+                <span>NEXTDIGIHOME</span>
+                <span className="text-slate-500 font-normal">•</span>
+                <span className="text-slate-300 font-medium normal-case tracking-normal text-[11px]">Master Technology Ecosystem</span>
+              </div>
+
+              {/* Main Headline (Single H1) */}
+              <h1 className="text-4xl sm:text-5xl lg:text-[3.5rem] font-black text-white tracking-tight leading-[1.08] mb-5">
+                Build. Launch.{' '}
+                <span className="bg-gradient-to-r from-[#00d4aa] via-[#38bdf8] to-[#8b5cf6] bg-clip-text text-transparent">
+                  Automate. Grow.
+                </span>
+              </h1>
+
+              {/* Supporting Headline */}
+              <p className="text-lg sm:text-xl font-semibold text-slate-200 leading-snug mb-4">
+                Technology, AI, software and digital growth solutions for modern businesses.
+              </p>
+
+              {/* Body Copy */}
+              <p className="text-sm sm:text-base text-slate-400 leading-relaxed mb-8 max-w-xl">
+                From websites and e-commerce platforms to custom software, SaaS, AI automation and digital growth — we help businesses turn ideas into scalable digital solutions.
+              </p>
+
+              {/* CTA Buttons */}
+              <div className="flex flex-wrap items-center gap-3 sm:gap-4 mb-8">
+                <Link
+                  href="/contact"
+                  className="inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-xl bg-[#00d4aa] text-[#07090e] font-bold text-sm hover:bg-[#00e2b6] shadow-lg shadow-[#00d4aa]/25 hover:scale-[1.02] active:scale-[0.98] transition-all"
+                >
+                  <RocketLaunchIcon className="w-4 h-4" />
+                  <span>Start a Project</span>
+                  <ArrowRightIcon className="w-4 h-4" />
+                </Link>
+
+                <Link
+                  href="/solutions"
+                  className="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl bg-white/5 border border-white/10 hover:border-[#00d4aa]/30 text-white font-semibold text-sm hover:bg-white/10 transition-all"
+                >
+                  <span>Explore Solutions</span>
+                  <ArrowTopRightOnSquareIcon className="w-4 h-4 text-slate-400" />
+                </Link>
+              </div>
+
+              {/* Capability Line */}
+              <div className="pt-6 border-t border-white/8">
+                <div className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider mb-2.5">
+                  Core Capabilities
+                </div>
+                <div className="flex flex-wrap items-center gap-x-2.5 gap-y-1.5 text-xs text-slate-300 font-medium">
+                  {['Web', 'E-commerce', 'Apps', 'Software', 'AI', 'Automation', 'Growth', 'SaaS'].map((cap, i, arr) => (
+                    <span key={cap} className="inline-flex items-center gap-2">
+                      <span className="hover:text-[#00d4aa] transition-colors">{cap}</span>
+                      {i < arr.length - 1 && <span className="text-slate-600">•</span>}
+                    </span>
+                  ))}
+                </div>
+              </div>
+
+              {/* Trust Element: Factual Capability Statements */}
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 mt-5">
                 {[
-                  { id: 'flagship', label: 'Flagship Digital Products', icon: ShoppingBagIcon },
-                  { id: 'ai-engine', label: 'Autonomous AI Agent Pipeline', icon: CpuChipIcon },
-                  { id: 'architecture', label: 'Full-Stack Architecture', icon: CommandLineIcon },
-                  { id: 'growth', label: 'Growth & Acquisition Engine', icon: ChartBarIcon },
-                ].map((tab) => {
-                  const Icon = tab.icon;
+                  { label: 'End-to-End Technology', icon: CommandLineIcon },
+                  { label: 'AI & Automation', icon: CpuChipIcon },
+                  { label: 'Custom Solutions', icon: CodeBracketIcon },
+                  { label: 'SaaS Development', icon: ServerIcon },
+                ].map((item, idx) => {
+                  const Icon = item.icon;
                   return (
-                    <button
-                      key={tab.id}
-                      onClick={() => setHeroConsoleTab(tab.id as any)}
-                      className={`px-4 py-2.5 rounded-xl text-xs font-bold transition-all flex items-center gap-2 ${
-                        heroConsoleTab === tab.id
-                          ? 'bg-[#00d4aa] text-black shadow-lg shadow-[#00d4aa]/20'
-                          : 'bg-white/5 text-slate-300 hover:text-white hover:bg-white/10 border border-white/5'
-                      }`}
-                    >
-                      <Icon className="w-4 h-4" />
-                      <span>{tab.label}</span>
-                    </button>
+                    <div key={idx} className="flex items-center gap-2 px-3 py-2 rounded-lg bg-white/[0.03] border border-white/5 text-[11px] text-slate-300">
+                      <Icon className="w-3.5 h-3.5 text-[#00d4aa] shrink-0" />
+                      <span className="truncate">{item.label}</span>
+                    </div>
                   );
                 })}
               </div>
 
-              <div className="hidden xl:flex items-center gap-2 text-xs font-mono text-slate-400">
-                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                <span>NEXTDIGIHOME Production Systems v2.4</span>
+            </div>
+
+
+            {/* RIGHT COLUMN: TECHNOLOGY / SAAS VISUAL */}
+            <div className="lg:col-span-5 xl:col-span-6 w-full">
+              {/* SaaS / Tech Interactive Visual Console */}
+              <div className="relative rounded-2xl bg-[#0c1017]/95 border border-white/10 shadow-2xl backdrop-blur-xl overflow-hidden">
+                
+                {/* Window Header */}
+                <div className="flex items-center justify-between px-4 py-3 bg-white/[0.03] border-b border-white/5">
+                  <div className="flex items-center gap-2">
+                    <span className="w-2.5 h-2.5 rounded-full bg-[#ef4444]/80" />
+                    <span className="w-2.5 h-2.5 rounded-full bg-[#eab308]/80" />
+                    <span className="w-2.5 h-2.5 rounded-full bg-[#10b981]/80" />
+                    <span className="text-[11px] font-mono text-slate-400 ml-2 hidden sm:inline">NEXTDIGIHOME System Console</span>
+                  </div>
+
+                  {/* Visual Mode Switcher */}
+                  <div className="flex items-center gap-1 bg-black/40 p-1 rounded-lg border border-white/5 text-[11px]">
+                    {[
+                      { id: 'saas', label: 'SaaS & Web', icon: CommandLineIcon },
+                      { id: 'ai', label: 'AI & Automate', icon: CpuChipIcon },
+                      { id: 'growth', label: 'Growth', icon: ChartBarIcon }
+                    ].map((tab) => {
+                      const Icon = tab.icon;
+                      const isActive = heroConsoleTab === tab.id;
+                      return (
+                        <button
+                          key={tab.id}
+                          onClick={() => setHeroConsoleTab(tab.id as any)}
+                          className={`flex items-center gap-1.5 px-2.5 py-1 rounded-md font-semibold transition-all ${
+                            isActive
+                              ? 'bg-[#00d4aa] text-black shadow-sm'
+                              : 'text-slate-400 hover:text-white hover:bg-white/5'
+                          }`}
+                        >
+                          <Icon className="w-3 h-3" />
+                          <span>{tab.label}</span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {/* Window Body: Visual Modes */}
+                <div className="p-5 sm:p-6 space-y-4">
+                  {heroConsoleTab === 'saas' && (
+                    <div className="space-y-4">
+                      {/* Top Metric Bar */}
+                      <div className="grid grid-cols-3 gap-2.5">
+                        <div className="p-3 rounded-xl bg-white/[0.03] border border-white/5">
+                          <div className="text-[10px] uppercase font-bold text-slate-400">Architecture</div>
+                          <div className="text-sm sm:text-base font-bold text-white mt-0.5">Next.js 15 + API</div>
+                          <div className="text-[10px] text-emerald-400 mt-0.5 flex items-center gap-1">
+                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" /> Active
+                          </div>
+                        </div>
+                        <div className="p-3 rounded-xl bg-white/[0.03] border border-white/5">
+                          <div className="text-[10px] uppercase font-bold text-slate-400">API Response</div>
+                          <div className="text-sm sm:text-base font-bold text-[#00d4aa] mt-0.5">18ms</div>
+                          <div className="text-[10px] text-slate-400 mt-0.5">Global Edge CDN</div>
+                        </div>
+                        <div className="p-3 rounded-xl bg-white/[0.03] border border-white/5">
+                          <div className="text-[10px] uppercase font-bold text-slate-400">System Uptime</div>
+                          <div className="text-sm sm:text-base font-bold text-white mt-0.5">99.98%</div>
+                          <div className="text-[10px] text-slate-400 mt-0.5">Automated CI/CD</div>
+                        </div>
+                      </div>
+
+                      {/* Services Telemetry Matrix */}
+                      <div className="p-4 rounded-xl bg-black/40 border border-white/5 space-y-2.5">
+                        <div className="flex items-center justify-between text-xs pb-2 border-b border-white/5">
+                          <span className="font-semibold text-white">Full-Stack Production Matrix</span>
+                          <span className="text-[11px] font-mono text-[#00d4aa]">Enterprise SLA</span>
+                        </div>
+                        <div className="grid grid-cols-2 gap-2 text-xs">
+                          <div className="flex items-center justify-between p-2 rounded-lg bg-white/[0.02] border border-white/5">
+                            <span className="text-slate-400">Web &amp; E-commerce</span>
+                            <span className="text-emerald-400 font-mono text-[11px]">NextDigi Solutions</span>
+                          </div>
+                          <div className="flex items-center justify-between p-2 rounded-lg bg-white/[0.02] border border-white/5">
+                            <span className="text-slate-400">Cross-Platform Apps</span>
+                            <span className="text-[#38bdf8] font-mono text-[11px]">Flutter &amp; React Native</span>
+                          </div>
+                          <div className="flex items-center justify-between p-2 rounded-lg bg-white/[0.02] border border-white/5">
+                            <span className="text-slate-400">SaaS Multi-Tenancy</span>
+                            <span className="text-[#8b5cf6] font-mono text-[11px]">RBAC + Billing</span>
+                          </div>
+                          <div className="flex items-center justify-between p-2 rounded-lg bg-white/[0.02] border border-white/5">
+                            <span className="text-slate-400">Code Ownership</span>
+                            <span className="text-white font-mono text-[11px]">100% Client IP</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Bottom Action Footer */}
+                      <div className="flex items-center justify-between pt-1 text-xs">
+                        <span className="text-slate-400 text-[11px]">Deploy custom web, mobile, or enterprise SaaS.</span>
+                        <Link href="/solutions" className="text-[#00d4aa] font-semibold hover:underline flex items-center gap-1">
+                          Explore Solutions <ArrowRightIcon className="w-3 h-3" />
+                        </Link>
+                      </div>
+                    </div>
+                  )}
+
+                  {heroConsoleTab === 'ai' && (
+                    <div className="space-y-4">
+                      {/* AI Agent Status */}
+                      <div className="p-3.5 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-between">
+                        <div className="flex items-center gap-2.5">
+                          <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping" />
+                          <div>
+                            <div className="text-xs font-bold text-white">Deterministic AI Automation Engine</div>
+                            <div className="text-[11px] text-emerald-400 font-mono">Private RAG &bull; WhatsApp API &bull; 0.8s Latency</div>
+                          </div>
+                        </div>
+                        <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 font-mono">
+                          24/7 Live
+                        </span>
+                      </div>
+
+                      {/* 4-Step Pipeline */}
+                      <div className="grid grid-cols-2 gap-2">
+                        {[
+                          { step: '01', title: 'Omnichannel Inbound', desc: 'WhatsApp, Web Chat & CRM' },
+                          { step: '02', title: 'Vector Retrieval', desc: 'Private company embeddings' },
+                          { step: '03', title: 'Autonomous Action', desc: 'CRM sync & checkout link' },
+                          { step: '04', title: 'Structured Output', desc: 'Bilingual Bengali & English' }
+                        ].map((node) => (
+                          <div key={node.step} className="p-2.5 rounded-xl bg-white/[0.03] border border-white/5">
+                            <div className="text-[10px] font-mono text-[#00d4aa] font-bold">{node.step}</div>
+                            <div className="text-xs font-bold text-white mt-0.5">{node.title}</div>
+                            <div className="text-[10px] text-slate-400 mt-0.5">{node.desc}</div>
+                          </div>
+                        ))}
+                      </div>
+
+                      {/* Console Log */}
+                      <div className="p-3 rounded-xl bg-black/60 border border-white/5 font-mono text-[11px] space-y-1 text-slate-400">
+                        <div className="text-emerald-400">&gt; [AI-DISPATCH] Lead captured &bull; Intent: Custom SaaS Inquiry</div>
+                        <div className="text-slate-300">&gt; [RAG-LOOKUP] Matched architecture blueprint in 118ms</div>
+                        <div className="text-[#38bdf8]">&gt; [STATUS] Automated response dispatched via WhatsApp</div>
+                      </div>
+
+                      <div className="flex items-center justify-between pt-1 text-xs">
+                        <span className="text-slate-400 text-[11px]">Save up to 80% manual response time.</span>
+                        <Link href="/ai" className="text-[#00d4aa] font-semibold hover:underline flex items-center gap-1">
+                          Deploy AI Agents <ArrowRightIcon className="w-3 h-3" />
+                        </Link>
+                      </div>
+                    </div>
+                  )}
+
+                  {heroConsoleTab === 'growth' && (
+                    <div className="space-y-4">
+                      {/* Growth Metrics */}
+                      <div className="grid grid-cols-3 gap-2.5">
+                        <div className="p-3 rounded-xl bg-white/[0.03] border border-white/5">
+                          <div className="text-[10px] uppercase font-bold text-slate-400">Server CAPI Match</div>
+                          <div className="text-lg font-black text-white mt-0.5">99.1%</div>
+                          <div className="text-[10px] text-emerald-400 mt-0.5">Zero Signal Loss</div>
+                        </div>
+                        <div className="p-3 rounded-xl bg-white/[0.03] border border-white/5">
+                          <div className="text-[10px] uppercase font-bold text-slate-400">Average ROAS</div>
+                          <div className="text-lg font-black text-[#00d4aa] mt-0.5">4.6x</div>
+                          <div className="text-[10px] text-slate-400 mt-0.5">Multi-Channel Ads</div>
+                        </div>
+                        <div className="p-3 rounded-xl bg-white/[0.03] border border-white/5">
+                          <div className="text-[10px] uppercase font-bold text-slate-400">Checkout Speed</div>
+                          <div className="text-lg font-black text-white mt-0.5">&lt; 1.2s</div>
+                          <div className="text-[10px] text-slate-400 mt-0.5">High-Converting</div>
+                        </div>
+                      </div>
+
+                      {/* Growth Channels */}
+                      <div className="p-4 rounded-xl bg-black/40 border border-white/5 space-y-2.5">
+                        <div className="text-xs font-semibold text-white">Full-Funnel Acquisition Engine</div>
+                        <div className="space-y-1.5 text-xs text-slate-300">
+                          <div className="flex items-center justify-between p-2 rounded-lg bg-white/[0.02]">
+                            <span>Meta Ads &amp; Conversion API (CAPI)</span>
+                            <span className="text-emerald-400 text-[11px] font-mono">Optimized</span>
+                          </div>
+                          <div className="flex items-center justify-between p-2 rounded-lg bg-white/[0.02]">
+                            <span>Google Search &amp; Performance Max</span>
+                            <span className="text-[#38bdf8] text-[11px] font-mono">High-Intent</span>
+                          </div>
+                          <div className="flex items-center justify-between p-2 rounded-lg bg-white/[0.02]">
+                            <span>Technical SEO &amp; Automated Abandoned Cart SMS</span>
+                            <span className="text-[#8b5cf6] text-[11px] font-mono">Predictable</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="flex items-center justify-between pt-1 text-xs">
+                        <span className="text-slate-400 text-[11px]">Drive profitable, scalable customer acquisition.</span>
+                        <Link href="/growth" className="text-[#00d4aa] font-semibold hover:underline flex items-center gap-1">
+                          Explore Growth Services <ArrowRightIcon className="w-3 h-3" />
+                        </Link>
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                {/* Ecosystem Connected Footer Banner */}
+                <div className="px-5 py-3 bg-gradient-to-r from-white/[0.02] via-white/[0.05] to-white/[0.02] border-t border-white/5 flex items-center justify-between text-[11px] text-slate-400">
+                  <div className="flex items-center gap-2">
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#00d4aa]" />
+                    <span>Part of the <strong>NEXTDIGIHOME</strong> Ecosystem</span>
+                  </div>
+                  <Link href="/store" className="text-[#00d4aa] hover:underline font-medium">
+                    NextDigi Store (Products) &rarr;
+                  </Link>
+                </div>
+
               </div>
             </div>
 
-            {/* TAB 1: PANORAMIC FLAGSHIP DIGITAL PRODUCTS CAROUSEL */}
-            {heroConsoleTab === 'flagship' && (
-              <div>
-                <div className="flex items-center justify-between mb-5">
-                  <div>
-                    <span className="text-xs font-bold text-[#00d4aa] uppercase tracking-wider block">Production-Ready Software</span>
-                    <h3 className="text-xl font-bold text-white mt-0.5">Top Verified Digital Products from NextDigi Store</h3>
-                  </div>
-                  <Link
-                    href="/products"
-                    className="text-xs font-bold text-[#00d4aa] hover:underline flex items-center gap-1 shrink-0"
-                  >
-                    <span>View All 100+ Products</span>
-                    <ArrowRightIcon className="w-3.5 h-3.5" />
-                  </Link>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-                  {allProducts.slice(0, 3).map((prod) => (
-                    <div
-                      key={prod.id}
-                      className="rounded-2xl bg-gradient-to-br from-[#141b2e] to-[#0c101d] border border-white/10 hover:border-[#00d4aa]/40 transition-all flex flex-col justify-between group overflow-hidden shadow-xl"
-                    >
-                      {/* Dynamic Product Image */}
-                      <div className="relative h-44 w-full bg-[#0b0f19] overflow-hidden border-b border-white/5">
-                        {(prod.thumbnail || prod.thumbnail_url || prod.image_url) ? (
-                          <img
-                            src={getProductImage(prod)}
-                            alt={prod.name}
-                            loading="lazy"
-                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                            onError={(e) => {
-                              (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=800&q=80';
-                            }}
-                          />
-                        ) : (
-                          <div className="w-full h-full bg-gradient-to-br from-[#162035] via-[#101726] to-[#090d16] flex items-center justify-center">
-                            <CodeBracketIcon className="w-10 h-10 text-[#00d4aa]/60" />
-                          </div>
-                        )}
-                        <div className="absolute inset-0 bg-gradient-to-t from-[#0c101d] via-transparent to-black/30 pointer-events-none" />
-                        <div className="absolute top-3 left-3">
-                          <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-[#0d121f]/90 text-[#00d4aa] border border-[#00d4aa]/30 backdrop-blur-md">
-                            {prod.category_name || prod.category || 'Digital Asset'}
-                          </span>
-                        </div>
-                        <div className="absolute top-3 right-3">
-                          <span className="text-[10px] font-extrabold text-amber-400 flex items-center gap-1 bg-black/60 px-2 py-0.5 rounded-full backdrop-blur-md border border-white/10">
-                            <StarIconSolid className="w-3.5 h-3.5" /> 5.0
-                          </span>
-                        </div>
-                      </div>
-
-                      <div className="p-5 flex-1 flex flex-col justify-between">
-                        <div>
-                          <h4 className="text-base font-bold text-white group-hover:text-[#00d4aa] transition-colors line-clamp-1 mb-2">
-                            {prod.name}
-                          </h4>
-
-                          <p className="text-xs text-slate-400 leading-relaxed line-clamp-2 mb-4">
-                            {prod.description}
-                          </p>
-
-                          <div className="flex flex-wrap gap-1.5 mb-4">
-                            <span className="text-[9px] font-mono px-2 py-0.5 rounded bg-white/5 text-slate-300 border border-white/5">Instant Download</span>
-                            <span className="text-[9px] font-mono px-2 py-0.5 rounded bg-white/5 text-slate-300 border border-white/5">Commercial License</span>
-                          </div>
-                        </div>
-
-                        <div className="pt-3.5 border-t border-white/10 flex items-center justify-between">
-                          <div>
-                            <span className="text-[9px] uppercase font-bold text-slate-500 block">License</span>
-                            <div className="flex items-baseline gap-1.5">
-                              <span className="text-lg font-black text-[#00d4aa]">৳{Number(prod.price).toLocaleString()}</span>
-                              {prod.compare_price && (
-                                <span className="text-xs line-through text-slate-500">৳{Number(prod.compare_price).toLocaleString()}</span>
-                              )}
-                            </div>
-                          </div>
-
-                          <div className="flex items-center gap-2">
-                            <button
-                              onClick={(e) => handleAddToCart(e, prod)}
-                              className="p-2 rounded-xl bg-white/5 hover:bg-[#00d4aa] hover:text-black text-slate-300 transition-all border border-white/5"
-                              title="Add to cart"
-                            >
-                              <ShoppingBagIcon className="w-4 h-4" />
-                            </button>
-                            <Link
-                              href={`/products/${prod.slug || prod.id}`}
-                              className="px-3.5 py-2 rounded-xl bg-[#00d4aa] hover:bg-[#00e2b6] text-black font-bold text-xs transition-all shadow-md shadow-[#00d4aa]/20"
-                            >
-                              Details
-                            </Link>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* TAB 2: AUTONOMOUS AI AGENT CONSOLE */}
-            {heroConsoleTab === 'ai-engine' && (
-              <div className="py-2">
-                <div className="flex items-center justify-between mb-4">
-                  <div className="flex items-center gap-2">
-                    <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping" />
-                    <span className="text-sm font-bold text-emerald-400">Autonomous AI Agent Runtime: 0.8s Execution Latency</span>
-                  </div>
-                  <span className="text-xs font-mono text-slate-400">OpenAI + Private RAG + WhatsApp Business</span>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-3 mb-5">
-                  {[
-                    { step: '01', title: 'Omnichannel Inbound', desc: 'Captures queries from WhatsApp, Web Chat, & Telegram simultaneously.' },
-                    { step: '02', title: 'Vector Knowledge RAG', desc: 'Extracts exact business answers from your private database & catalog.' },
-                    { step: '03', title: 'Autonomous Action Execution', desc: 'Calculates price, verifies stock, registers lead, and syncs CRM record.' },
-                    { step: '04', title: 'Bilingual Delivery', desc: 'Sends structured Bengali & English replies with payment checkout links.' }
-                  ].map((node) => (
-                    <div key={node.step} className="p-4 rounded-2xl bg-white/5 border border-white/5">
-                      <div className="text-xl font-black text-[#00d4aa] mb-1 font-mono">{node.step}</div>
-                      <div className="text-xs font-bold text-white mb-1">{node.title}</div>
-                      <div className="text-[11px] text-slate-400 leading-relaxed">{node.desc}</div>
-                    </div>
-                  ))}
-                </div>
-
-                <div className="flex flex-wrap items-center justify-between gap-4 p-4 rounded-2xl bg-black/40 border border-white/5">
-                  <div className="text-xs text-slate-300">
-                    <strong className="text-white">Enterprise AI SLA:</strong> 24/7 autonomous uptime with zero human manual intervention needed for up to 85% of customer queries.
-                  </div>
-                  <Link
-                    href="/ai"
-                    className="px-5 py-2.5 rounded-xl bg-[#00d4aa] text-black font-bold text-xs hover:bg-[#00e2b6] transition-all shrink-0"
-                  >
-                    Deploy AI Agent →
-                  </Link>
-                </div>
-              </div>
-            )}
-
-            {/* TAB 3: FULL-STACK ARCHITECTURAL BLUEPRINT */}
-            {heroConsoleTab === 'architecture' && (
-              <div className="py-2">
-                <div className="flex items-center justify-between mb-4">
-                  <div className="text-sm font-bold text-white">Full-Stack Production Blueprint</div>
-                  <span className="text-xs text-slate-400 font-mono">Modern High-Throughput Stack</span>
-                </div>
-
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-5">
-                  {[
-                    { title: 'Frontend Architecture', stack: 'Next.js 15, React 19, TypeScript, Tailwind CSS', badge: 'Ultra-Fast' },
-                    { title: 'Mobile Framework', stack: 'Flutter iOS & Android, Bloc State, Offline Sync', badge: 'Cross-Platform' },
-                    { title: 'Backend & APIs', stack: 'Node.js, Laravel, REST & GraphQL, Redis Caching', badge: 'Scalable' },
-                    { title: 'Cloud & Infrastructure', stack: 'Docker, AWS, PostgreSQL, CI/CD Automated Pipelines', badge: '99.9% Uptime' },
-                  ].map((arch, i) => (
-                    <div key={i} className="p-4 rounded-2xl bg-white/5 border border-white/5">
-                      <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-[#00d4aa]/15 text-[#00d4aa] inline-block mb-2">{arch.badge}</span>
-                      <div className="text-xs font-bold text-white mb-1">{arch.title}</div>
-                      <div className="text-[11px] text-slate-400">{arch.stack}</div>
-                    </div>
-                  ))}
-                </div>
-
-                <div className="flex items-center justify-between p-4 rounded-2xl bg-black/40 border border-white/5 text-xs text-slate-300">
-                  <span>Complete source code repos, Docker setup, and cloud credential ownership transferred to your company.</span>
-                  <Link href="/solutions" className="text-[#00d4aa] font-bold hover:underline shrink-0">
-                    Explore Solutions →
-                  </Link>
-                </div>
-              </div>
-            )}
-
-            {/* TAB 4: GROWTH & ACQUISITION SUITE */}
-            {heroConsoleTab === 'growth' && (
-              <div className="py-2">
-                <div className="flex items-center justify-between mb-4">
-                  <div className="text-sm font-bold text-white">Audited Performance Acquisition Architecture</div>
-                  <span className="text-xs font-bold px-2.5 py-0.5 rounded bg-[#00d4aa]/15 text-[#00d4aa]">Meta CAPI Verified</span>
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-5">
-                  <div className="p-4 rounded-2xl bg-white/5 border border-white/5">
-                    <div className="text-xs text-slate-400">Server-Side CAPI Match</div>
-                    <div className="text-2xl font-black text-white mt-1">98.4%</div>
-                    <div className="text-[11px] text-emerald-400 mt-1">Bypasses iOS Tracking Loss</div>
-                  </div>
-                  <div className="p-4 rounded-2xl bg-white/5 border border-white/5">
-                    <div className="text-xs text-slate-400">Average Store ROAS</div>
-                    <div className="text-2xl font-black text-[#00d4aa] mt-1">4.6x</div>
-                    <div className="text-[11px] text-slate-400 mt-1">Across 50+ Managed Brands</div>
-                  </div>
-                  <div className="p-4 rounded-2xl bg-white/5 border border-white/5">
-                    <div className="text-xs text-slate-400">Conversion Funnel Speed</div>
-                    <div className="text-2xl font-black text-white mt-1">&lt; 1.2s</div>
-                    <div className="text-[11px] text-slate-400 mt-1">Instant Checkout Routing</div>
-                  </div>
-                </div>
-
-                <div className="flex items-center justify-between p-4 rounded-2xl bg-black/40 border border-white/5 text-xs text-slate-300">
-                  <span>Google Ads + Meta Media Buying + Technical SEO + Abandoned Cart SMS Recovery.</span>
-                  <Link href="/growth" className="text-[#00d4aa] font-bold hover:underline shrink-0">
-                    Explore Growth Services →
-                  </Link>
-                </div>
-              </div>
-            )}
-
           </div>
-
         </div>
       </section>
 
