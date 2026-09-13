@@ -540,23 +540,13 @@ export default function ClientLayout({
                 )}
               </div>
 
-              <Link href="/case-studies"
-                className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
-                  pathname === '/case-studies' ? 'text-white font-semibold' : 'text-gray-300 hover:text-white'
-                }`}>
-                Case Studies
-              </Link>
               <Link href="/about"
-                className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
-                  pathname === '/about' ? 'text-white font-semibold' : 'text-gray-300 hover:text-white'
+                className={`px-3 py-2 rounded-xl text-sm font-medium transition-all ${
+                  pathname === '/about'
+                    ? 'text-[#00d4aa] font-bold bg-[#00d4aa]/10 border border-[#00d4aa]/25'
+                    : 'text-slate-300 hover:text-white hover:bg-white/5'
                 }`}>
                 About
-              </Link>
-              <Link href="/contact"
-                className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
-                  pathname === '/contact' ? 'text-white font-semibold' : 'text-gray-300 hover:text-white'
-                }`}>
-                Contact
               </Link>
             </nav>
 
