@@ -1240,10 +1240,10 @@ export default function StoreClient({ initialProducts, initialCategories }: Stor
               <ArrowRightIcon className="w-4 h-4" />
             </a>
             <Link
-              href="/solutions"
+              href="/contact?service=digital-products"
               className="px-8 py-4 rounded-xl font-semibold text-gray-200 hover:text-white bg-white/5 hover:bg-white/10 border border-white/10 transition"
             >
-              Request Custom Build
+              Need Something Custom?
             </Link>
           </div>
         </div>

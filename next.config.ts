@@ -92,16 +92,18 @@ const nextConfig: NextConfig = {
   // Proxy API requests to Laravel backend
   async rewrites() {
     const apiBase = (process.env.NEXT_PUBLIC_API_URL || 'https://backend.nextdigihome.com').replace(/\/$/, '');
-    return [
-      {
-        source: '/api/storage/:path*',
-        destination: `${apiBase}/public/storage/:path*`,
-      },
-      {
-        source: '/api/:path*',
-        destination: `${apiBase}/api/:path*`,
-      },
-    ];
+    return {
+      fallback: [
+        {
+          source: '/api/storage/:path*',
+          destination: `${apiBase}/public/storage/:path*`,
+        },
+        {
+          source: '/api/:path*',
+          destination: `${apiBase}/api/:path*`,
+        },
+      ],
+    };
   },
   // Environment variables
   env: {
