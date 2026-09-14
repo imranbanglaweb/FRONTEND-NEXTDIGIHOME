@@ -13,17 +13,17 @@ const nextConfig: NextConfig = {
       },
       {
         source: '/downloads',
-        destination: '/products',
+        destination: '/store',
         permanent: true,
       },
       {
         source: '/downloads/category/:path*',
-        destination: '/products',
+        destination: '/store',
         permanent: true,
       },
       {
         source: '/downloads/tag/:path*',
-        destination: '/products',
+        destination: '/store',
         permanent: true,
       },
       {

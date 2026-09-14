@@ -488,10 +488,10 @@ export default function ProductDetailPage() {
           <p className="text-gray-400 mb-6">{error}</p>
 
           <Link
-            href="/products"
+            href="/store"
             className="px-6 py-3 rounded-xl bg-[#00d4aa] text-black font-bold"
           >
-            Back
+            Back to Store
           </Link>
         </div>
       </div>
@@ -522,10 +522,10 @@ export default function ProductDetailPage() {
             <span>/</span>
 
             <Link
-              href="/products"
+              href="/store"
               className="text-gray-400 hover:text-white"
             >
-              Products
+              Store
             </Link>
 
             <span>/</span>
@@ -1366,10 +1366,10 @@ export default function ProductDetailPage() {
               <p className="text-gray-400 text-sm">Discover similar products from our collection</p>
             </div>
             <Link 
-              href="/products" 
+              href="/store" 
               className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-[#00d4aa]/10 border border-[#00d4aa]/40 text-[#00d4aa] font-semibold hover:bg-[#00d4aa]/20 hover:border-[#00d4aa]/60 transition-all duration-300"
             >
-              View All Products
+              Explore NextDigi Store
               <ArrowRightIcon className="w-4 h-4" />
             </Link>
           </div>

@@ -318,9 +318,9 @@ export default function ClientLayout({
                 About
               </Link>
 
-              {/* Store — Single click navigates directly to show all dynamic digital products */}
+              {/* Store — Single click navigates directly to NextDigi Store */}
               <Link
-                href="/products"
+                href="/store"
                 className={`px-3 py-2 rounded-xl text-sm flex items-center gap-1.5 transition-all ${
                   pathname.startsWith('/store') || pathname.startsWith('/products')
                     ? 'text-[#00d4aa] font-bold bg-[#00d4aa]/10 border border-[#00d4aa]/25'
@@ -650,7 +650,7 @@ export default function ClientLayout({
 
               {/* Prominent Mobile Store Banner */}
               <Link
-                href="/products"
+                href="/store"
                 onClick={() => setMobileMenuOpen(false)}
                 className="flex items-center justify-between px-4 py-3 rounded-xl border border-[#00d4aa]/30 bg-gradient-to-r from-[#00d4aa]/15 via-[#8b5cf6]/10 to-transparent text-white font-bold"
               >
@@ -1090,7 +1090,7 @@ export default function ClientLayout({
                   { label: "NextDigi Automate", href: "https://automate.nextdigihome.com/", badge: "Soon" },
                   { label: "Garibondhu360", href: "https://garibondhu360.nextdigihome.com/", badge: "Live" },
                   { label: "NextDigi Store", href: "/store", badge: "Store" },
-                  { label: "Browse Products", href: "/products", badge: "" },
+                  { label: "Digital Catalog", href: "/store", badge: "" },
                 ].map((item, idx) => (
                   <li key={idx}>
                     {item.href.startsWith('http') ? (

@@ -269,8 +269,8 @@ export default async function ProductDetailLayout({ children, params }: ProductR
 
   const breadcrumbSchema = generateBreadcrumbSchema([
     { label: "Home", path: "/" },
-    { label: "Products", path: "/products" },
-    { label: category, path: `/products?category=${encodeURIComponent(category)}` },
+    { label: "Store", path: "/store" },
+    { label: category, path: `/store?category=${encodeURIComponent(category)}` },
     { label: product.name, path },
   ]);
 
