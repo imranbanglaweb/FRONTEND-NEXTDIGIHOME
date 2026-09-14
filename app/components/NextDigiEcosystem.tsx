@@ -86,7 +86,7 @@ export default function NextDigiEcosystem() {
       borderGlow: 'border-[#00d4aa]/40 shadow-[0_0_30px_rgba(0,212,170,0.15)]',
       items: ['Full-Stack Source Code', 'Mobile App Templates', 'AI & Script Kits', 'Business Tools'],
       ctaText: 'Browse Store',
-      ctaLink: '/products'
+      ctaLink: '/store'
     },
     labs: {
       id: 'labs',
