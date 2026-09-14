@@ -36,7 +36,7 @@ import {
 } from '@heroicons/react/24/outline';
 import { StarIcon as StarIconSolid } from '@heroicons/react/24/solid';
 import Swal from 'sweetalert2';
-import { apiFetch, getStorageUrl } from './utils/api';
+import { apiFetch, getStorageUrl, getStorageProxyUrl } from './utils/api';
 
 interface Product {
   id: number | string;
@@ -55,13 +55,33 @@ interface Product {
 }
 
 const getProductImage = (prod: Product): string => {
+  if (prod.thumbnail_url && /^https?:\/\//i.test(prod.thumbnail_url)) {
+    return prod.thumbnail_url;
+  }
+  if (prod.image_url && /^https?:\/\//i.test(prod.image_url)) {
+    return prod.image_url;
+  }
   if (prod.thumbnail) {
     const storage = getStorageUrl(prod.thumbnail);
     if (storage) return storage;
   }
-  if (prod.thumbnail_url) return prod.thumbnail_url;
-  if (prod.image_url) return prod.image_url;
-  return '/placeholder.png';
+  return '/placeholder.svg';
+};
+
+const handleProductImageError = (e: React.SyntheticEvent<HTMLImageElement, Event>, fallbackPath?: string | null) => {
+  const target = e.currentTarget;
+  if (!target.dataset.triedProxy && fallbackPath) {
+    target.dataset.triedProxy = 'true';
+    const proxy = getStorageProxyUrl(fallbackPath);
+    if (proxy && proxy !== target.src) {
+      target.src = proxy;
+      return;
+    }
+  }
+  if (!target.dataset.fallbackApplied) {
+    target.dataset.fallbackApplied = 'true';
+    target.src = '/placeholder.svg';
+  }
 };
 
 interface WelcomeSettings {
@@ -1566,9 +1586,7 @@ export default function Home() {
                         loading="lazy"
                         decoding="async"
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                        onError={(e) => {
-                          (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=800&q=80';
-                        }}
+                        onError={(e) => handleProductImageError(e, prod.thumbnail)}
                       />
                     ) : (
                       <div className="w-full h-full bg-gradient-to-br from-[#162035] via-[#101726] to-[#090d16] flex items-center justify-center">

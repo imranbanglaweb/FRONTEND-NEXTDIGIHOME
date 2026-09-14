@@ -26,7 +26,7 @@ import {
   AcademicCapIcon,
 } from '@heroicons/react/24/outline';
 import Swal from 'sweetalert2';
-import { getStorageUrl, apiFetch } from '@/app/utils/api';
+import { getStorageUrl, getStorageProxyUrl, apiFetch } from '@/app/utils/api';
 import {
   getPurchaseType,
   getPurchaseTypeLabel,
@@ -64,13 +64,37 @@ interface StoreClientProps {
 }
 
 const resolveProductImage = (product: Product): string => {
+  // 1. Direct high-speed HTTPS thumbnail URL from backend
+  if (product.thumbnail_url && /^https?:\/\//i.test(product.thumbnail_url)) {
+    return product.thumbnail_url;
+  }
+  // 2. Direct high-speed HTTPS image URL from backend
+  if (product.image_url && /^https?:\/\//i.test(product.image_url)) {
+    return product.image_url;
+  }
+  // 3. Resolve relative thumbnail path to backend storage
   if (product.thumbnail) {
     const storageUrl = getStorageUrl(product.thumbnail);
     if (storageUrl) return storageUrl;
   }
-  if (product.thumbnail_url) return product.thumbnail_url;
-  if (product.image_url) return product.image_url;
-  return '/placeholder.png';
+  // 4. Reliable branded SVG fallback
+  return '/placeholder.svg';
+};
+
+const handleImageError = (e: React.SyntheticEvent<HTMLImageElement, Event>, fallbackPath?: string | null) => {
+  const target = e.currentTarget;
+  if (!target.dataset.triedProxy && fallbackPath) {
+    target.dataset.triedProxy = 'true';
+    const proxy = getStorageProxyUrl(fallbackPath);
+    if (proxy && proxy !== target.src) {
+      target.src = proxy;
+      return;
+    }
+  }
+  if (!target.dataset.fallbackApplied) {
+    target.dataset.fallbackApplied = 'true';
+    target.src = '/placeholder.svg';
+  }
 };
 
 const readNumber = (value: unknown, fallback: number): number => {
@@ -550,6 +574,7 @@ export default function StoreClient({ initialProducts, initialCategories }: Stor
                       alt={prod.name}
                       className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500"
                       loading="lazy"
+                      onError={(e) => handleImageError(e, prod.thumbnail)}
                     />
                     <div className="absolute top-3 left-3 flex flex-wrap gap-1.5">
                       <span className="px-2.5 py-1 rounded-md bg-black/75 backdrop-blur-md text-[10px] font-bold text-[#00d4aa] border border-[#00d4aa]/30 uppercase tracking-wider">
@@ -763,6 +788,7 @@ export default function StoreClient({ initialProducts, initialCategories }: Stor
                         alt={prod.name}
                         className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500"
                         loading="lazy"
+                        onError={(e) => handleImageError(e, prod.thumbnail)}
                       />
                       <div className="absolute top-3 left-3 flex flex-wrap gap-1.5">
                         <span className="px-2.5 py-1 rounded-md bg-black/75 backdrop-blur-md text-[10px] font-bold text-[#00d4aa] border border-[#00d4aa]/30 uppercase tracking-wider">
@@ -1268,6 +1294,7 @@ export default function StoreClient({ initialProducts, initialCategories }: Stor
                   src={resolveProductImage(quickViewProduct)}
                   alt={quickViewProduct.name}
                   className="w-full h-full object-cover"
+                  onError={(e) => handleImageError(e, quickViewProduct.thumbnail)}
                 />
               </div>
 

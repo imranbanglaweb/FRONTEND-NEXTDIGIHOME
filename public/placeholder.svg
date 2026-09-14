@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" fill="none" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bgGrad" x1="0" y1="0" x2="800" y2="500" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#0c1017"/>
+      <stop offset="50%" stop-color="#111726"/>
+      <stop offset="100%" stop-color="#090d15"/>
+    </linearGradient>
+    <linearGradient id="nLeft" x1="0" y1="0" x2="0" y2="120" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#00f2fe"/>
+      <stop offset="100%" stop-color="#00d4aa"/>
+    </linearGradient>
+    <linearGradient id="nDiag" x1="0" y1="0" x2="90" y2="120" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#00f2fe"/>
+      <stop offset="30%" stop-color="#00d4aa"/>
+      <stop offset="70%" stop-color="#8b5cf6"/>
+      <stop offset="100%" stop-color="#ec4899"/>
+    </linearGradient>
+    <linearGradient id="nRight" x1="0" y1="0" x2="0" y2="120" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#a855f7"/>
+      <stop offset="100%" stop-color="#6366f1"/>
+    </linearGradient>
+    <linearGradient id="accentGlow" x1="200" y1="100" x2="600" y2="400" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#00d4aa" stop-opacity="0.12"/>
+      <stop offset="50%" stop-color="#8b5cf6" stop-opacity="0.08"/>
+      <stop offset="100%" stop-color="#ec4899" stop-opacity="0.04"/>
+    </linearGradient>
+    <pattern id="grid" width="32" height="32" patternUnits="userSpaceOnUse">
+      <path d="M 32 0 L 0 0 0 32" fill="none" stroke="rgba(255,255,255,0.03)" stroke-width="1"/>
+    </pattern>
+  </defs>
+
+  <!-- Background Base -->
+  <rect width="800" height="500" fill="url(#bgGrad)"/>
+  <rect width="800" height="500" fill="url(#grid)"/>
+
+  <!-- Ambient Glow -->
+  <circle cx="400" cy="230" r="220" fill="url(#accentGlow)"/>
+
+  <!-- Central Card Container -->
+  <g transform="translate(355, 150)">
+    <!-- Stylized Ribbon N Logo -->
+    <rect x="68" y="0" width="22" height="100" rx="11" fill="url(#nRight)"/>
+    <rect x="0" y="0" width="22" height="100" rx="11" fill="url(#nLeft)"/>
+    <path
+      d="M 0 12 C 0 5.4 5.4 0 12 0 C 15.6 0 18.8 1.6 21 4.2 L 77 74 C 79.2 76.6 80.4 79.8 80.4 83.2 C 80.4 89.2 75.6 94 69.6 94 C 66 94 62.8 92.4 60.6 89.8 L 5 20 C 1.8 17.6 0 15 0 12 Z"
+      fill="url(#nDiag)"
+    />
+  </g>
+
+  <!-- Title & Subtitle -->
+  <text x="400" y="300" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="22" font-weight="800" fill="#ffffff" letter-spacing="1">
+    NEXTDIGI STORE
+  </text>
+  <text x="400" y="330" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="12" font-weight="600" fill="#00d4aa" letter-spacing="3">
+    DIGITAL ASSET PREVIEW
+  </text>
+
+  <!-- Border Accent -->
+  <rect x="1.5" y="1.5" width="797" height="497" rx="0" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+</svg>

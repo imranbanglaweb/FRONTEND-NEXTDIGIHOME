@@ -78,14 +78,31 @@ export const fetchTermsContent = () => apiFetch('content/terms');
 export const fetchProducts = (page: number = 1, perPage: number = 12) =>
   apiFetch(`products?page=${page}&per_page=${perPage}`);
 
-// Laravel storage URLs - use proxy to avoid CORS issues
+// Direct backend storage URL (bypasses proxy overhead for direct high-speed HTTP/2 asset delivery)
 export const getStorageUrl = (path: string | null | undefined): string | null => {
   if (!path) return null;
-  if (path.startsWith('http')) return path;
-  const cleanPath = path
+  const trimmed = path.trim();
+  if (!trimmed) return null;
+  if (/^https?:\/\//i.test(trimmed)) return trimmed;
+
+  const cleanPath = trimmed
     .replace(/^\/+/, '')
     .replace(/^(public\/)?storage\/+/i, '');
-  // Use proxy endpoint for images to avoid CORS issues
+
+  if (!cleanPath) return null;
+  return `${BACKEND_BASE_URL}/public/storage/${cleanPath}`;
+};
+
+// Proxy storage URL endpoint as secondary fallback
+export const getStorageProxyUrl = (path: string | null | undefined): string | null => {
+  if (!path) return null;
+  const trimmed = path.trim();
+  if (!trimmed) return null;
+  const cleanPath = trimmed
+    .replace(/^https?:\/\/[^\/]+/i, '')
+    .replace(/^\/+/, '')
+    .replace(/^(public\/)?storage\/+/i, '');
+  if (!cleanPath) return null;
   return `/api/storage/${cleanPath}`;
 };
 

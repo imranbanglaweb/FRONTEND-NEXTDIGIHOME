@@ -4,6 +4,32 @@ const nextConfig: NextConfig = {
   compress: true,
   poweredByHeader: false,
 
+  images: {
+    unoptimized: true,
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'backend.nextdigihome.com',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'nextdigihome.com',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'images.unsplash.com',
+        pathname: '/**',
+      },
+      {
+        protocol: 'http',
+        hostname: 'localhost',
+        pathname: '/**',
+      },
+    ],
+  },
+
   async redirects() {
     return [
       {

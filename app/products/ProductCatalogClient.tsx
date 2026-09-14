@@ -6,7 +6,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { MagnifyingGlassIcon, ArrowDownTrayIcon, StarIcon, ArrowPathIcon, AdjustmentsHorizontalIcon, HeartIcon, EyeIcon, XMarkIcon, BarsArrowDownIcon, BarsArrowUpIcon } from "@heroicons/react/24/outline";
 import { HeartIcon as HeartIconSolid } from "@heroicons/react/24/solid";
 import Swal from 'sweetalert2';
-import { getStorageUrl, apiFetch } from '../utils/api';
+import { getStorageUrl, getStorageProxyUrl, apiFetch } from '../utils/api';
 import {
   getAccessLabel,
   getProductKindLabel,
@@ -68,13 +68,33 @@ const normalizeCategory = (value: unknown): string => {
 };
 
 const resolveProductImage = (product: Product): string => {
+  if (product.thumbnail_url && /^https?:\/\//i.test(product.thumbnail_url)) {
+    return product.thumbnail_url;
+  }
+  if (product.image_url && /^https?:\/\//i.test(product.image_url)) {
+    return product.image_url;
+  }
   if (product.thumbnail) {
     const storageUrl = getStorageUrl(product.thumbnail);
     if (storageUrl) return storageUrl;
   }
-  if (product.thumbnail_url) return product.thumbnail_url;
-  if (product.image_url) return product.image_url;
-  return '/placeholder.png';
+  return '/placeholder.svg';
+};
+
+const handleImageError = (e: React.SyntheticEvent<HTMLImageElement, Event>, fallbackPath?: string | null) => {
+  const target = e.currentTarget;
+  if (!target.dataset.triedProxy && fallbackPath) {
+    target.dataset.triedProxy = 'true';
+    const proxy = getStorageProxyUrl(fallbackPath);
+    if (proxy && proxy !== target.src) {
+      target.src = proxy;
+      return;
+    }
+  }
+  if (!target.dataset.fallbackApplied) {
+    target.dataset.fallbackApplied = 'true';
+    target.src = '/placeholder.svg';
+  }
 };
 
 const unwrapArray = <T,>(data: unknown): T[] => {
@@ -782,9 +802,7 @@ function ProductsPageContent() {
                            loading="lazy"
                            decoding="async"
                            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                           onError={(e) => {
-                             (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=800&q=80';
-                           }}
+                           onError={(e) => handleImageError(e, product.thumbnail)}
                          />
                        ) : (
                         <div className="w-full h-full bg-linear-to-br from-[#1a1a1f] to-[#2a2a30] flex items-center justify-center">
@@ -888,9 +906,7 @@ function ProductsPageContent() {
                            loading="lazy"
                            decoding="async"
                            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                           onError={(e) => {
-                             (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=800&q=80';
-                           }}
+                           onError={(e) => handleImageError(e, product.thumbnail)}
                          />
                        ) : (
                         <div className="w-full h-full bg-linear-to-br from-[#1a1a1f] to-[#2a2a30] flex items-center justify-center">
@@ -1007,9 +1023,7 @@ function ProductsPageContent() {
                     loading="lazy"
                     decoding="async"
                     className="w-full h-64 lg:h-full object-cover"
-                    onError={(e) => {
-                      (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=800&q=80';
-                    }}
+                    onError={(e) => handleImageError(e, quickViewProduct.thumbnail)}
                   />
                 ) : (
                   <div className="w-full h-64 lg:h-full bg-linear-to-br from-[#1a1a1f] to-[#2a2a30] flex items-center justify-center">
