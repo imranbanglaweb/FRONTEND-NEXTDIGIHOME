@@ -184,7 +184,7 @@ export default function Home() {
   const [products, setProducts] = useState<Product[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [activeCategoryTab, setActiveCategoryTab] = useState<'all' | 'source-code' | 'mobile-apps' | 'scripts' | 'business-tools'>('all');
-  const [heroConsoleTab, setHeroConsoleTab] = useState<'saas' | 'ai' | 'growth'>('saas');
+  const [heroConsoleTab, setHeroConsoleTab] = useState<'saas' | 'ai' | 'growth' | 'products'>('saas');
   const [hoveredDivision, setHoveredDivision] = useState<'solutions' | 'ai' | 'growth' | 'products'>('solutions');
 
   useEffect(() => {
@@ -396,26 +396,73 @@ export default function Home() {
             </div>
 
 
-            {/* RIGHT COLUMN: TECHNOLOGY / SAAS VISUAL */}
-            <div className="lg:col-span-5 xl:col-span-6 w-full">
-              {/* SaaS / Tech Interactive Visual Console */}
-              <div className="relative rounded-2xl bg-[#0c1017]/95 border border-white/10 shadow-2xl backdrop-blur-xl overflow-hidden">
+            {/* RIGHT COLUMN: TECHNOLOGY / SAAS / AI MULTI-COLOR VISUAL CONSOLE */}
+            <div className="lg:col-span-5 xl:col-span-6 w-full relative">
+              {/* Multi-Color Ambient Glow Spheres */}
+              <div className="absolute -top-12 -left-10 w-64 h-64 bg-gradient-to-br from-[#00d4aa]/20 to-[#38bdf8]/10 rounded-full blur-3xl pointer-events-none -z-10" />
+              <div className="absolute -top-10 -right-10 w-72 h-72 bg-gradient-to-bl from-[#8b5cf6]/20 to-[#ec4899]/10 rounded-full blur-3xl pointer-events-none -z-10" />
+              <div className="absolute -bottom-12 left-1/4 w-80 h-80 bg-gradient-to-tr from-[#f59e0b]/15 to-[#10b981]/15 rounded-full blur-3xl pointer-events-none -z-10" />
+
+              {/* FLOATING DECORATIVE BADGE: TOP RIGHT (Edge Performance) */}
+              <div className="animate-float-slow absolute -top-5 -right-3 sm:-right-4 z-20 hidden sm:flex items-center gap-2.5 px-3.5 py-2 rounded-xl bg-[#0b1120]/90 border border-[#00d4aa]/40 shadow-[0_10px_30px_-5px_rgba(0,212,170,0.3)] backdrop-blur-xl text-xs">
+                <div className="w-7 h-7 rounded-lg bg-[#00d4aa]/20 border border-[#00d4aa]/40 flex items-center justify-center text-[#00d4aa]">
+                  <SparklesIcon className="w-4 h-4 animate-pulse" />
+                </div>
+                <div>
+                  <div className="font-bold text-white text-[11px] leading-tight">Next.js 16 + React 19</div>
+                  <div className="text-[10px] text-[#00d4aa] font-mono flex items-center gap-1">
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#00d4aa] animate-ping" />
+                    Edge SSR • 18ms Latency
+                  </div>
+                </div>
+              </div>
+
+              {/* FLOATING DECORATIVE BADGE: BOTTOM LEFT (IP Ownership) */}
+              <div className="animate-float-reverse absolute -bottom-5 -left-3 sm:-left-4 z-20 hidden sm:flex items-center gap-2.5 px-3.5 py-2 rounded-xl bg-[#0f1026]/90 border border-[#8b5cf6]/40 shadow-[0_10px_30px_-5px_rgba(139,92,246,0.3)] backdrop-blur-xl text-xs">
+                <div className="w-7 h-7 rounded-lg bg-[#8b5cf6]/20 border border-[#8b5cf6]/40 flex items-center justify-center text-[#c084fc]">
+                  <ShieldCheckIcon className="w-4 h-4" />
+                </div>
+                <div>
+                  <div className="font-bold text-white text-[11px] leading-tight">100% IP Code Ownership</div>
+                  <div className="text-[10px] text-[#c084fc] font-mono">Zero Lock-in • Clean Architecture</div>
+                </div>
+              </div>
+
+              {/* FLOATING PILL: MID-RIGHT (Live CDN Status) */}
+              <div className="absolute top-1/2 -right-4 translate-y-6 z-20 hidden xl:flex items-center gap-2 px-3 py-1.5 rounded-full bg-black/85 border border-emerald-500/40 shadow-xl backdrop-blur-md text-[10px] font-mono text-emerald-400">
+                <span className="relative flex h-2 w-2">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
+                </span>
+                <span>Active Global CDN • 99.98% SLA</span>
+              </div>
+
+              {/* MAIN INTERACTIVE CONSOLE CONTAINER */}
+              <div className="relative rounded-2xl bg-gradient-to-b from-[#0e1422]/95 via-[#0a0e18]/95 to-[#060911]/98 border border-white/12 shadow-[0_20px_70px_-15px_rgba(0,0,0,0.85)] backdrop-blur-2xl overflow-hidden group">
                 
+                {/* Neon Holographic Top Accent Bar */}
+                <div className="h-[2px] w-full bg-gradient-to-r from-transparent via-[#00d4aa] via-[#38bdf8] via-[#8b5cf6] to-transparent animate-neon-pulse" />
+
                 {/* Window Header */}
-                <div className="flex items-center justify-between px-4 py-3 bg-white/[0.03] border-b border-white/5">
+                <div className="flex flex-wrap items-center justify-between gap-2 px-4 py-3 bg-white/[0.03] border-b border-white/5">
                   <div className="flex items-center gap-2">
-                    <span className="w-2.5 h-2.5 rounded-full bg-[#ef4444]/80" />
-                    <span className="w-2.5 h-2.5 rounded-full bg-[#eab308]/80" />
-                    <span className="w-2.5 h-2.5 rounded-full bg-[#10b981]/80" />
-                    <span className="text-[11px] font-mono text-slate-400 ml-2 hidden sm:inline">NEXTDIGIHOME System Console</span>
+                    <span className="w-3 h-3 rounded-full bg-[#ef4444] shadow-[0_0_8px_rgba(239,68,68,0.6)]" />
+                    <span className="w-3 h-3 rounded-full bg-[#f59e0b] shadow-[0_0_8px_rgba(245,158,11,0.6)]" />
+                    <span className="w-3 h-3 rounded-full bg-[#10b981] shadow-[0_0_8px_rgba(16,185,129,0.6)]" />
+                    
+                    <div className="flex items-center gap-1.5 ml-2 px-2 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-[10px] font-mono text-emerald-400">
+                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                      <span className="font-semibold tracking-wider">ENGINE LIVE</span>
+                    </div>
                   </div>
 
-                  {/* Visual Mode Switcher */}
-                  <div className="flex items-center gap-1 bg-black/40 p-1 rounded-lg border border-white/5 text-[11px]">
+                  {/* Multi-Color Mode Switcher Tabs */}
+                  <div className="flex items-center gap-1 bg-black/50 p-1 rounded-xl border border-white/10 text-[11px]">
                     {[
-                      { id: 'saas', label: 'SaaS & Web', icon: CommandLineIcon },
-                      { id: 'ai', label: 'AI & Automate', icon: CpuChipIcon },
-                      { id: 'growth', label: 'Growth', icon: ChartBarIcon }
+                      { id: 'saas', label: 'SaaS & Web', icon: CommandLineIcon, activeColor: 'bg-[#00d4aa] text-black shadow-[0_0_15px_rgba(0,212,170,0.4)]' },
+                      { id: 'ai', label: 'AI & Agents', icon: CpuChipIcon, activeColor: 'bg-[#8b5cf6] text-white shadow-[0_0_15px_rgba(139,92,246,0.4)]' },
+                      { id: 'growth', label: 'Growth', icon: ChartBarIcon, activeColor: 'bg-[#10b981] text-black shadow-[0_0_15px_rgba(16,185,129,0.4)]' },
+                      { id: 'products', label: 'Products', icon: ShoppingBagIcon, activeColor: 'bg-gradient-to-r from-[#f97316] to-[#f59e0b] text-white shadow-[0_0_15px_rgba(249,115,22,0.4)]' }
                     ].map((tab) => {
                       const Icon = tab.icon;
                       const isActive = heroConsoleTab === tab.id;
@@ -423,187 +470,355 @@ export default function Home() {
                         <button
                           key={tab.id}
                           onClick={() => setHeroConsoleTab(tab.id as any)}
-                          className={`flex items-center gap-1.5 px-2.5 py-1 rounded-md font-semibold transition-all ${
+                          className={`flex items-center gap-1.5 px-2.5 py-1 rounded-lg font-semibold transition-all duration-200 ${
                             isActive
-                              ? 'bg-[#00d4aa] text-black shadow-sm'
+                              ? tab.activeColor
                               : 'text-slate-400 hover:text-white hover:bg-white/5'
                           }`}
                         >
-                          <Icon className="w-3 h-3" />
-                          <span>{tab.label}</span>
+                          <Icon className="w-3.5 h-3.5" />
+                          <span className="hidden sm:inline">{tab.label}</span>
                         </button>
                       );
                     })}
                   </div>
                 </div>
 
-                {/* Window Body: Visual Modes */}
-                <div className="p-5 sm:p-6 space-y-4">
+                {/* Window Body: Visual Interactive Modes */}
+                <div className="p-4 sm:p-5 space-y-4">
+
+                  {/* ========================================================= */}
+                  {/* TAB 1: SAAS & WEB ARCHITECTURE                           */}
+                  {/* ========================================================= */}
                   {heroConsoleTab === 'saas' && (
-                    <div className="space-y-4">
-                      {/* Top Metric Bar */}
-                      <div className="grid grid-cols-3 gap-2.5">
-                        <div className="p-3 rounded-xl bg-white/[0.03] border border-white/5">
-                          <div className="text-[10px] uppercase font-bold text-slate-400">Architecture</div>
-                          <div className="text-sm sm:text-base font-bold text-white mt-0.5">Next.js 15 + API</div>
-                          <div className="text-[10px] text-emerald-400 mt-0.5 flex items-center gap-1">
-                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" /> Active
+                    <div className="space-y-4 animate-in fade-in duration-300">
+                      {/* Metric KPI Grid */}
+                      <div className="grid grid-cols-3 gap-2 sm:gap-3">
+                        <div className="p-3 rounded-xl bg-gradient-to-br from-[#38bdf8]/10 to-transparent border border-[#38bdf8]/20 relative overflow-hidden group/card hover:border-[#38bdf8]/40 transition-colors">
+                          <div className="flex items-center justify-between">
+                            <span className="text-[10px] uppercase font-bold tracking-wider text-slate-400">Latency</span>
+                            <ServerIcon className="w-3.5 h-3.5 text-[#38bdf8]" />
+                          </div>
+                          <div className="text-lg sm:text-xl font-black text-white mt-1">18ms</div>
+                          <div className="text-[10px] text-[#38bdf8] font-mono mt-0.5 flex items-center gap-1">
+                            <span className="w-1.5 h-1.5 rounded-full bg-[#38bdf8] animate-pulse" /> Edge SSR
                           </div>
                         </div>
-                        <div className="p-3 rounded-xl bg-white/[0.03] border border-white/5">
-                          <div className="text-[10px] uppercase font-bold text-slate-400">API Response</div>
-                          <div className="text-sm sm:text-base font-bold text-[#00d4aa] mt-0.5">18ms</div>
-                          <div className="text-[10px] text-slate-400 mt-0.5">Global Edge CDN</div>
+
+                        <div className="p-3 rounded-xl bg-gradient-to-br from-[#00d4aa]/10 to-transparent border border-[#00d4aa]/20 relative overflow-hidden group/card hover:border-[#00d4aa]/40 transition-colors">
+                          <div className="flex items-center justify-between">
+                            <span className="text-[10px] uppercase font-bold tracking-wider text-slate-400">Security</span>
+                            <ShieldCheckIcon className="w-3.5 h-3.5 text-[#00d4aa]" />
+                          </div>
+                          <div className="text-lg sm:text-xl font-black text-[#00d4aa] mt-1">100% RLS</div>
+                          <div className="text-[10px] text-slate-300 font-mono mt-0.5">Tenant Isolation</div>
                         </div>
-                        <div className="p-3 rounded-xl bg-white/[0.03] border border-white/5">
-                          <div className="text-[10px] uppercase font-bold text-slate-400">System Uptime</div>
-                          <div className="text-sm sm:text-base font-bold text-white mt-0.5">99.98%</div>
-                          <div className="text-[10px] text-slate-400 mt-0.5">Automated CI/CD</div>
+
+                        <div className="p-3 rounded-xl bg-gradient-to-br from-[#10b981]/10 to-transparent border border-[#10b981]/20 relative overflow-hidden group/card hover:border-[#10b981]/40 transition-colors">
+                          <div className="flex items-center justify-between">
+                            <span className="text-[10px] uppercase font-bold tracking-wider text-slate-400">Uptime</span>
+                            <BoltIcon className="w-3.5 h-3.5 text-[#10b981]" />
+                          </div>
+                          <div className="text-lg sm:text-xl font-black text-white mt-1">99.98%</div>
+                          <div className="text-[10px] text-emerald-400 font-mono mt-0.5">Automated Scale</div>
                         </div>
                       </div>
 
-                      {/* Services Telemetry Matrix */}
-                      <div className="p-4 rounded-xl bg-black/40 border border-white/5 space-y-2.5">
-                        <div className="flex items-center justify-between text-xs pb-2 border-b border-white/5">
-                          <span className="font-semibold text-white">Full-Stack Production Matrix</span>
-                          <span className="text-[11px] font-mono text-[#00d4aa]">Enterprise SLA</span>
+                      {/* Interactive Architecture Flow Stream */}
+                      <div className="p-3.5 rounded-xl bg-black/60 border border-white/10 space-y-2.5">
+                        <div className="flex items-center justify-between">
+                          <span className="text-[11px] font-semibold text-white tracking-wide flex items-center gap-1.5">
+                            <CommandLineIcon className="w-3.5 h-3.5 text-[#00d4aa]" /> Production Pipeline Flow
+                          </span>
+                          <span className="text-[10px] font-mono text-[#00d4aa] bg-[#00d4aa]/10 px-2 py-0.5 rounded-full border border-[#00d4aa]/20">
+                            Zero-Downtime CI/CD
+                          </span>
                         </div>
-                        <div className="grid grid-cols-2 gap-2 text-xs">
-                          <div className="flex items-center justify-between p-2 rounded-lg bg-white/[0.02] border border-white/5">
-                            <span className="text-slate-400">Web &amp; E-commerce</span>
-                            <span className="text-emerald-400 font-mono text-[11px]">NextDigi Solutions</span>
+
+                        <div className="grid grid-cols-4 gap-1.5 sm:gap-2 text-center text-[10px] font-mono">
+                          <div className="p-2 rounded-lg bg-white/[0.03] border border-blue-500/30 text-blue-300 font-semibold shadow-inner">
+                            <div>01. Edge</div>
+                            <div className="text-[9px] text-slate-400 font-normal mt-0.5">Next.js 16</div>
                           </div>
-                          <div className="flex items-center justify-between p-2 rounded-lg bg-white/[0.02] border border-white/5">
-                            <span className="text-slate-400">Cross-Platform Apps</span>
-                            <span className="text-[#38bdf8] font-mono text-[11px]">Flutter &amp; React Native</span>
+                          <div className="p-2 rounded-lg bg-white/[0.03] border border-cyan-500/30 text-cyan-300 font-semibold shadow-inner">
+                            <div>02. CAPI</div>
+                            <div className="text-[9px] text-slate-400 font-normal mt-0.5">Server Event</div>
                           </div>
-                          <div className="flex items-center justify-between p-2 rounded-lg bg-white/[0.02] border border-white/5">
-                            <span className="text-slate-400">SaaS Multi-Tenancy</span>
-                            <span className="text-[#8b5cf6] font-mono text-[11px]">RBAC + Billing</span>
+                          <div className="p-2 rounded-lg bg-white/[0.03] border border-purple-500/30 text-purple-300 font-semibold shadow-inner">
+                            <div>03. DB RLS</div>
+                            <div className="text-[9px] text-slate-400 font-normal mt-0.5">PostgreSQL</div>
                           </div>
-                          <div className="flex items-center justify-between p-2 rounded-lg bg-white/[0.02] border border-white/5">
-                            <span className="text-slate-400">Code Ownership</span>
-                            <span className="text-white font-mono text-[11px]">100% Client IP</span>
+                          <div className="p-2 rounded-lg bg-white/[0.03] border border-emerald-500/30 text-emerald-300 font-semibold shadow-inner">
+                            <div>04. Gateway</div>
+                            <div className="text-[9px] text-slate-400 font-normal mt-0.5">bKash/Stripe</div>
                           </div>
                         </div>
                       </div>
 
-                      {/* Bottom Action Footer */}
+                      {/* Live Code / Telemetry Terminal */}
+                      <div className="p-3 rounded-xl bg-[#080c14] border border-white/8 font-mono text-[11px] leading-relaxed text-slate-300">
+                        <div className="flex items-center justify-between pb-2 border-b border-white/5 text-[10px] text-slate-400">
+                          <div className="flex items-center gap-1.5">
+                            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                            <span>telemetry@nextdigihome:~$ stream --live</span>
+                          </div>
+                          <span className="text-[#00d4aa]">HTTP/2 200 OK</span>
+                        </div>
+                        <div className="pt-2 space-y-1 text-[10px] sm:text-[11px]">
+                          <div className="text-slate-400 flex items-center justify-between">
+                            <span><span className="text-[#38bdf8]">GET</span> /api/v1/auth/session</span>
+                            <span className="text-emerald-400">14ms [Edge-BGD]</span>
+                          </div>
+                          <div className="text-slate-400 flex items-center justify-between">
+                            <span><span className="text-[#8b5cf6]">EXEC</span> syncTenantSchema(id: &quot;enterprise_app&quot;)</span>
+                            <span className="text-emerald-400">RLS Enforced</span>
+                          </div>
+                          <div className="text-slate-400 flex items-center justify-between">
+                            <span><span className="text-[#f59e0b]">DEPLOY</span> autoScaleWorker(cluster: 3)</span>
+                            <span className="text-[#00d4aa]">Healthy</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Mode Footer Callout */}
                       <div className="flex items-center justify-between pt-1 text-xs">
-                        <span className="text-slate-400 text-[11px]">Deploy custom web, mobile, or enterprise SaaS.</span>
-                        <Link href="/solutions" className="text-[#00d4aa] font-semibold hover:underline flex items-center gap-1">
+                        <span className="text-slate-400 text-[11px]">Enterprise full-stack software &amp; custom SaaS.</span>
+                        <Link href="/solutions" className="text-[#00d4aa] font-bold hover:underline flex items-center gap-1">
                           Explore Solutions <ArrowRightIcon className="w-3 h-3" />
                         </Link>
                       </div>
                     </div>
                   )}
 
+                  {/* ========================================================= */}
+                  {/* TAB 2: AI & AGENTS ARCHITECTURE                           */}
+                  {/* ========================================================= */}
                   {heroConsoleTab === 'ai' && (
-                    <div className="space-y-4">
-                      {/* AI Agent Status */}
-                      <div className="p-3.5 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-between">
-                        <div className="flex items-center gap-2.5">
-                          <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping" />
-                          <div>
-                            <div className="text-xs font-bold text-white">Deterministic AI Automation Engine</div>
-                            <div className="text-[11px] text-emerald-400 font-mono">Private RAG &bull; WhatsApp API &bull; 0.8s Latency</div>
-                          </div>
+                    <div className="space-y-4 animate-in fade-in duration-300">
+                      {/* AI Status Banner */}
+                      <div className="p-3 rounded-xl bg-gradient-to-r from-[#8b5cf6]/15 via-[#6366f1]/15 to-transparent border border-[#8b5cf6]/30 flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <CpuChipIcon className="w-4 h-4 text-[#c084fc] animate-pulse" />
+                          <span className="text-xs font-bold text-white">Autonomous Agentic Reasoning Engine</span>
                         </div>
-                        <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 font-mono">
-                          24/7 Live
+                        <span className="px-2 py-0.5 rounded-full bg-[#8b5cf6]/20 border border-[#8b5cf6]/40 text-[10px] font-mono text-[#c084fc]">
+                          Multi-Model LLM
                         </span>
                       </div>
 
-                      {/* 4-Step Pipeline */}
+                      {/* 4 Cognitive Nodes Grid */}
                       <div className="grid grid-cols-2 gap-2">
-                        {[
-                          { step: '01', title: 'Omnichannel Inbound', desc: 'WhatsApp, Web Chat & CRM' },
-                          { step: '02', title: 'Vector Retrieval', desc: 'Private company embeddings' },
-                          { step: '03', title: 'Autonomous Action', desc: 'CRM sync & checkout link' },
-                          { step: '04', title: 'Structured Output', desc: 'Bilingual Bengali & English' }
-                        ].map((node) => (
-                          <div key={node.step} className="p-2.5 rounded-xl bg-white/[0.03] border border-white/5">
-                            <div className="text-[10px] font-mono text-[#00d4aa] font-bold">{node.step}</div>
-                            <div className="text-xs font-bold text-white mt-0.5">{node.title}</div>
-                            <div className="text-[10px] text-slate-400 mt-0.5">{node.desc}</div>
+                        <div className="p-2.5 rounded-lg bg-black/40 border border-blue-500/20 hover:border-blue-500/40 transition-colors">
+                          <div className="flex items-center gap-1.5 text-blue-400 text-xs font-bold">
+                            <ChatBubbleBottomCenterTextIcon className="w-3.5 h-3.5" />
+                            <span>01. Inbound Triage</span>
                           </div>
-                        ))}
+                          <p className="text-[10px] text-slate-300 mt-1 leading-normal">
+                            WhatsApp, Facebook Messenger &amp; Webhook real-time intent parsing.
+                          </p>
+                        </div>
+
+                        <div className="p-2.5 rounded-lg bg-black/40 border border-purple-500/20 hover:border-purple-500/40 transition-colors">
+                          <div className="flex items-center gap-1.5 text-[#c084fc] text-xs font-bold">
+                            <SparklesIcon className="w-3.5 h-3.5" />
+                            <span>02. Vector RAG</span>
+                          </div>
+                          <p className="text-[10px] text-slate-300 mt-1 leading-normal">
+                            Hybrid semantic search over product catalog, policies &amp; ERP inventory.
+                          </p>
+                        </div>
+
+                        <div className="p-2.5 rounded-lg bg-black/40 border border-[#00d4aa]/20 hover:border-[#00d4aa]/40 transition-colors">
+                          <div className="flex items-center gap-1.5 text-[#00d4aa] text-xs font-bold">
+                            <WrenchScrewdriverIcon className="w-3.5 h-3.5" />
+                            <span>03. Tool Execution</span>
+                          </div>
+                          <p className="text-[10px] text-slate-300 mt-1 leading-normal">
+                            Automated CRM sync, order booking, invoice dispatch &amp; SMS delivery.
+                          </p>
+                        </div>
+
+                        <div className="p-2.5 rounded-lg bg-black/40 border border-emerald-500/20 hover:border-emerald-500/40 transition-colors">
+                          <div className="flex items-center gap-1.5 text-emerald-400 text-xs font-bold">
+                            <ShieldCheckIcon className="w-3.5 h-3.5" />
+                            <span>04. Human In Loop</span>
+                          </div>
+                          <p className="text-[10px] text-slate-300 mt-1 leading-normal">
+                            Instant escalation to supervisor when customer sentiment requires care.
+                          </p>
+                        </div>
                       </div>
 
-                      {/* Console Log */}
-                      <div className="p-3 rounded-xl bg-black/60 border border-white/5 font-mono text-[11px] space-y-1 text-slate-400">
-                        <div className="text-emerald-400">&gt; [AI-DISPATCH] Lead captured &bull; Intent: Custom SaaS Inquiry</div>
-                        <div className="text-slate-300">&gt; [RAG-LOOKUP] Matched architecture blueprint in 118ms</div>
-                        <div className="text-[#38bdf8]">&gt; [STATUS] Automated response dispatched via WhatsApp</div>
+                      {/* Agentic Prompt Execution Trace */}
+                      <div className="p-3 rounded-xl bg-[#080b14] border border-white/8 font-mono text-[11px] leading-relaxed text-slate-300">
+                        <div className="text-[10px] text-[#c084fc] flex items-center justify-between pb-1 border-b border-white/5">
+                          <span>AGENT TRACE: OrderSupportBot_v2.4</span>
+                          <span className="text-emerald-400">Confidence: 98.4%</span>
+                        </div>
+                        <div className="pt-2 space-y-1 text-[10px]">
+                          <div className="text-slate-400">
+                            <span className="text-[#38bdf8]">[User Prompt]</span> &quot;Can I track order #NDH-8821 and add express delivery?&quot;
+                          </div>
+                          <div className="text-slate-300">
+                            <span className="text-[#c084fc]">[Reasoning]</span> Order found in ERP. Express delivery available (+BDT 100).
+                          </div>
+                          <div className="text-emerald-400">
+                            <span className="text-[#00d4aa]">[Action Taken]</span> Invoice adjusted, bKash paylink generated, SMS dispatched.
+                          </div>
+                        </div>
                       </div>
 
+                      {/* Mode Footer Callout */}
                       <div className="flex items-center justify-between pt-1 text-xs">
-                        <span className="text-slate-400 text-[11px]">Save up to 80% manual response time.</span>
-                        <Link href="/ai" className="text-[#00d4aa] font-semibold hover:underline flex items-center gap-1">
-                          Deploy AI Agents <ArrowRightIcon className="w-3 h-3" />
+                        <span className="text-slate-400 text-[11px]">Deploy automated, revenue-producing AI workflows.</span>
+                        <Link href="/ai" className="text-[#8b5cf6] font-bold hover:underline flex items-center gap-1">
+                          Explore AI Automation <ArrowRightIcon className="w-3 h-3" />
                         </Link>
                       </div>
                     </div>
                   )}
 
+                  {/* ========================================================= */}
+                  {/* TAB 3: GROWTH & ADS ARCHITECTURE                          */}
+                  {/* ========================================================= */}
                   {heroConsoleTab === 'growth' && (
-                    <div className="space-y-4">
+                    <div className="space-y-4 animate-in fade-in duration-300">
                       {/* Growth Metrics */}
-                      <div className="grid grid-cols-3 gap-2.5">
-                        <div className="p-3 rounded-xl bg-white/[0.03] border border-white/5">
+                      <div className="grid grid-cols-3 gap-2 sm:gap-3">
+                        <div className="p-3 rounded-xl bg-gradient-to-br from-emerald-500/10 to-transparent border border-emerald-500/20 hover:border-emerald-500/40 transition-colors">
                           <div className="text-[10px] uppercase font-bold text-slate-400">Server CAPI Match</div>
-                          <div className="text-lg font-black text-white mt-0.5">99.1%</div>
-                          <div className="text-[10px] text-emerald-400 mt-0.5">Zero Signal Loss</div>
+                          <div className="text-lg sm:text-xl font-black text-emerald-400 mt-0.5">99.4%</div>
+                          <div className="text-[10px] text-slate-300 mt-0.5">Zero Signal Loss</div>
                         </div>
-                        <div className="p-3 rounded-xl bg-white/[0.03] border border-white/5">
+                        <div className="p-3 rounded-xl bg-gradient-to-br from-amber-500/10 to-transparent border border-amber-500/20 hover:border-amber-500/40 transition-colors">
                           <div className="text-[10px] uppercase font-bold text-slate-400">Average ROAS</div>
-                          <div className="text-lg font-black text-[#00d4aa] mt-0.5">4.6x</div>
-                          <div className="text-[10px] text-slate-400 mt-0.5">Multi-Channel Ads</div>
+                          <div className="text-lg sm:text-xl font-black text-[#f59e0b] mt-0.5">4.6x</div>
+                          <div className="text-[10px] text-slate-300 mt-0.5">Blended Channels</div>
                         </div>
-                        <div className="p-3 rounded-xl bg-white/[0.03] border border-white/5">
+                        <div className="p-3 rounded-xl bg-gradient-to-br from-cyan-500/10 to-transparent border border-cyan-500/20 hover:border-cyan-500/40 transition-colors">
                           <div className="text-[10px] uppercase font-bold text-slate-400">Checkout Speed</div>
-                          <div className="text-lg font-black text-white mt-0.5">&lt; 1.2s</div>
-                          <div className="text-[10px] text-slate-400 mt-0.5">High-Converting</div>
+                          <div className="text-lg sm:text-xl font-black text-[#00d4aa] mt-0.5">&lt; 1.1s</div>
+                          <div className="text-[10px] text-slate-300 mt-0.5">High-Converting</div>
                         </div>
                       </div>
 
-                      {/* Growth Channels */}
-                      <div className="p-4 rounded-xl bg-black/40 border border-white/5 space-y-2.5">
-                        <div className="text-xs font-semibold text-white">Full-Funnel Acquisition Engine</div>
-                        <div className="space-y-1.5 text-xs text-slate-300">
-                          <div className="flex items-center justify-between p-2 rounded-lg bg-white/[0.02]">
-                            <span>Meta Ads &amp; Conversion API (CAPI)</span>
-                            <span className="text-emerald-400 text-[11px] font-mono">Optimized</span>
+                      {/* Growth Channels Matrix */}
+                      <div className="p-3.5 rounded-xl bg-black/50 border border-white/8 space-y-2.5">
+                        <div className="text-xs font-bold text-white flex items-center justify-between">
+                          <span className="flex items-center gap-1.5">
+                            <ChartBarIcon className="w-4 h-4 text-emerald-400" /> Full-Funnel Acquisition Engine
+                          </span>
+                          <span className="text-[10px] text-emerald-400 font-mono">+34% Revenue Lift</span>
+                        </div>
+                        <div className="space-y-1.5 text-xs">
+                          <div className="flex items-center justify-between p-2 rounded-lg bg-white/[0.02] border border-white/5">
+                            <span className="text-slate-200">Meta Ads &amp; Server-Side Conversion API (CAPI)</span>
+                            <span className="text-emerald-400 text-[11px] font-mono font-bold">Optimized</span>
                           </div>
-                          <div className="flex items-center justify-between p-2 rounded-lg bg-white/[0.02]">
-                            <span>Google Search &amp; Performance Max</span>
-                            <span className="text-[#38bdf8] text-[11px] font-mono">High-Intent</span>
+                          <div className="flex items-center justify-between p-2 rounded-lg bg-white/[0.02] border border-white/5">
+                            <span className="text-slate-200">Google Search &amp; Performance Max (High Intent)</span>
+                            <span className="text-[#38bdf8] text-[11px] font-mono font-bold">High-ROAS</span>
                           </div>
-                          <div className="flex items-center justify-between p-2 rounded-lg bg-white/[0.02]">
-                            <span>Technical SEO &amp; Automated Abandoned Cart SMS</span>
-                            <span className="text-[#8b5cf6] text-[11px] font-mono">Predictable</span>
+                          <div className="flex items-center justify-between p-2 rounded-lg bg-white/[0.02] border border-white/5">
+                            <span className="text-slate-200">Technical SEO &amp; Automated Abandoned Cart Recovery</span>
+                            <span className="text-[#8b5cf6] text-[11px] font-mono font-bold">Predictable</span>
                           </div>
                         </div>
                       </div>
 
+                      {/* Mode Footer Callout */}
                       <div className="flex items-center justify-between pt-1 text-xs">
                         <span className="text-slate-400 text-[11px]">Drive profitable, scalable customer acquisition.</span>
-                        <Link href="/growth" className="text-[#00d4aa] font-semibold hover:underline flex items-center gap-1">
+                        <Link href="/growth" className="text-emerald-400 font-bold hover:underline flex items-center gap-1">
                           Explore Growth Services <ArrowRightIcon className="w-3 h-3" />
                         </Link>
                       </div>
                     </div>
                   )}
+
+                  {/* ========================================================= */}
+                  {/* TAB 4: LIVE PRODUCTION PRODUCTS                           */}
+                  {/* ========================================================= */}
+                  {heroConsoleTab === 'products' && (
+                    <div className="space-y-4 animate-in fade-in duration-300">
+                      {/* Product Header */}
+                      <div className="p-3 rounded-xl bg-gradient-to-r from-[#f97316]/15 via-[#f59e0b]/15 to-transparent border border-[#f97316]/30 flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <ShoppingBagIcon className="w-4 h-4 text-[#f97316]" />
+                          <span className="text-xs font-bold text-white">Live SaaS Products &amp; Digital Assets</span>
+                        </div>
+                        <span className="px-2 py-0.5 rounded-full bg-[#f97316]/20 border border-[#f97316]/40 text-[10px] font-mono text-[#f97316]">
+                          Production Live
+                        </span>
+                      </div>
+
+                      {/* 2 Live Product Cards */}
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                        {/* Product 1: NextDigi Commerce */}
+                        <div className="p-3 rounded-xl bg-black/40 border border-orange-500/20 hover:border-orange-500/40 transition-all group/prod">
+                          <div className="flex items-center justify-between">
+                            <span className="text-[10px] font-mono text-[#f97316] font-bold">E-Commerce SaaS</span>
+                            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                          </div>
+                          <h4 className="text-sm font-bold text-white mt-1 group-hover/prod:text-[#f97316] transition-colors">
+                            NextDigi Commerce
+                          </h4>
+                          <p className="text-[11px] text-slate-300 mt-1 leading-snug">
+                            Multi-vendor storefront, order ERP &amp; local bKash/Nagad checkout.
+                          </p>
+                          <a
+                            href="https://commerce.nextdigihome.com/"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="mt-2.5 inline-flex items-center gap-1 text-[11px] font-bold text-[#f97316] hover:underline"
+                          >
+                            Launch Live Demo <ArrowTopRightOnSquareIcon className="w-3 h-3" />
+                          </a>
+                        </div>
+
+                        {/* Product 2: Garibondhu360 */}
+                        <div className="p-3 rounded-xl bg-black/40 border-blue-500/20 hover:border-blue-500/40 transition-all group/prod">
+                          <div className="flex items-center justify-between">
+                            <span className="text-[10px] font-mono text-[#38bdf8] font-bold">Automotive Platform</span>
+                            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                          </div>
+                          <h4 className="text-sm font-bold text-white mt-1 group-hover/prod:text-[#38bdf8] transition-colors">
+                            Garibondhu360
+                          </h4>
+                          <p className="text-[11px] text-slate-300 mt-1 leading-snug">
+                            Vehicle inspection logs, dealer marketplace &amp; workshop CRM.
+                          </p>
+                          <a
+                            href="https://garibondhu360.nextdigihome.com/"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="mt-2.5 inline-flex items-center gap-1 text-[11px] font-bold text-[#38bdf8] hover:underline"
+                          >
+                            Launch Live Demo <ArrowTopRightOnSquareIcon className="w-3 h-3" />
+                          </a>
+                        </div>
+                      </div>
+
+                      {/* Mode Footer Callout */}
+                      <div className="flex items-center justify-between pt-1 text-xs">
+                        <span className="text-slate-400 text-[11px]">Ready-to-deploy web software and digital tools.</span>
+                        <Link href="/store" className="text-[#f97316] font-bold hover:underline flex items-center gap-1">
+                          Explore NextDigi Store <ArrowRightIcon className="w-3 h-3" />
+                        </Link>
+                      </div>
+                    </div>
+                  )}
+
                 </div>
 
                 {/* Ecosystem Connected Footer Banner */}
                 <div className="px-5 py-3 bg-gradient-to-r from-white/[0.02] via-white/[0.05] to-white/[0.02] border-t border-white/5 flex items-center justify-between text-[11px] text-slate-400">
                   <div className="flex items-center gap-2">
-                    <span className="w-1.5 h-1.5 rounded-full bg-[#00d4aa]" />
+                    <span className="w-2 h-2 rounded-full bg-[#00d4aa] animate-pulse" />
                     <span>Part of the <strong>NEXTDIGIHOME</strong> Ecosystem</span>
                   </div>
-                  <Link href="/store" className="text-[#00d4aa] hover:underline font-medium">
-                    NextDigi Store (Products) &rarr;
+                  <Link href="/store" className="text-[#00d4aa] hover:underline font-bold flex items-center gap-1">
+                    NextDigi Store (Assets) &rarr;
                   </Link>
                 </div>
 
