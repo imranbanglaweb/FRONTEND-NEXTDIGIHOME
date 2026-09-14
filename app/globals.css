@@ -210,6 +210,21 @@
   to { transform: rotate(0deg); }
 }
 
+@keyframes counterRotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(-360deg); }
+}
+
+@keyframes counterRotateReverse {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes radarSweep {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
 @keyframes pulseHalo {
   0%, 100% {
     transform: scale(1);
@@ -228,11 +243,23 @@
 }
 
 .animate-orbit-slow {
-  animation: orbitRotate 24s linear infinite;
+  animation: orbitRotate 30s linear infinite;
 }
 
 .animate-orbit-reverse {
-  animation: orbitRotateReverse 18s linear infinite;
+  animation: orbitRotateReverse 24s linear infinite;
+}
+
+.animate-counter-rotate {
+  animation: counterRotate 30s linear infinite;
+}
+
+.animate-counter-rotate-reverse {
+  animation: counterRotateReverse 24s linear infinite;
+}
+
+.animate-radar-sweep {
+  animation: radarSweep 6s linear infinite;
 }
 
 .animate-pulse-halo {
