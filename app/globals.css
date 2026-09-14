@@ -45,6 +45,48 @@
   }
 }
 
+@keyframes floatSlow {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-8px) rotate(0.6deg);
+  }
+}
+
+@keyframes floatReverse {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(8px) rotate(-0.6deg);
+  }
+}
+
+@keyframes neonBorderPulse {
+  0%, 100% {
+    border-color: rgba(0, 212, 170, 0.35);
+    box-shadow: 0 0 25px rgba(0, 212, 170, 0.12), inset 0 0 15px rgba(0, 212, 170, 0.05);
+  }
+  50% {
+    border-color: rgba(139, 92, 246, 0.45);
+    box-shadow: 0 0 35px rgba(139, 92, 246, 0.18), inset 0 0 20px rgba(139, 92, 246, 0.06);
+  }
+}
+
+@keyframes holographicShimmer {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+
 @keyframes gradientShift {
   0% { background-position: 0% 50%; }
   50% { background-position: 100% 50%; }
