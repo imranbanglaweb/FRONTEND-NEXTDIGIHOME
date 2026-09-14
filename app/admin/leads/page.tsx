@@ -46,6 +46,23 @@ interface Lead {
   utm_campaign?: string;
   utm_content?: string;
   utm_term?: string;
+  first_utm_source?: string;
+  first_utm_medium?: string;
+  first_utm_campaign?: string;
+  first_utm_content?: string;
+  first_utm_term?: string;
+  first_landing_page?: string;
+  first_referrer?: string;
+  first_touch_time?: string;
+  last_utm_source?: string;
+  last_utm_medium?: string;
+  last_utm_campaign?: string;
+  last_utm_content?: string;
+  last_utm_term?: string;
+  last_landing_page?: string;
+  last_referrer?: string;
+  last_touch_time?: string;
+  event_id?: string;
   file_name?: string;
   file_size?: number;
   file_type?: string;
@@ -1016,38 +1033,36 @@ export default function AdminLeadsPage() {
                     <h4 className="font-semibold text-slate-100 text-xs uppercase tracking-wider text-cyan-400">
                       Marketing Attribution &amp; Source
                     </h4>
-                    <div className="grid grid-cols-2 gap-4">
-                      <div>
-                        <div className="text-[11px] text-slate-500">Lead Source (Reported)</div>
-                        <div className="text-slate-200 font-medium mt-0.5">{selectedLead.lead_source || 'Direct'}</div>
-                      </div>
-                      <div>
-                        <div className="text-[11px] text-slate-500">Landing Page</div>
-                        <div className="text-slate-200 font-medium mt-0.5 truncate">{selectedLead.landing_page || '/contact'}</div>
-                      </div>
-                      <div>
-                        <div className="text-[11px] text-slate-500">HTTP Referrer</div>
-                        <div className="text-slate-200 font-medium mt-0.5 truncate">{selectedLead.referrer || 'Direct visit'}</div>
-                      </div>
-                      <div>
-                        <div className="text-[11px] text-slate-500">UTM Source</div>
-                        <div className="text-slate-200 font-medium mt-0.5">{selectedLead.utm_source || 'None'}</div>
-                      </div>
-                      <div>
-                        <div className="text-[11px] text-slate-500">UTM Medium</div>
-                        <div className="text-slate-200 font-medium mt-0.5">{selectedLead.utm_medium || 'None'}</div>
-                      </div>
-                      <div>
-                        <div className="text-[11px] text-slate-500">UTM Campaign</div>
-                        <div className="text-slate-200 font-medium mt-0.5">{selectedLead.utm_campaign || 'None'}</div>
-                      </div>
-                      <div>
-                        <div className="text-[11px] text-slate-500">UTM Content</div>
-                        <div className="text-slate-200 font-medium mt-0.5">{selectedLead.utm_content || 'None'}</div>
-                      </div>
-                      <div>
-                        <div className="text-[11px] text-slate-500">UTM Term</div>
-                        <div className="text-slate-200 font-medium mt-0.5">{selectedLead.utm_term || 'None'}</div>
+                    <div className="space-y-4 text-xs">
+                      {/* First Touch vs Last Touch Overview */}
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                        <div className="p-3 rounded-xl bg-slate-900/60 border border-slate-800">
+                          <div className="text-[10px] uppercase font-bold text-[#00d4aa] tracking-wider mb-2 flex items-center gap-1.5">
+                            <span className="w-1.5 h-1.5 rounded-full bg-[#00d4aa]" />
+                            First Touch (Origin)
+                          </div>
+                          <div className="space-y-1.5 text-[11px]">
+                            <div className="flex justify-between"><span className="text-slate-500">Source:</span> <span className="text-slate-200 font-medium">{selectedLead.first_utm_source || selectedLead.utm_source || 'Direct'}</span></div>
+                            <div className="flex justify-between"><span className="text-slate-500">Medium:</span> <span className="text-slate-200">{selectedLead.first_utm_medium || selectedLead.utm_medium || 'None'}</span></div>
+                            <div className="flex justify-between"><span className="text-slate-500">Campaign:</span> <span className="text-slate-200">{selectedLead.first_utm_campaign || selectedLead.utm_campaign || 'None'}</span></div>
+                            <div className="flex justify-between"><span className="text-slate-500">Landing Page:</span> <span className="text-slate-200 truncate max-w-[180px]">{selectedLead.first_landing_page || selectedLead.landing_page || '/'}</span></div>
+                            <div className="flex justify-between"><span className="text-slate-500">Referrer:</span> <span className="text-slate-200 truncate max-w-[180px]">{selectedLead.first_referrer || selectedLead.referrer || 'Direct'}</span></div>
+                          </div>
+                        </div>
+
+                        <div className="p-3 rounded-xl bg-slate-900/60 border border-slate-800">
+                          <div className="text-[10px] uppercase font-bold text-sky-400 tracking-wider mb-2 flex items-center gap-1.5">
+                            <span className="w-1.5 h-1.5 rounded-full bg-sky-400" />
+                            Last Touch (Conversion)
+                          </div>
+                          <div className="space-y-1.5 text-[11px]">
+                            <div className="flex justify-between"><span className="text-slate-500">Source:</span> <span className="text-slate-200 font-medium">{selectedLead.last_utm_source || selectedLead.utm_source || 'Direct'}</span></div>
+                            <div className="flex justify-between"><span className="text-slate-500">Medium:</span> <span className="text-slate-200">{selectedLead.last_utm_medium || selectedLead.utm_medium || 'None'}</span></div>
+                            <div className="flex justify-between"><span className="text-slate-500">Campaign:</span> <span className="text-slate-200">{selectedLead.last_utm_campaign || selectedLead.utm_campaign || 'None'}</span></div>
+                            <div className="flex justify-between"><span className="text-slate-500">Landing Page:</span> <span className="text-slate-200 truncate max-w-[180px]">{selectedLead.last_landing_page || selectedLead.landing_page || '/contact'}</span></div>
+                            <div className="flex justify-between"><span className="text-slate-500">Event ID:</span> <span className="text-slate-300 font-mono text-[10px] truncate max-w-[180px]">{selectedLead.event_id || 'N/A'}</span></div>
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </div>

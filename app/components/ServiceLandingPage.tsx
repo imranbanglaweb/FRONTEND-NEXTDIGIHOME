@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
+import TrackedCTA from './TrackedCTA';
 import {
   ArrowRightIcon,
   CheckCircleIcon,
@@ -171,15 +172,18 @@ export default function ServiceLandingPage({ data }: { data: ServiceLandingPageD
 
                 {/* Hero CTAs */}
                 <div className="flex flex-wrap items-center gap-4 mb-8 w-full sm:w-auto">
-                  <Link
+                  <TrackedCTA
                     href={contactUrl}
+                    ctaName="start_project"
+                    ctaLocation="hero"
+                    service={data.contactServiceParam}
                     className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-4 rounded-xl font-bold text-sm text-black transition-all duration-200 shadow-lg hover:shadow-xl hover:scale-[1.02] active:scale-[0.98]"
                     style={{ backgroundColor: data.accent }}
                   >
                     <RocketLaunchIcon className="w-4 h-4" />
                     <span>Start Your Project</span>
                     <ArrowRightIcon className="w-4 h-4" />
-                  </Link>
+                  </TrackedCTA>
 
                   <Link
                     href="/case-studies"
@@ -334,13 +338,16 @@ export default function ServiceLandingPage({ data }: { data: ServiceLandingPageD
               <div className="text-xs text-gray-300 text-center sm:text-left">
                 Need a customized solution architecture tailored to your business rules?
               </div>
-              <Link
+              <TrackedCTA
                 href={contactUrl}
+                ctaName="discuss_requirements"
+                ctaLocation="mid_page"
+                service={data.contactServiceParam}
                 className="px-6 py-2.5 rounded-xl text-xs font-bold text-black transition-all hover:scale-105"
                 style={{ backgroundColor: data.accent }}
               >
                 Discuss Your Requirements →
-              </Link>
+              </TrackedCTA>
             </div>
           </div>
         </section>
@@ -399,13 +406,16 @@ export default function ServiceLandingPage({ data }: { data: ServiceLandingPageD
                 </div>
 
                 <div className="mt-8 pt-6 border-t border-white/10">
-                  <Link
+                  <TrackedCTA
                     href={contactUrl}
+                    ctaName="request_estimate"
+                    ctaLocation="mid_page"
+                    service={data.contactServiceParam}
                     className="w-full py-3 rounded-xl text-center text-xs font-bold text-black block transition-all hover:opacity-95"
                     style={{ backgroundColor: data.accent }}
                   >
                     Request Project Estimate
-                  </Link>
+                  </TrackedCTA>
                 </div>
               </div>
             </div>
@@ -721,21 +731,27 @@ export default function ServiceLandingPage({ data }: { data: ServiceLandingPageD
             </p>
 
             <div className="flex flex-wrap items-center justify-center gap-4 pt-2">
-              <Link
+              <TrackedCTA
                 href={contactUrl}
+                ctaName="start_project"
+                ctaLocation="final_cta"
+                service={data.contactServiceParam}
                 className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-4 rounded-xl font-extrabold text-sm text-black transition-all shadow-[0_0_35px_rgba(0,212,170,0.3)] hover:scale-[1.02] active:scale-[0.98]"
                 style={{ backgroundColor: data.accent }}
               >
                 <span>Start Your Project</span>
                 <ArrowRightIcon className="w-4 h-4" />
-              </Link>
+              </TrackedCTA>
 
-              <Link
+              <TrackedCTA
                 href={contactUrl}
+                ctaName="talk_to_us"
+                ctaLocation="final_cta"
+                service={data.contactServiceParam}
                 className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-7 py-4 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-white font-semibold text-sm transition-all"
               >
                 <span>Talk to Us</span>
-              </Link>
+              </TrackedCTA>
             </div>
           </div>
         </section>
@@ -747,14 +763,17 @@ export default function ServiceLandingPage({ data }: { data: ServiceLandingPageD
           <span className="font-bold text-white block truncate">{data.eyebrow}</span>
           <span className="text-[10px] text-gray-400">Direct Engineering Inquiry</span>
         </div>
-        <Link
+        <TrackedCTA
           href={contactUrl}
+          ctaName="start_project"
+          ctaLocation="sticky_nav"
+          service={data.contactServiceParam}
           className="px-4 py-2 rounded-lg font-bold text-xs text-black shrink-0 flex items-center gap-1.5 shadow-md"
           style={{ backgroundColor: data.accent }}
         >
           <span>Start Project</span>
           <ArrowRightIcon className="w-3.5 h-3.5" />
-        </Link>
+        </TrackedCTA>
       </div>
     </div>
   );

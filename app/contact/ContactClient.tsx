@@ -1,8 +1,10 @@
 'use client';
 
-import React, { useState, useEffect, useMemo, useRef } from 'react';
+import React, { useState, useEffect, useMemo, useRef, useCallback } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
+import { getAttributionPayload } from '../utils/attribution';
+import { trackContactFormStart, trackLeadConversion } from '../utils/analytics';
 import {
   PhoneIcon,
   EnvelopeIcon,
@@ -155,6 +157,19 @@ export default function ContactClient() {
   const [submitting, setSubmitting] = useState(false);
   const [submittedLead, setSubmittedLead] = useState<{ id: string; name: string; service: string } | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [hasTrackedFormStart, setHasTrackedFormStart] = useState(false);
+
+  // Form interaction listener (fires once per session on user action)
+  const handleFormInteraction = useCallback(() => {
+    if (!hasTrackedFormStart) {
+      setHasTrackedFormStart(true);
+      trackContactFormStart({
+        form_name: 'contact_inquiry',
+        service: selectedService,
+        page_path: typeof window !== 'undefined' ? window.location.pathname : '/contact',
+      });
+    }
+  }, [hasTrackedFormStart, selectedService]);
 
   // Sync service from URL if param changes
   useEffect(() => {
@@ -220,14 +235,8 @@ export default function ContactClient() {
     setSubmitting(true);
 
     try {
-      // Capture UTM & Attribution data
-      const utm_source = searchParams.get('utm_source') || undefined;
-      const utm_medium = searchParams.get('utm_medium') || undefined;
-      const utm_campaign = searchParams.get('utm_campaign') || undefined;
-      const utm_content = searchParams.get('utm_content') || undefined;
-      const utm_term = searchParams.get('utm_term') || undefined;
-      const landing_page = typeof window !== 'undefined' ? window.location.pathname : '/contact';
-      const referrer = typeof document !== 'undefined' ? document.referrer || 'Direct' : 'Direct';
+      // Capture Comprehensive First-Touch & Last-Touch Attribution
+      const attribution = getAttributionPayload();
 
       const payload = {
         name,
@@ -246,13 +255,7 @@ export default function ContactClient() {
         file_name: selectedFile?.name,
         file_size: selectedFile?.size,
         file_type: selectedFile?.type,
-        landing_page,
-        referrer,
-        utm_source,
-        utm_medium,
-        utm_campaign,
-        utm_content,
-        utm_term,
+        ...attribution,
         _hp: honeypot, // Honeypot field
       };
 
@@ -265,41 +268,24 @@ export default function ContactClient() {
       const data = await res.json();
 
       if (res.ok && data.success) {
+        const assignedLeadId = data.data?.id || attribution.lead_id || `NDH-${Date.now().toString().slice(-6)}`;
         setSubmittedLead({
-          id: data.data?.id || `lead_${Date.now()}`,
+          id: assignedLeadId,
           name,
           service: selectedService,
         });
 
-        // 31. Trigger Meta Pixel Lead event only after successful submission
-        if (typeof window !== 'undefined' && (window as any).fbq) {
-          try {
-            (window as any).fbq('track', 'Lead', {
-              content_name: selectedService,
-              content_category: 'Lead Inquiry',
-              value: budget,
-              currency: 'BDT',
-            });
-          } catch (pixelErr) {
-            console.warn('Meta Pixel dispatch error:', pixelErr);
-          }
-        }
-
-        // 32. Trigger GA4 lead event only after successful submission
-        if (typeof window !== 'undefined' && (window as any).gtag) {
-          try {
-            (window as any).gtag('event', 'lead_success', {
-              event_category: 'engagement',
-              event_label: selectedService,
-              service_name: selectedService,
-            });
-            (window as any).gtag('event', 'contact_form_submit', {
-              service_name: selectedService,
-            });
-          } catch (gaErr) {
-            console.warn('GA4 dispatch error:', gaErr);
-          }
-        }
+        // Fire official Lead Conversion across GA4, Meta Pixel, Google Ads & dataLayer
+        // STRICT RULE: Only fires after successful backend lead creation (HTTP 200)
+        trackLeadConversion({
+          service: selectedService,
+          lead_source: leadSource,
+          landing_page: attribution.landing_page || (typeof window !== 'undefined' ? window.location.pathname : '/contact'),
+          lead_id: assignedLeadId,
+          event_id: attribution.event_id,
+          value: budget,
+          currency: 'BDT',
+        });
       } else {
         setErrorMessage(data.message || 'Unable to submit inquiry. Please review your details and try again.');
       }
@@ -425,7 +411,12 @@ export default function ContactClient() {
             </div>
           ) : (
             /* LEAD CAPTURE FORM */
-            <form onSubmit={handleSubmit} className="p-6 sm:p-12 rounded-3xl bg-[#0e131d] border border-white/10 shadow-2xl relative">
+            <form
+              onSubmit={handleSubmit}
+              onFocusCapture={handleFormInteraction}
+              onClickCapture={handleFormInteraction}
+              className="p-6 sm:p-12 rounded-3xl bg-[#0e131d] border border-white/10 shadow-2xl relative"
+            >
               {/* Invisible Honeypot Spam Trap */}
               <input
                 type="text"

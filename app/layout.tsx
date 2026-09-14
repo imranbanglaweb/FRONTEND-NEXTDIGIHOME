@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import ClientLayout from "./ClientLayout";
+import AnalyticsProvider from "./components/AnalyticsProvider";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -118,6 +119,7 @@ export default function RootLayout({
         <link rel="dns-prefetch" href="//nextdigihome.com" />
       </head>
       <body suppressHydrationWarning={true} className="min-h-full flex flex-col bg-[#0f0f12] text-[#fafafa] selection:bg-[#00d4aa] selection:text-[#0f0f12]">
+        <AnalyticsProvider />
         <ClientLayout>{children}</ClientLayout>
         
         {/* Organization Structured Data for SEO & Trust */}

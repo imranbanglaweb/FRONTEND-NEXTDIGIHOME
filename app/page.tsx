@@ -37,6 +37,7 @@ import {
 import { StarIcon as StarIconSolid } from '@heroicons/react/24/solid';
 import Swal from 'sweetalert2';
 import { apiFetch, getStorageUrl, getStorageProxyUrl } from './utils/api';
+import TrackedCTA from './components/TrackedCTA';
 
 interface Product {
   id: number | string;
@@ -468,22 +469,26 @@ export default function Home() {
 
               {/* CTA Buttons */}
               <div className="flex flex-wrap items-center gap-3 sm:gap-4 mb-8">
-                <Link
+                <TrackedCTA
                   href="/contact"
+                  ctaName="start_project"
+                  ctaLocation="hero"
                   className="inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-xl bg-[#00d4aa] text-[#07090e] font-bold text-sm hover:bg-[#00e2b6] shadow-lg shadow-[#00d4aa]/25 hover:scale-[1.02] active:scale-[0.98] transition-all"
                 >
                   <RocketLaunchIcon className="w-4 h-4" />
                   <span>Start a Project</span>
                   <ArrowRightIcon className="w-4 h-4" />
-                </Link>
+                </TrackedCTA>
 
-                <Link
+                <TrackedCTA
                   href="/solutions"
+                  ctaName="explore_solutions"
+                  ctaLocation="hero"
                   className="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl bg-white/5 border border-white/10 hover:border-[#00d4aa]/30 text-white font-semibold text-sm hover:bg-white/10 transition-all"
                 >
                   <span>Explore Solutions</span>
                   <ArrowTopRightOnSquareIcon className="w-4 h-4 text-slate-400" />
-                </Link>
+                </TrackedCTA>
               </div>
 
               {/* Capability Line */}
@@ -1731,20 +1736,24 @@ export default function Home() {
           </p>
 
           <div className="flex flex-wrap items-center justify-center gap-4">
-            <Link
+            <TrackedCTA
               href="/contact"
+              ctaName="start_project"
+              ctaLocation="final_cta"
               className="inline-flex items-center gap-2 px-8 py-4 rounded-xl bg-[#00d4aa] text-black font-extrabold text-sm hover:bg-[#00e2b6] shadow-[0_0_35px_rgba(0,212,170,0.35)] transition-all hover:scale-[1.02] active:scale-[0.98]"
             >
               <span>Start a Project</span>
               <ArrowRightIcon className="w-4 h-4" />
-            </Link>
+            </TrackedCTA>
 
-            <Link
+            <TrackedCTA
               href="/contact"
+              ctaName="talk_to_team"
+              ctaLocation="final_cta"
               className="inline-flex items-center gap-2 px-7 py-4 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-white font-semibold text-sm transition-all"
             >
               <span>Talk to Our Team</span>
-            </Link>
+            </TrackedCTA>
           </div>
         </div>
       </section>

@@ -45,6 +45,25 @@ export interface Lead {
   utm_campaign?: string;
   utm_content?: string;
   utm_term?: string;
+  // First Touch Attribution
+  first_utm_source?: string;
+  first_utm_medium?: string;
+  first_utm_campaign?: string;
+  first_utm_content?: string;
+  first_utm_term?: string;
+  first_landing_page?: string;
+  first_referrer?: string;
+  first_touch_time?: string;
+  // Last Touch Attribution
+  last_utm_source?: string;
+  last_utm_medium?: string;
+  last_utm_campaign?: string;
+  last_utm_content?: string;
+  last_utm_term?: string;
+  last_landing_page?: string;
+  last_referrer?: string;
+  last_touch_time?: string;
+  event_id?: string;
   file_name?: string;
   file_size?: number;
   file_type?: string;
@@ -258,7 +277,9 @@ export async function POST(request: NextRequest) {
     });
 
     const timestamp = new Date().toISOString();
-    const leadId = `lead_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`;
+    const leadId = (body.lead_id && String(body.lead_id).startsWith('NDH-'))
+      ? String(body.lead_id)
+      : `NDH-${Date.now().toString().slice(-6)}${Math.floor(10 + Math.random() * 90)}`;
 
     // 4. Construct comprehensive lead object
     const newLead: Lead = {
@@ -284,6 +305,25 @@ export async function POST(request: NextRequest) {
       utm_campaign: body.utm_campaign || undefined,
       utm_content: body.utm_content || undefined,
       utm_term: body.utm_term || undefined,
+      // First Touch Attribution
+      first_utm_source: body.first_utm_source || undefined,
+      first_utm_medium: body.first_utm_medium || undefined,
+      first_utm_campaign: body.first_utm_campaign || undefined,
+      first_utm_content: body.first_utm_content || undefined,
+      first_utm_term: body.first_utm_term || undefined,
+      first_landing_page: body.first_landing_page || undefined,
+      first_referrer: body.first_referrer || undefined,
+      first_touch_time: body.first_touch_time || undefined,
+      // Last Touch Attribution
+      last_utm_source: body.last_utm_source || undefined,
+      last_utm_medium: body.last_utm_medium || undefined,
+      last_utm_campaign: body.last_utm_campaign || undefined,
+      last_utm_content: body.last_utm_content || undefined,
+      last_utm_term: body.last_utm_term || undefined,
+      last_landing_page: body.last_landing_page || undefined,
+      last_referrer: body.last_referrer || undefined,
+      last_touch_time: body.last_touch_time || undefined,
+      event_id: body.event_id || undefined,
       file_name: body.file_name || undefined,
       file_size: body.file_size || undefined,
       file_type: body.file_type || undefined,
