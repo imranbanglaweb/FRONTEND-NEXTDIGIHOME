@@ -32,12 +32,241 @@ import {
   RocketLaunchIcon,
   UserGroupIcon,
   VideoCameraIcon,
-  PresentationChartLineIcon
+  PresentationChartLineIcon,
+  AcademicCapIcon,
+  TruckIcon,
+  BuildingOffice2Icon
 } from '@heroicons/react/24/outline';
 import { StarIcon as StarIconSolid } from '@heroicons/react/24/solid';
 import Swal from 'sweetalert2';
 import { apiFetch, getStorageUrl, getStorageProxyUrl } from './utils/api';
 import TrackedCTA from './components/TrackedCTA';
+
+export interface EnterpriseSoftware {
+  id: string;
+  name: string;
+  categoryTag: string;
+  categoryFilter: 'mobility' | 'network' | 'hrms' | 'edtech' | 'cms';
+  tagline: string;
+  badge: string;
+  badgeColor: string;
+  description: string;
+  highlights: string[];
+  techStack: string[];
+  deploymentOptions: string[];
+  color: string;
+  glowColor: string;
+  icon: any;
+  liveUrl?: string;
+  ctaText?: string;
+}
+
+export const softwareProducts: EnterpriseSoftware[] = [
+  {
+    id: 'parking-software',
+    name: 'ParkPulse 360™',
+    categoryTag: 'Smart Mobility & ANPR',
+    categoryFilter: 'mobility',
+    tagline: 'Automated Smart Parking & ANPR Barrier Management',
+    badge: 'Hardware & IoT Ready',
+    badgeColor: 'bg-[#00d4aa]/15 text-[#00d4aa] border-[#00d4aa]/30',
+    description: 'High-accuracy Automatic Number Plate Recognition (ANPR) linked with automatic boom barrier gates, live multi-level vacancy sensors, and QR cashless payment checkout.',
+    highlights: [
+      'Sub-second ANPR Camera Plate Recognition & Barrier Trigger',
+      'Live Slot Occupancy Telemetry with Dynamic Overhead LED Map',
+      'Hourly, Daily, VIP Resident & Corporate Fleet Pass Billing',
+      'Cashless Checkout via bKash, Cards, Stripe, and POS Thermal Print',
+      'Blacklisted Plate Security Alerts & Real-time Revenue Audit Logs'
+    ],
+    techStack: ['Next.js 16', 'Python ANPR', 'Node.js IoT', 'PostgreSQL', 'MQTT WebSockets'],
+    deploymentOptions: ['Cloud Central SaaS', 'Local Offline Appliance', 'Hybrid Gateway'],
+    color: '#00d4aa',
+    glowColor: 'rgba(0, 212, 170, 0.35)',
+    icon: TruckIcon,
+    ctaText: 'Explore ParkPulse'
+  },
+  {
+    id: 'lan-management',
+    name: 'NetShield LAN™',
+    categoryTag: 'Network Ops & Cybersecurity',
+    categoryFilter: 'network',
+    tagline: 'Enterprise LAN, ISP & Bandwidth Infrastructure Controller',
+    badge: 'ISP & Enterprise Ready',
+    badgeColor: 'bg-[#38bdf8]/15 text-[#38bdf8] border-[#38bdf8]/30',
+    description: 'Centralized network orchestration console with automated Mikrotik & Cisco router scripting, dynamic bandwidth rate shaping, subscriber billing, and SMS OTP captive voucher portal.',
+    highlights: [
+      'Mikrotik RouterOS & Cisco API Auto-Provisioning & Scripting',
+      'Dynamic Speed Throttling, Fair-Usage Policy (FUP) & Quota Limits',
+      'Captive Portal Hotspot with SMS OTP Voucher Generation & Token Billing',
+      'Live Visual Network Topology Map & Ping Packet Drop Alert Webhooks',
+      'MAC Address Binding, ARP Anti-Spoofing & IP Pool Firewall Routing'
+    ],
+    techStack: ['Node.js API', 'Mikrotik API', 'Redis Cache', 'WebSockets', 'Tailwind'],
+    deploymentOptions: ['On-Premise Server', 'Cloud Central Controller', 'Docker Cluster'],
+    color: '#38bdf8',
+    glowColor: 'rgba(56, 189, 248, 0.35)',
+    icon: ServerIcon,
+    ctaText: 'Explore NetShield'
+  },
+  {
+    id: 'hrms-solution',
+    name: 'WorkZen HRMS™',
+    categoryTag: 'Human Capital & Smart Payroll',
+    categoryFilter: 'hrms',
+    tagline: 'Enterprise Cloud Human Resource & Automated Payroll Suite',
+    badge: 'Multi-Tenant Cloud',
+    badgeColor: 'bg-[#8b5cf6]/15 text-[#8b5cf6] border-[#8b5cf6]/30',
+    description: 'Complete employee lifecycle management combining real-time biometric attendance capture, automated progressive tax & salary disbursement, shift rosters, and mobile self-service.',
+    highlights: [
+      'ZKTeco & Face/Fingerprint Device Real-Time Attendance Sync',
+      '1-Click Salary Disbursement, Bank Advice Files & PDF Pay Slips',
+      'Multi-Level Leave Approval Hierarchy & Dynamic Shift Roster Engine',
+      'Employee Self-Service (ESS) Mobile Portal with Geo-Fenced Check-in',
+      'Tax Deduction Slabs, Provident Fund Ledgers & Expense Claims Audit'
+    ],
+    techStack: ['Next.js 16', 'React 19', 'Express Backend', 'PostgreSQL', 'Docker'],
+    deploymentOptions: ['Cloud Multi-Tenant', 'Self-Hosted Private VPC', 'Enterprise License'],
+    color: '#8b5cf6',
+    glowColor: 'rgba(139, 92, 246, 0.35)',
+    icon: UserGroupIcon,
+    ctaText: 'Explore WorkZen'
+  },
+  {
+    id: 'school-management',
+    name: 'EduSphere 360™',
+    categoryTag: 'EdTech & Campus ERP',
+    categoryFilter: 'edtech',
+    tagline: 'All-in-One Smart School, College & Campus Operating System',
+    badge: 'K-12 & University Ready',
+    badgeColor: 'bg-[#f59e0b]/15 text-[#f59e0b] border-[#f59e0b]/30',
+    description: 'Unified institutional operating platform unifying online admissions, fee collections, GPA examination tabulation, printable student ID cards, and automated parent SMS alerts.',
+    highlights: [
+      'Digital Admission Portal with Automated Barcode Student ID Printing',
+      'Multi-Gateway Tuition Fee Collection (bKash/Cards) & Auto-Receipts',
+      'GPA/CGPA Grading Matrix, Tabulation Sheets & Terminal Report Cards',
+      'RFID Gate Attendance with Instant Parent Entry/Exit Push Alerts',
+      'Teacher Gradebook, Digital Library, Hostel & School Bus GPS Fleet'
+    ],
+    techStack: ['Next.js', 'React', 'Node.js', 'MySQL', 'SMS Gateway API'],
+    deploymentOptions: ['Institutional SaaS', 'School Private Server', 'Full Source Code'],
+    color: '#f59e0b',
+    glowColor: 'rgba(245, 158, 11, 0.35)',
+    icon: AcademicCapIcon,
+    ctaText: 'Explore EduSphere'
+  },
+  {
+    id: 'customer-cms',
+    name: 'OmniFlow CMS™',
+    categoryTag: 'Digital Experience & Headless CMS',
+    categoryFilter: 'cms',
+    tagline: 'Headless Digital Experience & Customer Content Engine',
+    badge: 'API-First & Edge Ready',
+    badgeColor: 'bg-[#f43f5e]/15 text-[#f43f5e] border-[#f43f5e]/30',
+    description: 'Modern API-first content management system designed for speed, flexibility, and customer conversions with drag-and-drop block building and dynamic lead capture.',
+    highlights: [
+      'Visual Drag-and-Drop Page Builder & Modular Block Composer',
+      'Headless REST & GraphQL APIs Serving Web, iOS & Android Frontends',
+      'Dynamic Customer Form Builder with Automated CRM Webhook Routing',
+      'Multi-Language Localization, Dynamic Slugs & Automated SEO Schema',
+      'Granular Role-Based Access Control (Author, Editor, Admin, Publisher)'
+    ],
+    techStack: ['Next.js 16', 'TypeScript', 'Tailwind CSS', 'PostgreSQL', 'Prisma'],
+    deploymentOptions: ['Vercel Edge Cloud', 'Self-Hosted Docker', 'Enterprise Whitelabel'],
+    color: '#f43f5e',
+    glowColor: 'rgba(244, 63, 94, 0.35)',
+    icon: CommandLineIcon,
+    ctaText: 'Explore OmniFlow'
+  },
+  {
+    id: 'garibondhu-erp',
+    name: 'Garibondhu360™',
+    categoryTag: 'Automotive & Workshop ERP',
+    categoryFilter: 'hrms',
+    tagline: 'Automotive Repair, Garage & Workshop Operating Platform',
+    badge: 'Active Live SaaS',
+    badgeColor: 'bg-[#10b981]/15 text-[#10b981] border-[#10b981]/30',
+    description: 'Leading workshop operating system with digital job cards, camera vehicle condition intake, barcode spare parts stock, and technician commission tracking.',
+    highlights: [
+      'Digital Vehicle Inspection Checklist with Camera Damage Photo Logs',
+      'Barcode Spare-Parts Inventory with Minimum Stock Auto-Reorder Alerts',
+      'Technician Work-Order Allocation & Automated Commission Calculation',
+      'Automated Customer SMS Delivery Estimates & Digital PDF Invoices'
+    ],
+    techStack: ['Next.js', 'Node.js', 'PostgreSQL', 'Docker', 'SMS Gateway'],
+    deploymentOptions: ['Active Cloud SaaS', 'Dedicated Workshop Appliance'],
+    color: '#10b981',
+    glowColor: 'rgba(16, 185, 129, 0.35)',
+    icon: WrenchScrewdriverIcon,
+    liveUrl: 'https://garibondhu360.nextdigihome.com/',
+    ctaText: 'Launch Garibondhu360'
+  },
+  {
+    id: 'medicore-health',
+    name: 'MediCore Health™',
+    categoryTag: 'Healthcare & Clinical ERP',
+    categoryFilter: 'cms',
+    tagline: 'Hospital, Clinic & Patient Practice Management System',
+    badge: 'Clinic & Hospital Ready',
+    badgeColor: 'bg-[#06b6d4]/15 text-[#06b6d4] border-[#06b6d4]/30',
+    description: 'Secure clinical management ecosystem covering patient electronic health records (EHR), multi-doctor scheduling, diagnostic laboratory reporting, and pharmacy billing.',
+    highlights: [
+      'Electronic Medical Records (EMR) & Digital Prescription Generator',
+      'Doctor Roster Scheduling & Multi-Channel Patient Online Booking',
+      'Diagnostic Pathology & Radiology Test Reporting with Barcode Tracking',
+      'Inpatient Bed/Cabin Management & Integrated Pharmacy POS Dispensing'
+    ],
+    techStack: ['Next.js 16', 'Node.js API', 'PostgreSQL', 'HIPAA Standards'],
+    deploymentOptions: ['Private Healthcare Cloud', 'Hospital On-Premise LAN'],
+    color: '#06b6d4',
+    glowColor: 'rgba(6, 182, 212, 0.35)',
+    icon: ShieldCheckIcon,
+    ctaText: 'Explore MediCore'
+  },
+  {
+    id: 'billvibe-pos',
+    name: 'BillVibe POS™',
+    categoryTag: 'Retail & Multi-Branch POS',
+    categoryFilter: 'cms',
+    tagline: 'High-Speed Cloud Point of Sale & Centralized Inventory',
+    badge: 'Multi-Branch & Retail Ready',
+    badgeColor: 'bg-[#ec4899]/15 text-[#ec4899] border-[#ec4899]/30',
+    description: 'Lightning-fast 0.2-second barcode checkout system with offline transaction resilience, multi-branch centralized warehouse sync, and customer loyalty rewards.',
+    highlights: [
+      'Sub-Second Barcode Scanning & Thermal Receipt Printer Integration',
+      'Multi-Branch Real-Time Inventory Sync & Inter-Store Stock Transfers',
+      'Customer Loyalty Points, Dynamic Discount Coupons & SMS Invoices',
+      'Real-Time Gross Margin & Profit/Loss Analytics Dashboard'
+    ],
+    techStack: ['React', 'PWA / Electron', 'SQLite / Cloud Sync', 'Thermal API'],
+    deploymentOptions: ['Cloud Sync SaaS', 'Offline-First Desktop / Touch Terminal'],
+    color: '#ec4899',
+    glowColor: 'rgba(236, 72, 153, 0.35)',
+    icon: ShoppingBagIcon,
+    ctaText: 'Explore BillVibe'
+  }
+];
+
+export interface CountryItem {
+  id: string;
+  name: string;
+  flagUrl: string;
+  code: string;
+}
+
+export const countriesWorked: CountryItem[] = [
+  { id: 'us', name: 'United States', flagUrl: '/flags/us.svg', code: 'US' },
+  { id: 'uk', name: 'United Kingdom', flagUrl: '/flags/gb.svg', code: 'GB' },
+  { id: 'ca', name: 'Canada', flagUrl: '/flags/ca.svg', code: 'CA' },
+  { id: 'au', name: 'Australia', flagUrl: '/flags/au.svg', code: 'AU' },
+  { id: 'de', name: 'Germany', flagUrl: '/flags/de.svg', code: 'DE' },
+  { id: 'ae', name: 'United Arab Emirates', flagUrl: '/flags/ae.svg', code: 'AE' },
+  { id: 'sa', name: 'Saudi Arabia', flagUrl: '/flags/sa.svg', code: 'SA' },
+  { id: 'sg', name: 'Singapore', flagUrl: '/flags/sg.svg', code: 'SG' },
+  { id: 'in', name: 'India', flagUrl: '/flags/in.svg', code: 'IN' },
+  { id: 'pk', name: 'Pakistan', flagUrl: '/flags/pk.svg', code: 'PK' },
+  { id: 'bd', name: 'Bangladesh', flagUrl: '/flags/bd.svg', code: 'BD' },
+  { id: 'my', name: 'Malaysia', flagUrl: '/flags/my.svg', code: 'MY' },
+];
 
 interface Product {
   id: number | string;
@@ -310,6 +539,7 @@ export default function Home() {
   const [products, setProducts] = useState<Product[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [activeCategoryTab, setActiveCategoryTab] = useState<'all' | 'source-code' | 'mobile-apps' | 'scripts' | 'business-tools'>('all');
+  const [activeSoftwareTab, setActiveSoftwareTab] = useState<'all' | 'mobility' | 'network' | 'hrms' | 'edtech' | 'cms'>('all');
   const [heroConsoleTab, setHeroConsoleTab] = useState<'saas' | 'ai' | 'growth' | 'products'>('saas');
   const [hoveredDivision, setHoveredDivision] = useState<'solutions' | 'ai' | 'growth' | 'products'>('solutions');
   const [activeDivisionId, setActiveDivisionId] = useState<string>('solutions');
@@ -416,6 +646,61 @@ export default function Home() {
         timer: 1800
       });
     }
+  };
+
+  // Filter software products by category tab
+  const filteredSoftware = useMemo(() => {
+    if (activeSoftwareTab === 'all') return softwareProducts;
+    return softwareProducts.filter(p => p.categoryFilter === activeSoftwareTab);
+  }, [activeSoftwareTab]);
+
+  // Interactive Live Demo / Inquiry Modal
+  const handleRequestProductDemo = (product: EnterpriseSoftware) => {
+    Swal.fire({
+      title: `<span style="color:#ffffff;font-size:20px;font-weight:800;letter-spacing:-0.02em;">${product.name}</span>`,
+      html: `
+        <div style="text-align:left;font-size:13px;color:#94a3b8;line-height:1.6;padding-top:4px;">
+          <div style="margin-bottom:12px;display:flex;flex-wrap:wrap;gap:6px;align-items:center;">
+            <span style="background:${product.color}22;color:${product.color};padding:3px 9px;border-radius:20px;font-size:11px;font-weight:700;border:1px solid ${product.color}44;">
+              ${product.categoryTag}
+            </span>
+            <span style="background:rgba(255,255,255,0.08);color:#e2e8f0;padding:3px 9px;border-radius:20px;font-size:11px;font-weight:600;border:1px solid rgba(255,255,255,0.12);">
+              ${product.badge}
+            </span>
+          </div>
+          <p style="color:#f8fafc;font-weight:600;font-size:14px;margin-bottom:10px;">
+            ${product.tagline}
+          </p>
+          <p style="color:#94a3b8;font-size:12.5px;margin-bottom:14px;">
+            ${product.description}
+          </p>
+          <div style="background:#070b14;border:1px solid rgba(255,255,255,0.1);padding:12px;border-radius:12px;margin-bottom:14px;">
+            <div style="font-size:11px;font-weight:800;color:#00d4aa;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px;">
+              Key Capabilities:
+            </div>
+            <ul style="margin:0;padding-left:18px;color:#cbd5e1;font-size:12px;display:flex;flex-direction:column;gap:5px;">
+              ${product.highlights.slice(0, 3).map(h => `<li>${h}</li>`).join('')}
+            </ul>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:4px;padding-top:8px;border-top:1px solid rgba(255,255,255,0.08);font-size:11px;color:#64748b;">
+            <div>Deployment: <strong style="color:#cbd5e1;">${product.deploymentOptions.join(' • ')}</strong></div>
+            <div>Tech Stack: <strong style="color:#94a3b8;">${product.techStack.join(' • ')}</strong></div>
+          </div>
+        </div>
+      `,
+      showCancelButton: true,
+      confirmButtonText: 'Book Live Demo & Pricing →',
+      confirmButtonColor: '#00d4aa',
+      cancelButtonText: 'Close',
+      cancelButtonColor: '#1e293b',
+      background: '#0d121f',
+      color: '#ffffff',
+      focusConfirm: false,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        window.location.href = `/contact?product=${encodeURIComponent(product.name)}&service=${encodeURIComponent(product.categoryTag)}`;
+      }
+    });
   };
 
   const siteName = welcomeSettings?.site_title || welcomeSettings?.admin_title || 'NextDigiHome';
@@ -1388,7 +1673,225 @@ export default function Home() {
 
 
       {/* ================================================================ */}
-      {/* 07. CASE STUDIES                                                 */}
+      {/* 07. ENTERPRISE SOFTWARE PRODUCTS & READY-TO-DEPLOY PLATFORMS     */}
+      {/* ================================================================ */}
+      <section id="enterprise-software" className="py-20 sm:py-24 border-t border-white/8 relative overflow-hidden">
+        {/* Ambient lighting */}
+        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[700px] h-[400px] bg-[#00d4aa]/5 blur-[160px] rounded-full pointer-events-none -z-10" />
+        <div className="absolute bottom-10 right-10 w-[500px] h-[350px] bg-[#8b5cf6]/5 blur-[160px] rounded-full pointer-events-none -z-10" />
+
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          
+          {/* Section Header */}
+          <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
+            <div>
+              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#00d4aa]/10 border border-[#00d4aa]/25 text-xs font-bold tracking-wider text-[#00d4aa] uppercase mb-4">
+                <SparklesIcon className="w-4 h-4" />
+                <span>Flagship Software Suite</span>
+              </div>
+              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black text-white tracking-tight">
+                Enterprise Software &amp; Industry Platforms
+              </h2>
+              <p className="text-sm sm:text-base text-slate-400 mt-3 max-w-3xl leading-relaxed">
+                Ready-to-deploy software architectures engineered for smart cities, campus management, network infrastructure, corporate operations, and seamless digital commerce. Available via Cloud SaaS or full private source code license.
+              </p>
+            </div>
+
+            <div className="flex items-center gap-3 shrink-0">
+              <Link
+                href="/contact?service=custom-software"
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-white font-bold text-xs transition-all"
+              >
+                <span>Request Custom Build</span>
+                <ArrowRightIcon className="w-3.5 h-3.5" />
+              </Link>
+            </div>
+          </div>
+
+          {/* Software Category Filter Tabs */}
+          <div className="flex flex-wrap items-center gap-2 mb-10 pb-2 overflow-x-auto no-scrollbar">
+            {[
+              { id: 'all', label: 'All Software Solutions (8)' },
+              { id: 'mobility', label: 'Smart Mobility & ANPR' },
+              { id: 'network', label: 'Network Ops & LAN' },
+              { id: 'hrms', label: 'Enterprise HR & Workshop ERP' },
+              { id: 'edtech', label: 'EdTech & Campus ERP' },
+              { id: 'cms', label: 'Headless CMS & POS' },
+            ].map((tab) => (
+              <button
+                key={tab.id}
+                type="button"
+                onClick={() => setActiveSoftwareTab(tab.id as any)}
+                className={`px-4 py-2 rounded-xl text-xs font-bold transition-all whitespace-nowrap ${
+                  activeSoftwareTab === tab.id
+                    ? 'bg-[#00d4aa] text-black shadow-lg shadow-[#00d4aa]/20 scale-102'
+                    : 'bg-[#0f1523]/90 border border-white/8 text-slate-300 hover:border-white/20 hover:text-white'
+                }`}
+              >
+                {tab.label}
+              </button>
+            ))}
+          </div>
+
+          {/* Software Products Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {filteredSoftware.map((prod) => {
+              const Icon = prod.icon;
+              return (
+                <div
+                  key={prod.id}
+                  className="p-6 rounded-2xl bg-[#0f1523]/80 border border-white/8 hover:border-white/25 hover:bg-[#121929] transition-all duration-300 flex flex-col justify-between group hover:shadow-2xl relative overflow-hidden"
+                  style={{
+                    boxShadow: `0 10px 30px -10px ${prod.glowColor}`,
+                  }}
+                >
+                  {/* Neon Top Accent Line */}
+                  <div
+                    className="absolute top-0 inset-x-0 h-[2px] opacity-80"
+                    style={{ background: `linear-gradient(to right, transparent, ${prod.color}, transparent)` }}
+                  />
+
+                  <div>
+                    {/* Top Row: Icon and Badge */}
+                    <div className="flex items-center justify-between gap-2 mb-5">
+                      <div
+                        className="w-12 h-12 rounded-xl flex items-center justify-center shrink-0 border transition-transform duration-300 group-hover:scale-110"
+                        style={{
+                          background: `${prod.color}15`,
+                          borderColor: `${prod.color}40`,
+                          color: prod.color,
+                        }}
+                      >
+                        <Icon className="w-6 h-6" />
+                      </div>
+
+                      <span className={`text-[10px] font-mono font-bold uppercase tracking-wider px-2.5 py-1 rounded-full border ${prod.badgeColor}`}>
+                        {prod.badge}
+                      </span>
+                    </div>
+
+                    {/* Product Name & Category */}
+                    <div className="text-[11px] font-mono font-bold uppercase tracking-wider mb-1" style={{ color: prod.color }}>
+                      {prod.categoryTag}
+                    </div>
+                    <h3 className="text-xl font-black text-white group-hover:text-white transition-colors mb-2">
+                      {prod.name}
+                    </h3>
+                    <p className="text-xs font-semibold text-slate-300 mb-3 leading-snug">
+                      {prod.tagline}
+                    </p>
+                    <p className="text-xs text-slate-400 leading-relaxed mb-5">
+                      {prod.description}
+                    </p>
+
+                    {/* Key Highlights Checklist */}
+                    <div className="p-3.5 rounded-xl bg-black/40 border border-white/5 mb-5">
+                      <div className="text-[10px] font-mono uppercase tracking-wider text-slate-400 font-bold mb-2 flex items-center gap-1.5">
+                        <CheckCircleIcon className="w-3.5 h-3.5 text-[#00d4aa]" />
+                        <span>Core Capabilities:</span>
+                      </div>
+                      <ul className="space-y-1.5 text-xs text-slate-300">
+                        {prod.highlights.slice(0, 3).map((item, idx) => (
+                          <li key={idx} className="flex items-start gap-2 leading-tight">
+                            <span className="w-1.5 h-1.5 rounded-full bg-[#00d4aa] mt-1 shrink-0" />
+                            <span className="text-[11px] text-slate-300">{item}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+
+                    {/* Tech Stack Chips */}
+                    <div className="flex flex-wrap gap-1.5 mb-6">
+                      {prod.techStack.map((tech, i) => (
+                        <span
+                          key={i}
+                          className="px-2 py-0.5 rounded-md bg-white/[0.04] border border-white/8 text-[10px] font-mono text-slate-300"
+                        >
+                          {tech}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Card Bottom Actions */}
+                  <div className="pt-4 border-t border-white/8 flex flex-col gap-2">
+                    <div className="flex items-center justify-between text-[10px] font-mono text-slate-500 mb-1">
+                      <span>Deployment:</span>
+                      <span className="text-slate-300 font-medium truncate max-w-[170px] text-right">
+                        {prod.deploymentOptions[0]}
+                      </span>
+                    </div>
+
+                    <div className="flex items-center gap-2">
+                      <button
+                        type="button"
+                        onClick={() => handleRequestProductDemo(prod)}
+                        className="flex-1 py-2.5 px-3 rounded-xl text-xs font-bold text-black transition-all flex items-center justify-center gap-1.5 hover:brightness-110 shadow-md active:scale-98"
+                        style={{ background: prod.color }}
+                      >
+                        <span>Demo &amp; Specs</span>
+                        <ArrowRightIcon className="w-3.5 h-3.5" />
+                      </button>
+
+                      {prod.liveUrl ? (
+                        <a
+                          href={prod.liveUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="p-2.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-white transition-all"
+                          title="Open Live Platform"
+                        >
+                          <ArrowTopRightOnSquareIcon className="w-4 h-4 text-slate-300" />
+                        </a>
+                      ) : (
+                        <Link
+                          href={`/contact?product=${encodeURIComponent(prod.name)}`}
+                          className="p-2.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-white transition-all"
+                          title="Contact for Quote"
+                        >
+                          <ArrowTopRightOnSquareIcon className="w-4 h-4 text-slate-300" />
+                        </Link>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Bottom Custom Software Banner */}
+          <div className="mt-14 p-6 sm:p-8 rounded-3xl bg-gradient-to-r from-[#0d1627] via-[#09101d] to-[#0d1627] border border-white/10 flex flex-col md:flex-row items-center justify-between gap-6 relative overflow-hidden">
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 rounded-2xl bg-[#00d4aa]/10 border border-[#00d4aa]/30 flex items-center justify-center text-[#00d4aa] shrink-0">
+                <CodeBracketIcon className="w-6 h-6" />
+              </div>
+              <div>
+                <h4 className="text-base sm:text-lg font-bold text-white">
+                  Need a Bespoke Solution or White-Label Source Code License?
+                </h4>
+                <p className="text-xs sm:text-sm text-slate-400 mt-1">
+                  We customize any software module to fit your exact business workflows, IoT hardware, and ERP databases with full IP code ownership transfer.
+                </p>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-3 shrink-0 w-full md:w-auto">
+              <Link
+                href="/contact?service=custom-software"
+                className="w-full md:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-[#00d4aa] text-[#07090e] font-bold text-xs hover:bg-[#00e2b6] transition-all shadow-md shadow-[#00d4aa]/20"
+              >
+                <span>Schedule a Technical Consultation</span>
+                <ArrowRightIcon className="w-4 h-4" />
+              </Link>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+
+      {/* ================================================================ */}
+      {/* 08. CASE STUDIES                                                 */}
       {/* ================================================================ */}
       <section className="py-20 sm:py-24 border-t border-white/8 relative">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -1483,7 +1986,163 @@ export default function Home() {
 
 
       {/* ================================================================ */}
-      {/* 08. BUILD • LAUNCH • AUTOMATE • GROW                             */}
+      {/* 09. GLOBAL FOOTPRINT: COUNTRIES WE WORKED WITH                   */}
+      {/* ================================================================ */}
+      <section id="global-reach" className="py-20 sm:py-24 border-t border-white/8 bg-[#090d16]/90 relative overflow-hidden">
+        {/* Ambient Glows */}
+        <div className="absolute top-1/3 left-1/4 -translate-x-1/2 w-[600px] h-[350px] bg-[#00d4aa]/5 blur-[160px] rounded-full pointer-events-none -z-10" />
+        <div className="absolute bottom-10 right-10 w-[500px] h-[350px] bg-[#38bdf8]/5 blur-[160px] rounded-full pointer-events-none -z-10" />
+        
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          
+          {/* Header */}
+          <div className="text-center max-w-3xl mx-auto mb-14">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#00d4aa]/10 border border-[#00d4aa]/30 text-xs font-bold tracking-wider text-[#00d4aa] uppercase mb-4 shadow-sm">
+              <GlobeAltIcon className="w-4 h-4" />
+              <span>Global Footprint • Trusted Worldwide</span>
+            </div>
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black text-white tracking-tight mb-4">
+              Trusted by Clients Across Global Markets
+            </h2>
+            <p className="text-sm sm:text-base text-slate-400 leading-relaxed">
+              We design, engineer, and deploy high-performance software and digital platforms worldwide with guaranteed 100% intellectual property ownership, strict NDA standards, and seamless cross-border collaboration.
+            </p>
+          </div>
+
+          {/* 4 Real Trust Assurance Pillars */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-14">
+            {[
+              {
+                stat: '100%',
+                title: 'IP Code Ownership Transfer',
+                desc: 'Full GitHub repository handover with zero vendor lock-in & strict mutual NDA.',
+                icon: ShieldCheckIcon,
+                color: '#00d4aa',
+              },
+              {
+                stat: '24/7',
+                title: 'Multi-Timezone Sprints',
+                desc: 'Dedicated overlap across North America (EST/PST), UK, Middle East & Asia hours.',
+                icon: ClockIcon,
+                color: '#38bdf8',
+              },
+              {
+                stat: 'Multi-Currency',
+                title: 'Cross-Border Invoicing',
+                desc: 'Seamless invoicing in USD, GBP, EUR, AED, and BDT via Stripe & Wire Transfer.',
+                icon: ArrowsRightLeftIcon,
+                color: '#8b5cf6',
+              },
+              {
+                stat: '99.98%',
+                title: 'Enterprise Cloud SLA',
+                desc: 'Low-latency global edge deployment backed by AWS, Vercel & Cloudflare.',
+                icon: ServerIcon,
+                color: '#10b981',
+              },
+            ].map((pillar, i) => {
+              const Icon = pillar.icon;
+              return (
+                <div
+                  key={i}
+                  className="p-5 rounded-2xl bg-[#0f1523]/80 border border-white/8 hover:border-white/20 transition-all flex flex-col justify-between group"
+                >
+                  <div className="flex items-center justify-between mb-4">
+                    <span className="text-2xl sm:text-3xl font-black tracking-tight" style={{ color: pillar.color }}>
+                      {pillar.stat}
+                    </span>
+                    <div
+                      className="w-9 h-9 rounded-xl flex items-center justify-center border"
+                      style={{
+                        background: `${pillar.color}15`,
+                        borderColor: `${pillar.color}35`,
+                        color: pillar.color,
+                      }}
+                    >
+                      <Icon className="w-4 h-4" />
+                    </div>
+                  </div>
+                  <div>
+                    <h4 className="text-sm font-bold text-white mb-1.5">{pillar.title}</h4>
+                    <p className="text-xs text-slate-400 leading-relaxed">{pillar.desc}</p>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Countries Grid: Flag + Country Name Only */}
+          <div className="mb-14">
+            <div className="text-center mb-6">
+              <span className="text-xs font-mono font-bold tracking-widest text-slate-400 uppercase">
+                Active Client Footprint &amp; Delivered Projects
+              </span>
+            </div>
+
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3.5 sm:gap-4">
+              {countriesWorked.map((c) => (
+                <div
+                  key={c.id}
+                  className="flex items-center gap-3 px-3.5 py-3 rounded-2xl bg-[#0f1523]/90 border border-white/8 hover:border-[#00d4aa]/40 hover:bg-[#131b2e] hover:shadow-[0_0_25px_rgba(0,212,170,0.12)] hover:scale-[1.02] transition-all duration-300 group select-none"
+                >
+                  <div className="w-7 h-5 sm:w-8 sm:h-5.5 rounded overflow-hidden shrink-0 border border-white/15 shadow-sm flex items-center justify-center bg-black/40">
+                    <img
+                      src={c.flagUrl}
+                      alt={`${c.name} flag`}
+                      width={32}
+                      height={22}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform"
+                      loading="lazy"
+                      onError={(e) => {
+                        const target = e.currentTarget;
+                        if (!target.dataset.triedCdn) {
+                          target.dataset.triedCdn = 'true';
+                          target.src = `https://flagcdn.com/${c.id === 'uk' ? 'gb' : c.id}.svg`;
+                        }
+                      }}
+                    />
+                  </div>
+                  <span className="text-xs sm:text-sm font-bold text-white group-hover:text-[#00d4aa] transition-colors truncate">
+                    {c.name}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* International Collaboration Guarantee Banner */}
+          <div className="p-6 sm:p-8 rounded-3xl bg-gradient-to-r from-[#0b1322] via-[#09101d] to-[#0b1322] border border-white/10 flex flex-col md:flex-row items-center justify-between gap-6">
+            <div className="flex items-center gap-4 text-left">
+              <div className="w-12 h-12 rounded-2xl bg-[#00d4aa]/10 border border-[#00d4aa]/30 flex items-center justify-center text-[#00d4aa] shrink-0">
+                <GlobeAltIcon className="w-6 h-6" />
+              </div>
+              <div>
+                <h4 className="text-base sm:text-lg font-bold text-white">
+                  Looking for a Trusted Global Technology Partner?
+                </h4>
+                <p className="text-xs sm:text-sm text-slate-400 mt-1">
+                  Enterprise delivery standards, bilateral non-disclosure protection, and transparent milestone sprint delivery.
+                </p>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-3 shrink-0 w-full md:w-auto">
+              <Link
+                href="/contact"
+                className="w-full md:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-[#00d4aa] text-[#07090e] font-bold text-xs hover:bg-[#00e2b6] transition-all shadow-md shadow-[#00d4aa]/20"
+              >
+                <span>Start an International Project</span>
+                <ArrowRightIcon className="w-4 h-4" />
+              </Link>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+
+      {/* ================================================================ */}
+      {/* 10. BUILD • LAUNCH • AUTOMATE • GROW                             */}
       {/* ================================================================ */}
       <section className="py-20 sm:py-24 border-t border-white/8 bg-[#090d16]/70 relative">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -1520,7 +2179,7 @@ export default function Home() {
 
 
       {/* ================================================================ */}
-      {/* 09. NEXTDIGI STORE                                               */}
+      {/* 11. NEXTDIGI STORE                                               */}
       {/* ================================================================ */}
       <section id="featured-products" className="py-20 sm:py-24 border-t border-white/8 relative">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -1673,7 +2332,7 @@ export default function Home() {
 
 
       {/* ================================================================ */}
-      {/* 10. TRUST / WHY BUSINESSES CHOOSE NEXTDIGI                       */}
+      {/* 12. TRUST / WHY BUSINESSES CHOOSE NEXTDIGI                       */}
       {/* ================================================================ */}
       <section className="py-20 sm:py-24 border-t border-white/8 bg-[#090d16]/70 relative">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -1718,7 +2377,7 @@ export default function Home() {
 
 
       {/* ================================================================ */}
-      {/* 11. FINAL CTA                                                    */}
+      {/* 13. FINAL CTA                                                    */}
       {/* ================================================================ */}
       <section className="py-20 sm:py-24 border-t border-white/8 bg-gradient-to-b from-[#090d16] via-[#0b1420] to-[#090d16]">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
