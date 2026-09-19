@@ -265,8 +265,20 @@ export const countriesWorked: CountryItem[] = [
   { id: 'in', name: 'India', flagUrl: '/flags/in.svg', code: 'IN' },
   { id: 'pk', name: 'Pakistan', flagUrl: '/flags/pk.svg', code: 'PK' },
   { id: 'bd', name: 'Bangladesh', flagUrl: '/flags/bd.svg', code: 'BD' },
-  { id: 'my', name: 'Malaysia', flagUrl: '/flags/my.svg', code: 'MY' },
 ];
+
+const softwareIconMap: Record<string, any> = {
+  TruckIcon,
+  ServerIcon,
+  UserGroupIcon,
+  AcademicCapIcon,
+  CommandLineIcon,
+  WrenchScrewdriverIcon,
+  ShieldCheckIcon,
+  ShoppingBagIcon,
+  SparklesIcon,
+  CpuChipIcon,
+};
 
 interface Product {
   id: number | string;
@@ -543,6 +555,8 @@ export default function Home() {
   const [heroConsoleTab, setHeroConsoleTab] = useState<'saas' | 'ai' | 'growth' | 'products'>('saas');
   const [hoveredDivision, setHoveredDivision] = useState<'solutions' | 'ai' | 'growth' | 'products'>('solutions');
   const [activeDivisionId, setActiveDivisionId] = useState<string>('solutions');
+  const [softwareList, setSoftwareList] = useState<EnterpriseSoftware[]>(softwareProducts);
+  const [countriesList, setCountriesList] = useState<CountryItem[]>(countriesWorked);
 
   useEffect(() => {
     let isMounted = true;
@@ -552,6 +566,25 @@ export default function Home() {
         const settingsRes = await apiFetch('settings', { silent: true });
         if (isMounted && settingsRes) {
           setWelcomeSettings(settingsRes?.data?.data || settingsRes?.data || settingsRes || {});
+        }
+      } catch {}
+
+      try {
+        const homeRes = await apiFetch('content/home', { silent: true });
+        const homeData = homeRes?.data?.data || homeRes?.data || homeRes;
+        if (isMounted && homeData) {
+          if (Array.isArray(homeData.enterprise_software) && homeData.enterprise_software.length > 0) {
+            const mapped = homeData.enterprise_software.map((item: any) => ({
+              ...item,
+              icon: typeof item.icon === 'string'
+                ? (softwareIconMap[item.icon] || softwareProducts.find(p => p.id === item.id)?.icon || CommandLineIcon)
+                : (item.icon || softwareProducts.find(p => p.id === item.id)?.icon || CommandLineIcon)
+            }));
+            setSoftwareList(mapped);
+          }
+          if (Array.isArray(homeData.countries_worked) && homeData.countries_worked.length > 0) {
+            setCountriesList(homeData.countries_worked);
+          }
         }
       } catch {}
 
@@ -650,9 +683,9 @@ export default function Home() {
 
   // Filter software products by category tab
   const filteredSoftware = useMemo(() => {
-    if (activeSoftwareTab === 'all') return softwareProducts;
-    return softwareProducts.filter(p => p.categoryFilter === activeSoftwareTab);
-  }, [activeSoftwareTab]);
+    if (activeSoftwareTab === 'all') return softwareList;
+    return softwareList.filter(p => p.categoryFilter === activeSoftwareTab);
+  }, [activeSoftwareTab, softwareList]);
 
   // Interactive Live Demo / Inquiry Modal
   const handleRequestProductDemo = (product: EnterpriseSoftware) => {
@@ -1736,7 +1769,7 @@ export default function Home() {
           {/* Software Products Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {filteredSoftware.map((prod) => {
-              const Icon = prod.icon;
+              const Icon = prod.icon || CommandLineIcon;
               return (
                 <div
                   key={prod.id}
@@ -2080,7 +2113,7 @@ export default function Home() {
             </div>
 
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3.5 sm:gap-4">
-              {countriesWorked.map((c) => (
+              {countriesList.map((c) => (
                 <div
                   key={c.id}
                   className="flex items-center gap-3 px-3.5 py-3 rounded-2xl bg-[#0f1523]/90 border border-white/8 hover:border-[#00d4aa]/40 hover:bg-[#131b2e] hover:shadow-[0_0_25px_rgba(0,212,170,0.12)] hover:scale-[1.02] transition-all duration-300 group select-none"
