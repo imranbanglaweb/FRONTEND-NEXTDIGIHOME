@@ -111,6 +111,20 @@ export default function RootLayout({
       suppressHydrationWarning={true}
     >
       <head>
+        {/* Google tag (gtag.js) */}
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZL847FTZQE" />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+
+              gtag('config', 'G-ZL847FTZQE');
+            `,
+          }}
+        />
+
         {/* Additional Meta Tags for SEO & Performance */}
         <meta charSet="utf-8" />
         <meta httpEquiv="x-ua-compatible" content="ie=edge" />

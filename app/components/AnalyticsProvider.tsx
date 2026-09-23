@@ -61,7 +61,12 @@ function AnalyticsRouteListener() {
 }
 
 export default function AnalyticsProvider() {
-  const primaryGoogleId = GA_MEASUREMENT_ID || GOOGLE_ADS_ID;
+  // G-ZL847FTZQE is installed directly in <head> in RootLayout.
+  // Prevent duplicate Google tag injection if G-ZL847FTZQE is configured in env
+  const isInstalledInHead = (id?: string) => !id || id === 'G-ZL847FTZQE';
+  const effectiveGaId = isInstalledInHead(GA_MEASUREMENT_ID) ? undefined : GA_MEASUREMENT_ID;
+  const effectiveAdsId = isInstalledInHead(GOOGLE_ADS_ID) ? undefined : GOOGLE_ADS_ID;
+  const primaryGoogleId = effectiveGaId || effectiveAdsId;
 
   return (
     <>
